@@ -7,6 +7,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,9 @@ public abstract class ScrapperTablaAbstract<Entidad> {
     private Integer contador;
     private Integer contadorPaginasVacias;
     private List<Entidad> productosRecolectados;
+    private LocalTime momentoDeRecoleccion;
+    //deben ser en minutos
+    private int intervaloDeRenovacionDeDatos;
 
 
 
@@ -67,8 +72,29 @@ public abstract class ScrapperTablaAbstract<Entidad> {
 
 
     public List<Entidad> getProductosRecolectados() throws IOException {
-        recolectarProductos();
+
+        if(esValidoRecolectarDeNuevo()){
+            this.momentoDeRecoleccion = LocalTime.now();
+            recolectarProductos();
+        }
         return this.productosRecolectados;
+    }
+
+    private boolean esValidoRecolectarDeNuevo() {
+        boolean resultado = false;
+
+        try{
+            boolean noEsAntesDeTiempo = ChronoUnit
+                    .MINUTES
+                    .between(this.momentoDeRecoleccion,LocalTime.now()) > intervaloDeRenovacionDeDatos;
+
+            resultado = noEsAntesDeTiempo;
+
+        } catch (Exception e){
+            resultado = true;
+        }
+
+        return resultado;
     }
 
 }

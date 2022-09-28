@@ -1,17 +1,24 @@
 package distribuidora.scrapping.servicios;
 
+import distribuidora.scrapping.entidad.MelarEntidad;
+import distribuidora.scrapping.extra.WebDriverConfig;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
-import pruebas.simples.entidad.MelarEntidad;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class MelarSeleniumServicio extends ScrapperTablaAbstract {
+
+    @Autowired
+    EdgeDriver driver;
 
     public MelarSeleniumServicio() {
         setUrlBuscador("https://listadepreciosmelar.com.ar");
@@ -19,8 +26,6 @@ public class MelarSeleniumServicio extends ScrapperTablaAbstract {
 
     @Override
     protected Document generarDocument() throws IOException {
-        System.setProperty("webdriver.edge.driver","C:\\selenium\\msedgedriver.exe");
-        WebDriver driver = new EdgeDriver();
         driver.get(getUrlBuscador());
         String template = driver.getPageSource();
         driver.close();

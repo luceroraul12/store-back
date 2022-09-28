@@ -1,7 +1,7 @@
 package distribuidora.scrapping.servicios;
 
+import distribuidora.scrapping.entidad.SudamerikEntidad;
 import org.jsoup.select.Elements;
-import pruebas.simples.entidad.SudamerikEntidad;
 
 public class SudamerikServicio extends ScrapperTablaAbstract<SudamerikEntidad>{
 
