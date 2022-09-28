@@ -19,6 +19,8 @@ public class WebDriverConfig {
     @Bean
     public EdgeDriver driver(){
         EdgeDriver driver = new EdgeDriver();
+        driver.manage().window().minimize();
+        driver.getWindowHandle();
         return driver;
     }
 }

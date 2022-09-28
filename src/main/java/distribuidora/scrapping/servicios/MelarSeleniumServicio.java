@@ -28,7 +28,6 @@ public class MelarSeleniumServicio extends ScrapperTablaAbstract {
     protected Document generarDocument() throws IOException {
         driver.get(getUrlBuscador());
         String template = driver.getPageSource();
-        driver.close();
 
         return Jsoup.parse(template);
     }

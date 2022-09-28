@@ -2,7 +2,9 @@ package distribuidora.scrapping.servicios;
 
 import distribuidora.scrapping.entidad.SudamerikEntidad;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SudamerikServicio extends ScrapperTablaAbstract<SudamerikEntidad>{
 
     private final String claseConjunto = "number";

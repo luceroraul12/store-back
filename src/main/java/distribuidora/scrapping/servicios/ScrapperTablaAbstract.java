@@ -25,7 +25,7 @@ public abstract class ScrapperTablaAbstract<Entidad> {
     private List<Entidad> productosRecolectados;
     private LocalTime momentoDeRecoleccion;
     //deben ser en minutos
-    private int intervaloDeRenovacionDeDatos;
+    private int intervaloDeRenovacionDeDatos = 30;
 
 
 
@@ -75,7 +75,11 @@ public abstract class ScrapperTablaAbstract<Entidad> {
 
         if(esValidoRecolectarDeNuevo()){
             this.momentoDeRecoleccion = LocalTime.now();
+            System.out.println("recargo info");
+            System.out.println(this.momentoDeRecoleccion);
             recolectarProductos();
+        } else {
+            System.out.println("Es muy temprano, envio la info existente");
         }
         return this.productosRecolectados;
     }
@@ -84,6 +88,12 @@ public abstract class ScrapperTablaAbstract<Entidad> {
         boolean resultado = false;
 
         try{
+
+            System.out.println(this.momentoDeRecoleccion);
+
+            System.out.println(LocalTime.now());
+
+
             boolean noEsAntesDeTiempo = ChronoUnit
                     .MINUTES
                     .between(this.momentoDeRecoleccion,LocalTime.now()) > intervaloDeRenovacionDeDatos;
@@ -91,9 +101,11 @@ public abstract class ScrapperTablaAbstract<Entidad> {
             resultado = noEsAntesDeTiempo;
 
         } catch (Exception e){
+            e.printStackTrace();
             resultado = true;
         }
-
+        System.out.println("volver a buscar?");
+        System.out.println(resultado);
         return resultado;
     }
 

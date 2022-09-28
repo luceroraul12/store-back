@@ -2,7 +2,9 @@ package distribuidora.scrapping.servicios;
 
 import distribuidora.scrapping.entidad.LaGranjaDelCentroEntidad;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
+@Service
 public class LaGranjaDelCentroServicio extends ScrapperTablaAbstract{
 
     public LaGranjaDelCentroServicio() {
