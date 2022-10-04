@@ -1,5 +1,5 @@
 package distribuidora.scrapping.enums;
 
-public enum Distribuidoras {
+public enum Distribuidora {
     MERLAR, SUDAMERIK, LA_GRANJA_DEL_CENTRO
 }
