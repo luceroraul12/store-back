@@ -1,12 +1,18 @@
 package distribuidora.scrapping.services;
 
+import distribuidora.scrapping.entities.MelarEntidad;
+import distribuidora.scrapping.entities.UnionEntidad;
+import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.repositories.UnionRepository;
 import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -16,6 +22,11 @@ import java.util.List;
 @Setter
 public abstract class ScrapperTablaAbstract<Entidad> {
 
+    @Autowired
+    UnionRepository<Entidad> unionRepository;
+
+    private Distribuidora distribuidora;
+
     private String clasesTabla;
     private String clasesNombreProducto;
     private String clasesPrecio;
@@ -23,9 +34,8 @@ public abstract class ScrapperTablaAbstract<Entidad> {
     private Integer contador;
     private Integer contadorPaginasVacias;
     private List<Entidad> productosRecolectados;
-    private LocalTime momentoDeRecoleccion;
-    //deben ser en minutos
-    private int intervaloDeRenovacionDeDatos = 30;
+    //deben ser en Dias
+    private int intervaloDeRenovacionDeDatos = 1;
 
 
 
@@ -39,9 +49,15 @@ public abstract class ScrapperTablaAbstract<Entidad> {
             }
             contador++;
             trabajarProductos(productos);
-
-
         }
+        unionRepository.deleteAll();
+
+        UnionEntidad<Entidad> union = new UnionEntidad();
+        union.setDatos(this.productosRecolectados);
+        union.setFechaScrap(LocalDate.now());
+        union.setDistribuidora(this.distribuidora);
+
+        unionRepository.save(union);
 
     }
 
@@ -74,32 +90,24 @@ public abstract class ScrapperTablaAbstract<Entidad> {
     public List<Entidad> getProductosRecolectados() throws IOException {
 
         if(esValidoRecolectarDeNuevo()){
-            this.momentoDeRecoleccion = LocalTime.now();
             System.out.println("recargo info");
-            System.out.println(this.momentoDeRecoleccion);
             recolectarProductos();
         } else {
             System.out.println("Es muy temprano, envio la info existente");
         }
-        return this.productosRecolectados;
+        return unionRepository.obtenerProductos(this.distribuidora).getDatos();
     }
 
     private boolean esValidoRecolectarDeNuevo() {
         boolean resultado = false;
 
         try{
-
-            System.out.println(this.momentoDeRecoleccion);
-
-            System.out.println(LocalTime.now());
-
-
+            UnionEntidad<Entidad> dataAlmacenada = unionRepository.obtenerProductos(this.distribuidora);
             boolean noEsAntesDeTiempo = ChronoUnit
-                    .MINUTES
-                    .between(this.momentoDeRecoleccion,LocalTime.now()) > intervaloDeRenovacionDeDatos;
+                    .DAYS
+                    .between(dataAlmacenada.getFechaScrap(),LocalDate.now()) > intervaloDeRenovacionDeDatos;
 
             resultado = noEsAntesDeTiempo;
-
         } catch (Exception e){
             e.printStackTrace();
             resultado = true;
@@ -108,5 +116,4 @@ public abstract class ScrapperTablaAbstract<Entidad> {
         System.out.println(resultado);
         return resultado;
     }
-
 }
