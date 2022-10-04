@@ -1,13 +1,12 @@
-package distribuidora.scrapping.controlador;
+package distribuidora.scrapping.controller;
 
-import distribuidora.scrapping.entidad.LaGranjaDelCentroEntidad;
-import distribuidora.scrapping.entidad.MelarEntidad;
-import distribuidora.scrapping.entidad.SudamerikEntidad;
-import distribuidora.scrapping.servicios.LaGranjaDelCentroServicio;
-import distribuidora.scrapping.servicios.MelarSeleniumServicio;
-import distribuidora.scrapping.servicios.SudamerikServicio;
+import distribuidora.scrapping.entities.LaGranjaDelCentroEntidad;
+import distribuidora.scrapping.entities.MelarEntidad;
+import distribuidora.scrapping.entities.SudamerikEntidad;
+import distribuidora.scrapping.services.LaGranjaDelCentroServicio;
+import distribuidora.scrapping.services.MelarSeleniumServicio;
+import distribuidora.scrapping.services.SudamerikServicio;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

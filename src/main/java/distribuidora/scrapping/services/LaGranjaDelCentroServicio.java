@@ -1,6 +1,6 @@
-package distribuidora.scrapping.servicios;
+package distribuidora.scrapping.services;
 
-import distribuidora.scrapping.entidad.LaGranjaDelCentroEntidad;
+import distribuidora.scrapping.entities.LaGranjaDelCentroEntidad;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 

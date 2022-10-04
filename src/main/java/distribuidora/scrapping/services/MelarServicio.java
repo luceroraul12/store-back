@@ -1,6 +1,6 @@
-package distribuidora.scrapping.servicios;
+package distribuidora.scrapping.services;
 
-import distribuidora.scrapping.entidad.MelarEntidad;
+import distribuidora.scrapping.entities.MelarEntidad;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

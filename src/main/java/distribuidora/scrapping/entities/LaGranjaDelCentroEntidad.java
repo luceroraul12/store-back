@@ -1,18 +1,13 @@
-package distribuidora.scrapping.entidad;
-
+package distribuidora.scrapping.entities;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
 @ToString
 @Builder
-public class SudamerikEntidad {
+public class LaGranjaDelCentroEntidad {
     private String nombreProducto;
-    private String cantidadEspecifca;
     private Double precio;
-
 }

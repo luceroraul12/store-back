@@ -1,11 +1,9 @@
-package distribuidora.scrapping.servicios;
+package distribuidora.scrapping.services;
 
-import distribuidora.scrapping.entidad.MelarEntidad;
-import distribuidora.scrapping.extra.WebDriverConfig;
+import distribuidora.scrapping.entities.MelarEntidad;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

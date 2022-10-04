@@ -1,6 +1,6 @@
 package distribuidora.scrapping.repositories;
 
-import distribuidora.scrapping.entidad.UnionEntidad;
+import distribuidora.scrapping.entities.UnionEntidad;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

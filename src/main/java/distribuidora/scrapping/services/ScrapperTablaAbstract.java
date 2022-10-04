@@ -1,4 +1,4 @@
-package distribuidora.scrapping.servicios;
+package distribuidora.scrapping.services;
 
 import lombok.Getter;
 import lombok.Setter;

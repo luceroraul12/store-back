@@ -1,4 +1,4 @@
-package distribuidora.scrapping.entidad;
+package distribuidora.scrapping.entities;
 
 import lombok.Builder;
 import lombok.Getter;
