@@ -7,12 +7,11 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface UnionRepository<Entidad> extends MongoRepository<UnionEntidad<Entidad>,String> {
 
-    @Query("Select u from UnionEntidad where u.distribuidora = :distribuidora")
-    UnionEntidad<Entidad> obtenerProductos(@Param("distribuidora") Distribuidora distribuidora);
+    UnionEntidad<Entidad> findByDistribuidora(@Param("distribuidora") Distribuidora distribuidora);
+
+    String deleteUnionEntidadByDistribuidora(@Param("distribuidora") Distribuidora distribuidora);
 
 }
