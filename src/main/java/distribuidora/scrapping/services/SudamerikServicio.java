@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.SudamerikEntidad;
+import distribuidora.scrapping.enums.Distribuidora;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ public class SudamerikServicio extends ScrapperTablaAbstract<SudamerikEntidad>{
         setClasesPrecio("precio");
         setClasesNombreProducto("nombre");
         setClasesTabla("productos-container");
+        setDistribuidora(Distribuidora.SUDAMERIK);
     }
 
 
