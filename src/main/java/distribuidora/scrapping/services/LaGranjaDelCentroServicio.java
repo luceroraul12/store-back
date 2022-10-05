@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.LaGranjaDelCentroEntidad;
+import distribuidora.scrapping.enums.Distribuidora;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ public class LaGranjaDelCentroServicio extends ScrapperTablaAbstract{
         setClasesTabla("box-content-1");
         setClasesNombreProducto("h3-content-1");
         setClasesPrecio("p-precio-content-1");
+        setDistribuidora(Distribuidora.LA_GRANJA_DEL_CENTRO);
     }
 
     @Override
