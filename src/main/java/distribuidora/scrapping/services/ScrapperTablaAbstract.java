@@ -1,6 +1,5 @@
 package distribuidora.scrapping.services;
 
-import distribuidora.scrapping.entities.MelarEntidad;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,7 @@ import java.util.List;
 public abstract class ScrapperTablaAbstract<Entidad> {
 
     @Autowired
-    UnionRepository<Entidad> unionRepository;
+    private UnionRepository<Entidad> unionRepository;
 
     private Distribuidora distribuidora;
 
@@ -39,7 +37,7 @@ public abstract class ScrapperTablaAbstract<Entidad> {
 
 
 
-    private void recolectarProductos() throws IOException {
+    private UnionEntidad<Entidad> recolectarProductos() throws IOException {
         reiniciar();
         while (this.contadorPaginasVacias <= 2){
             Document document = generarDocument();
@@ -50,7 +48,7 @@ public abstract class ScrapperTablaAbstract<Entidad> {
             contador++;
             trabajarProductos(productos);
         }
-        unionRepository.deleteAll();
+        unionRepository.deleteUnionEntidadByDistribuidora(this.distribuidora);
 
         UnionEntidad<Entidad> union = new UnionEntidad();
         union.setDatos(this.productosRecolectados);
@@ -59,6 +57,7 @@ public abstract class ScrapperTablaAbstract<Entidad> {
 
         unionRepository.save(union);
 
+        return union;
     }
 
     protected Elements generarElementosProductos(Document doc){
@@ -87,33 +86,30 @@ public abstract class ScrapperTablaAbstract<Entidad> {
     }
 
 
+    /*
+    primero se debe revisar la base de datos, si la fecha no es valida, se tiene que volver a scrapear la data. en caso contrario, se devuelvo lo almacenado
+     */
     public List<Entidad> getProductosRecolectados() throws IOException {
-
-        if(esValidoRecolectarDeNuevo()){
+        UnionEntidad<Entidad> dataDB = unionRepository.findByDistribuidora(this.distribuidora);
+        if(esValidoRecolectarDeNuevo(dataDB)){
             System.out.println("recargo info");
-            recolectarProductos();
+            dataDB = recolectarProductos();
         } else {
             System.out.println("Es muy temprano, envio la info existente");
         }
-        return unionRepository.obtenerProductos(this.distribuidora).getDatos();
+        return dataDB.getDatos();
     }
 
-    private boolean esValidoRecolectarDeNuevo() {
+    private boolean esValidoRecolectarDeNuevo(UnionEntidad<Entidad> dataDB) {
         boolean resultado = false;
-
         try{
-            UnionEntidad<Entidad> dataAlmacenada = unionRepository.obtenerProductos(this.distribuidora);
             boolean noEsAntesDeTiempo = ChronoUnit
                     .DAYS
-                    .between(dataAlmacenada.getFechaScrap(),LocalDate.now()) > intervaloDeRenovacionDeDatos;
-
+                    .between(dataDB.getFechaScrap(),LocalDate.now()) >= intervaloDeRenovacionDeDatos;
             resultado = noEsAntesDeTiempo;
         } catch (Exception e){
-            e.printStackTrace();
             resultado = true;
         }
-        System.out.println("volver a buscar?");
-        System.out.println(resultado);
         return resultado;
     }
 }
