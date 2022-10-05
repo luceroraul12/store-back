@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.MelarEntidad;
+import distribuidora.scrapping.enums.Distribuidora;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -20,6 +21,7 @@ public class MelarSeleniumServicio extends ScrapperTablaAbstract {
 
     public MelarSeleniumServicio() {
         setUrlBuscador("https://listadepreciosmelar.com.ar");
+        setDistribuidora(Distribuidora.MERLAR);
     }
 
     @Override
