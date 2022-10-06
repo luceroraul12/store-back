@@ -1,12 +1,21 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.LaGranjaDelCentroEntidad;
+import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.util.LaGranjaDelCentroUtil;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class LaGranjaDelCentroServicio extends ScrapperTablaAbstract{
+
+    @Autowired
+    LaGranjaDelCentroUtil laGranjaDelCentroUtil;
 
     public LaGranjaDelCentroServicio() {
         setUrlBuscador("https://lagranjadelcentro.com.ar/productos.php?pagina=");
@@ -56,5 +65,10 @@ public class LaGranjaDelCentroServicio extends ScrapperTablaAbstract{
         });
 
 
+    }
+
+    @Override
+    protected List<Producto> convertirProductos(UnionEntidad dataDB) {
+        return (List<Producto>) laGranjaDelCentroUtil.arregloToProducto(dataDB.getDatos());
     }
 }
