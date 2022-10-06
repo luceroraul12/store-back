@@ -1,8 +1,10 @@
 package distribuidora.scrapping.services;
 
+import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
+import distribuidora.scrapping.util.MelarUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
@@ -35,8 +37,46 @@ public abstract class ScrapperTablaAbstract<Entidad> {
     //deben ser en Dias
     private int intervaloDeRenovacionDeDatos = 1;
 
+    protected abstract void trabajarProductos(Elements productos);
+
+    public String generarSiguienteUrl(){
+        return this.urlBuscador + this.contador;
+    }
 
 
+    /*
+    primero se debe revisar la base de datos, si la fecha no es valida, se tiene que volver a scrapear la data. en caso contrario, se devuelvo lo almacenado
+     */
+    public List<Producto> getProductosRecolectados() throws IOException {
+        UnionEntidad<Entidad> dataDB = unionRepository.findByDistribuidora(this.distribuidora);
+        List<Producto> productosConvertidos = new ArrayList<>();
+        
+        if(esValidoRecolectarDeNuevo(dataDB)){
+            System.out.println("recargo info");
+            dataDB = recolectarProductos();
+        } else {
+            System.out.println("Es muy temprano, envio la info existente");
+        }
+
+        productosConvertidos = convertirProductos(dataDB);
+
+        return productosConvertidos;
+    }
+
+    protected abstract List<Producto> convertirProductos(UnionEntidad<Entidad> dataDB);
+
+    private boolean esValidoRecolectarDeNuevo(UnionEntidad<Entidad> dataDB) {
+        boolean resultado = false;
+        try{
+            boolean noEsAntesDeTiempo = ChronoUnit
+                    .DAYS
+                    .between(dataDB.getFechaScrap(),LocalDate.now()) >= intervaloDeRenovacionDeDatos;
+            resultado = noEsAntesDeTiempo;
+        } catch (Exception e){
+            resultado = true;
+        }
+        return resultado;
+    }
     private UnionEntidad<Entidad> recolectarProductos() throws IOException {
         reiniciar();
         while (this.contadorPaginasVacias <= 2){
@@ -68,9 +108,6 @@ public abstract class ScrapperTablaAbstract<Entidad> {
         return Jsoup.connect(generarSiguienteUrl()).get();
     }
 
-    protected abstract void trabajarProductos(Elements productos);
-
-
     private void reiniciar(){
         this.contador = 0;
         this.contadorPaginasVacias = 0;
@@ -81,35 +118,5 @@ public abstract class ScrapperTablaAbstract<Entidad> {
         this.productosRecolectados.add(producto);
     }
 
-    public String generarSiguienteUrl(){
-        return this.urlBuscador + this.contador;
-    }
 
-
-    /*
-    primero se debe revisar la base de datos, si la fecha no es valida, se tiene que volver a scrapear la data. en caso contrario, se devuelvo lo almacenado
-     */
-    public List<Entidad> getProductosRecolectados() throws IOException {
-        UnionEntidad<Entidad> dataDB = unionRepository.findByDistribuidora(this.distribuidora);
-        if(esValidoRecolectarDeNuevo(dataDB)){
-            System.out.println("recargo info");
-            dataDB = recolectarProductos();
-        } else {
-            System.out.println("Es muy temprano, envio la info existente");
-        }
-        return dataDB.getDatos();
-    }
-
-    private boolean esValidoRecolectarDeNuevo(UnionEntidad<Entidad> dataDB) {
-        boolean resultado = false;
-        try{
-            boolean noEsAntesDeTiempo = ChronoUnit
-                    .DAYS
-                    .between(dataDB.getFechaScrap(),LocalDate.now()) >= intervaloDeRenovacionDeDatos;
-            resultado = noEsAntesDeTiempo;
-        } catch (Exception e){
-            resultado = true;
-        }
-        return resultado;
-    }
 }
