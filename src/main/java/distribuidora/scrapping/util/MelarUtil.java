@@ -7,12 +7,24 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 @Component
 public class MelarUtil extends ProductoUtil<MelarEntidad>{
     @Override
     Collection<Producto> convertirProductoyDevolverlo(MelarEntidad productoSinConvertir) {
         Collection<Producto> productosCreados = new ArrayList<>();
+
+        /*
+        Hay que tener cuidado cons los precios, debido a que el monto siempre lo muestran  por 1 kilo,
+        Se debe multiplicar por la medida correspondiente para obtener la el precio que se paga por la minima cantidad adquirible
+         */
+        HashMap<String, Double> preciosCalculados = new HashMap<>();
+        preciosCalculados.put("fraccion", 0.0);
+        preciosCalculados.put("granel", 0.0);
+
+        verificaryCalcularPrecio(productoSinConvertir,preciosCalculados);
+
 
         /*
         Quiero tener un descripcion en el siguiente orden
@@ -42,7 +54,7 @@ public class MelarUtil extends ProductoUtil<MelarEntidad>{
                 Producto
                         .builder()
                         .descripcion(descripcionFraccion)
-                        .precioPorCantidadEspecifica(productoSinConvertir.getPrecioFraccionado())
+                        .precioPorCantidadEspecifica(preciosCalculados.get("fraccion"))
                         .distribuidora(Distribuidora.MELAR)
                         .build()
         );
@@ -50,11 +62,32 @@ public class MelarUtil extends ProductoUtil<MelarEntidad>{
                 Producto
                         .builder()
                         .descripcion(descripcionGranel)
-                        .precioPorCantidadEspecifica(productoSinConvertir.getPrecioGranel())
+                        .precioPorCantidadEspecifica(preciosCalculados.get("granel"))
                         .distribuidora(Distribuidora.MELAR)
                         .build()
         );
 
         return productosCreados;
+    }
+
+    private void verificaryCalcularPrecio(MelarEntidad productoSinConvertir, HashMap<String, Double> preciosCalculados) {
+        try{
+            preciosCalculados
+                    .replace("granel",
+                    productoSinConvertir.getPrecioGranel() * Double.parseDouble(productoSinConvertir.getGranel()
+                    ));
+        } catch(Exception e) {
+            preciosCalculados
+                    .replace("granel", 0.0);
+        }
+
+        try {
+            preciosCalculados
+                    .replace("fraccion",
+                            productoSinConvertir.getPrecioFraccionado() * Double.parseDouble(productoSinConvertir.getFraccion()));
+        } catch (Exception e) {
+            preciosCalculados
+                    .replace("fraccion",0.0);
+        }
     }
 }
