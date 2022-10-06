@@ -1,7 +1,10 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.MelarEntidad;
+import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.util.MelarUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -14,10 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MelarSeleniumServicio extends ScrapperTablaAbstract {
+public class MelarSeleniumServicio extends ScrapperTablaAbstract<MelarEntidad> {
 
     @Autowired
     EdgeDriver driver;
+
+    @Autowired
+    MelarUtil melarUtil;
 
     public MelarSeleniumServicio() {
         setUrlBuscador("https://listadepreciosmelar.com.ar");
@@ -85,5 +91,10 @@ public class MelarSeleniumServicio extends ScrapperTablaAbstract {
 
         setContadorPaginasVacias(10);
 
+    }
+
+    @Override
+    protected List<Producto> convertirProductos(UnionEntidad<MelarEntidad> dataDB) {
+        return (List<Producto>) melarUtil.arregloToProducto(dataDB.getDatos());
     }
 }
