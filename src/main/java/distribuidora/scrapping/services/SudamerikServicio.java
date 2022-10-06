@@ -1,13 +1,21 @@
 package distribuidora.scrapping.services;
 
+import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.SudamerikEntidad;
+import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.util.SudamerikUtil;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SudamerikServicio extends ScrapperTablaAbstract<SudamerikEntidad>{
 
+    @Autowired
+    SudamerikUtil sudamerikUtil;
     private final String claseConjunto = "number";
     private final String claseTipo = "unidad-tipo";
 
@@ -68,5 +76,10 @@ public class SudamerikServicio extends ScrapperTablaAbstract<SudamerikEntidad>{
                 }
         );
 
+    }
+
+    @Override
+    protected List<Producto> convertirProductos(UnionEntidad<SudamerikEntidad> dataDB) {
+        return (List<Producto>) sudamerikUtil.arregloToProducto(dataDB.getDatos());
     }
 }
