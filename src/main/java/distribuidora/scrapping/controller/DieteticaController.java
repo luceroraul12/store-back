@@ -2,6 +2,7 @@ package distribuidora.scrapping.controller;
 
 import distribuidora.scrapping.entities.LaGranjaDelCentroEntidad;
 import distribuidora.scrapping.entities.MelarEntidad;
+import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.SudamerikEntidad;
 import distribuidora.scrapping.services.LaGranjaDelCentroServicio;
 import distribuidora.scrapping.services.MelarSeleniumServicio;
@@ -28,17 +29,17 @@ public class DieteticaController {
     SudamerikServicio sudamerikServicio;
 
     @GetMapping("melar")
-    public List<MelarEntidad> getMelarProductos() throws IOException {
+    public List<Producto> getMelarProductos() throws IOException {
         return melarSeleniumServicio.getProductosRecolectados();
     }
 
     @GetMapping("granja")
-    public List<LaGranjaDelCentroEntidad> getGranjaProductos() throws IOException {
+    public List<Producto> getGranjaProductos() throws IOException {
         return granjaServicio.getProductosRecolectados();
     }
 
     @GetMapping("sudamerik")
-    public List<SudamerikEntidad> getSudamerikProductos() throws IOException {
+    public List<Producto> getSudamerikProductos() throws IOException {
         return sudamerikServicio.getProductosRecolectados();
     }
 }
