@@ -28,7 +28,7 @@ public class MelarSeleniumServicio extends ScrapperTablaAbstract<MelarEntidad> {
 
     public MelarSeleniumServicio() {
         setUrlBuscador("https://listadepreciosmelar.com.ar");
-        setDistribuidora(Distribuidora.MERLAR);
+        setDistribuidora(Distribuidora.MELAR);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class MelarUtil extends ProductoUtil<MelarEntidad>{
                         .builder()
                         .descripcion(descripcionFraccion)
                         .precioPorCantidadEspecifica(productoSinConvertir.getPrecioFraccionado())
-                        .distribuidora(Distribuidora.MERLAR)
+                        .distribuidora(Distribuidora.MELAR)
                         .build()
         );
         productosCreados.add(
@@ -51,7 +51,7 @@ public class MelarUtil extends ProductoUtil<MelarEntidad>{
                         .builder()
                         .descripcion(descripcionGranel)
                         .precioPorCantidadEspecifica(productoSinConvertir.getPrecioGranel())
-                        .distribuidora(Distribuidora.MERLAR)
+                        .distribuidora(Distribuidora.MELAR)
                         .build()
         );
 
