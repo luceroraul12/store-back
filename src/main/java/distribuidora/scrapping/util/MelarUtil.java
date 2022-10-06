@@ -2,6 +2,7 @@ package distribuidora.scrapping.util;
 
 import distribuidora.scrapping.entities.MelarEntidad;
 import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class MelarUtil extends ProductoUtil<MelarEntidad>{
                         .builder()
                         .descripcion(descripcionFraccion)
                         .precioPorCantidadEspecifica(productoSinConvertir.getPrecioFraccionado())
+                        .distribuidora(Distribuidora.MERLAR)
                         .build()
         );
         productosCreados.add(
@@ -49,6 +51,7 @@ public class MelarUtil extends ProductoUtil<MelarEntidad>{
                         .builder()
                         .descripcion(descripcionGranel)
                         .precioPorCantidadEspecifica(productoSinConvertir.getPrecioGranel())
+                        .distribuidora(Distribuidora.MERLAR)
                         .build()
         );
 
