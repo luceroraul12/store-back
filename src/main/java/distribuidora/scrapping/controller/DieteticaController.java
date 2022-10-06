@@ -6,6 +6,7 @@ import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.SudamerikEntidad;
 import distribuidora.scrapping.services.LaGranjaDelCentroServicio;
 import distribuidora.scrapping.services.MelarSeleniumServicio;
+import distribuidora.scrapping.services.RecolectorDeProductosServicio;
 import distribuidora.scrapping.services.SudamerikServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -20,26 +22,11 @@ import java.util.List;
 public class DieteticaController {
 
     @Autowired
-    MelarSeleniumServicio melarSeleniumServicio;
+    RecolectorDeProductosServicio recolectorDeProductosServicio;
 
-    @Autowired
-    LaGranjaDelCentroServicio granjaServicio;
-
-    @Autowired
-    SudamerikServicio sudamerikServicio;
-
-    @GetMapping("melar")
-    public List<Producto> getMelarProductos() throws IOException {
-        return melarSeleniumServicio.getProductosRecolectados();
+    @GetMapping("productos")
+    public Collection<Producto> obtenerTodosLosProductos() throws IOException {
+        return recolectorDeProductosServicio.obtenerTodosLosProductos();
     }
 
-    @GetMapping("granja")
-    public List<Producto> getGranjaProductos() throws IOException {
-        return granjaServicio.getProductosRecolectados();
-    }
-
-    @GetMapping("sudamerik")
-    public List<Producto> getSudamerikProductos() throws IOException {
-        return sudamerikServicio.getProductosRecolectados();
-    }
 }
