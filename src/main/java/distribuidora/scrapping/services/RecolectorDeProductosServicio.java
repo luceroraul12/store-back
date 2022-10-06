@@ -20,14 +20,17 @@ public class RecolectorDeProductosServicio {
     @Autowired
     MelarSeleniumServicio melarSeleniumServicio;
 
-    public Collection<Producto> obtenerTodosLosProductos() throws IOException {
-        Collection<Producto> resultado = new ArrayList<>();
+    @Autowired
+    BuscadorServicio buscadorServicio;
 
-        resultado.addAll(melarSeleniumServicio.getProductosRecolectados());
-        resultado.addAll(sudamerikServicio.getProductosRecolectados());
-        resultado.addAll(laGranjaDelCentroServicio.getProductosRecolectados());
+    public Collection<Producto> obtenerTodosLosProductos(String busqueda) throws IOException {
+        Collection<Producto> conjuntoDeProductos = new ArrayList<>();
+
+        conjuntoDeProductos.addAll(melarSeleniumServicio.getProductosRecolectados());
+        conjuntoDeProductos.addAll(sudamerikServicio.getProductosRecolectados());
+        conjuntoDeProductos.addAll(laGranjaDelCentroServicio.getProductosRecolectados());
 
 
-        return resultado;
+        return buscadorServicio.filtrarProductos(conjuntoDeProductos, busqueda);
     }
 }
