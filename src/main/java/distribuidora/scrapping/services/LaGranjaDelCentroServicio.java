@@ -9,10 +9,10 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collection;
 
 @Service
-public class LaGranjaDelCentroServicio extends ScrapperTablaAbstract{
+public class LaGranjaDelCentroServicio extends ScrapperTablaAbstract<LaGranjaDelCentroEntidad> {
 
     @Autowired
     LaGranjaDelCentroUtil laGranjaDelCentroUtil;
@@ -68,7 +68,7 @@ public class LaGranjaDelCentroServicio extends ScrapperTablaAbstract{
     }
 
     @Override
-    protected List<Producto> convertirProductos(UnionEntidad dataDB) {
-        return (List<Producto>) laGranjaDelCentroUtil.arregloToProducto(dataDB.getDatos());
+    protected Collection<Producto> convertirProductos(UnionEntidad<LaGranjaDelCentroEntidad> dataDB) {
+        return laGranjaDelCentroUtil.arregloToProducto(dataDB.getDatos());
     }
 }

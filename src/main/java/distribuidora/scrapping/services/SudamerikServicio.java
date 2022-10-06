@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -79,7 +80,7 @@ public class SudamerikServicio extends ScrapperTablaAbstract<SudamerikEntidad>{
     }
 
     @Override
-    protected List<Producto> convertirProductos(UnionEntidad<SudamerikEntidad> dataDB) {
-        return (List<Producto>) sudamerikUtil.arregloToProducto(dataDB.getDatos());
+    protected Collection<Producto> convertirProductos(UnionEntidad<SudamerikEntidad> dataDB) {
+        return sudamerikUtil.arregloToProducto(dataDB.getDatos());
     }
 }

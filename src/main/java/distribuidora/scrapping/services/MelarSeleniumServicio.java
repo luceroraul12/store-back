@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -94,7 +95,7 @@ public class MelarSeleniumServicio extends ScrapperTablaAbstract<MelarEntidad> {
     }
 
     @Override
-    protected List<Producto> convertirProductos(UnionEntidad<MelarEntidad> dataDB) {
-        return (List<Producto>) melarUtil.arregloToProducto(dataDB.getDatos());
+    protected Collection<Producto> convertirProductos(UnionEntidad<MelarEntidad> dataDB) {
+        return melarUtil.arregloToProducto(dataDB.getDatos());
     }
 }

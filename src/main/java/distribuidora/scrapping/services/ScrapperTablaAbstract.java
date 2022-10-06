@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -47,9 +48,9 @@ public abstract class ScrapperTablaAbstract<Entidad> {
     /*
     primero se debe revisar la base de datos, si la fecha no es valida, se tiene que volver a scrapear la data. en caso contrario, se devuelvo lo almacenado
      */
-    public List<Producto> getProductosRecolectados() throws IOException {
+    public Collection<Producto> getProductosRecolectados() throws IOException {
         UnionEntidad<Entidad> dataDB = unionRepository.findByDistribuidora(this.distribuidora);
-        List<Producto> productosConvertidos = new ArrayList<>();
+        Collection<Producto> productosConvertidos = new ArrayList<>();
         
         if(esValidoRecolectarDeNuevo(dataDB)){
             System.out.println("recargo info");
@@ -63,7 +64,7 @@ public abstract class ScrapperTablaAbstract<Entidad> {
         return productosConvertidos;
     }
 
-    protected abstract List<Producto> convertirProductos(UnionEntidad<Entidad> dataDB);
+    protected abstract Collection<Producto> convertirProductos(UnionEntidad<Entidad> dataDB);
 
     private boolean esValidoRecolectarDeNuevo(UnionEntidad<Entidad> dataDB) {
         boolean resultado = false;
