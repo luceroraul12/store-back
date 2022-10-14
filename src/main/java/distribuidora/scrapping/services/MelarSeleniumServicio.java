@@ -8,6 +8,7 @@ import distribuidora.scrapping.util.MelarUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import java.util.List;
 public class MelarSeleniumServicio extends ScrapperTablaAbstract<MelarEntidad> {
 
     @Autowired
-    EdgeDriver driver;
+    WebDriver driver;
 
     @Autowired
     MelarUtil melarUtil;

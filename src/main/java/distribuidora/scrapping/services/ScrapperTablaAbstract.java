@@ -69,9 +69,10 @@ public abstract class ScrapperTablaAbstract<Entidad> {
     private boolean esValidoRecolectarDeNuevo(UnionEntidad<Entidad> dataDB) {
         boolean resultado = false;
         try{
-            boolean noEsAntesDeTiempo = ChronoUnit
+            long diferenciaDeFecha = ChronoUnit
                     .DAYS
-                    .between(dataDB.getFechaScrap(),LocalDate.now()) >= intervaloDeRenovacionDeDatos;
+                    .between(dataDB.getFechaScrap(),LocalDate.now());
+            boolean noEsAntesDeTiempo = diferenciaDeFecha >= intervaloDeRenovacionDeDatos;
             resultado = noEsAntesDeTiempo;
         } catch (Exception e){
             resultado = true;
