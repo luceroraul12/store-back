@@ -91,7 +91,7 @@ public class MelarSeleniumServicio extends ScrapperTablaAbstract<MelarEntidad> {
                     .build());
         });
 
-        setContadorPaginasVacias(10);
+        setContadorPaginasVacias(100);
 
     }
 

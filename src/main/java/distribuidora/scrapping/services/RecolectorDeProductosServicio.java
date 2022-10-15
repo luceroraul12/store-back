@@ -21,6 +21,9 @@ public class RecolectorDeProductosServicio {
     MelarSeleniumServicio melarSeleniumServicio;
 
     @Autowired
+    DonGasparService donGasparService;
+
+    @Autowired
     BuscadorServicio buscadorServicio;
 
     public Collection<Producto> obtenerTodosLosProductos(String busqueda) throws IOException {
@@ -29,6 +32,7 @@ public class RecolectorDeProductosServicio {
         conjuntoDeProductos.addAll(melarSeleniumServicio.getProductosRecolectados());
         conjuntoDeProductos.addAll(sudamerikServicio.getProductosRecolectados());
         conjuntoDeProductos.addAll(laGranjaDelCentroServicio.getProductosRecolectados());
+        conjuntoDeProductos.addAll(donGasparService.getProductosRecolectados());
 
 
         return buscadorServicio.filtrarProductos(conjuntoDeProductos, busqueda);

@@ -83,6 +83,7 @@ public abstract class ScrapperTablaAbstract<Entidad> {
         reiniciar();
         while (this.contadorPaginasVacias <= 10){
             Document document = generarDocument();
+            System.out.println(document);
             Elements productos = generarElementosProductos(document);
             if (productos.size() == 0){
                 contadorPaginasVacias++;
