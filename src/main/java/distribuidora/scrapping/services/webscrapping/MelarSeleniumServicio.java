@@ -1,4 +1,4 @@
-package distribuidora.scrapping.services;
+package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.entities.MelarEntidad;
 import distribuidora.scrapping.entities.Producto;
@@ -9,7 +9,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.edge.EdgeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

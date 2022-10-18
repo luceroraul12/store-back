@@ -1,4 +1,4 @@
-package distribuidora.scrapping.services;
+package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.entities.LaGranjaDelCentroEntidad;
 import distribuidora.scrapping.entities.Producto;

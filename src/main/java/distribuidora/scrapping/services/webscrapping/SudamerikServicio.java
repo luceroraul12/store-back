@@ -1,4 +1,4 @@
-package distribuidora.scrapping.services;
+package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.SudamerikEntidad;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 
 @Service
 public class SudamerikServicio extends ScrapperTablaAbstract<SudamerikEntidad>{

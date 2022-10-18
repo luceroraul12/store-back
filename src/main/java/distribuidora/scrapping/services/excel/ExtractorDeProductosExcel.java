@@ -1,5 +1,6 @@
-package distribuidora.scrapping.services;
+package distribuidora.scrapping.services.excel;
 
+import distribuidora.scrapping.enums.Distribuidora;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public abstract class ExtractorDeProductosExcel<Entidad> {
+
+     Distribuidora distribuidora;
 
 //    TODO: hay que ver como diferenciar los datos que llegan por medio de la distribuidora y llamar al servicio que corresponda para extraer los datos y luego ver como guardarlo segun distribuidoras
     public Collection<Entidad> obtenerProductos(MultipartFile[] excels) throws IOException {

@@ -1,4 +1,4 @@
-package distribuidora.scrapping.services;
+package distribuidora.scrapping.services.excel;
 
 import distribuidora.scrapping.entities.IndiasEntidad;
 import org.apache.poi.ss.usermodel.CellType;
@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 
 @Service
-public class IndiasServicio extends ExtractorDeProductosExcel<IndiasEntidad>{
+public class IndiasServicio extends ExtractorDeProductosExcel<IndiasEntidad> {
     @Override
     boolean esRowValido(Row row) {
         boolean resultado = false;
