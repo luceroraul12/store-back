@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -12,6 +13,7 @@ import java.util.Collection;
 
 public abstract class ExtractorDeProductosExcel<Entidad> {
 
+//    TODO: hay que ver como diferenciar los datos que llegan por medio de la distribuidora y llamar al servicio que corresponda para extraer los datos y luego ver como guardarlo segun distribuidoras
     public Collection<Entidad> obtenerProductos(MultipartFile[] excels) throws IOException {
         Collection<Entidad> productosFinales = new ArrayList<>();
         ArrayList<Sheet> sheets;
@@ -36,10 +38,28 @@ public abstract class ExtractorDeProductosExcel<Entidad> {
         Collection<Entidad> productosFinales = new ArrayList<>();
         sheet.forEach(
                 row -> {
+                    row.forEach(cell -> expandirValorDeCeldasFusionadas(sheet, cell));
+
                     productosFinales.addAll(trabajarConRowyObtenerProducto(row));
                 }
         );        
         return  productosFinales;
+    }
+
+
+    private void expandirValorDeCeldasFusionadas(Sheet sheet, Cell celda) {
+        sheet.getMergedRegions().forEach(
+                rango -> {
+                    Cell celdaUnica = sheet.getRow(rango.getFirstRow()).getCell(rango.getFirstColumn());
+                    if (rango.isInRange(celda)){
+                        try {
+                            celda.setCellValue(celdaUnica.getStringCellValue());
+                        } catch (Exception e) {
+                            celda.setCellValue(celdaUnica.getNumericCellValue());
+                        }
+                    }
+                }
+        );
     }
 
     private Collection<Entidad> trabajarConRowyObtenerProducto(Row row) {

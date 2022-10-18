@@ -13,12 +13,15 @@ public class ActualizacionDeDocumentoServicio {
     @Autowired
     IndiasServicio indiasServicio;
 
+    @Autowired
+    FacundoServicio facundoServicio;
+
     public void recibirDocumento(PeticionFrontEndDocumento documento) throws IOException {
         Distribuidora distribuidora = documento.getDistribuidora();
-        MultipartFile[] archivosOrigen = documento.getExcels();
 
         System.out.println(distribuidora);
-        indiasServicio.obtenerProductos(documento.getExcels()).forEach(System.out::println);
+//        indiasServicio.obtenerProductos(documento.getExcels()).forEach(System.out::println);
+        facundoServicio.obtenerProductos(documento.getExcels()).forEach(System.out::println);
     }
 
     private void leerExcels(MultipartFile[] archivosOrigen) {
