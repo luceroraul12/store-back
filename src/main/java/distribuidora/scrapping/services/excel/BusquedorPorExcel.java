@@ -1,6 +1,8 @@
 package distribuidora.scrapping.services.excel;
 
 import distribuidora.scrapping.entities.PeticionFrontEndDocumento;
+import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,8 +22,11 @@ import java.util.List;
  * @param <Entidad>
  * @see PeticionFrontEndDocumento
  */
-public abstract class BusquedorPorExcel<Entidad> extends BuscadorDeProductosEntidad<Entidad, PeticionFrontEndDocumento> {
+public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, PeticionFrontEndDocumento> {
 
+    public BusquedorPorExcel() {
+        tipoDistribuidora = TipoDistribuidora.EXCEL;
+    }
 
     @Override
     protected List<Entidad> trabajarDocumentoyObtenerSusProductosEspecificos(PeticionFrontEndDocumento elementoAuxiliar) {

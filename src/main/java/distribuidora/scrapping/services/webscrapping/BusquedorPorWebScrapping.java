@@ -1,8 +1,10 @@
 package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
 import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
 import lombok.Getter;
@@ -21,7 +23,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public abstract class BusquedorPorWebScrapping<Entidad> extends BuscadorDeProductosEntidad<Entidad, Boolean> {
+public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, Boolean> {
 
     @Autowired
     private UnionRepository<Entidad> unionRepository;
@@ -37,6 +39,10 @@ public abstract class BusquedorPorWebScrapping<Entidad> extends BuscadorDeProduc
     private List<Entidad> productosRecolectados;
     //deben ser en Dias
     private int intervaloDeRenovacionDeDatos = 1;
+
+    public BusquedorPorWebScrapping() {
+        tipoDistribuidora = TipoDistribuidora.WEB_SCRAPPING;
+    }
 
     protected abstract void trabajarProductos(Elements productos);
 

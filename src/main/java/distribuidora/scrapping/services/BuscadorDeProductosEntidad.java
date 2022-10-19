@@ -1,8 +1,10 @@
 package distribuidora.scrapping.services;
 
 
+import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
 import distribuidora.scrapping.services.excel.BusquedorPorExcel;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
@@ -19,12 +21,15 @@ import java.util.List;
  * @see UnionEntidad
  * @see UnionRepository
  */
-public abstract class BuscadorDeProductosEntidad<Entidad, Auxiliar>  extends RelacionadorConProducto<Entidad> {
+public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecifico, Auxiliar>  extends RelacionadorConProducto<Entidad> {
 
     /**
      * Cada servicio final tiene que tener la enumeracion de la distribuidora a la que pertenece.
      */
     protected Distribuidora distribuidora;
+    protected TipoDistribuidora tipoDistribuidora;
+    protected LocalDate fechaUltimaActualizacion;
+
 
     @Autowired
     UnionRepository<Entidad> unionRepository;
@@ -59,6 +64,7 @@ public abstract class BuscadorDeProductosEntidad<Entidad, Auxiliar>  extends Rel
                 productos
         );
         unionEntidad.setDistribuidora(distribuidora);
+        unionEntidad.setTipoDistribuidora(tipoDistribuidora);
         unionEntidad.setFechaScrap(LocalDate.now());
         unionRepository.save(unionEntidad);
     }

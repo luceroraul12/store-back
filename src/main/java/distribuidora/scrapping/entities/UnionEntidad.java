@@ -2,6 +2,7 @@ package distribuidora.scrapping.entities;
 
 import distribuidora.scrapping.entities.productos.especificos.*;
 import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.enums.TipoDistribuidora;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Data
 @Document(collection = "union")
-public class UnionEntidad<Entidad> {
+public class UnionEntidad<Entidad extends ProductoEspecifico> {
     @Id
     private String id;
     /**
@@ -29,4 +30,5 @@ public class UnionEntidad<Entidad> {
     private List<Entidad> datos;
     private LocalDate fechaScrap;
     private Distribuidora distribuidora;
+    private TipoDistribuidora tipoDistribuidora;
 }

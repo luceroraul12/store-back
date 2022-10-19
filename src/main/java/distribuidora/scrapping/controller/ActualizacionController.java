@@ -1,7 +1,6 @@
 package distribuidora.scrapping.controller;
 
-import distribuidora.scrapping.entities.PeticionFrontEndDocumento;
-import distribuidora.scrapping.entities.UnionEntidad;
+import distribuidora.scrapping.entities.*;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
 import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
@@ -28,7 +27,7 @@ public class ActualizacionController {
     ActualizacionPorDocumentoServicio actualizacionDeDocumentoServicio;
 
     @Autowired
-    UnionRepository<?> unionRepository;
+    UnionRepository<ProductoEspecifico> unionRepository;
 
 
     /**
@@ -58,24 +57,21 @@ public class ActualizacionController {
      * map.webScrapping es un map de fecha Realizado y Distribuidora
      */
     @GetMapping
-    public ResponseEntity<Map<String, List<Distribuidora>>> obtenerTipoyEstadoDeDistribuidora(){
+    public ResponseEntity<List<DatosDistribuidora>> obtenerTipoyEstadoDeDistribuidora(){
 //        TODO: esto esta hecho por momentos, hay que sacar todo del controlador
-        Map<String, List<Distribuidora>> distribuidorasDisponibles = new HashMap<>();
-        distribuidorasDisponibles.put("excel",
-                Arrays.asList(
-                        Distribuidora.FACUNDO,
-                        Distribuidora.INDIAS)
-                );
-        distribuidorasDisponibles.put("webScrapping",
-                Arrays.asList(
-                        Distribuidora.DON_GASPAR,
-                        Distribuidora.LA_GRANJA_DEL_CENTRO,
-                        Distribuidora.MELAR,
-                        Distribuidora.SUDAMERIK)
-                );
+        List<DatosDistribuidora> datosDistribuidoras = new ArrayList<>();
+        this.unionRepository.findAll().forEach(union -> {
+            datosDistribuidoras.add(
+                    DatosDistribuidora.builder()
+                            .distribuidora(union.getDistribuidora())
+                            .tipo(union.getTipoDistribuidora())
+                            .fechaActualizacion(union.getFechaScrap())
+                            .build()
+            );
+        });
 
 
-
-        return new ResponseEntity<>(distribuidorasDisponibles,HttpStatus.OK);
+        return new ResponseEntity<>(datosDistribuidoras,HttpStatus.OK);
     }
+
 }

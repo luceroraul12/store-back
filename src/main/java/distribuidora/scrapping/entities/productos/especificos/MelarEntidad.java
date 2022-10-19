@@ -1,5 +1,6 @@
 package distribuidora.scrapping.entities.productos.especificos;
 
+import distribuidora.scrapping.entities.ProductoEspecifico;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +10,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-public class MelarEntidad {
+public class MelarEntidad extends ProductoEspecifico {
     private String codigo;
     private String producto;
     private String fraccion;

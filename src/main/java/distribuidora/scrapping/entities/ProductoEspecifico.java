@@ -6,4 +6,5 @@ package distribuidora.scrapping.entities;
  * Cada clase especifica a cada distribuidora debe heredar de esta clase.
  */
 public class ProductoEspecifico {
+
 }
