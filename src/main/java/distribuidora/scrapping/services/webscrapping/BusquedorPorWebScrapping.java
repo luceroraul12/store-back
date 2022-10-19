@@ -1,135 +1,140 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.entities.UnionEntidad;
-import distribuidora.scrapping.enums.Distribuidora;
-import distribuidora.scrapping.enums.TipoDistribuidora;
-import distribuidora.scrapping.repositories.UnionRepository;
 import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
-import lombok.Getter;
-import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-@Getter
-@Setter
+/**
+ * Clase base para los servicios basados en Web Scrapping.
+ * En caso de que alguna pagina no carge el template desde el programa pero si en el navegador, se debera utilizar un WebDriver que simule el uso del navegador.
+ * @param <Entidad>
+ */
 public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, Boolean> {
+    /**
+     * Obligatorio para poder comenzar a utilizar el servicio
+     */
+    protected String urlBuscador;
+    /**
+     * Variable booleana utilizada para indicar si los productos estan distribuidos por paginadores.
+     * En caso de true: se utilizara un metodo especifico para la generacion de las nuevas URL.
+     * Valor por defecto: false.
+     * @see BusquedorPorWebScrapping#generarNuevaURL(int)
+     */
+    protected Boolean esBuscadorConPaginador = false;
+
+    /**
+     * Variable booleana utilizada para indicar si es necesario contar con un Webdriver para generar los templates de la pagina Web.
+     */
+    protected Boolean esNecesarioUsarWebDriver = false;
 
     @Autowired
-    private UnionRepository<Entidad> unionRepository;
-
-    private Distribuidora distribuidora;
-
-    private String clasesTabla;
-    private String clasesNombreProducto;
-    private String clasesPrecio;
-    private String urlBuscador;
-    private Integer contador;
-    private Integer contadorPaginasVacias;
-    private List<Entidad> productosRecolectados;
-    //deben ser en Dias
-    private int intervaloDeRenovacionDeDatos = 1;
-
-    public BusquedorPorWebScrapping() {
-        tipoDistribuidora = TipoDistribuidora.WEB_SCRAPPING;
-    }
-
-    protected abstract void trabajarProductos(Elements productos);
-
-    public String generarSiguienteUrl(){
-        return this.urlBuscador + this.contador;
-    }
+    WebDriver driver;
 
     @Override
     protected List<Entidad> trabajarDocumentoyObtenerSusProductosEspecificos(Boolean elementoAuxiliar) {
-        return null;
-    }
-
-    /*
-        primero se debe revisar la base de datos, si la fecha no es valida, se tiene que volver a scrapear la data. en caso contrario, se devuelvo lo almacenado
-         */
-    public Collection<Producto> getProductosRecolectados() throws IOException {
-        UnionEntidad<Entidad> dataDB = unionRepository.findByDistribuidora(this.distribuidora);
-        Collection<Producto> productosConvertidos = new ArrayList<>();
-        
-        if(esValidoRecolectarDeNuevo(dataDB)){
-            System.out.println("recargo info");
-            dataDB = recolectarProductos();
-        } else {
-            System.out.println("Es muy temprano, envio la info existente");
+        List<Entidad> productostotales = new ArrayList<>();
+        try {
+            generarDocumentos().forEach(
+                    document -> {
+                        productostotales.addAll(
+                                obtenerProductosPorDocument(document)
+                        );
+                    }
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        productosConvertidos = convertirProductos(dataDB);
-
-        return productosConvertidos;
+        return productostotales;
     }
 
-    protected abstract Collection<Producto> convertirProductos(UnionEntidad<Entidad> dataDB);
+    /**
+     * Encargado de crear todas los documentos asociados a la URL de la pagina.
+     * Tener en cuenta si usa paginacion.
+     * @return lista de documentos asociados a la pagina.
+     * @throws IOException
+     * @see BusquedorPorWebScrapping#generarNuevaURL(int)
+     */
+    private List<Document> generarDocumentos() throws IOException {
+        List<Document> documentos = new ArrayList<>();
+        int contador = 1;
 
-    private boolean esValidoRecolectarDeNuevo(UnionEntidad<Entidad> dataDB) {
-        boolean resultado = false;
-        try{
-            long diferenciaDeFecha = ChronoUnit
-                    .DAYS
-                    .between(dataDB.getFechaScrap(),LocalDate.now());
-            boolean noEsAntesDeTiempo = diferenciaDeFecha >= intervaloDeRenovacionDeDatos;
-            resultado = noEsAntesDeTiempo;
-        } catch (Exception e){
-            resultado = true;
-        }
-        return resultado;
-    }
-    private UnionEntidad<Entidad> recolectarProductos() throws IOException {
-        reiniciar();
-        while (this.contadorPaginasVacias <= 10){
-            Document document = generarDocument();
-            System.out.println(document);
-            Elements productos = generarElementosProductos(document);
-            if (productos.size() == 0){
-                contadorPaginasVacias++;
+        if (esBuscadorConPaginador){
+            Document doc = Jsoup.connect(generarNuevaURL(contador)).get();
+            while(esDocumentValido(doc)){
+                documentos.add(
+                        doc
+                );
+                contador++;
+                doc = Jsoup.connect(generarNuevaURL(contador)).get();
             }
-            contador++;
-            trabajarProductos(productos);
+        } else {
+            documentos.add(
+                    Jsoup.connect(urlBuscador).get()
+            );
         }
-        unionRepository.deleteUnionEntidadByDistribuidora(this.distribuidora);
-
-        UnionEntidad<Entidad> union = new UnionEntidad();
-        union.setDatos(this.productosRecolectados);
-        union.setFechaScrap(LocalDate.now());
-        union.setDistribuidora(this.distribuidora);
-
-        unionRepository.save(union);
-
-        return union;
+        return documentos;
     }
 
-    protected Elements generarElementosProductos(Document doc){
-        return doc.getElementsByClass(clasesTabla);
+    /**
+     * Encargado de generar un documento.
+     * Tener en cuenta la variable esNecesarioWebDriver para esta generacion, debido a que el ordenador debera tener instalado los driver scomo el navegador seleccionado.
+     * @return documento
+     */
+    private Document generarDocumento(String url) {
+        Document documentoGenerado;
+        if (esNecesarioUsarWebDriver){
+            driver.get(url);
+            String template = driver.getPageSource();
+            documentoGenerado = Jsoup.parse(template);
+        } else {
+            try {
+                documentoGenerado = Jsoup.connect(url).get();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return documentoGenerado;
     }
 
-    protected Document generarDocument() throws IOException {
-        return Jsoup.connect(generarSiguienteUrl()).get();
+    /**
+     * Genera una nueva URL.
+     * Toma la URL original y una variable contador para poder generar la nueva URL.
+     * @param contador externo, va en incremento 1
+     * @return nueva URL
+     */
+    protected String generarNuevaURL(int contador) {
+        return urlBuscador+'/'+contador ;
     }
 
-    private void reiniciar(){
-        this.contador = 0;
-        this.contadorPaginasVacias = 0;
-        this.productosRecolectados = new ArrayList<>();
-    }
+    /**
+     * Encargado de validar las nuevas paginas creadas.
+     * Es un metodo que deben aplicar las clases Especificas, debido a que cada pagina puede ser diferente del resto.
+     * Solo es utilizado cuando se trabaja con paginador
+     * @param document template de la pagina Web
+     * @return true en caso de que sea valido
+     * @see BusquedorPorWebScrapping#esBuscadorConPaginador
+     * @see BusquedorPorWebScrapping#generarNuevaURL(int contador)
+     */
+    protected abstract boolean esDocumentValido(Document document);
 
-    protected void agregarProducto(Entidad producto){
-        this.productosRecolectados.add(producto);
-    }
+    /**
+     * Encargado de extraer productos Especificos de cada Document.
+     * Extrae todos los datos posibles del mismo para poder crear productos especificos.
+     * @param documento uno de los tanttos document que puede traer una pagina Web.
+     * @return listado de productos especificos.
+     */
+    protected List<Entidad> obtenerProductosPorDocument(Document documento){
+        List<Entidad> productosPorDocumento = new ArrayList<>();
 
+
+        return productosPorDocumento;
+    }
 
 }

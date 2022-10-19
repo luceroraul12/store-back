@@ -23,30 +23,25 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
     @Autowired
     WebDriver driver;
 
-    @Autowired
-    MelarUtil melarUtil;
-
     public MelarSeleniumWebScrappingServicio() {
-        setUrlBuscador("https://listadepreciosmelar.com.ar");
-        setDistribuidora(Distribuidora.MELAR);
+        urlBuscador = "https://listadepreciosmelar.com.ar";
+        distribuidora = Distribuidora.MELAR;
+        esNecesarioUsarWebDriver = true;
     }
 
-    @Override
-    protected Document generarDocument() throws IOException {
-        driver.get(getUrlBuscador());
+    protected Document generarDocumentos() throws IOException {
+        driver.get(urlBuscador);
         String template = driver.getPageSource();
 
         return Jsoup.parse(template);
     }
 
-    @Override
     protected Elements generarElementosProductos(Document doc) {
         return doc.getElementsByTag("table")
                 .select("table > tbody > tr:not(.group)");
     }
 
-    @Override
-    protected void trabajarProductos(Elements productos) {
+    protected void trabajarConElementsyObtenerProductosEspecificos(Elements productos) {
 
         List<String> renglon = new ArrayList<>();
 
@@ -78,26 +73,19 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
 
 
 
-            agregarProducto(MelarEntidad.builder()
-                    .codigo(renglon.get(0))
-                    .producto(renglon.get(1))
-                    .fraccion(renglon.get(2))
-                    .granel(renglon.get(3))
-                    .origen(renglon.get(4))
-                    .medida(renglon.get(5))
-                    .precioFraccionado(precioFraccionado)
-                    .precioGranel(precioGranel)
-                    .build());
+//            agregarProducto(MelarEntidad.builder()
+//                    .codigo(renglon.get(0))
+//                    .producto(renglon.get(1))
+//                    .fraccion(renglon.get(2))
+//                    .granel(renglon.get(3))
+//                    .origen(renglon.get(4))
+//                    .medida(renglon.get(5))
+//                    .precioFraccionado(precioFraccionado)
+//                    .precioGranel(precioGranel)
+//                    .build());
         });
-
-        setContadorPaginasVacias(100);
-
     }
 
-    @Override
-    protected Collection<Producto> convertirProductos(UnionEntidad<MelarEntidad> dataDB) {
-        return melarUtil.arregloToProducto(dataDB.getDatos());
-    }
 
     @Override
     protected List<Producto> mapearEntidadaProducto(MelarEntidad productoEntidad) {
