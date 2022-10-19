@@ -12,33 +12,48 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Servicio encargado de recolectar todos los productos y realizar busqueda.
+ * La finalidad es centralizar todos los servicios finales en un unico lugar y luego realizar la busqueda por medio de un servicio auxiliar
+ * @see BuscadorPorMedioDeTerminoServicio
+ */
 @Service
 public class RecolectorDeProductosServicio {
 
-    @Autowired
-    SudamerikWebScrappingServicio sudamerikWebScrappingServicio;
+//    @Autowired
+//    SudamerikWebScrappingServicio sudamerikWebScrappingServicio;
+//    @Autowired
+//    LaGranjaDelCentroWebScrappingServicio laGranjaDelCentroWebScrappingServicio;
+//    @Autowired
+//    MelarSeleniumWebScrappingServicio melarSeleniumWebScrappingServicio;
+//    @Autowired
+//    DonGasparWebScrappingServicio donGasparWebScrappingServicio;
 
     @Autowired
-    LaGranjaDelCentroWebScrappingServicio laGranjaDelCentroWebScrappingServicio;
+    ProductoServicio productoServicio;
 
     @Autowired
-    MelarSeleniumWebScrappingServicio melarSeleniumWebScrappingServicio;
+    BuscadorPorMedioDeTerminoServicio buscadorPorMedioDeTerminoServicio;
 
-    @Autowired
-    DonGasparWebScrappingServicio donGasparWebScrappingServicio;
-
-    @Autowired
-    BuscadorServicio buscadorServicio;
-
+    /**
+     * Encargado de buscar productos que contengan el termino de busqueda.
+     * Llama a todos los servicios finales, obtiene todos los productos y luego el servicio auxiliar hace el filtrado.
+     * @param busqueda termino de busqueda
+     * @return
+     * @throws IOException
+     */
     public Collection<Producto> obtenerTodosLosProductos(String busqueda) throws IOException {
-        Collection<Producto> conjuntoDeProductos = new ArrayList<>();
+//        Collection<Producto> conjuntoDeProductos = new ArrayList<>();
 
-        conjuntoDeProductos.addAll(melarSeleniumWebScrappingServicio.getProductosRecolectados());
-        conjuntoDeProductos.addAll(sudamerikWebScrappingServicio.getProductosRecolectados());
-        conjuntoDeProductos.addAll(laGranjaDelCentroWebScrappingServicio.getProductosRecolectados());
-        conjuntoDeProductos.addAll(donGasparWebScrappingServicio.getProductosRecolectados());
+//        conjuntoDeProductos.addAll(melarSeleniumWebScrappingServicio.getProductosRecolectados());
+//        conjuntoDeProductos.addAll(sudamerikWebScrappingServicio.getProductosRecolectados());
+//        conjuntoDeProductos.addAll(laGranjaDelCentroWebScrappingServicio.getProductosRecolectados());
+//        conjuntoDeProductos.addAll(donGasparWebScrappingServicio.getProductosRecolectados());
 
 
-        return buscadorServicio.filtrarProductos(conjuntoDeProductos, busqueda);
+        return buscadorPorMedioDeTerminoServicio.filtrarProductos(
+                this.productoServicio.obtenerTodosLosProductosAlmacenados(),
+                busqueda
+        );
     }
 }

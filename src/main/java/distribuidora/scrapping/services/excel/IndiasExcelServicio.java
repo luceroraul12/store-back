@@ -7,6 +7,9 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
     public IndiasExcelServicio() {
@@ -42,7 +45,15 @@ public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
     }
 
     @Override
-    public Producto mapearEntidadaProducto(IndiasEntidad productoEntidad) {
-        return null;
+    public List<Producto> mapearEntidadaProducto(IndiasEntidad productoEntidad) {
+        String descripcion = String.format(
+                "%s",
+                productoEntidad.getDescripcion()
+        );
+        return Collections.singletonList(Producto.builder()
+                .descripcion(descripcion)
+                .precioPorCantidadEspecifica(productoEntidad.getPrecio())
+                .distribuidora(distribuidora)
+                .build());
     }
 }

@@ -12,14 +12,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Clase padre de todos los tipos de busqueda.
- * Contiene metodos sobre la base de datos y el abstract para buscar.
+ * Clase padre de todos los servicios de tipos de busqueda.
+ * Contiene metodos sobre la base de datos y el abstract para una entidadEspecifica.
  * @param <Entidad> necesario para saber el tipo de distribuidora
  * @param <Auxiliar> clase con los datos necesarios para poder comenzar busqueda
  * @see UnionEntidad
  * @see UnionRepository
  */
-public abstract class BuscadorDeProductos<Entidad, Auxiliar>  extends MapeadorDeProducto<Entidad> {
+public abstract class BuscadorDeProductosEntidad<Entidad, Auxiliar>  extends RelacionadorConProducto<Entidad> {
 
     /**
      * Cada servicio final tiene que tener la enumeracion de la distribuidora a la que pertenece.
@@ -37,13 +37,13 @@ public abstract class BuscadorDeProductos<Entidad, Auxiliar>  extends MapeadorDe
      * @see BusquedorPorExcel
      * @see BusquedorPorWebScrapping
      */
-    protected abstract List<Entidad> trabajarDocumentoyObtenerSusProductos(Auxiliar elementoAuxiliar);
+    protected abstract List<Entidad> trabajarDocumentoyObtenerSusProductosEspecificos(Auxiliar elementoAuxiliar);
 
 
     /**
      * Obtiene todos los productos almacenados en la base de datos en funcion a la distribuidora
      */
-    public UnionEntidad<Entidad> obtenerProductos(){
+    public UnionEntidad<Entidad> obtenerProductosEspecificos(){
         return unionRepository.findByDistribuidora(distribuidora);
     };
 
@@ -53,7 +53,7 @@ public abstract class BuscadorDeProductos<Entidad, Auxiliar>  extends MapeadorDe
      * @param productos Productos en su entidad correspondiente
      * @see UnionEntidad
      */
-    protected void almacenarProductosEnBaseDeDatos(List<Entidad> productos) {
+    protected void almacenarProductosEspecificos(List<Entidad> productos) {
         UnionEntidad<Entidad> unionEntidad = new UnionEntidad<>();
         unionEntidad.setDatos(
                 productos
@@ -64,12 +64,19 @@ public abstract class BuscadorDeProductos<Entidad, Auxiliar>  extends MapeadorDe
     }
 
     /**
-     * Elimina los datos almacenados de cierta distribuidora y vuelve a guardar con datos que deben ser nuevos
-     * @param productos
-     * @see BuscadorDeProductos#almacenarProductosEnBaseDeDatos(List)
+     * Elimina los datos almacenados de cierta distribuidora y vuelve a guardar con datos nuevos.
+     * Esto se realiza en la coleccion Entidad Especifica como en la de Productos
+     * @param productos de ciertan entidad
+     * @see BuscadorDeProductosEntidad#almacenarProductosEspecificos(List)
+     * @see UnionEntidad
      */
-    public void actualizarProductosEnBaseDeDatos(List<Entidad> productos){
+    public void actualizarProductosEnTodasLasColecciones(List<Entidad> productos){
         unionRepository.deleteUnionEntidadByDistribuidora(distribuidora);
-        almacenarProductosEnBaseDeDatos(productos);
+        almacenarProductosEspecificos(productos);
+
+        actualizarProductosFinalesPorDistribuidora(
+                convertirTodosAProducto(productos),
+                distribuidora
+        );
     }
 }

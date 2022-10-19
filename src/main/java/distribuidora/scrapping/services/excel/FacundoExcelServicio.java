@@ -8,6 +8,9 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
 
@@ -59,7 +62,36 @@ public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
     }
 
     @Override
-    public Producto mapearEntidadaProducto(FacundoEntidad productoEntidad) {
-        return null;
+    public List<Producto> mapearEntidadaProducto(FacundoEntidad productoEntidad) {
+        List<Producto> productosGenerados = new ArrayList<>();
+        String descripcionMenor = String.format(
+                "%s %s X %s X menor",
+                productoEntidad.getCategoria(),
+                productoEntidad.getSubcategoria(),
+                productoEntidad.getCantidad()
+        );
+        String descripcionMayor = String.format(
+                "%s %s X %s X mayor",
+                productoEntidad.getCategoria(),
+                productoEntidad.getSubcategoria(),
+                productoEntidad.getCantidad()
+        );
+
+        productosGenerados.add(
+                Producto.builder()
+                        .descripcion(descripcionMayor)
+                        .precioPorCantidadEspecifica(productoEntidad.getPrecioMayor())
+                        .distribuidora(distribuidora)
+                        .build()
+        );
+        productosGenerados.add(
+                Producto.builder()
+                        .descripcion(descripcionMenor)
+                        .precioPorCantidadEspecifica(productoEntidad.getPrecioMenor())
+                        .distribuidora(distribuidora)
+                        .build()
+        );
+
+        return productosGenerados;
     }
 }

@@ -29,13 +29,13 @@ public class ActualizacionPorDocumentoServicio {
 
         switch (documento.getDistribuidora()){
             case FACUNDO: {
-                facundoExcelServicio.actualizarProductosEnBaseDeDatos(
+                facundoExcelServicio.actualizarProductosEnTodasLasColecciones(
                         facundoExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels())
                 );
                 return facundoExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels());
             }
             case INDIAS: {
-                indiasExcelServicio.actualizarProductosEnBaseDeDatos(
+                indiasExcelServicio.actualizarProductosEnTodasLasColecciones(
                         indiasExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels())
                 );
                 return indiasExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels());
