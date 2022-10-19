@@ -9,17 +9,31 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 
 @Configuration
+/**
+ * Configuracion del Web driver de Selenium.
+ */
 public class WebDriverConfig {
 
     @PostConstruct
+    /**
+     * Propongo una carpeta donde deben estar almacenado los drivers
+     */
     void postConstrcut(){
         System.setProperty("webdriver.edge.driver","C:\\selenium\\msedgedriver.exe");
         System.setProperty("webdriver.chrome.driver","C:\\selenium\\chromedriver.exe");
-
     }
 
     @Bean
+
     public WebDriver driver(){
+        return getDriver();
+    }
+
+    /**
+     * Por polimorfismo devuelve un WebDriver.
+     * Puede ser de Edge o Chrome segun el navegador que tenga instalado en el computador
+     */
+    private WebDriver getDriver(){
         WebDriver driver;
         try{
             System.out.println("usando edge driver");
