@@ -4,11 +4,11 @@ import distribuidora.scrapping.enums.Distribuidora;
 import lombok.Builder;
 import lombok.Data;
 
-@Data
-@Builder
 /**
  * Es la entidad con la que llegan al FrontEnd
  */
+@Data
+@Builder
 public class Producto {
     private String descripcion;
     private Double precioPorCantidadEspecifica;

@@ -4,7 +4,6 @@ import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
-import distribuidora.scrapping.util.MelarUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
@@ -21,7 +20,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public abstract class ScrapperTablaAbstract<Entidad> {
+public abstract class BusquedorPorWebScrapping<Entidad> {
 
     @Autowired
     private UnionRepository<Entidad> unionRepository;

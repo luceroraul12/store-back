@@ -8,8 +8,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 
 @Service
-public class IndiasServicio extends ExtractorDeProductosExcel<IndiasEntidad> {
-    public IndiasServicio() {
+public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
+    public IndiasExcelServicio() {
         distribuidora = Distribuidora.INDIAS;
     }
 

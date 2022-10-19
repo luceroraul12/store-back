@@ -9,9 +9,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FacundoServicio extends ExtractorDeProductosExcel<FacundoEntidad> {
+public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
 
-    public FacundoServicio() {
+    public FacundoExcelServicio() {
         distribuidora = Distribuidora.FACUNDO;
     }
 

@@ -1,10 +1,10 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.services.webscrapping.DonGasparService;
-import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroServicio;
-import distribuidora.scrapping.services.webscrapping.MelarSeleniumServicio;
-import distribuidora.scrapping.services.webscrapping.SudamerikServicio;
+import distribuidora.scrapping.services.webscrapping.DonGasparWebScrappingServicio;
+import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroWebScrappingServicio;
+import distribuidora.scrapping.services.webscrapping.MelarSeleniumWebScrappingServicio;
+import distribuidora.scrapping.services.webscrapping.SudamerikWebScrappingServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +16,16 @@ import java.util.Collection;
 public class RecolectorDeProductosServicio {
 
     @Autowired
-    SudamerikServicio sudamerikServicio;
+    SudamerikWebScrappingServicio sudamerikWebScrappingServicio;
 
     @Autowired
-    LaGranjaDelCentroServicio laGranjaDelCentroServicio;
+    LaGranjaDelCentroWebScrappingServicio laGranjaDelCentroWebScrappingServicio;
 
     @Autowired
-    MelarSeleniumServicio melarSeleniumServicio;
+    MelarSeleniumWebScrappingServicio melarSeleniumWebScrappingServicio;
 
     @Autowired
-    DonGasparService donGasparService;
+    DonGasparWebScrappingServicio donGasparWebScrappingServicio;
 
     @Autowired
     BuscadorServicio buscadorServicio;
@@ -33,10 +33,10 @@ public class RecolectorDeProductosServicio {
     public Collection<Producto> obtenerTodosLosProductos(String busqueda) throws IOException {
         Collection<Producto> conjuntoDeProductos = new ArrayList<>();
 
-        conjuntoDeProductos.addAll(melarSeleniumServicio.getProductosRecolectados());
-        conjuntoDeProductos.addAll(sudamerikServicio.getProductosRecolectados());
-        conjuntoDeProductos.addAll(laGranjaDelCentroServicio.getProductosRecolectados());
-        conjuntoDeProductos.addAll(donGasparService.getProductosRecolectados());
+        conjuntoDeProductos.addAll(melarSeleniumWebScrappingServicio.getProductosRecolectados());
+        conjuntoDeProductos.addAll(sudamerikWebScrappingServicio.getProductosRecolectados());
+        conjuntoDeProductos.addAll(laGranjaDelCentroWebScrappingServicio.getProductosRecolectados());
+        conjuntoDeProductos.addAll(donGasparWebScrappingServicio.getProductosRecolectados());
 
 
         return buscadorServicio.filtrarProductos(conjuntoDeProductos, busqueda);

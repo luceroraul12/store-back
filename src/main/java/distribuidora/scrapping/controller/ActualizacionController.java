@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.*;
 
-@RestController
-@RequestMapping(value = "actualizar")
 /**
  * Tiene la finalidad de realizar la actualizacion de datos por distribuidora como tambien el estado de cada una.
  * @see ActualizacionPorDocumentoServicio
  */
+@RestController
+@RequestMapping(value = "actualizar")
 public class ActualizacionController {
 
     @Autowired

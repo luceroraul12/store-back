@@ -8,11 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
-@Document(collection = "union")
 /**
  * Es el tipo de dato que se almacena en la base de datos.
  */
+@Data
+@Document(collection = "union")
 public class UnionEntidad<Entidad> {
     @Id
     private String id;

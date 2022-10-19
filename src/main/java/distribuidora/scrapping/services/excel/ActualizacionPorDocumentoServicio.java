@@ -11,9 +11,9 @@ import java.util.Collection;
 @Service
 public class ActualizacionPorDocumentoServicio {
     @Autowired
-    private IndiasServicio indiasServicio;
+    private IndiasExcelServicio indiasExcelServicio;
     @Autowired
-    private FacundoServicio facundoServicio;
+    private FacundoExcelServicio facundoExcelServicio;
 
     public void recibirDocumento(PeticionFrontEndDocumento documento) throws IOException {
         Distribuidora distribuidora = documento.getDistribuidora();
@@ -29,16 +29,16 @@ public class ActualizacionPorDocumentoServicio {
 
         switch (documento.getDistribuidora()){
             case FACUNDO: {
-                facundoServicio.actualizarProductosEnBaseDeDatos(
-                        facundoServicio.obtenerProductosApartirDeExcels(documento.getExcels())
+                facundoExcelServicio.actualizarProductosEnBaseDeDatos(
+                        facundoExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels())
                 );
-                return facundoServicio.obtenerProductosApartirDeExcels(documento.getExcels());
+                return facundoExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels());
             }
             case INDIAS: {
-                indiasServicio.actualizarProductosEnBaseDeDatos(
-                        indiasServicio.obtenerProductosApartirDeExcels(documento.getExcels())
+                indiasExcelServicio.actualizarProductosEnBaseDeDatos(
+                        indiasExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels())
                 );
-                return indiasServicio.obtenerProductosApartirDeExcels(documento.getExcels());
+                return indiasExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels());
             }
         }
         return null;

@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-public class MelarSeleniumServicio extends ScrapperTablaAbstract<MelarEntidad> {
+public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<MelarEntidad> {
 
     @Autowired
     WebDriver driver;
@@ -26,7 +26,7 @@ public class MelarSeleniumServicio extends ScrapperTablaAbstract<MelarEntidad> {
     @Autowired
     MelarUtil melarUtil;
 
-    public MelarSeleniumServicio() {
+    public MelarSeleniumWebScrappingServicio() {
         setUrlBuscador("https://listadepreciosmelar.com.ar");
         setDistribuidora(Distribuidora.MELAR);
     }

@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
-@Configuration
 /**
  * Configuracion del Web driver de Selenium.
  */
+@Configuration
 public class WebDriverConfig {
 
     @PostConstruct

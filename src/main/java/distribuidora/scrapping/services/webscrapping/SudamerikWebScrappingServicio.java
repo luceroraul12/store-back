@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
-public class SudamerikServicio extends ScrapperTablaAbstract<SudamerikEntidad>{
+public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<SudamerikEntidad> {
 
     @Autowired
     SudamerikUtil sudamerikUtil;
     private final String claseConjunto = "number";
     private final String claseTipo = "unidad-tipo";
 
-    public SudamerikServicio() {
+    public SudamerikWebScrappingServicio() {
         setUrlBuscador("https://www.sudamerikargentina.com.ar/productos/pagina/");
         setClasesPrecio("precio");
         setClasesNombreProducto("nombre");

@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
-public class LaGranjaDelCentroServicio extends ScrapperTablaAbstract<LaGranjaDelCentroEntidad> {
+public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapping<LaGranjaDelCentroEntidad> {
 
     @Autowired
     LaGranjaDelCentroUtil laGranjaDelCentroUtil;
 
-    public LaGranjaDelCentroServicio() {
+    public LaGranjaDelCentroWebScrappingServicio() {
         setUrlBuscador("https://lagranjadelcentro.com.ar/productos.php?pagina=");
         setClasesTabla("box-content-1");
         setClasesNombreProducto("h3-content-1");

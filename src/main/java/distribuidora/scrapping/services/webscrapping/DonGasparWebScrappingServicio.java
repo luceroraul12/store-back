@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 @Service
-public class DonGasparService extends ScrapperTablaAbstract<DonGasparEntidad>{
+public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonGasparEntidad> {
 
 
     @Autowired
@@ -25,7 +25,7 @@ public class DonGasparService extends ScrapperTablaAbstract<DonGasparEntidad>{
     @Autowired
     WebDriver driver;
 
-    public DonGasparService() {
+    public DonGasparWebScrappingServicio() {
         setUrlBuscador("https://pidorapido.com/dongasparsj");
         setClasesTabla("container");
         setDistribuidora(Distribuidora.DON_GASPAR);

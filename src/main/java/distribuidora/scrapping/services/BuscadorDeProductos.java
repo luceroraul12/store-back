@@ -1,37 +1,29 @@
 package distribuidora.scrapping.services;
 
 
-import distribuidora.scrapping.entities.DonGasparEntidad;
-import distribuidora.scrapping.entities.FacundoEntidad;
-import distribuidora.scrapping.entities.IndiasEntidad;
-import distribuidora.scrapping.entities.LaGranjaDelCentroEntidad;
-import distribuidora.scrapping.entities.MelarEntidad;
-import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.SudamerikEntidad;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
+import distribuidora.scrapping.services.excel.BusquedorPorExcel;
+import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @param <Entidad>
- * @param <Auxiliar>
- * @see DonGasparEntidad
- * @see FacundoEntidad
- * @see IndiasEntidad
- * @see LaGranjaDelCentroEntidad
- * @see MelarEntidad
- * @see SudamerikEntidad
- *
+ * Clase padre de todos los tipos de busqueda.
+ * Contiene metodos sobre la base de datos y el abstract para buscar.
+ * @param <Entidad> necesario para saber el tipo de distribuidora
+ * @param <Auxiliar> clase con los datos necesarios para poder comenzar busqueda
+ * @see UnionEntidad
  * @see UnionRepository
  */
-public abstract class BusquedaDeProductoPorDistribuidora<Entidad, Auxiliar>  implements  RecoleccionDeInformacionInterface<Entidad>{
+public abstract class BuscadorDeProductos<Entidad, Auxiliar>  extends MapeadorDeProducto<Entidad> {
 
+    /**
+     * Cada servicio final tiene que tener la enumeracion de la distribuidora a la que pertenece.
+     */
     protected Distribuidora distribuidora;
 
     @Autowired
@@ -42,6 +34,8 @@ public abstract class BusquedaDeProductoPorDistribuidora<Entidad, Auxiliar>  imp
      * Metodo por el cual se inicia el proceso de busqueda de datos en el proceso especifico
      * @param elementoAuxiliar Clase del elemento que tiene los elementos especificos necesarios
      * @return lista de productos en la entidad seleccionada
+     * @see BusquedorPorExcel
+     * @see BusquedorPorWebScrapping
      */
     protected abstract List<Entidad> trabajarDocumentoyObtenerSusProductos(Auxiliar elementoAuxiliar);
 
@@ -57,13 +51,7 @@ public abstract class BusquedaDeProductoPorDistribuidora<Entidad, Auxiliar>  imp
     /**
      * Almacena productos en la base de datos
      * @param productos Productos en su entidad correspondiente
-     * @see DonGasparEntidad
-     * @see FacundoEntidad
-     * @see IndiasEntidad
-     * @see LaGranjaDelCentroEntidad
-     * @see MelarEntidad
-     * @see SudamerikEntidad
-     * @see Distribuidora
+     * @see UnionEntidad
      */
     protected void almacenarProductosEnBaseDeDatos(List<Entidad> productos) {
         UnionEntidad<Entidad> unionEntidad = new UnionEntidad<>();
@@ -78,22 +66,10 @@ public abstract class BusquedaDeProductoPorDistribuidora<Entidad, Auxiliar>  imp
     /**
      * Elimina los datos almacenados de cierta distribuidora y vuelve a guardar con datos que deben ser nuevos
      * @param productos
-     * @see BusquedaDeProductoPorDistribuidora#almacenarProductosEnBaseDeDatos(List)
+     * @see BuscadorDeProductos#almacenarProductosEnBaseDeDatos(List)
      */
     public void actualizarProductosEnBaseDeDatos(List<Entidad> productos){
         unionRepository.deleteUnionEntidadByDistribuidora(distribuidora);
         almacenarProductosEnBaseDeDatos(productos);
-    }
-
-    @Override
-    public List<Producto> convertirTodosAProducto(List<Entidad> productosEntidad){
-        List<Producto> productosFinales = new ArrayList<>();
-
-        productosEntidad.forEach(
-                productoEntidad -> productosFinales.add(
-                        mapearEntidadaProducto(productoEntidad)
-                )
-        );
-        return productosFinales;
     }
 }
