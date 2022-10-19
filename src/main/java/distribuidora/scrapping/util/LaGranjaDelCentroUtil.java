@@ -5,14 +5,14 @@ import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 public class LaGranjaDelCentroUtil extends ProductoUtil<LaGranjaDelCentroEntidad>{
     @Override
-    Collection<Producto> convertirProductoyDevolverlo(LaGranjaDelCentroEntidad productoSinConvertir) {
-        return Collections.singleton(Producto.builder()
+    List<Producto> convertirProductoyDevolverlo(LaGranjaDelCentroEntidad productoSinConvertir) {
+        return Collections.singletonList(Producto.builder()
                 .descripcion(productoSinConvertir.getNombreProducto())
                 .precioPorCantidadEspecifica(productoSinConvertir.getPrecio())
                 .distribuidora(Distribuidora.LA_GRANJA_DEL_CENTRO)

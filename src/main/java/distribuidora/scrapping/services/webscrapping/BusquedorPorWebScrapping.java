@@ -1,9 +1,11 @@
 package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,11 +36,15 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      */
     protected Boolean esNecesarioUsarWebDriver = false;
 
+    public BusquedorPorWebScrapping() {
+        tipoDistribuidora = TipoDistribuidora.WEB_SCRAPPING;
+    }
+
     @Autowired
     WebDriver driver;
 
     @Override
-    protected List<Entidad> trabajarDocumentoyObtenerSusProductosEspecificos(Boolean elementoAuxiliar) {
+    public List<Entidad> generarProductosEntidadYActualizarCollecciones(Boolean elementoAuxiliar) {
         List<Entidad> productostotales = new ArrayList<>();
         try {
             generarDocumentos().forEach(
@@ -72,11 +78,11 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
                         doc
                 );
                 contador++;
-                doc = Jsoup.connect(generarNuevaURL(contador)).get();
+                doc = generarDocumento(generarNuevaURL(contador));
             }
         } else {
             documentos.add(
-                    Jsoup.connect(urlBuscador).get()
+                    generarDocumento(urlBuscador)
             );
         }
         return documentos;
@@ -132,9 +138,27 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      */
     protected List<Entidad> obtenerProductosPorDocument(Document documento){
         List<Entidad> productosPorDocumento = new ArrayList<>();
-
-
+        List<Elements> elementosQueContienenDatosConvertible = filtrarElementos(documento);
+        elementosQueContienenDatosConvertible.forEach(element -> {
+            productosPorDocumento.addAll(
+                    obtenerProductosAPartirDeElements(element)
+            );
+        });
         return productosPorDocumento;
     }
+
+    /**
+     * Genera un producto a partir de un elemento.
+     * @param elements elemento que contiene datos
+     * @return un producto especifico
+     */
+    protected abstract List<Entidad> obtenerProductosAPartirDeElements(Elements elements);
+
+    /**
+     * Deja solo los elementos que contienen datos convertibles a productos.
+     * @param documento documento que contiene elementos
+     * @return elementos filtrados
+     */
+    protected abstract List<Elements> filtrarElementos(Document documento);
 
 }

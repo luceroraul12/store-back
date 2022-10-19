@@ -29,7 +29,7 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
     }
 
     @Override
-    protected List<Entidad> trabajarDocumentoyObtenerSusProductosEspecificos(PeticionFrontEndDocumento elementoAuxiliar) {
+    protected List<Entidad> generarProductosEntidadYActualizarCollecciones(PeticionFrontEndDocumento elementoAuxiliar) {
         List<Entidad> productosrecolectados;
 
         try {

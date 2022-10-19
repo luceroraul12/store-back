@@ -42,7 +42,8 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
      * @see BusquedorPorExcel
      * @see BusquedorPorWebScrapping
      */
-    protected abstract List<Entidad> trabajarDocumentoyObtenerSusProductosEspecificos(Auxiliar elementoAuxiliar);
+    protected abstract List<Entidad> generarProductosEntidadYActualizarCollecciones(Auxiliar elementoAuxiliar);
+
 
 
     /**

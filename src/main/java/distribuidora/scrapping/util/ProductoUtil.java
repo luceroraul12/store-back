@@ -4,6 +4,7 @@ import distribuidora.scrapping.entities.Producto;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public abstract class ProductoUtil<Entidad> {
 
@@ -24,7 +25,7 @@ public abstract class ProductoUtil<Entidad> {
      * @param productoSinConvertir
      * @return puede que un unico producto tenga diferentes ofertas precios en funcion a la cantidad
      */
-    abstract Collection<Producto> convertirProductoyDevolverlo(Entidad productoSinConvertir);
+    abstract List<Producto> convertirProductoyDevolverlo(Entidad productoSinConvertir);
 
 
 

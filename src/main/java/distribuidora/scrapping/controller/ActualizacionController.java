@@ -1,8 +1,8 @@
 package distribuidora.scrapping.controller;
 
 import distribuidora.scrapping.entities.*;
-import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
+import distribuidora.scrapping.services.ActualizacionPorWebScrappingServicio;
 import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,10 +24,15 @@ import java.util.*;
 public class ActualizacionController {
 
     @Autowired
-    ActualizacionPorDocumentoServicio actualizacionDeDocumentoServicio;
+    ActualizacionPorDocumentoServicio actualizacionPorDocumentoServicio;
+
+    @Autowired
+    ActualizacionPorWebScrappingServicio actualizacionPorWebScrappingServicio;
 
     @Autowired
     UnionRepository<ProductoEspecifico> unionRepository;
+
+
 
 
     /**
@@ -38,15 +43,15 @@ public class ActualizacionController {
      */
     @PostMapping("excel")
     public void actualizacionPorExcel(PeticionFrontEndDocumento documento) throws IOException {
-        actualizacionDeDocumentoServicio.recibirDocumento(documento);
+        actualizacionPorDocumentoServicio.recibirDocumento(documento);
     }
 
     /**
      * Permite actualizar los productos de las distribuidoras que dependan de Web Scrapping. Actualiza todas las distribuidoras de este tipo al mismo tiempo.
      */
-    @PostMapping("web-scrapping")
+    @GetMapping("web-scrapping")
     public void actualizacionPorWebScrapping(){
-
+        this.actualizacionPorWebScrappingServicio.actualizarTodasLasDistribuidoras();
     }
 
     //TODO: este metodo de momento va aquedar fijo aca, pero en un futuro habria que crear un servicio o almacenar este dato en algun lado

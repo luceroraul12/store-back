@@ -5,13 +5,13 @@ import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 public class SudamerikUtil extends ProductoUtil<SudamerikEntidad> {
     @Override
-    Collection<Producto> convertirProductoyDevolverlo(SudamerikEntidad productoSinConvertir) {
+    List<Producto> convertirProductoyDevolverlo(SudamerikEntidad productoSinConvertir) {
         String cantidadEspecifica = productoSinConvertir.getCantidadEspecifca();
         String nombreProducto = productoSinConvertir.getNombreProducto();
 
@@ -38,7 +38,7 @@ public class SudamerikUtil extends ProductoUtil<SudamerikEntidad> {
             );
         }
 
-        return Collections.singleton(Producto
+        return Collections.singletonList(Producto
                 .builder()
                 .descripcion(descripcion)
                 .precioPorCantidadEspecifica(productoSinConvertir.getPrecio())

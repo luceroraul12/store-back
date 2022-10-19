@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 @Component
 public class MelarUtil extends ProductoUtil<MelarEntidad>{
     @Override
-    Collection<Producto> convertirProductoyDevolverlo(MelarEntidad productoSinConvertir) {
-        Collection<Producto> productosCreados = new ArrayList<>();
+    public List<Producto> convertirProductoyDevolverlo(MelarEntidad productoSinConvertir) {
+        List<Producto> productosCreados = new ArrayList<>();
 
         /*
         Hay que tener cuidado cons los precios, debido a que el monto siempre lo muestran  por 1 kilo,
