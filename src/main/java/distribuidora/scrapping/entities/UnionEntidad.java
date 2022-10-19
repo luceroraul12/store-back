@@ -1,5 +1,6 @@
 package distribuidora.scrapping.entities;
 
+import distribuidora.scrapping.entities.productos.especificos.*;
 import distribuidora.scrapping.enums.Distribuidora;
 import lombok.Data;
 import org.springframework.data.annotation.Id;

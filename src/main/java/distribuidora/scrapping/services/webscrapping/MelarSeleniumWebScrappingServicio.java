@@ -1,6 +1,6 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.entities.MelarEntidad;
+import distribuidora.scrapping.entities.productos.especificos.MelarEntidad;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
@@ -97,5 +97,10 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
     @Override
     protected Collection<Producto> convertirProductos(UnionEntidad<MelarEntidad> dataDB) {
         return melarUtil.arregloToProducto(dataDB.getDatos());
+    }
+
+    @Override
+    protected List<Producto> mapearEntidadaProducto(MelarEntidad productoEntidad) {
+        return null;
     }
 }

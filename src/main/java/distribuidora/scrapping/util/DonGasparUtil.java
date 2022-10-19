@@ -1,6 +1,6 @@
 package distribuidora.scrapping.util;
 
-import distribuidora.scrapping.entities.DonGasparEntidad;
+import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.stereotype.Component;

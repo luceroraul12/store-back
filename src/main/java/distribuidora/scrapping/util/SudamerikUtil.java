@@ -1,13 +1,12 @@
 package distribuidora.scrapping.util;
 
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.SudamerikEntidad;
+import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 @Component
 public class SudamerikUtil extends ProductoUtil<SudamerikEntidad> {

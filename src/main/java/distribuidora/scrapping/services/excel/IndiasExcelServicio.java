@@ -1,6 +1,6 @@
 package distribuidora.scrapping.services.excel;
 
-import distribuidora.scrapping.entities.IndiasEntidad;
+import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.enums.Distribuidora;
 import org.apache.poi.ss.usermodel.CellType;

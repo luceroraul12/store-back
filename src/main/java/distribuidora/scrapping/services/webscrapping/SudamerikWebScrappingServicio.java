@@ -1,7 +1,7 @@
 package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.SudamerikEntidad;
+import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.util.SudamerikUtil;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<SudamerikEntidad> {
@@ -81,5 +82,10 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
     @Override
     protected Collection<Producto> convertirProductos(UnionEntidad<SudamerikEntidad> dataDB) {
         return sudamerikUtil.arregloToProducto(dataDB.getDatos());
+    }
+
+    @Override
+    protected List<Producto> mapearEntidadaProducto(SudamerikEntidad productoEntidad) {
+        return null;
     }
 }

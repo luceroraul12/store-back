@@ -4,6 +4,7 @@ import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
+import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
 import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public abstract class BusquedorPorWebScrapping<Entidad> {
+public abstract class BusquedorPorWebScrapping<Entidad> extends BuscadorDeProductosEntidad<Entidad, Boolean> {
 
     @Autowired
     private UnionRepository<Entidad> unionRepository;
@@ -43,10 +44,14 @@ public abstract class BusquedorPorWebScrapping<Entidad> {
         return this.urlBuscador + this.contador;
     }
 
+    @Override
+    protected List<Entidad> trabajarDocumentoyObtenerSusProductosEspecificos(Boolean elementoAuxiliar) {
+        return null;
+    }
 
     /*
-    primero se debe revisar la base de datos, si la fecha no es valida, se tiene que volver a scrapear la data. en caso contrario, se devuelvo lo almacenado
-     */
+        primero se debe revisar la base de datos, si la fecha no es valida, se tiene que volver a scrapear la data. en caso contrario, se devuelvo lo almacenado
+         */
     public Collection<Producto> getProductosRecolectados() throws IOException {
         UnionEntidad<Entidad> dataDB = unionRepository.findByDistribuidora(this.distribuidora);
         Collection<Producto> productosConvertidos = new ArrayList<>();

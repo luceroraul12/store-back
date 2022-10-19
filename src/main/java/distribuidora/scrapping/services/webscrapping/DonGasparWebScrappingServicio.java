@@ -1,6 +1,6 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.entities.DonGasparEntidad;
+import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonGasparEntidad> {
@@ -78,4 +79,8 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
     }
 
 
+    @Override
+    protected List<Producto> mapearEntidadaProducto(DonGasparEntidad productoEntidad) {
+        return null;
+    }
 }

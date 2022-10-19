@@ -1,7 +1,9 @@
 package distribuidora.scrapping.controller;
 
 import distribuidora.scrapping.entities.PeticionFrontEndDocumento;
+import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.repositories.UnionRepository;
 import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,9 @@ public class ActualizacionController {
 
     @Autowired
     ActualizacionPorDocumentoServicio actualizacionDeDocumentoServicio;
+
+    @Autowired
+    UnionRepository<?> unionRepository;
 
 
     /**
@@ -50,9 +55,11 @@ public class ActualizacionController {
     /**
      * Devuelve un map con el tipo de busqueda por distribuidora
      * @return map.excel dependen del excel, map.webScrapping dependen de Web Scrapping
+     * map.webScrapping es un map de fecha Realizado y Distribuidora
      */
     @GetMapping
-    public ResponseEntity<Map<String, List<Distribuidora>>> obtenerTipoDeActualizacionPorDistribuidora(){
+    public ResponseEntity<Map<String, List<Distribuidora>>> obtenerTipoyEstadoDeDistribuidora(){
+//        TODO: esto esta hecho por momentos, hay que sacar todo del controlador
         Map<String, List<Distribuidora>> distribuidorasDisponibles = new HashMap<>();
         distribuidorasDisponibles.put("excel",
                 Arrays.asList(
@@ -66,6 +73,9 @@ public class ActualizacionController {
                         Distribuidora.MELAR,
                         Distribuidora.SUDAMERIK)
                 );
+
+
+
         return new ResponseEntity<>(distribuidorasDisponibles,HttpStatus.OK);
     }
 }

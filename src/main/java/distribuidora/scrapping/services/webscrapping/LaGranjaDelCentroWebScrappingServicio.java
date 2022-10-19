@@ -1,6 +1,6 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.entities.LaGranjaDelCentroEntidad;
+import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapping<LaGranjaDelCentroEntidad> {
@@ -70,5 +71,10 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
     @Override
     protected Collection<Producto> convertirProductos(UnionEntidad<LaGranjaDelCentroEntidad> dataDB) {
         return laGranjaDelCentroUtil.arregloToProducto(dataDB.getDatos());
+    }
+
+    @Override
+    protected List<Producto> mapearEntidadaProducto(LaGranjaDelCentroEntidad productoEntidad) {
+        return null;
     }
 }
