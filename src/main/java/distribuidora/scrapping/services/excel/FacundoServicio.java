@@ -1,6 +1,8 @@
 package distribuidora.scrapping.services.excel;
 
 import distribuidora.scrapping.entities.FacundoEntidad;
+import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.enums.Distribuidora;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -8,6 +10,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FacundoServicio extends ExtractorDeProductosExcel<FacundoEntidad> {
+
+    public FacundoServicio() {
+        distribuidora = Distribuidora.FACUNDO;
+    }
 
     @Override
     boolean esRowValido(Row row) {
@@ -50,5 +56,10 @@ public class FacundoServicio extends ExtractorDeProductosExcel<FacundoEntidad> {
         }
 
         return resultado;
+    }
+
+    @Override
+    public Producto mapearEntidadaProducto(FacundoEntidad productoEntidad) {
+        return null;
     }
 }

@@ -1,19 +1,31 @@
 package distribuidora.scrapping.services;
 
+
+import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BusquedaDeProductoPorDistribuidora<Entidad> {
+public abstract class BusquedaDeProductoPorDistribuidora<Entidad, Auxiliar>  implements  RecoleccionDeInformacionInterface<Entidad>{
 
     protected Distribuidora distribuidora;
 
     @Autowired
     UnionRepository<Entidad> unionRepository;
+
+
+    /**
+     * Metodo por el cual se inicia el proceso de busqueda de datos en el documento especifico
+     * @param elementoAuxiliar Clase del elemento que tiene los elementos especificos necesarios
+     * @return lista de productos en la entidad seleccionada
+     */
+    protected abstract List<Entidad> trabajarDocumentoyObtenerSusProductos(Auxiliar elementoAuxiliar);
+
 
     /**
      * Obtiene todos los productos almacenados en la base de datos en funcion a la distribuidora
@@ -22,15 +34,15 @@ public abstract class BusquedaDeProductoPorDistribuidora<Entidad> {
         return unionRepository.findByDistribuidora(distribuidora);
     };
 
-    abstract void buscarProductos();
 
     /**
      * Para almacenar productos en la base de datos
-     * @param productos los productos a almacenar
      */
     protected void almacenarProductosEnBaseDeDatos(List<Entidad> productos) {
         UnionEntidad<Entidad> unionEntidad = new UnionEntidad<>();
-        unionEntidad.setDatos(productos);
+        unionEntidad.setDatos(
+                productos
+        );
         unionEntidad.setDistribuidora(distribuidora);
         unionEntidad.setFechaScrap(LocalDate.now());
         unionRepository.save(unionEntidad);
@@ -40,9 +52,20 @@ public abstract class BusquedaDeProductoPorDistribuidora<Entidad> {
      * Elimina los datos almacenados de cierta distribuidora y vuelve a guardar con datos que deben ser nuevos
      * @param productos
      */
-    protected void actualizarProductosEnBaseDeDatos(List<Entidad> productos){
+    public void actualizarProductosEnBaseDeDatos(List<Entidad> productos){
         unionRepository.deleteUnionEntidadByDistribuidora(distribuidora);
         almacenarProductosEnBaseDeDatos(productos);
     }
 
+    @Override
+    public List<Producto> convertirTodosAProducto(List<Entidad> productosEntidad){
+        List<Producto> productosFinales = new ArrayList<>();
+
+        productosEntidad.forEach(
+                productoEntidad -> productosFinales.add(
+                        mapearEntidadaProducto(productoEntidad)
+                )
+        );
+        return productosFinales;
+    }
 }

@@ -1,12 +1,18 @@
 package distribuidora.scrapping.services.excel;
 
 import distribuidora.scrapping.entities.IndiasEntidad;
+import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.enums.Distribuidora;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 
 @Service
 public class IndiasServicio extends ExtractorDeProductosExcel<IndiasEntidad> {
+    public IndiasServicio() {
+        distribuidora = Distribuidora.INDIAS;
+    }
+
     @Override
     boolean esRowValido(Row row) {
         boolean resultado = false;
@@ -33,5 +39,10 @@ public class IndiasServicio extends ExtractorDeProductosExcel<IndiasEntidad> {
                 .descripcion(row.getCell(3).toString())
                 .precio(row.getCell(4).getNumericCellValue())
                 .build();
+    }
+
+    @Override
+    public Producto mapearEntidadaProducto(IndiasEntidad productoEntidad) {
+        return null;
     }
 }

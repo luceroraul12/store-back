@@ -19,8 +19,8 @@ public class ActualizacionPorDocumentoServicio {
         Distribuidora distribuidora = documento.getDistribuidora();
 
         System.out.println(distribuidora);
-//        indiasServicio.obtenerProductos(documento.getExcels()).forEach(System.out::println);
-//        facundoServicio.obtenerProductos(documento.getExcels()).forEach(System.out::println);
+
+
         identificarDistribuidorayEjecutar(documento).forEach(System.out::println);
     }
 
@@ -29,10 +29,16 @@ public class ActualizacionPorDocumentoServicio {
 
         switch (documento.getDistribuidora()){
             case FACUNDO: {
-                return facundoServicio.obtenerProductos(documento.getExcels());
+                facundoServicio.actualizarProductosEnBaseDeDatos(
+                        facundoServicio.obtenerProductosApartirDeExcels(documento.getExcels())
+                );
+                return facundoServicio.obtenerProductosApartirDeExcels(documento.getExcels());
             }
             case INDIAS: {
-                return indiasServicio.obtenerProductos(documento.getExcels());
+                indiasServicio.actualizarProductosEnBaseDeDatos(
+                        indiasServicio.obtenerProductosApartirDeExcels(documento.getExcels())
+                );
+                return indiasServicio.obtenerProductosApartirDeExcels(documento.getExcels());
             }
         }
         return null;

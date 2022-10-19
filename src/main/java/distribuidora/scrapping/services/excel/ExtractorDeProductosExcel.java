@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services.excel;
 
-import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.entities.PeticionFrontEndDocumento;
+import distribuidora.scrapping.services.BusquedaDeProductoPorDistribuidora;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -11,14 +12,26 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public abstract class ExtractorDeProductosExcel<Entidad> {
+public abstract class ExtractorDeProductosExcel<Entidad> extends BusquedaDeProductoPorDistribuidora<Entidad, PeticionFrontEndDocumento> {
 
-     Distribuidora distribuidora;
 
-//    TODO: hay que ver como diferenciar los datos que llegan por medio de la distribuidora y llamar al servicio que corresponda para extraer los datos y luego ver como guardarlo segun distribuidoras
-    public Collection<Entidad> obtenerProductos(MultipartFile[] excels) throws IOException {
-        Collection<Entidad> productosFinales = new ArrayList<>();
+    @Override
+    protected List<Entidad> trabajarDocumentoyObtenerSusProductos(PeticionFrontEndDocumento elementoAuxiliar) {
+        List<Entidad> productosrecolectados;
+
+        try {
+            productosrecolectados = new ArrayList<>(obtenerProductosApartirDeExcels(elementoAuxiliar.getExcels()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return productosrecolectados;
+    }
+
+    public List<Entidad> obtenerProductosApartirDeExcels(MultipartFile[] excels) throws IOException {
+        List<Entidad> productosFinales = new ArrayList<>();
         ArrayList<Sheet> sheets;
         for (MultipartFile excel : excels) {
             System.out.println(excel.getOriginalFilename());
