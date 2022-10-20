@@ -2,15 +2,16 @@ package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
-import distribuidora.scrapping.entities.UnionEntidad;
+import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad.SudamerikConjuntoEspecifico;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.util.SudamerikUtil;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -47,8 +48,26 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
 
     @Override
     protected List<SudamerikEntidad> obtenerProductosAPartirDeElements(Elements elements) {
-        return null;
+        List<SudamerikEntidad> productosCreados = new ArrayList<>();
+        elements.forEach(
+                elementProducto -> {
+                    String nombreProducto = elementProducto.getElementsByClass("nombre").text();
+                    Elements conjuntoPreciosElements = elementProducto.getElementsByClass("number");
+                    productosCreados.add(
+                            SudamerikEntidad.builder()
+                                    .nombreProducto(nombreProducto)
+                                    .cantidadesEspecificas(
+                                            obtenerTodosLosConjuntosDePrecios(conjuntoPreciosElements)
+                                    )
+                                    .build()
+                    );
+                }
+        );
+        return productosCreados;
     }
+
+
+
 
     @Override
     protected Elements filtrarElementos(Document documento) {
@@ -60,58 +79,33 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
         return null;
     }
 
-//    @Override
-//    protected void trabajarConElementsyObtenerProductosEspecificos(Elements productos) {
-//        productos.forEach(
-//                p -> {
-//                    Elements productoEnConjuntos = p.getElementsByClass(claseConjunto);
-//                    productoEnConjuntos.forEach(
-//                            pConjunto -> {
-//                                agregarProducto(
-//                                        SudamerikEntidad
-//                                                .builder()
-//                                                .nombreProducto(
-//                                                        p.getElementsByClass(getClasesNombreProducto()).text()
-//                                                )
-//                                                .cantidadEspecifca(
-//                                                        pConjunto.getElementsByClass(claseTipo).text()
-//                                                )
-//                                                .precio(
-//                                                        Double.valueOf
-//                                                                (pConjunto.
-//                                                                        getElementsByClass(getClasesPrecio())
-//                                                                        .text()
-//                                                                        .replaceAll("\\$",""))
-//                                                )
-//                                                .build()
-//                                );
-//                                System.out.println(
-//                                        SudamerikEntidad
-//                                                .builder()
-//                                                .nombreProducto(
-//                                                        p.getElementsByClass(getClasesNombreProducto()).text()
-//                                                )
-//                                                .cantidadEspecifca(
-//                                                        pConjunto.getElementsByClass(claseTipo).text()
-//                                                )
-//                                                .precio(
-//                                                        Double.valueOf
-//                                                                (pConjunto.
-//                                                                        getElementsByClass(getClasesPrecio())
-//                                                                        .text()
-//                                                                        .replaceAll("\\$",""))
-//                                                )
-//                                                .build()
-//                                );
-//                            }
-//                    );
-//                }
-//        );
-//
-//    }
-//
-//    @Override
-//    protected Collection<Producto> convertirProductos(UnionEntidad<SudamerikEntidad> dataDB) {
-//        return sudamerikUtil.arregloToProducto(dataDB.getDatos());
-//    }
+    /**
+     * Toma el conjunto de precios en elements y lo convierte a Objeto.<br>
+     * Itera cada conjunto, tiene en cuenta la cantidadEspecifica y el precio.
+     * @param conjuntoPreciosElements Previamente filtrados
+     * @return lista de conjunto de precios para productos de Sudamerik
+     * @see SudamerikConjuntoEspecifico
+     */
+    private List<SudamerikConjuntoEspecifico> obtenerTodosLosConjuntosDePrecios(Elements conjuntoPreciosElements) {
+        List<SudamerikConjuntoEspecifico> conjuntoDePrecios = new ArrayList<>();
+        conjuntoPreciosElements.forEach(
+                conjunto -> {
+                    conjuntoDePrecios.add(
+                            SudamerikConjuntoEspecifico.builder()
+                                    .cantidadEspecifica(
+                                            conjunto
+                                                    .getElementsByClass("unidad-tipo")
+                                                    .text()
+                                    )
+                                    .precio(Double.valueOf(
+                                            conjunto
+                                                    .getElementsByClass("precio")
+                                                    .text()
+                                                    .replaceAll("\\$", "")))
+                                    .build()
+                    );
+                }
+        );
+        return conjuntoDePrecios;
+    }
 }

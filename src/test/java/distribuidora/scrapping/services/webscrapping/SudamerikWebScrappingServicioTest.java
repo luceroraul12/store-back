@@ -1,5 +1,6 @@
 package distribuidora.scrapping.services.webscrapping;
 
+import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,7 +45,11 @@ class SudamerikWebScrappingServicioTest {
 
     @Test
     void obtenerProductosAPartirDeElements() throws IOException {
+        Document docBueno = Jsoup.parse(new File("src/main/resources/static/sudamerik.html"));
+        Elements cantidadDeProductosObtenidos = servicio.filtrarElementos(docBueno);
+        List<SudamerikEntidad> productosCreados = servicio.obtenerProductosAPartirDeElements(cantidadDeProductosObtenidos);
 
+        assertEquals(9, productosCreados.size());
 
     }
 
