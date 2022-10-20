@@ -95,6 +95,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      */
     private Document generarDocumento(String url) {
         Document documentoGenerado;
+        System.out.println(url);
         if (esNecesarioUsarWebDriver){
             driver.get(url);
             String template = driver.getPageSource();
@@ -116,7 +117,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * @return nueva URL
      */
     private String generarNuevaURL(int contador) {
-        return urlBuscador+'/'+contador ;
+        return urlBuscador+contador ;
     }
 
     /**

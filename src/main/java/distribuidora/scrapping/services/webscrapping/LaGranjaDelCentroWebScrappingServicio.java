@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
 
     @Autowired
     LaGranjaDelCentroUtil laGranjaDelCentroUtil;
+
 
     public LaGranjaDelCentroWebScrappingServicio() {
         urlBuscador = "https://lagranjadelcentro.com.ar/productos.php?pagina=";
@@ -38,6 +40,7 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
     @Override
     protected boolean esDocumentValido(Document document) {
         boolean esValido = false;
+        System.out.println(document);
 
         for (Element element : document.getElementsByTag("span")){
             if (element.hasClass("p-activo")){
@@ -50,7 +53,26 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
 
     @Override
     protected List<LaGranjaDelCentroEntidad> obtenerProductosAPartirDeElements(Elements elements) {
-        return null;
+        List<LaGranjaDelCentroEntidad> productosFinales = new ArrayList<>();
+        elements.forEach(
+                element -> {
+                    productosFinales.add(
+                            LaGranjaDelCentroEntidad.builder()
+                                    .nombreProducto(
+                                            element.getElementsByClass("h3-content-1").text()
+                                    )
+                                    .precio(
+                                            Double.valueOf(element
+                                                    .getElementsByClass("p-precio-content-1")
+                                                    .text()
+                                                    .replaceAll("[$.]","")
+                                                    .replaceAll(",","."))
+                                    )
+                                    .build()
+                    );
+                }
+        );
+        return productosFinales;
     }
 
     @Override
@@ -58,14 +80,14 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
 //        setClasesTabla("box-content-1");
 //        setClasesNombreProducto("h3-content-1");
 //        setClasesPrecio("p-precio-content-1");
-
+        System.out.println(documento.select("div.productos-content-1 > div.box-content-1"));
         return documento.select("div.productos-content-1 > div.box-content-1");
     }
 
 
     @Override
     protected List<Producto> mapearEntidadaProducto(LaGranjaDelCentroEntidad productoEntidad) {
-        return null;
+        return laGranjaDelCentroUtil.convertirProductoyDevolverlo(productoEntidad);
     }
 
 
