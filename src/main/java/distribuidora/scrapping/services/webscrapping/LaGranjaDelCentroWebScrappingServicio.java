@@ -80,8 +80,8 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
 //        setClasesTabla("box-content-1");
 //        setClasesNombreProducto("h3-content-1");
 //        setClasesPrecio("p-precio-content-1");
-        System.out.println(documento.select("div.productos-content-1 > div.box-content-1"));
-        return documento.select("div.productos-content-1 > div.box-content-1");
+        return documento
+                .select("div.box-content-1");
     }
 
 
