@@ -70,8 +70,4 @@ class LaGranjaDelCentroWebScrappingServicioTest {
 
         assertEquals(4,elementosObtenidos.size());
     }
-
-    @Test
-    void mapearEntidadaProducto() {
-    }
 }
