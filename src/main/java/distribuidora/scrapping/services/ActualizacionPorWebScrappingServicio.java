@@ -11,7 +11,6 @@ public class ActualizacionPorWebScrappingServicio {
     MelarSeleniumWebScrappingServicio melarSeleniumWebScrappingServicio;
 
     public void actualizarTodasLasDistribuidoras(){
-        melarSeleniumWebScrappingServicio.gene
         this.melarSeleniumWebScrappingServicio.actualizarProductosEnTodasLasColecciones(
                 this.melarSeleniumWebScrappingServicio.generarProductosEntidadYActualizarCollecciones(false)
         );
