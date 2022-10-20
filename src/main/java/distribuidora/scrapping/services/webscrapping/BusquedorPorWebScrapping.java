@@ -138,12 +138,10 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      */
     private List<Entidad> obtenerProductosPorDocument(Document documento){
         List<Entidad> productosPorDocumento = new ArrayList<>();
-        List<Elements> elementosQueContienenDatosConvertible = filtrarElementos(documento);
-        elementosQueContienenDatosConvertible.forEach(element -> {
-            productosPorDocumento.addAll(
-                    obtenerProductosAPartirDeElements(element)
-            );
-        });
+        Elements elementosQueContienenDatosConvertible = filtrarElementos(documento);
+        productosPorDocumento.addAll(
+                obtenerProductosAPartirDeElements(elementosQueContienenDatosConvertible)
+        );
         return productosPorDocumento;
     }
 
@@ -159,6 +157,6 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * @param documento documento que contiene elementos
      * @return elementos filtrados
      */
-    protected abstract List<Elements> filtrarElementos(Document documento);
+    protected abstract Elements filtrarElementos(Document documento);
 
 }

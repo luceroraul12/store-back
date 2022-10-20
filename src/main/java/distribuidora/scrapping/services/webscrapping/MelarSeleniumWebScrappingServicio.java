@@ -4,7 +4,6 @@ import distribuidora.scrapping.entities.productos.especificos.MelarEntidad;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.util.MelarUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,8 +84,8 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
     }
 
     @Override
-    protected List<Elements> filtrarElementos(Document documento) {
-        return Collections.singletonList(documento.getElementsByTag("table")
-                .select("table > tbody > tr:not(.group)"));
+    protected Elements filtrarElementos(Document documento) {
+        return documento.getElementsByTag("table")
+                .select("table > tbody > tr:not(.group)");
     }
 }
