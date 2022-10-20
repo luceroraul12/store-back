@@ -2,10 +2,12 @@ package distribuidora.scrapping.services.webscrapping;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,11 +42,17 @@ class SudamerikWebScrappingServicioTest {
     }
 
     @Test
-    void obtenerProductosAPartirDeElements() {
+    void obtenerProductosAPartirDeElements() throws IOException {
+
+
     }
 
     @Test
-    void filtrarElementos() {
+    void filtrarElementos() throws IOException {
+        Document docBueno = Jsoup.parse(new File("src/main/resources/static/sudamerik.html"));
+        Elements cantidadDeProductosObtenidos = servicio.filtrarElementos(docBueno);
+
+        assertEquals(9,cantidadDeProductosObtenidos.size());
     }
 
     @Test

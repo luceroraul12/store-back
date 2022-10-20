@@ -52,7 +52,7 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
 
     @Override
     protected Elements filtrarElementos(Document documento) {
-        return null;
+        return documento.select("div.productos-container");
     }
 
     @Override
