@@ -44,7 +44,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
     WebDriver driver;
 
     @Override
-    public List<Entidad> generarProductosEntidadYActualizarCollecciones(Boolean elementoAuxiliar) {
+    public List<Entidad> adquirirProductosEntidad(Boolean elementoAuxiliar) {
         List<Entidad> productostotales = new ArrayList<>();
         try {
             generarDocumentos().forEach(
@@ -115,7 +115,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * @param contador externo, va en incremento 1
      * @return nueva URL
      */
-    protected String generarNuevaURL(int contador) {
+    private String generarNuevaURL(int contador) {
         return urlBuscador+'/'+contador ;
     }
 
@@ -136,7 +136,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * @param documento uno de los tanttos document que puede traer una pagina Web.
      * @return listado de productos especificos.
      */
-    protected List<Entidad> obtenerProductosPorDocument(Document documento){
+    private List<Entidad> obtenerProductosPorDocument(Document documento){
         List<Entidad> productosPorDocumento = new ArrayList<>();
         List<Elements> elementosQueContienenDatosConvertible = filtrarElementos(documento);
         elementosQueContienenDatosConvertible.forEach(element -> {

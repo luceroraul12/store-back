@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class SudamerikUtil extends ProductoUtil<SudamerikEntidad> {
     @Override
-    List<Producto> convertirProductoyDevolverlo(SudamerikEntidad productoSinConvertir) {
+    public List<Producto> convertirProductoyDevolverlo(SudamerikEntidad productoSinConvertir) {
         String cantidadEspecifica = productoSinConvertir.getCantidadEspecifca();
         String nombreProducto = productoSinConvertir.getNombreProducto();
 

@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class LaGranjaDelCentroUtil extends ProductoUtil<LaGranjaDelCentroEntidad>{
     @Override
-    List<Producto> convertirProductoyDevolverlo(LaGranjaDelCentroEntidad productoSinConvertir) {
+    public List<Producto> convertirProductoyDevolverlo(LaGranjaDelCentroEntidad productoSinConvertir) {
         return Collections.singletonList(Producto.builder()
                 .descripcion(productoSinConvertir.getNombreProducto())
                 .precioPorCantidadEspecifica(productoSinConvertir.getPrecio())

@@ -25,7 +25,7 @@ public abstract class ProductoUtil<Entidad> {
      * @param productoSinConvertir
      * @return puede que un unico producto tenga diferentes ofertas precios en funcion a la cantidad
      */
-    abstract List<Producto> convertirProductoyDevolverlo(Entidad productoSinConvertir);
+    public abstract List<Producto> convertirProductoyDevolverlo(Entidad productoSinConvertir);
 
 
 

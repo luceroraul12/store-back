@@ -36,13 +36,29 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
 
 
     /**
-     * Metodo por el cual se inicia el proceso de busqueda de datos en el proceso especifico
+     * Metodo por el cual se inicia el proceso de busqueda de datos en el proceso especifico.
+     * Luego de la adquisicion de datos, la misma se guarda en  en las colecciones correspondientes.
      * @param elementoAuxiliar Clase del elemento que tiene los elementos especificos necesarios
-     * @return lista de productos en la entidad seleccionada
      * @see BusquedorPorExcel
      * @see BusquedorPorWebScrapping
+     * @see BuscadorDeProductosEntidad#adquirirProductosEntidad(Auxiliar elementoAuxiliar)
+     * @see BuscadorDeProductosEntidad#actualizarProductosEnTodasLasColecciones(List productos)
      */
-    protected abstract List<Entidad> generarProductosEntidadYActualizarCollecciones(Auxiliar elementoAuxiliar);
+    public void generarProductosEntidadYActualizarCollecciones(Auxiliar elementoAuxiliar){
+        actualizarProductosEnTodasLasColecciones(
+                adquirirProductosEntidad(elementoAuxiliar)
+        );
+    }
+
+    /**
+     * Metodo a implementar por cada clase de tipo de busqued.
+     * Este metodo permite unicamente la adquisicion de productos de cierta entidad y solo eso.
+     * @param elementoAuxiliar
+     * @return lista de productos
+     */
+    protected abstract List<Entidad> adquirirProductosEntidad(Auxiliar elementoAuxiliar);;
+
+
 
 
 

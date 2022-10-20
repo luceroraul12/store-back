@@ -5,6 +5,7 @@ import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class DonGasparUtil extends ProductoUtil<DonGasparEntidad> {
 
     @Override
-    List<Producto> convertirProductoyDevolverlo(DonGasparEntidad productoSinConvertir) {
+    public List<Producto> convertirProductoyDevolverlo(DonGasparEntidad productoSinConvertir) {
         return Collections.singletonList(Producto.builder()
                 .descripcion(productoSinConvertir.getNombreProducto())
                 .precioPorCantidadEspecifica(productoSinConvertir.getPrecio())

@@ -21,26 +21,21 @@ public class ActualizacionPorDocumentoServicio {
         System.out.println(distribuidora);
 
 
-        identificarDistribuidorayEjecutar(documento).forEach(System.out::println);
+        identificarDistribuidorayEjecutar(documento);
     }
 
 
-    private Collection<?> identificarDistribuidorayEjecutar(PeticionFrontEndDocumento documento) throws IOException {
+    private void identificarDistribuidorayEjecutar(PeticionFrontEndDocumento documento) throws IOException {
 
         switch (documento.getDistribuidora()){
             case FACUNDO: {
-                facundoExcelServicio.actualizarProductosEnTodasLasColecciones(
-                        facundoExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels())
-                );
-                return facundoExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels());
+                facundoExcelServicio.generarProductosEntidadYActualizarCollecciones(documento);
+                break;
             }
             case INDIAS: {
-                indiasExcelServicio.actualizarProductosEnTodasLasColecciones(
-                        indiasExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels())
-                );
-                return indiasExcelServicio.obtenerProductosApartirDeExcels(documento.getExcels());
+                indiasExcelServicio.generarProductosEntidadYActualizarCollecciones(documento);
+                break;
             }
         }
-        return null;
     }
 }
