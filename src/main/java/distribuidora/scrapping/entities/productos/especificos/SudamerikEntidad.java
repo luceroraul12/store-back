@@ -12,8 +12,8 @@ import java.util.List;
 @Builder
 public class SudamerikEntidad extends ProductoEspecifico {
     private String nombreProducto;
-    private String cantidadEspecifca;
-    private Double precio;
+//    private String cantidadEspecifca;
+//    private Double precio;
     private List<SudamerikConjuntoEspecifico> cantidadesEspecificas;
 
 

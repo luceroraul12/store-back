@@ -19,26 +19,22 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
 
     @Autowired
     SudamerikUtil sudamerikUtil;
-//    private final String claseConjunto = "number";
-//    private final String claseTipo = "unidad-tipo";
 
     public SudamerikWebScrappingServicio() {
         urlBuscador = "https://www.sudamerikargentina.com.ar/productos/pagina/";
         distribuidora = Distribuidora.SUDAMERIK;
-//        setClasesPrecio("precio");
-//        setClasesNombreProducto("nombre");
-//        setClasesTabla("productos-container");
+        esBuscadorConPaginador = true;
     }
 
     /**
      * En este momento, tiene una paginacion maxima de 48
      * Esta pagina al superar el limite de paginacion no contiene redireccionamiento, por lo que sigue buscando y al no tener productos muestra una ventana sin productos pero muestra el sistema de paginaciones.
-     * Esta paginacion muestra todos los indices sin importar en que paginacion se encuentre. por lo tanto, intentare relacionarlo al ultimo indice que en teoria siempre sera la ultima pagina del paginador.
+     * Esta paginacion muestra todos los indices sin importar en que paginacion se encuentre. por lo tanto, intentare relacionarlo al ultimo indice que en teoria siempre sera la ultima pagina del paginador. Esto es posible por que el sistema de paginacion, coloca en negrita la paginacion actual y cuando se excede del rango, no existe un indice de pagina en negrita.
      * @param document template de la pagina Web
      * @return
      */
     @Override
-    protected boolean esDocumentValido(Document document) {
+    protected boolean  esDocumentValido(Document document) {
         boolean esDocumentoValido = false;
         document.location();
         Elements paginador = document.select("ul.pagination > li > a > b");
@@ -76,7 +72,7 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
 
     @Override
     protected List<Producto> mapearEntidadaProducto(SudamerikEntidad productoEntidad) {
-        return null;
+        return sudamerikUtil.convertirProductoyDevolverlo(productoEntidad);
     }
 
     /**

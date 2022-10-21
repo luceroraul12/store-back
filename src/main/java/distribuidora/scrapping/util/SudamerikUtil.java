@@ -2,9 +2,11 @@ package distribuidora.scrapping.util;
 
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
+import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad.SudamerikConjuntoEspecifico;
 import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,37 +14,28 @@ import java.util.List;
 public class SudamerikUtil extends ProductoUtil<SudamerikEntidad> {
     @Override
     public List<Producto> convertirProductoyDevolverlo(SudamerikEntidad productoSinConvertir) {
-        String cantidadEspecifica = productoSinConvertir.getCantidadEspecifca();
+        List<Producto> productosConvertidos = new ArrayList<>();
         String nombreProducto = productoSinConvertir.getNombreProducto();
+        List<SudamerikConjuntoEspecifico> conjuntoEspecificos = productoSinConvertir.getCantidadesEspecificas();
 
-        String[] arregloCantidad = cantidadEspecifica.split(" ");
-        String descripcion = "";
-
-        boolean estaContenido = false;
-
-        for (String parte : arregloCantidad){
-            if (nombreProducto.contains(parte)){
-                descripcion = nombreProducto;
-                estaContenido = true;
-                break;
-            }
-        }
-        if (!estaContenido){
-            /*
-            Para este caso, en caso de no tenerlo, simplemente concateno ambos strings y nada mas.
-             */
-            descripcion = String.format(
-                    "%s X %s",
-                    nombreProducto,
-                    cantidadEspecifica
-            );
-        }
-
-        return Collections.singletonList(Producto
-                .builder()
-                .descripcion(descripcion)
-                .precioPorCantidadEspecifica(productoSinConvertir.getPrecio())
-                .distribuidora(Distribuidora.SUDAMERIK)
-                .build());
+        conjuntoEspecificos.forEach(
+                conjunto -> {
+                    productosConvertidos.add(
+                            Producto
+                                    .builder()
+                                    .descripcion(
+                                        validaryAgregarPropiedadesQueNoEstanRepetidasEnOriginal(
+                                                nombreProducto,
+                                                Collections.singletonList(conjunto.getCantidadEspecifica())
+                                                )
+                                    )
+                                    .precioPorCantidadEspecifica(
+                                            conjunto.getPrecio()
+                                    )
+                                    .build()
+                    );
+                }
+        );
+        return productosConvertidos;
     }
 }

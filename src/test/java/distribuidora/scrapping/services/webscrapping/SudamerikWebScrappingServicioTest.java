@@ -1,5 +1,6 @@
 package distribuidora.scrapping.services.webscrapping;
 
+import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -49,7 +50,7 @@ class SudamerikWebScrappingServicioTest {
         Elements cantidadDeProductosObtenidos = servicio.filtrarElementos(docBueno);
         List<SudamerikEntidad> productosCreados = servicio.obtenerProductosAPartirDeElements(cantidadDeProductosObtenidos);
 
-        assertEquals(9, productosCreados.size());
+        assertEquals(7, productosCreados.size());
 
     }
 
@@ -58,10 +59,22 @@ class SudamerikWebScrappingServicioTest {
         Document docBueno = Jsoup.parse(new File("src/main/resources/static/sudamerik.html"));
         Elements cantidadDeProductosObtenidos = servicio.filtrarElementos(docBueno);
 
-        assertEquals(9,cantidadDeProductosObtenidos.size());
+        assertEquals(7,cantidadDeProductosObtenidos.size());
     }
 
     @Test
-    void mapearEntidadaProducto() {
+    void mapearEntidadaProducto() throws IOException {
+        Document docBueno = Jsoup.parse(new File("src/main/resources/static/sudamerik.html"));
+        Elements cantidadDeProductosObtenidos = servicio.filtrarElementos(docBueno);
+        List<SudamerikEntidad> productosCreados = servicio.obtenerProductosAPartirDeElements(cantidadDeProductosObtenidos);
+
+        List<Producto> productosGenerados = servicio.mapearEntidadaProducto(productosCreados.get(6));
+
+        assertEquals(3, productosGenerados.size());
+    }
+
+    @Test
+    void almacenamiento(){
+        servicio.generarProductosEntidadYActualizarCollecciones(false);
     }
 }
