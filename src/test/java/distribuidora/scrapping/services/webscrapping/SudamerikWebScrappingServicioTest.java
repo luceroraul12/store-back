@@ -74,7 +74,7 @@ class SudamerikWebScrappingServicioTest {
     }
 
     @Test
-    void almacenamiento(){
+    void almacenamiento() throws IOException {
         servicio.generarProductosEntidadYActualizarCollecciones(false);
     }
 }

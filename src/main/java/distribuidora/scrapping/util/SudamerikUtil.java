@@ -29,6 +29,7 @@ public class SudamerikUtil extends ProductoUtil<SudamerikEntidad> {
                                                 Collections.singletonList(conjunto.getCantidadEspecifica())
                                                 )
                                     )
+                                    .distribuidora(Distribuidora.SUDAMERIK)
                                     .precioPorCantidadEspecifica(
                                             conjunto.getPrecio()
                                     )
