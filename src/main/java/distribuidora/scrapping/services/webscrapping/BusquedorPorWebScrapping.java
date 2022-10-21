@@ -69,9 +69,9 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      */
     private List<Document> generarDocumentos() throws IOException {
         List<Document> documentos = new ArrayList<>();
-        int contador = 1;
 
         if (esBuscadorConPaginador){
+            int contador = 1;
             Document doc = Jsoup.connect(generarNuevaURL(contador)).get();
             while(esDocumentValido(doc)){
                 documentos.add(
