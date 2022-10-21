@@ -8,6 +8,11 @@ import java.util.List;
 
 public abstract class ProductoUtil<Entidad> {
 
+    /**
+     * Toma un conjunto de Producto Especifico y lo convierte a conjunto de Producto
+     * @param productos
+     * @return
+     */
     public Collection<Producto> arregloToProducto(Collection<Entidad> productos){
         Collection<Producto> productosConvertidos = new ArrayList<>();
 
@@ -21,13 +26,38 @@ public abstract class ProductoUtil<Entidad> {
     }
 
     /**
-     * ingresa un producto y salen todas las conversiones necesarias
+     * ingresa un producto Especifico y salen todas las conversiones necesarias.
+     * En caso de querer convertir propiedades en descripcion utilizar el metodo validador.
      * @param productoSinConvertir
-     * @return puede que un unico producto tenga diferentes ofertas precios en funcion a la cantidad
+     * @return puede que sea uno solo o sean un conjunto, depende de la Entidad Especifica
+     * @see ProductoUtil#validaryAgregarPropiedadesQueNoEstanRepetidasEnOriginal(String, List)
      */
     public abstract List<Producto> convertirProductoyDevolverlo(Entidad productoSinConvertir);
 
 
+    /**
+     * Compara el nombre original del producto contra un conjunto de propiedades y agrega segun corresponda.
+     * La idea es que contenga la mayor cantidad de propiedades utiles para el cliente siempre y cuando no se encuentren repetidas. Al ser algo que se puede llegar a repetir con varias Entidades Especificas prefiero colocarlo por herencia.
+     * En caso de no tener ningun
+     * @param nombreProductoOriginal
+     * @param propiedadesParaValidar
+     * @return
+     */
+    protected String validaryAgregarPropiedadesQueNoEstanRepetidasEnOriginal(
+            String nombreProductoOriginal,
+            List<String> propiedadesParaValidar){
+        StringBuilder nombreProductoFinal = new StringBuilder(nombreProductoOriginal);
+        propiedadesParaValidar.forEach(
+                propiedad -> {
+                    if (!nombreProductoOriginal.contains(propiedad)){
+                        nombreProductoFinal
+                                .append(" ")
+                                .append(propiedad);
+                    }
+                }
+        );
+        return nombreProductoFinal.toString();
+    }
 
 
 }
