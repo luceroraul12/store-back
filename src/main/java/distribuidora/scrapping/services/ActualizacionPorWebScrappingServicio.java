@@ -9,27 +9,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ActualizacionPorWebScrappingServicio {
-//    @Autowired
-//    SudamerikWebScrappingServicio sudamerikWebScrappingServicio;
-//
-//    @Autowired
-//    MelarSeleniumWebScrappingServicio melarSeleniumWebScrappingServicio;
-//
-//    @Autowired
-//    DonGasparWebScrappingServicio donGasparWebScrappingServicio;
-//
-//    @Autowired
-//    LaGranjaDelCentroWebScrappingServicio laGranjaDelCentroWebScrappingServicio;
-
     @Autowired
     Comunicador comunicador;
 
 
     public void actualizarTodasLasDistribuidoras(){
-//        this.donGasparWebScrappingServicio.generarProductosEntidadYActualizarCollecciones(false);
-//        this.melarSeleniumWebScrappingServicio.generarProductosEntidadYActualizarCollecciones(false);
-//        this.laGranjaDelCentroWebScrappingServicio.generarProductosEntidadYActualizarCollecciones(false);
-//        this.sudamerikWebScrappingServicio.generarProductosEntidadYActualizarCollecciones(false);
         PeticionWebScrapping peticion = PeticionWebScrapping.builder().build();
         comunicador.getDisparadorActualizacion().onNext(peticion);
     }
