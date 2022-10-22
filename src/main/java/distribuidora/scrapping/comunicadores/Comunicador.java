@@ -1,6 +1,7 @@
 package distribuidora.scrapping.comunicadores;
 
-import distribuidora.scrapping.entities.PeticionFrontEndDocumento;
+import distribuidora.scrapping.entities.Peticion;
+import distribuidora.scrapping.entities.PeticionExcel;
 import distribuidora.scrapping.enums.Distribuidora;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import lombok.Data;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 public class Comunicador {
-    private PublishSubject<Boolean> disparadorActualizacionWebScrapping = PublishSubject.create();
-    private PublishSubject<Distribuidora> disparadorActualizacionWebScrappingPorDistribuidora = PublishSubject.create();
-    private PublishSubject<PeticionFrontEndDocumento> disparadorActualizacionExcelPorDistribuidora = PublishSubject.create();
+//    private PublishSubject<Boolean> disparadorActualizacionWebScrapping = PublishSubject.create();
+//    private PublishSubject<Distribuidora> disparadorActualizacionWebScrappingPorDistribuidora = PublishSubject.create();
+//    private PublishSubject<PeticionExcel> disparadorActualizacionExcelPorDistribuidora = PublishSubject.create();
+
+    private PublishSubject<Peticion> disparadorActualizacion = PublishSubject.create();
 }

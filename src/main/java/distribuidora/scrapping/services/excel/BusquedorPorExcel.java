@@ -1,7 +1,7 @@
 package distribuidora.scrapping.services.excel;
 
 import distribuidora.scrapping.comunicadores.Comunicador;
-import distribuidora.scrapping.entities.PeticionFrontEndDocumento;
+import distribuidora.scrapping.entities.PeticionExcel;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,14 +22,14 @@ import java.util.List;
 /**
  * Encargada de configurar la busqueda por medio de documentos excel.
  * @param <Entidad>
- * @see PeticionFrontEndDocumento
+ * @see PeticionExcel
  */
-public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, PeticionFrontEndDocumento> {
+public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, PeticionExcel> {
 
     @Autowired
     Comunicador comunicador;
     @Override
-    protected List<Entidad> adquirirProductosEntidad(PeticionFrontEndDocumento elementoAuxiliar) {
+    protected List<Entidad> adquirirProductosEntidad(PeticionExcel elementoAuxiliar) {
         List<Entidad> productosrecolectados;
         try {
             productosrecolectados = new ArrayList<>(obtenerProductosApartirDeExcels(elementoAuxiliar.getExcels()));
@@ -44,7 +43,11 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
     protected void initTipoDeBusqueda() {
         setTipoDistribuidora(TipoDistribuidora.EXCEL);
         System.out.println("buscadores excel");
-        comunicador.getDisparadorActualizacionExcelPorDistribuidora().subscribe(
+        comunicador.getDisparadorActualizacion()
+                .filter(comunicadorInformacionAuxiliar
+                        -> comunicadorInformacionAuxiliar.getClass() == PeticionExcel.class)
+                .cast(PeticionExcel.class)
+                .subscribe(
                 documento -> {
                     if(documento.getDistribuidora() == getDistribuidora()){
                         this.generarProductosEntidadYActualizarCollecciones(documento);
@@ -55,7 +58,7 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
 
     @Override
     protected void destroy() {
-        comunicador.getDisparadorActualizacionExcelPorDistribuidora().onComplete();
+        comunicador.getDisparadorActualizacion().onComplete();
     }
 
     /**

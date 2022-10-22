@@ -1,5 +1,7 @@
 package distribuidora.scrapping.enums;
 
-public enum TipoDistribuidora {
+import distribuidora.scrapping.comunicadores.ComunicadorInformacionActualizacion;
+
+public enum TipoDistribuidora implements ComunicadorInformacionActualizacion {
     EXCEL, WEB_SCRAPPING
 }
