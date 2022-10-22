@@ -12,7 +12,10 @@ import java.util.List;
 
 @Service
 public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
-    public IndiasExcelServicio() {
+
+
+    @Override
+    protected void intitEspecifico() {
         distribuidora = Distribuidora.INDIAS;
     }
 

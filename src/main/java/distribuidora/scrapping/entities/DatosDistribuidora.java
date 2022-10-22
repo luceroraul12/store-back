@@ -12,5 +12,5 @@ import java.time.LocalDate;
 public class DatosDistribuidora {
     private Distribuidora distribuidora;
     private TipoDistribuidora tipo;
-    private LocalDate fechaActualizacion;
+    private String fechaActualizacion;
 }

@@ -1,5 +1,6 @@
 package distribuidora.scrapping.services.excel;
 
+import distribuidora.scrapping.comunicadores.Comunicador;
 import distribuidora.scrapping.entities.PeticionFrontEndDocumento;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.TipoDistribuidora;
@@ -10,8 +11,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,21 +27,38 @@ import java.util.List;
  */
 public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, PeticionFrontEndDocumento> {
 
-    public BusquedorPorExcel() {
-        tipoDistribuidora = TipoDistribuidora.EXCEL;
-    }
-
+    @Autowired
+    Comunicador comunicador;
     @Override
     protected List<Entidad> adquirirProductosEntidad(PeticionFrontEndDocumento elementoAuxiliar) {
         List<Entidad> productosrecolectados;
-
         try {
             productosrecolectados = new ArrayList<>(obtenerProductosApartirDeExcels(elementoAuxiliar.getExcels()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return productosrecolectados;
+    }
+
+    @Override
+    protected void init() {
+        tipoDistribuidora = TipoDistribuidora.EXCEL;
+        System.out.println("buscadores excel");
+        comunicador.getDisparadorActualizacionExcelPorDistribuidora().subscribe(
+                documento -> {
+                    if(documento.getDistribuidora() == this.distribuidora){
+                        this.generarProductosEntidadYActualizarCollecciones(documento);
+                    }
+                }
+        );
+    }
+
+    @PostConstruct
+    protected abstract void intitEspecifico();
+
+    @Override
+    protected void destroy() {
+        comunicador.getDisparadorActualizacionExcelPorDistribuidora().onComplete();
     }
 
     /**
@@ -58,7 +78,6 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
                 productosFinales.addAll(obtenerProductosPorSheet(s));
             });
         }
-
         return productosFinales;
     }
 

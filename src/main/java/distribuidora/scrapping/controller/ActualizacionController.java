@@ -70,7 +70,7 @@ public class ActualizacionController {
                     DatosDistribuidora.builder()
                             .distribuidora(union.getDistribuidora())
                             .tipo(union.getTipoDistribuidora())
-                            .fechaActualizacion(union.getFechaScrap())
+                            .fechaActualizacion(union.getFechaScrap().toString())
                             .build()
             );
         });

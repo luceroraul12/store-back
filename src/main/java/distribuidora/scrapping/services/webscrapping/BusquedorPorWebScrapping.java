@@ -4,16 +4,14 @@ import distribuidora.scrapping.comunicadores.Comunicador;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
-import lombok.Data;
-import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -167,7 +165,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      */
     protected abstract Elements filtrarElementos(Document documento);
 
-    @PostConstruct
+    @Override
     public void init(){
         tipoDistribuidora = TipoDistribuidora.WEB_SCRAPPING;
         comunicador.getDisparadorActualizacionWebScrapping().subscribe(
@@ -176,6 +174,20 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
                     generarProductosEntidadYActualizarCollecciones(false);
                 }
         );
+        comunicador.getDisparadorActualizacionWebScrappingPorDistribuidora().subscribe(
+                distribuidora -> {
+                    if(distribuidora == this.distribuidora){
+                        System.out.println("Servicio Seleccionado "+this.getClass());
+                        this.generarProductosEntidadYActualizarCollecciones(false);
+                    }
+                }
+        );
+    }
+    @Override
+    public void destroy(){
+        System.out.println("finalizando comunicador: "+this.getClass());
+        comunicador.getDisparadorActualizacionWebScrappingPorDistribuidora().onComplete();
+        comunicador.getDisparadorActualizacionWebScrapping().onComplete();
     }
 
 }

@@ -14,7 +14,8 @@ import java.util.List;
 @Service
 public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
 
-    public FacundoExcelServicio() {
+    @Override
+    protected void intitEspecifico() {
         distribuidora = Distribuidora.FACUNDO;
     }
 

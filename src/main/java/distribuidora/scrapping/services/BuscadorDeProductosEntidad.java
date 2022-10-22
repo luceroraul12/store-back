@@ -10,6 +10,8 @@ import distribuidora.scrapping.services.excel.BusquedorPorExcel;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,6 +36,13 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
     @Autowired
     UnionRepository<Entidad> unionRepository;
 
+
+
+    @PostConstruct
+    protected abstract void init();
+
+    @PreDestroy
+    protected abstract void destroy();
 
     /**
      * Metodo por el cual se inicia el proceso de busqueda de datos en el proceso especifico.
@@ -102,4 +111,5 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
                 distribuidora
         );
     }
+
 }

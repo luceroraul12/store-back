@@ -1,7 +1,7 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.comunicadores.Comunicador;
-import distribuidora.scrapping.services.webscrapping.*;
+import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +29,9 @@ public class ActualizacionPorWebScrappingServicio {
 //        this.laGranjaDelCentroWebScrappingServicio.generarProductosEntidadYActualizarCollecciones(false);
 //        this.sudamerikWebScrappingServicio.generarProductosEntidadYActualizarCollecciones(false);
         comunicador.getDisparadorActualizacionWebScrapping().onNext(true);
+    }
+
+    public void actualizarPorDistribuidora(Distribuidora distribuidora){
+        comunicador.getDisparadorActualizacionWebScrappingPorDistribuidora().onNext(distribuidora);
     }
 }
