@@ -18,11 +18,7 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
     @Autowired
     MelarUtil melarUtil;
 
-    public MelarSeleniumWebScrappingServicio() {
-        urlBuscador = "https://listadepreciosmelar.com.ar";
-        distribuidora = Distribuidora.MELAR;
-        esNecesarioUsarWebDriver = true;
-    }
+
 
 
     @Override
@@ -87,5 +83,12 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
     protected Elements filtrarElementos(Document documento) {
         return documento.getElementsByTag("table")
                 .select("table > tbody > tr:not(.group)");
+    }
+
+    @Override
+    protected void initEspecifico() {
+        setDistribuidora(Distribuidora.MELAR);
+        setEsNecesarioUsarWebDriver(true);
+        setUrlBuscador("https://listadepreciosmelar.com.ar");
     }
 }

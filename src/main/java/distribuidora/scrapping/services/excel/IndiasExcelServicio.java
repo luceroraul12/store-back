@@ -13,12 +13,6 @@ import java.util.List;
 @Service
 public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
 
-
-    @Override
-    protected void intitEspecifico() {
-        distribuidora = Distribuidora.INDIAS;
-    }
-
     @Override
     boolean esRowValido(Row row) {
         boolean resultado = false;
@@ -56,7 +50,12 @@ public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
         return Collections.singletonList(Producto.builder()
                 .descripcion(descripcion)
                 .precioPorCantidadEspecifica(productoEntidad.getPrecio())
-                .distribuidora(distribuidora)
+                .distribuidora(getDistribuidora())
                 .build());
+    }
+
+    @Override
+    protected void initEspecifico() {
+        setDistribuidora(Distribuidora.INDIAS);
     }
 }

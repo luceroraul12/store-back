@@ -20,15 +20,6 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
     @Autowired
     LaGranjaDelCentroUtil laGranjaDelCentroUtil;
 
-
-    public LaGranjaDelCentroWebScrappingServicio() {
-        urlBuscador = "https://lagranjadelcentro.com.ar/productos.php?pagina=";
-        distribuidora = Distribuidora.LA_GRANJA_DEL_CENTRO;
-        esBuscadorConPaginador = true;
-
-
-    }
-
     /**
      * Para este caso, contienen un apartado  de paginador.
      * En el template aparece la siguiente etiqueta 'span' con los siguientes atributos:<br>
@@ -75,9 +66,6 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
 
     @Override
     protected Elements filtrarElementos(Document documento) {
-//        setClasesTabla("box-content-1");
-//        setClasesNombreProducto("h3-content-1");
-//        setClasesPrecio("p-precio-content-1");
         return documento
                 .select("div.box-content-1");
     }
@@ -88,51 +76,10 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
         return laGranjaDelCentroUtil.convertirProductoyDevolverlo(productoEntidad);
     }
 
-
-//    @Override
-//    protected void trabajarConElementsyObtenerProductosEspecificos(Elements productos) {
-//
-//        productos.forEach( producto -> {
-//            String nombre = producto.getElementsByClass("h3-content-1").text();
-//            String precio = producto.getElementsByClass("p-precio-content-1").text();
-//
-//            agregarProducto(
-//                    LaGranjaDelCentroEntidad
-//                            .builder()
-//                            .nombreProducto(
-//                                    producto.getElementsByClass("h3-content-1").text()
-//                            )
-//                            .precio(
-//                                    Double.valueOf(producto
-//                                            .getElementsByClass("p-precio-content-1")
-//                                            .text()
-//                                            .replaceAll("[$.]","")
-//                                            .replaceAll(",","."))
-//                            )
-//                            .build()
-//            );
-//            System.out.println(
-//                    LaGranjaDelCentroEntidad
-//                            .builder()
-//                            .nombreProducto(
-//                                    producto.getElementsByClass("h3-content-1").text()
-//                            )
-//                            .precio(
-//                                    Double.valueOf(producto
-//                                            .getElementsByClass("p-precio-content-1")
-//                                            .text()
-//                                            .replaceAll("[$.]","")
-//                                            .replaceAll(",","."))
-//                            )
-//                            .build()
-//            );
-//        });
-//
-//
-//    }
-//
-//    @Override
-//    protected Collection<Producto> convertirProductos(UnionEntidad<LaGranjaDelCentroEntidad> dataDB) {
-//        return laGranjaDelCentroUtil.arregloToProducto(dataDB.getDatos());
-//    }
+    @Override
+    protected void initEspecifico() {
+        setDistribuidora(Distribuidora.LA_GRANJA_DEL_CENTRO);
+        setEsBuscadorConPaginador(true);
+        setUrlBuscador("https://lagranjadelcentro.com.ar/productos.php?pagina=");
+    }
 }

@@ -20,12 +20,6 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
     @Autowired
     SudamerikUtil sudamerikUtil;
 
-    public SudamerikWebScrappingServicio() {
-        urlBuscador = "https://www.sudamerikargentina.com.ar/productos/pagina/";
-        distribuidora = Distribuidora.SUDAMERIK;
-        esBuscadorConPaginador = true;
-    }
-
     /**
      * En este momento, tiene una paginacion maxima de 48
      * Esta pagina al superar el limite de paginacion no contiene redireccionamiento, por lo que sigue buscando y al no tener productos muestra una ventana sin productos pero muestra el sistema de paginaciones.
@@ -61,9 +55,6 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
         );
         return productosCreados;
     }
-
-
-
 
     @Override
     protected Elements filtrarElementos(Document documento) {
@@ -103,5 +94,12 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
                 }
         );
         return conjuntoDePrecios;
+    }
+
+    @Override
+    protected void initEspecifico() {
+        setDistribuidora(Distribuidora.SUDAMERIK);
+        setEsBuscadorConPaginador(true);
+        setUrlBuscador("https://www.sudamerikargentina.com.ar/productos/pagina/");
     }
 }

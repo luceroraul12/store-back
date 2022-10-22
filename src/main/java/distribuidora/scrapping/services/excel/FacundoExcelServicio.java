@@ -14,10 +14,7 @@ import java.util.List;
 @Service
 public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
 
-    @Override
-    protected void intitEspecifico() {
-        distribuidora = Distribuidora.FACUNDO;
-    }
+
 
     @Override
     boolean esRowValido(Row row) {
@@ -82,17 +79,22 @@ public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
                 Producto.builder()
                         .descripcion(descripcionMayor)
                         .precioPorCantidadEspecifica(productoEntidad.getPrecioMayor())
-                        .distribuidora(distribuidora)
+                        .distribuidora(getDistribuidora())
                         .build()
         );
         productosGenerados.add(
                 Producto.builder()
                         .descripcion(descripcionMenor)
                         .precioPorCantidadEspecifica(productoEntidad.getPrecioMenor())
-                        .distribuidora(distribuidora)
+                        .distribuidora(getDistribuidora())
                         .build()
         );
 
         return productosGenerados;
+    }
+
+    @Override
+    protected void initEspecifico() {
+        setDistribuidora(Distribuidora.FACUNDO);
     }
 }

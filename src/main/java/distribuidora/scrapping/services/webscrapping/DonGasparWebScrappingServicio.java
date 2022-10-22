@@ -15,18 +15,8 @@ import java.util.List;
 
 @Service
 public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonGasparEntidad> {
-
-
     @Autowired
     DonGasparUtil donGasparUtil;
-
-    public DonGasparWebScrappingServicio() {
-        urlBuscador = "https://pidorapido.com/dongasparsj";
-        distribuidora = Distribuidora.DON_GASPAR;
-        esNecesarioUsarWebDriver = true;
-
-//        setClasesTabla("container");
-    }
 
     @Override
     protected boolean esDocumentValido(Document document) {
@@ -68,5 +58,12 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
     @Override
     protected List<Producto> mapearEntidadaProducto(DonGasparEntidad productoEntidad) {
         return donGasparUtil.convertirProductoyDevolverlo(productoEntidad);
+    }
+
+    @Override
+    protected void initEspecifico() {
+        setDistribuidora(Distribuidora.DON_GASPAR);
+        setUrlBuscador("https://pidorapido.com/dongasparsj");
+        setEsNecesarioUsarWebDriver(true);
     }
 }
