@@ -38,11 +38,11 @@ public class ActualizacionController {
     /**
      * Permite actualizar los productos de las distribuidoras que dependan de excel. Actualiza una Distribuidora a la vez
      * @param documento Debe contener todas sus partes.
-     * @see PeticionFrontEndDocumento
+     * @see PeticionExcel
      * @throws IOException
      */
     @PostMapping("excel")
-    public void actualizacionPorExcel(PeticionFrontEndDocumento documento) throws IOException {
+    public void actualizacionPorExcel(PeticionExcel documento) throws IOException {
         actualizacionPorDocumentoServicio.recibirDocumento(documento);
     }
 

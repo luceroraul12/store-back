@@ -1,13 +1,11 @@
 package distribuidora.scrapping.services.excel;
 
 import distribuidora.scrapping.comunicadores.Comunicador;
-import distribuidora.scrapping.entities.PeticionFrontEndDocumento;
-import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.entities.PeticionExcel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Collection;
 
 @Service
 public class ActualizacionPorDocumentoServicio {
@@ -18,10 +16,10 @@ public class ActualizacionPorDocumentoServicio {
     @Autowired
     private Comunicador comunicador;
 
-    public void recibirDocumento(PeticionFrontEndDocumento documento) throws IOException {
-        this.comunicador.getDisparadorActualizacionExcelPorDistribuidora().onNext(documento);
+    public void recibirDocumento(PeticionExcel peticion) throws IOException {
+        this.comunicador.getDisparadorActualizacion().onNext(peticion);
     }
-    private void identificarDistribuidorayEjecutar(PeticionFrontEndDocumento documento) throws IOException {
+    private void identificarDistribuidorayEjecutar(PeticionExcel documento) throws IOException {
         switch (documento.getDistribuidora()){
             case FACUNDO: {
                 facundoExcelServicio.generarProductosEntidadYActualizarCollecciones(documento);

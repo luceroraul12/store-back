@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.comunicadores.Comunicador;
+import distribuidora.scrapping.entities.PeticionWebScrapping;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.TipoDistribuidora;
@@ -26,7 +27,7 @@ import java.util.List;
  * @param <Entidad>
  */
 @Data
-public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, Boolean> {
+public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, PeticionWebScrapping> {
 
     @Autowired
     private Comunicador comunicador;
@@ -54,7 +55,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
 
 
     @Override
-    public List<Entidad> adquirirProductosEntidad(Boolean elementoAuxiliar) {
+    public List<Entidad> adquirirProductosEntidad(PeticionWebScrapping peticionWebScrapping) {
         List<Entidad> productostotales = new ArrayList<>();
         try {
             generarDocumentos().forEach(
@@ -173,20 +174,31 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
     @Override
     public void initTipoDeBusqueda(){
         setTipoDistribuidora(TipoDistribuidora.WEB_SCRAPPING);
-        comunicador.getDisparadorActualizacionWebScrapping().subscribe(
-                respuesta -> {
-                    System.out.println("realizado desde:\t"+getDistribuidora());
-                    generarProductosEntidadYActualizarCollecciones(false);
-                }
-        );
-        comunicador.getDisparadorActualizacionWebScrappingPorDistribuidora().subscribe(
-                distribuidora -> {
-                    if(distribuidora == getDistribuidora()){
-                        System.out.println("Servicio Seleccionado "+this.getClass());
-                        this.generarProductosEntidadYActualizarCollecciones(false);
-                    }
-                }
-        );
+//        comunicador.getDisparadorActualizacionWebScrapping().subscribe(
+//                respuesta -> {
+//                    System.out.println("realizado desde:\t"+getDistribuidora());
+//                    generarProductosEntidadYActualizarCollecciones(false);
+//                }
+//        );
+//        comunicador.getDisparadorActualizacionWebScrappingPorDistribuidora().subscribe(
+//                distribuidora -> {
+//                    if(distribuidora == getDistribuidora()){
+//                        System.out.println("Servicio Seleccionado "+this.getClass());
+//                        this.generarProductosEntidadYActualizarCollecciones(false);
+//                    }
+//                }
+//        );
+        comunicador.getDisparadorActualizacion()
+                .filter(peticion -> peticion.getClass() == PeticionWebScrapping.class)
+                .cast(PeticionWebScrapping.class)
+                .subscribe(peticionWebScrapping -> {
+                   if (peticionWebScrapping.getDistribuidora() != null){
+                       System.out.println("Es Peticion Unica "+ getDistribuidora());
+                   } else {
+                       System.out.println("Es peticion General "+ getDistribuidora());
+                       this.generarProductosEntidadYActualizarCollecciones(peticionWebScrapping);
+                   }
+                });
     }
 
 
@@ -194,8 +206,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
     @Override
     public void destroy(){
         System.out.println("finalizando comunicador: "+this.getClass());
-        comunicador.getDisparadorActualizacionWebScrappingPorDistribuidora().onComplete();
-        comunicador.getDisparadorActualizacionWebScrapping().onComplete();
+        comunicador.getDisparadorActualizacion().onComplete();
     }
 
 }

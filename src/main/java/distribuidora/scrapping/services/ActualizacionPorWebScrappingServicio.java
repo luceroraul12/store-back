@@ -1,6 +1,8 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.comunicadores.Comunicador;
+import distribuidora.scrapping.entities.Peticion;
+import distribuidora.scrapping.entities.PeticionWebScrapping;
 import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,10 +30,16 @@ public class ActualizacionPorWebScrappingServicio {
 //        this.melarSeleniumWebScrappingServicio.generarProductosEntidadYActualizarCollecciones(false);
 //        this.laGranjaDelCentroWebScrappingServicio.generarProductosEntidadYActualizarCollecciones(false);
 //        this.sudamerikWebScrappingServicio.generarProductosEntidadYActualizarCollecciones(false);
-        comunicador.getDisparadorActualizacionWebScrapping().onNext(true);
+        PeticionWebScrapping peticion = PeticionWebScrapping.builder().build();
+        comunicador.getDisparadorActualizacion().onNext(peticion);
     }
 
     public void actualizarPorDistribuidora(Distribuidora distribuidora){
-        comunicador.getDisparadorActualizacionWebScrappingPorDistribuidora().onNext(distribuidora);
+        PeticionWebScrapping peticion = PeticionWebScrapping.builder()
+                .distribuidora(distribuidora)
+                .build();
+        comunicador.getDisparadorActualizacion().onNext(
+                peticion
+        );
     }
 }
