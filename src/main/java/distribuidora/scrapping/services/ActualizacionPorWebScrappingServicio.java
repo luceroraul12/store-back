@@ -1,10 +1,7 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.comunicadores.Comunicador;
-import distribuidora.scrapping.services.webscrapping.DonGasparWebScrappingServicio;
-import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroWebScrappingServicio;
-import distribuidora.scrapping.services.webscrapping.MelarSeleniumWebScrappingServicio;
-import distribuidora.scrapping.services.webscrapping.SudamerikWebScrappingServicio;
+import distribuidora.scrapping.services.webscrapping.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
