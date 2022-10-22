@@ -8,7 +8,9 @@ import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
 import distribuidora.scrapping.services.excel.BusquedorPorExcel;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -23,23 +25,42 @@ import java.util.List;
  * @see UnionEntidad
  * @see UnionRepository
  */
+@Data
 public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecifico, Auxiliar>  extends RelacionadorConProducto<Entidad> {
 
     /**
      * Cada servicio final tiene que tener la enumeracion de la distribuidora a la que pertenece.
      */
-    protected Distribuidora distribuidora;
-    protected TipoDistribuidora tipoDistribuidora;
-    protected LocalDate fechaUltimaActualizacion;
+    private Distribuidora distribuidora;
+    /**
+     * Cada tipo de busqueda tiene que tener la enumeracion del tipo a la que pertenece
+     */
+    private TipoDistribuidora tipoDistribuidora;
+
+    private LocalDate fechaUltimaActualizacion;
 
 
     @Autowired
-    UnionRepository<Entidad> unionRepository;
+    private UnionRepository<Entidad> unionRepository;
 
 
-
+    /**
+     * Es el metodo de inicializacion para los tipos de busqueda.<br>
+     * Se debe tener seteado {@link BuscadorDeProductosEntidad#tipoDistribuidora}
+     * @see BuscadorDeProductosEntidad#setTipoDistribuidora(TipoDistribuidora) 
+     */
     @PostConstruct
-    protected abstract void init();
+    @Order(1)
+    protected abstract void initTipoDeBusqueda();
+
+    /**
+     * Es el metodo de inicializacion para las implementaciones.<br>
+     * Se debe tener seteado {@link BuscadorDeProductosEntidad#distribuidora}
+     * @see BuscadorDeProductosEntidad#setTipoDistribuidora(TipoDistribuidora)
+     */
+    @PostConstruct
+    @Order(2)
+    protected abstract void initEspecifico();
 
     @PreDestroy
     protected abstract void destroy();
@@ -110,6 +131,26 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
                 convertirTodosAProducto(productos),
                 distribuidora
         );
+    }
+
+    /**
+     * Inicializacion encargada de verificar Base de datos.<br>
+     * Verifica si existe la implementacion en la base de datos, en caso de no existir, crea una con los datos de la misma.<br>
+     * Toda implementacion debe tener seteado:
+     * {@link BuscadorDeProductosEntidad#distribuidora},{@link BuscadorDeProductosEntidad#tipoDistribuidora}
+     * para poder realizar esta verificacion.
+     */
+    @PostConstruct
+    @Order(3)
+    private void verificarExistenciaEnBaseDeDatosEspecifica() {
+        if (!this.unionRepository.existsByDistribuidora(this.distribuidora)){
+            System.out.println(this.distribuidora +"no existe, creando ...");
+            UnionEntidad<Entidad> union = new UnionEntidad<>();
+            union.setDistribuidora(this.distribuidora);
+            union.setTipoDistribuidora(this.tipoDistribuidora);
+            union.setFechaScrap(LocalDate.now());
+            this.unionRepository.save(union);
+        };
     }
 
 }
