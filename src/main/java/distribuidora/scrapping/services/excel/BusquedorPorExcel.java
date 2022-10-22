@@ -41,20 +41,17 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
     }
 
     @Override
-    protected void init() {
-        tipoDistribuidora = TipoDistribuidora.EXCEL;
+    protected void initTipoDeBusqueda() {
+        setTipoDistribuidora(TipoDistribuidora.EXCEL);
         System.out.println("buscadores excel");
         comunicador.getDisparadorActualizacionExcelPorDistribuidora().subscribe(
                 documento -> {
-                    if(documento.getDistribuidora() == this.distribuidora){
+                    if(documento.getDistribuidora() == getDistribuidora()){
                         this.generarProductosEntidadYActualizarCollecciones(documento);
                     }
                 }
         );
     }
-
-    @PostConstruct
-    protected abstract void intitEspecifico();
 
     @Override
     protected void destroy() {
