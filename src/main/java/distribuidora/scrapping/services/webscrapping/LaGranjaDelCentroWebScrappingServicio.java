@@ -40,9 +40,7 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
     @Override
     protected boolean esDocumentValido(Document document) {
         boolean esValido = false;
-        System.out.println(document);
-
-        for (Element element : document.getElementsByTag("span")){
+         for (Element element : document.getElementsByTag("span")){
             if (element.hasClass("p-activo")){
                 esValido = true;
             };

@@ -1,14 +1,19 @@
 package distribuidora.scrapping.services.webscrapping;
 
+import distribuidora.scrapping.comunicadores.Comunicador;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
+import lombok.Data;
+import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +24,10 @@ import java.util.List;
  * @param <Entidad>
  */
 public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, Boolean> {
+
+    @Autowired
+    private Comunicador comunicador;
+
     /**
      * Obligatorio para poder comenzar a utilizar el servicio
      */
@@ -36,12 +45,10 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      */
     protected Boolean esNecesarioUsarWebDriver = false;
 
-    public BusquedorPorWebScrapping() {
-        tipoDistribuidora = TipoDistribuidora.WEB_SCRAPPING;
-    }
-
     @Autowired
     WebDriver driver;
+
+
 
     @Override
     public List<Entidad> adquirirProductosEntidad(Boolean elementoAuxiliar) {
@@ -159,5 +166,16 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * @return elementos filtrados
      */
     protected abstract Elements filtrarElementos(Document documento);
+
+    @PostConstruct
+    public void init(){
+        tipoDistribuidora = TipoDistribuidora.WEB_SCRAPPING;
+        comunicador.getDisparadorActualizacionWebScrapping().subscribe(
+                respuesta -> {
+                    System.out.println("realizado desde:\t"+distribuidora);
+                    generarProductosEntidadYActualizarCollecciones(false);
+                }
+        );
+    }
 
 }
