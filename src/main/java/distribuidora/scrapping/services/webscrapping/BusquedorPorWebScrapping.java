@@ -2,8 +2,10 @@ package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.comunicadores.Comunicador;
 import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
+import lombok.Data;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -13,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,6 +25,7 @@ import java.util.List;
  * En caso de que alguna pagina no carge el template desde el programa pero si en el navegador, se debera utilizar un WebDriver que simule el uso del navegador.
  * @param <Entidad>
  */
+@Data
 public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, Boolean> {
 
     @Autowired
@@ -29,19 +34,19 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
     /**
      * Obligatorio para poder comenzar a utilizar el servicio
      */
-    protected String urlBuscador;
+    private String urlBuscador;
     /**
      * Variable booleana utilizada para indicar si los productos estan distribuidos por paginadores.
      * En caso de true: se utilizara un metodo especifico para la generacion de las nuevas URL.
      * Valor por defecto: false.
      * @see BusquedorPorWebScrapping#generarNuevaURL(int)
      */
-    protected Boolean esBuscadorConPaginador = false;
+    private Boolean esBuscadorConPaginador = false;
 
     /**
      * Variable booleana utilizada para indicar si es necesario contar con un Webdriver para generar los templates de la pagina Web.
      */
-    protected Boolean esNecesarioUsarWebDriver = false;
+    private Boolean esNecesarioUsarWebDriver = false;
 
     @Autowired
     WebDriver driver;
@@ -166,23 +171,26 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
     protected abstract Elements filtrarElementos(Document documento);
 
     @Override
-    public void init(){
-        tipoDistribuidora = TipoDistribuidora.WEB_SCRAPPING;
+    public void initTipoDeBusqueda(){
+        setTipoDistribuidora(TipoDistribuidora.WEB_SCRAPPING);
         comunicador.getDisparadorActualizacionWebScrapping().subscribe(
                 respuesta -> {
-                    System.out.println("realizado desde:\t"+distribuidora);
+                    System.out.println("realizado desde:\t"+getDistribuidora());
                     generarProductosEntidadYActualizarCollecciones(false);
                 }
         );
         comunicador.getDisparadorActualizacionWebScrappingPorDistribuidora().subscribe(
                 distribuidora -> {
-                    if(distribuidora == this.distribuidora){
+                    if(distribuidora == getDistribuidora()){
                         System.out.println("Servicio Seleccionado "+this.getClass());
                         this.generarProductosEntidadYActualizarCollecciones(false);
                     }
                 }
         );
     }
+
+
+
     @Override
     public void destroy(){
         System.out.println("finalizando comunicador: "+this.getClass());
