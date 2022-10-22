@@ -14,4 +14,6 @@ public interface UnionRepository<Entidad extends ProductoEspecifico> extends Mon
 
     String deleteUnionEntidadByDistribuidora(@Param("distribuidora") Distribuidora distribuidora);
 
+    boolean existsByDistribuidora(@Param("distribuidora") Distribuidora distribuidora);
+
 }
