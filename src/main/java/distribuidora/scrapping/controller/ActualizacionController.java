@@ -53,8 +53,16 @@ public class ActualizacionController {
     }
 
     @PostMapping("web-scrapping/individual")
-    public void actualizacionPorWebScrappingIndividual(@RequestParam Distribuidora distribuidora){
+    public ResponseEntity<DatosDistribuidora> actualizacionPorWebScrappingIndividual
+            (@RequestParam Distribuidora distribuidora){
         this.actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(distribuidora);
+        UnionEntidad<ProductoEspecifico> union = unionRepository.findByDistribuidora(distribuidora);
+        return new ResponseEntity<>(DatosDistribuidora.builder()
+                .fechaActualizacion(union.getFechaScrap().toString())
+                .cantidadDeProductosAlmacenados(union.getCantidadDeProductosAlmacenados())
+                .distribuidora(union.getDistribuidora())
+                .tipo(union.getTipoDistribuidora())
+                .build(),HttpStatus.OK);
     }
 
 
