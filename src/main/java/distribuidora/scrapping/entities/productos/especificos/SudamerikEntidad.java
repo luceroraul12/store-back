@@ -2,6 +2,7 @@ package distribuidora.scrapping.entities.productos.especificos;
 
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.enums.Distribuidora;
 import lombok.*;
 
 import java.util.List;
@@ -9,13 +10,16 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Builder
 public class SudamerikEntidad extends ProductoEspecifico {
     private String nombreProducto;
-//    private String cantidadEspecifca;
-//    private Double precio;
     private List<SudamerikConjuntoEspecifico> cantidadesEspecificas;
 
+    @Builder
+    public SudamerikEntidad(Distribuidora distribuidora, String nombreProducto, List<SudamerikConjuntoEspecifico> cantidadesEspecificas) {
+        super(distribuidora);
+        this.nombreProducto = nombreProducto;
+        this.cantidadesEspecificas = cantidadesEspecificas;
+    }
 
     @Data
     @Builder

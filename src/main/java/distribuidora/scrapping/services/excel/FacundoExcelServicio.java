@@ -39,6 +39,7 @@ public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
     @Override
     FacundoEntidad mapearRowPorProducto(Row row) {
         return FacundoEntidad.builder()
+                .distribuidora(getDistribuidora())
                 .categoria(row.getCell(0).getStringCellValue())
                 .subcategoria(row.getCell(1).getStringCellValue())
                 .cantidad(row.getCell(2).getStringCellValue())

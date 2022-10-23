@@ -1,6 +1,7 @@
 package distribuidora.scrapping.entities.productos.especificos;
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.enums.Distribuidora;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,6 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@Builder
 @ToString
 public class MelarEntidad extends ProductoEspecifico {
     private String codigo;
@@ -21,6 +21,16 @@ public class MelarEntidad extends ProductoEspecifico {
     private Double precioFraccionado;
     private Double precioGranel;
 
-
-
+    @Builder
+    public MelarEntidad(Distribuidora distribuidora, String codigo, String producto, String fraccion, String granel, String origen, String medida, Double precioFraccionado, Double precioGranel) {
+        super(distribuidora);
+        this.codigo = codigo;
+        this.producto = producto;
+        this.fraccion = fraccion;
+        this.granel = granel;
+        this.origen = origen;
+        this.medida = medida;
+        this.precioFraccionado = precioFraccionado;
+        this.precioGranel = precioGranel;
+    }
 }

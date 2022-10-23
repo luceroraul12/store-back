@@ -47,6 +47,7 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
                 element -> {
                     productosFinales.add(
                             LaGranjaDelCentroEntidad.builder()
+                                    .distribuidora(getDistribuidora())
                                     .nombreProducto(
                                             element.getElementsByClass("h3-content-1").text()
                                     )

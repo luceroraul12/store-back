@@ -40,6 +40,7 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
 
             productosGenerados.add(
                     DonGasparEntidad.builder()
+                            .distribuidora(getDistribuidora())
                             .nombreProducto(descripcion)
                             .precio(precio)
                             .build()

@@ -56,6 +56,7 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
 
             productosGenerados.add(
                     MelarEntidad.builder()
+                            .distribuidora(getDistribuidora())
                             .codigo(renglon.get(0))
                             .producto(renglon.get(1))
                             .fraccion(renglon.get(2))

@@ -45,6 +45,7 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
                     Elements conjuntoPreciosElements = elementProducto.getElementsByClass("number");
                     productosCreados.add(
                             SudamerikEntidad.builder()
+                                    .distribuidora(getDistribuidora())
                                     .nombreProducto(nombreProducto)
                                     .cantidadesEspecificas(
                                             obtenerTodosLosConjuntosDePrecios(conjuntoPreciosElements)

@@ -51,6 +51,9 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
     @Autowired
     private ProductoServicio productoServicio;
 
+    @Autowired
+    private ProductoEspecificoServicio<Entidad> productoEspecificoServicio;
+
 
     /**
      * Es el metodo de inicializacion para los tipos de busqueda.<br>
@@ -136,6 +139,8 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
                 productoUtil.arregloToProducto(productos),
                 this.distribuidora
         );
+
+        this.productoEspecificoServicio.guardarDatos(productos);
     }
 
     /**
