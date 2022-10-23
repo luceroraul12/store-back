@@ -4,6 +4,7 @@ import distribuidora.scrapping.comunicadores.Comunicador;
 import distribuidora.scrapping.entities.PeticionWebScrapping;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UnionEntidad;
+import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
 import lombok.Data;
@@ -192,11 +193,14 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
                 .filter(peticion -> peticion.getClass() == PeticionWebScrapping.class)
                 .cast(PeticionWebScrapping.class)
                 .subscribe(peticionWebScrapping -> {
-                   if (peticionWebScrapping.getDistribuidora() != null){
-                       System.out.println("Es Peticion Unica "+ getDistribuidora());
-                   } else {
-                       System.out.println("Es peticion General "+ getDistribuidora());
+                   if (peticionWebScrapping.getDistribuidora() == this.getDistribuidora()){
+                       System.out.println("actualiza "+ getDistribuidora());
                        this.generarProductosEntidadYActualizarCollecciones(peticionWebScrapping);
+                   } else if (peticionWebScrapping.getDistribuidora() == Distribuidora.TODAS) {
+                       System.out.println("actualizacion General");
+                       this.generarProductosEntidadYActualizarCollecciones(peticionWebScrapping);
+                   } else {
+                       System.out.println("no actualiza "+ getDistribuidora());
                    }
                 });
     }

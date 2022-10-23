@@ -14,7 +14,9 @@ public class ActualizacionPorWebScrappingServicio {
 
 
     public void actualizarTodasLasDistribuidoras(){
-        PeticionWebScrapping peticion = PeticionWebScrapping.builder().build();
+        PeticionWebScrapping peticion = PeticionWebScrapping.builder()
+                .distribuidora(Distribuidora.TODAS)
+                .build();
         comunicador.getDisparadorActualizacion().onNext(peticion);
     }
 

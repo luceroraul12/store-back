@@ -49,8 +49,8 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
      * Se debe tener seteado {@link BuscadorDeProductosEntidad#tipoDistribuidora}
      * @see BuscadorDeProductosEntidad#setTipoDistribuidora(TipoDistribuidora) 
      */
-    @PostConstruct
     @Order(1)
+    @PostConstruct
     protected abstract void initTipoDeBusqueda();
 
     /**
@@ -58,8 +58,8 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
      * Se debe tener seteado {@link BuscadorDeProductosEntidad#distribuidora}
      * @see BuscadorDeProductosEntidad#setTipoDistribuidora(TipoDistribuidora)
      */
-    @PostConstruct
     @Order(2)
+    @PostConstruct
     protected abstract void initEspecifico();
 
     @PreDestroy
@@ -140,8 +140,8 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
      * {@link BuscadorDeProductosEntidad#distribuidora},{@link BuscadorDeProductosEntidad#tipoDistribuidora}
      * para poder realizar esta verificacion.
      */
-    @PostConstruct
     @Order(3)
+    @PostConstruct
     private void verificarExistenciaEnBaseDeDatosEspecifica() {
         if (!this.unionRepository.existsByDistribuidora(this.distribuidora)){
             System.out.println(this.distribuidora +"no existe, creando ...");

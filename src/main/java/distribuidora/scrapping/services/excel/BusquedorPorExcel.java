@@ -50,7 +50,10 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
                 .subscribe(
                 documento -> {
                     if(documento.getDistribuidora() == getDistribuidora()){
+                        System.out.println("actualiza "+ getDistribuidora());
                         this.generarProductosEntidadYActualizarCollecciones(documento);
+                    } else {
+                        System.out.println("no actualiza "+ getDistribuidora());
                     }
                 }
         );
