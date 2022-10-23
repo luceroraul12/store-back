@@ -4,7 +4,7 @@ import distribuidora.scrapping.comunicadores.Comunicador;
 import distribuidora.scrapping.entities.PeticionExcel;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.TipoDistribuidora;
-import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
+import distribuidora.scrapping.services.BuscadorDeProductos;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,7 +24,7 @@ import java.util.List;
  * @param <Entidad>
  * @see PeticionExcel
  */
-public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, PeticionExcel> {
+public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> extends BuscadorDeProductos<Entidad, PeticionExcel> {
 
     @Autowired
     Comunicador comunicador;

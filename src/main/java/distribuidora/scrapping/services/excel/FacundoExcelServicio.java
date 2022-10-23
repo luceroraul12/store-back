@@ -60,40 +60,6 @@ public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
     }
 
     @Override
-    public List<Producto> mapearEntidadaProducto(FacundoEntidad productoEntidad) {
-        List<Producto> productosGenerados = new ArrayList<>();
-        String descripcionMenor = String.format(
-                "%s %s X %s X menor",
-                productoEntidad.getCategoria(),
-                productoEntidad.getSubcategoria(),
-                productoEntidad.getCantidad()
-        );
-        String descripcionMayor = String.format(
-                "%s %s X %s X mayor",
-                productoEntidad.getCategoria(),
-                productoEntidad.getSubcategoria(),
-                productoEntidad.getCantidad()
-        );
-
-        productosGenerados.add(
-                Producto.builder()
-                        .descripcion(descripcionMayor)
-                        .precioPorCantidadEspecifica(productoEntidad.getPrecioMayor())
-                        .distribuidora(getDistribuidora())
-                        .build()
-        );
-        productosGenerados.add(
-                Producto.builder()
-                        .descripcion(descripcionMenor)
-                        .precioPorCantidadEspecifica(productoEntidad.getPrecioMenor())
-                        .distribuidora(getDistribuidora())
-                        .build()
-        );
-
-        return productosGenerados;
-    }
-
-    @Override
     protected void initEspecifico() {
         setDistribuidora(Distribuidora.FACUNDO);
     }

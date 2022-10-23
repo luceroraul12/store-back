@@ -61,11 +61,6 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
         return documento.select("div.productos-container");
     }
 
-    @Override
-    protected List<Producto> mapearEntidadaProducto(SudamerikEntidad productoEntidad) {
-        return sudamerikUtil.convertirProductoyDevolverlo(productoEntidad);
-    }
-
     /**
      * Toma el conjunto de precios en elements y lo convierte a Objeto.<br>
      * Itera cada conjunto, tiene en cuenta la cantidadEspecifica y el precio.

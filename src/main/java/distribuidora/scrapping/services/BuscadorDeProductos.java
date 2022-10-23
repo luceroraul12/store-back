@@ -8,6 +8,7 @@ import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.repositories.UnionRepository;
 import distribuidora.scrapping.services.excel.BusquedorPorExcel;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
+import distribuidora.scrapping.util.ProductoUtil;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -26,7 +27,8 @@ import java.util.List;
  * @see UnionRepository
  */
 @Data
-public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecifico, Auxiliar>  extends RelacionadorConProducto<Entidad> {
+public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Auxiliar>
+{
 
     /**
      * Cada servicio final tiene que tener la enumeracion de la distribuidora a la que pertenece.
@@ -43,11 +45,17 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
     @Autowired
     private UnionRepository<Entidad> unionRepository;
 
+    @Autowired
+    private ProductoUtil<Entidad> productoUtil;
+
+    @Autowired
+    private ProductoServicio productoServicio;
+
 
     /**
      * Es el metodo de inicializacion para los tipos de busqueda.<br>
-     * Se debe tener seteado {@link BuscadorDeProductosEntidad#tipoDistribuidora}
-     * @see BuscadorDeProductosEntidad#setTipoDistribuidora(TipoDistribuidora) 
+     * Se debe tener seteado {@link BuscadorDeProductos#tipoDistribuidora}
+     * @see BuscadorDeProductos#setTipoDistribuidora(TipoDistribuidora)
      */
     @Order(1)
     @PostConstruct
@@ -55,8 +63,8 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
 
     /**
      * Es el metodo de inicializacion para las implementaciones.<br>
-     * Se debe tener seteado {@link BuscadorDeProductosEntidad#distribuidora}
-     * @see BuscadorDeProductosEntidad#setTipoDistribuidora(TipoDistribuidora)
+     * Se debe tener seteado {@link BuscadorDeProductos#distribuidora}
+     * @see BuscadorDeProductos#setTipoDistribuidora(TipoDistribuidora)
      */
     @Order(2)
     @PostConstruct
@@ -71,8 +79,8 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
      * @param elementoAuxiliar Clase del elemento que tiene los elementos especificos necesarios
      * @see BusquedorPorExcel
      * @see BusquedorPorWebScrapping
-     * @see BuscadorDeProductosEntidad#adquirirProductosEntidad(Auxiliar elementoAuxiliar)
-     * @see BuscadorDeProductosEntidad#actualizarProductosEnTodasLasColecciones(List productos)
+     * @see BuscadorDeProductos#adquirirProductosEntidad(Auxiliar elementoAuxiliar)
+     * @see BuscadorDeProductos#actualizarProductosEnTodasLasColecciones(List productos)
      */
     public void generarProductosEntidadYActualizarCollecciones(Auxiliar elementoAuxiliar){
         actualizarProductosEnTodasLasColecciones(
@@ -87,10 +95,6 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
      * @return lista de productos
      */
     protected abstract List<Entidad> adquirirProductosEntidad(Auxiliar elementoAuxiliar);;
-
-
-
-
 
     /**
      * Obtiene todos los productos almacenados en la base de datos en funcion a la distribuidora
@@ -121,16 +125,16 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
      * Elimina los datos almacenados de cierta distribuidora y vuelve a guardar con datos nuevos.
      * Esto se realiza en la coleccion Entidad Especifica como en la de Productos
      * @param productos de ciertan entidad
-     * @see BuscadorDeProductosEntidad#almacenarProductosEspecificos(List)
+     * @see BuscadorDeProductos#almacenarProductosEspecificos(List)
      * @see UnionEntidad
      */
     public void actualizarProductosEnTodasLasColecciones(List<Entidad> productos){
         unionRepository.deleteUnionEntidadByDistribuidora(distribuidora);
         almacenarProductosEspecificos(productos);
 
-        actualizarProductosFinalesPorDistribuidora(
-                convertirTodosAProducto(productos),
-                distribuidora
+        this.productoServicio.actualizarProductosPorDistribuidora(
+                productoUtil.arregloToProducto(productos),
+                this.distribuidora
         );
     }
 
@@ -138,7 +142,7 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
      * Inicializacion encargada de verificar Base de datos.<br>
      * Verifica si existe la implementacion en la base de datos, en caso de no existir, crea una con los datos de la misma.<br>
      * Toda implementacion debe tener seteado:
-     * {@link BuscadorDeProductosEntidad#distribuidora},{@link BuscadorDeProductosEntidad#tipoDistribuidora}
+     * {@link BuscadorDeProductos#distribuidora},{@link BuscadorDeProductos#tipoDistribuidora}
      * para poder realizar esta verificacion.
      */
     @Order(3)

@@ -25,13 +25,13 @@ public class ProductoServicio {
      */
     public void actualizarProductosPorDistribuidora(List<Producto> productos, Distribuidora distribuidora){
        eliminarProductosPorDistribuidora(distribuidora);
-       crearProductosPorDistribuidora(productos, distribuidora);
+       crearProductosPorDistribuidora(productos);
     }
 
     public List<Producto> obtenerTodosLosProductosAlmacenados(){
         return this.productoRepository.findAll();
     }
-    private void crearProductosPorDistribuidora(List<Producto> productos, Distribuidora distribuidora){
+    private void crearProductosPorDistribuidora(List<Producto> productos){
         this.productoRepository.saveAll(productos);
     }
     private void eliminarProductosPorDistribuidora(Distribuidora distribuidora){

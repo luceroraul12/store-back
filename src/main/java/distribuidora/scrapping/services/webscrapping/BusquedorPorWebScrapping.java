@@ -3,10 +3,9 @@ package distribuidora.scrapping.services.webscrapping;
 import distribuidora.scrapping.comunicadores.Comunicador;
 import distribuidora.scrapping.entities.PeticionWebScrapping;
 import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.enums.TipoDistribuidora;
-import distribuidora.scrapping.services.BuscadorDeProductosEntidad;
+import distribuidora.scrapping.services.BuscadorDeProductos;
 import lombok.Data;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,12 +13,8 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,7 +23,7 @@ import java.util.List;
  * @param <Entidad>
  */
 @Data
-public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecifico> extends BuscadorDeProductosEntidad<Entidad, PeticionWebScrapping> {
+public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecifico> extends BuscadorDeProductos<Entidad, PeticionWebScrapping> {
 
     @Autowired
     private Comunicador comunicador;

@@ -19,14 +19,6 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
     MelarUtil melarUtil;
 
 
-
-
-    @Override
-    protected List<Producto> mapearEntidadaProducto(MelarEntidad productoEntidad) {
-        return melarUtil.convertirProductoyDevolverlo(productoEntidad);
-    }
-
-
     @Override
     protected boolean esDocumentValido(Document document) {
         return false;

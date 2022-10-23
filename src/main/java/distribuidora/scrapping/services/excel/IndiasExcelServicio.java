@@ -42,19 +42,6 @@ public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
     }
 
     @Override
-    public List<Producto> mapearEntidadaProducto(IndiasEntidad productoEntidad) {
-        String descripcion = String.format(
-                "%s",
-                productoEntidad.getDescripcion()
-        );
-        return Collections.singletonList(Producto.builder()
-                .descripcion(descripcion)
-                .precioPorCantidadEspecifica(productoEntidad.getPrecio())
-                .distribuidora(getDistribuidora())
-                .build());
-    }
-
-    @Override
     protected void initEspecifico() {
         setDistribuidora(Distribuidora.INDIAS);
     }

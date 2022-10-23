@@ -56,11 +56,6 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
 
 
     @Override
-    protected List<Producto> mapearEntidadaProducto(DonGasparEntidad productoEntidad) {
-        return donGasparUtil.convertirProductoyDevolverlo(productoEntidad);
-    }
-
-    @Override
     protected void initEspecifico() {
         setDistribuidora(Distribuidora.DON_GASPAR);
         setUrlBuscador("https://pidorapido.com/dongasparsj");

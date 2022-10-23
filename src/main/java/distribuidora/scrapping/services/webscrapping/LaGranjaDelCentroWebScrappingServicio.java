@@ -70,12 +70,6 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
                 .select("div.box-content-1");
     }
 
-
-    @Override
-    protected List<Producto> mapearEntidadaProducto(LaGranjaDelCentroEntidad productoEntidad) {
-        return laGranjaDelCentroUtil.convertirProductoyDevolverlo(productoEntidad);
-    }
-
     @Override
     protected void initEspecifico() {
         setDistribuidora(Distribuidora.LA_GRANJA_DEL_CENTRO);
