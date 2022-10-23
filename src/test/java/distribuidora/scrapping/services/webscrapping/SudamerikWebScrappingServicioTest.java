@@ -2,6 +2,7 @@ package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
+import distribuidora.scrapping.util.ProductoUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -21,6 +22,9 @@ class SudamerikWebScrappingServicioTest {
 
     @Autowired
     SudamerikWebScrappingServicio servicio;
+
+    @Autowired
+    ProductoUtil<SudamerikEntidad> util;
 
     /**
      * Use tres enlaces para probar<br>
@@ -68,7 +72,7 @@ class SudamerikWebScrappingServicioTest {
         Elements cantidadDeProductosObtenidos = servicio.filtrarElementos(docBueno);
         List<SudamerikEntidad> productosCreados = servicio.obtenerProductosAPartirDeElements(cantidadDeProductosObtenidos);
 
-        List<Producto> productosGenerados = servicio.mapearEntidadaProducto(productosCreados.get(6));
+        List<Producto> productosGenerados = util.convertirProductoyDevolverlo(productosCreados.get(6));
 
         assertEquals(3, productosGenerados.size());
     }
