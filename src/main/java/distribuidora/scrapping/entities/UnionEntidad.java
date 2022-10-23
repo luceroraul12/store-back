@@ -31,4 +31,5 @@ public class UnionEntidad<Entidad extends ProductoEspecifico> {
     private LocalDate fechaScrap;
     private Distribuidora distribuidora;
     private TipoDistribuidora tipoDistribuidora;
+    private Integer cantidadDeProductosAlmacenados;
 }

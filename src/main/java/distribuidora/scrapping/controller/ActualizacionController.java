@@ -75,6 +75,7 @@ public class ActualizacionController {
                             .distribuidora(union.getDistribuidora())
                             .tipo(union.getTipoDistribuidora())
                             .fechaActualizacion(union.getFechaScrap().toString())
+                            .cantidadDeProductosAlmacenados(union.getCantidadDeProductosAlmacenados())
                             .build()
             );
         });

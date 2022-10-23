@@ -13,4 +13,5 @@ public class DatosDistribuidora {
     private Distribuidora distribuidora;
     private TipoDistribuidora tipo;
     private String fechaActualizacion;
+    private Integer cantidadDeProductosAlmacenados;
 }

@@ -113,6 +113,7 @@ public abstract class BuscadorDeProductosEntidad<Entidad extends ProductoEspecif
         unionEntidad.setDistribuidora(distribuidora);
         unionEntidad.setTipoDistribuidora(tipoDistribuidora);
         unionEntidad.setFechaScrap(LocalDate.now());
+        unionEntidad.setCantidadDeProductosAlmacenados(productos.size());
         unionRepository.save(unionEntidad);
     }
 
