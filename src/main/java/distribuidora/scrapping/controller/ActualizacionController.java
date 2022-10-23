@@ -2,6 +2,7 @@ package distribuidora.scrapping.controller;
 
 import distribuidora.scrapping.entities.*;
 import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.UnionRepository;
 import distribuidora.scrapping.services.ActualizacionPorWebScrappingServicio;
 import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
@@ -26,6 +27,9 @@ public class ActualizacionController {
 
     @Autowired
     ActualizacionPorWebScrappingServicio actualizacionPorWebScrappingServicio;
+
+    @Autowired
+    DatosDistribuidoraRepository datosDistribuidoraRepository;
 
     @Autowired
     UnionRepository<ProductoEspecifico> unionRepository;
@@ -76,19 +80,7 @@ public class ActualizacionController {
     @GetMapping
     public ResponseEntity<List<DatosDistribuidora>> obtenerTipoyEstadoDeDistribuidora(){
 //        TODO: esto esta hecho por momentos, hay que sacar todo del controlador
-        List<DatosDistribuidora> datosDistribuidoras = new ArrayList<>();
-        this.unionRepository.findAll().forEach(union -> {
-            datosDistribuidoras.add(
-                    DatosDistribuidora.builder()
-                            .distribuidora(union.getDistribuidora())
-                            .tipo(union.getTipoDistribuidora())
-                            .fechaActualizacion(union.getFechaScrap().toString())
-                            .cantidadDeProductosAlmacenados(union.getCantidadDeProductosAlmacenados())
-                            .build()
-            );
-        });
-
-
+        List<DatosDistribuidora> datosDistribuidoras = this.datosDistribuidoraRepository.findAll();
         return new ResponseEntity<>(datosDistribuidoras,HttpStatus.OK);
     }
 

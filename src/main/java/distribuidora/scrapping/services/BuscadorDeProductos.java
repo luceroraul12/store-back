@@ -1,10 +1,12 @@
 package distribuidora.scrapping.services;
 
 
+import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.enums.TipoDistribuidora;
+import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.UnionRepository;
 import distribuidora.scrapping.services.excel.BusquedorPorExcel;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
@@ -53,6 +55,9 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 
     @Autowired
     private ProductoEspecificoServicio<Entidad> productoEspecificoServicio;
+
+    @Autowired
+    private DatosDistribuidoraRepository datosDistribuidoraRepository;
 
 
     /**
@@ -107,39 +112,47 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
     };
 
 
-    /**
-     * Almacena productos en la base de datos
-     * @param productos Productos en su entidad correspondiente
-     * @see UnionEntidad
-     */
-    protected void almacenarProductosEspecificos(List<Entidad> productos) {
-        UnionEntidad<Entidad> unionEntidad = new UnionEntidad<>();
-        unionEntidad.setDatos(
-                productos
-        );
-        unionEntidad.setDistribuidora(distribuidora);
-        unionEntidad.setTipoDistribuidora(tipoDistribuidora);
-        unionEntidad.setFechaScrap(LocalDate.now());
-        unionEntidad.setCantidadDeProductosAlmacenados(productos.size());
-        unionRepository.save(unionEntidad);
-    }
+//    /**
+//     * Almacena productos en la base de datos
+//     * @param productos Productos en su entidad correspondiente
+//     * @see UnionEntidad
+//     */
+//    protected void almacenarProductosEspecificos(List<Entidad> productos) {
+//        UnionEntidad<Entidad> unionEntidad = new UnionEntidad<>();
+//        unionEntidad.setDatos(
+//                productos
+//        );
+//        unionEntidad.setDistribuidora(distribuidora);
+//        unionEntidad.setTipoDistribuidora(tipoDistribuidora);
+//        unionEntidad.setFechaScrap(LocalDate.now());
+//        unionEntidad.setCantidadDeProductosAlmacenados(productos.size());
+//        unionRepository.save(unionEntidad);
+//    }
 
     /**
      * Elimina los datos almacenados de cierta distribuidora y vuelve a guardar con datos nuevos.
      * Esto se realiza en la coleccion Entidad Especifica como en la de Productos
      * @param productos de ciertan entidad
-     * @see BuscadorDeProductos#almacenarProductosEspecificos(List)
+//     * @see BuscadorDeProductos#almacenarProductosEspecificos(List)
      * @see UnionEntidad
      */
     public void actualizarProductosEnTodasLasColecciones(List<Entidad> productos){
         unionRepository.deleteUnionEntidadByDistribuidora(distribuidora);
-        almacenarProductosEspecificos(productos);
+//        almacenarProductosEspecificos(productos);
 
         this.productoServicio.actualizarProductosPorDistribuidora(
                 productoUtil.arregloToProducto(productos),
                 this.distribuidora
         );
-
+        this.datosDistribuidoraRepository
+                .save(
+                        DatosDistribuidora.builder()
+                                .distribuidora(getDistribuidora())
+                                .fechaActualizacion(LocalDate.now().toString())
+                                .tipo(getTipoDistribuidora())
+                                .cantidadDeProductosAlmacenados(productos.size())
+                                .build()
+                );
         this.productoEspecificoServicio.guardarDatos(productos);
     }
 
@@ -153,13 +166,22 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
     @Order(3)
     @PostConstruct
     private void verificarExistenciaEnBaseDeDatosEspecifica() {
-        if (!this.unionRepository.existsByDistribuidora(this.distribuidora)){
-            System.out.println(this.distribuidora +"no existe, creando ...");
-            UnionEntidad<Entidad> union = new UnionEntidad<>();
-            union.setDistribuidora(this.distribuidora);
-            union.setTipoDistribuidora(this.tipoDistribuidora);
-            union.setFechaScrap(LocalDate.now());
-            this.unionRepository.save(union);
+        if (!this.datosDistribuidoraRepository.existsByDistribuidora(getDistribuidora())){
+            System.out.println(this.distribuidora +" no existe, creando ...");
+//            UnionEntidad<Entidad> union = new UnionEntidad<>();
+//            union.setDistribuidora(this.distribuidora);
+//            union.setTipoDistribuidora(this.tipoDistribuidora);
+//            union.setFechaScrap(LocalDate.now());
+//            this.unionRepository.save(union);
+//            this.datosDistribuidoraRepository()
+            this.datosDistribuidoraRepository.save(
+                    DatosDistribuidora.builder()
+                            .distribuidora(getDistribuidora())
+                            .tipo(getTipoDistribuidora())
+                            .cantidadDeProductosAlmacenados(0)
+                            .fechaActualizacion(LocalDate.now().toString())
+                            .build()
+            );
         };
     }
 
