@@ -8,4 +8,6 @@ public interface DatosDistribuidoraRepository extends MongoRepository<DatosDistr
 
     boolean existsByDistribuidora(Distribuidora distribuidora);
     DatosDistribuidora findByDistribuidora(Distribuidora distribuidora);
+
+    void deleteByDistribuidora(Distribuidora distribuidora);
 }

@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,8 @@ public class ProductoEspecificoServicio<Entidad extends ProductoEspecifico> impl
 
     @Override
     public void actualizarDatos(List<Entidad> datos) {
-        eliminarDatos();
+        Distribuidora distribuidora = datos.get(0).getDistribuidora();
+        eliminarDatos(distribuidora);
         guardarDatos(datos);
     }
 
@@ -25,7 +27,7 @@ public class ProductoEspecificoServicio<Entidad extends ProductoEspecifico> impl
     }
 
     @Override
-    public void eliminarDatos() {
+    public void eliminarDatos(Distribuidora distribuidora) {
         repository.deleteAll();
     }
 }

@@ -11,11 +11,13 @@ import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
 import distribuidora.scrapping.util.ProductoUtil;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,8 +50,11 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
     @Autowired
     private ProductoEspecificoServicio<Entidad> productoEspecificoServicio;
 
+//    @Autowired
+//    private DatosDistribuidoraRepository datosDistribuidoraRepository;
+
     @Autowired
-    private DatosDistribuidoraRepository datosDistribuidoraRepository;
+    private DatoDistribuidoraServicio datoDistribuidoraServicio;
 
 
     /**
@@ -108,15 +113,14 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
                 productoUtil.arregloToProducto(productos),
                 this.distribuidora
         );
-        this.datosDistribuidoraRepository
-                .save(
-                        DatosDistribuidora.builder()
-                                .distribuidora(getDistribuidora())
-                                .fechaActualizacion(LocalDate.now().toString())
-                                .tipo(getTipoDistribuidora())
-                                .cantidadDeProductosAlmacenados(productos.size())
-                                .build()
-                );
+        this.datoDistribuidoraServicio.actualizarDatos(
+                Collections.singletonList(DatosDistribuidora.builder()
+                        .distribuidora(getDistribuidora())
+                        .fechaActualizacion(LocalDate.now().toString())
+                        .tipo(getTipoDistribuidora())
+                        .cantidadDeProductosAlmacenados(productos.size())
+                        .build())
+        );
         this.productoEspecificoServicio.guardarDatos(productos);
     }
 
@@ -128,18 +132,18 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      * para poder realizar esta verificacion.
      */
     @PostConstruct
-    @Order(3)
+    @Order(Ordered.LOWEST_PRECEDENCE)
     private void verificarExistenciaEnBaseDeDatosEspecifica() {
-        if (!this.datosDistribuidoraRepository.existsByDistribuidora(getDistribuidora())){
+        if (!this.datoDistribuidoraServicio.existsByDistribuidora(getDistribuidora())){
             System.out.println(this.distribuidora +" no existe, creando ...");
 
-            this.datosDistribuidoraRepository.save(
-                    DatosDistribuidora.builder()
+            this.datoDistribuidoraServicio.actualizarDatos(
+                    Collections.singletonList(DatosDistribuidora.builder()
                             .distribuidora(getDistribuidora())
                             .tipo(getTipoDistribuidora())
                             .cantidadDeProductosAlmacenados(0)
                             .fechaActualizacion(LocalDate.now().toString())
-                            .build()
+                            .build())
             );
         };
     }
