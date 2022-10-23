@@ -3,11 +3,9 @@ package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.entities.UnionEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
-import distribuidora.scrapping.repositories.UnionRepository;
 import distribuidora.scrapping.services.excel.BusquedorPorExcel;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
 import distribuidora.scrapping.util.ProductoUtil;
@@ -25,8 +23,6 @@ import java.util.List;
  * Contiene metodos sobre la base de datos y el abstract para una entidadEspecifica.
  * @param <Entidad> necesario para saber el tipo de distribuidora
  * @param <Auxiliar> clase con los datos necesarios para poder comenzar busqueda
- * @see UnionEntidad
- * @see UnionRepository
  */
 @Data
 public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Auxiliar>
@@ -42,10 +38,6 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
     private TipoDistribuidora tipoDistribuidora;
 
     private LocalDate fechaUltimaActualizacion;
-
-
-    @Autowired
-    private UnionRepository<Entidad> unionRepository;
 
     @Autowired
     private ProductoUtil<Entidad> productoUtil;
@@ -65,8 +57,8 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      * Se debe tener seteado {@link BuscadorDeProductos#tipoDistribuidora}
      * @see BuscadorDeProductos#setTipoDistribuidora(TipoDistribuidora)
      */
-    @Order(1)
     @PostConstruct
+    @Order(1)
     protected abstract void initTipoDeBusqueda();
 
     /**
@@ -74,8 +66,8 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      * Se debe tener seteado {@link BuscadorDeProductos#distribuidora}
      * @see BuscadorDeProductos#setTipoDistribuidora(TipoDistribuidora)
      */
-    @Order(2)
     @PostConstruct
+    @Order(2)
     protected abstract void initEspecifico();
 
     @PreDestroy
@@ -104,42 +96,14 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      */
     protected abstract List<Entidad> adquirirProductosEntidad(Auxiliar elementoAuxiliar);;
 
-    /**
-     * Obtiene todos los productos almacenados en la base de datos en funcion a la distribuidora
-     */
-    public UnionEntidad<Entidad> obtenerProductosEspecificos(){
-        return unionRepository.findByDistribuidora(distribuidora);
-    };
-
-
-//    /**
-//     * Almacena productos en la base de datos
-//     * @param productos Productos en su entidad correspondiente
-//     * @see UnionEntidad
-//     */
-//    protected void almacenarProductosEspecificos(List<Entidad> productos) {
-//        UnionEntidad<Entidad> unionEntidad = new UnionEntidad<>();
-//        unionEntidad.setDatos(
-//                productos
-//        );
-//        unionEntidad.setDistribuidora(distribuidora);
-//        unionEntidad.setTipoDistribuidora(tipoDistribuidora);
-//        unionEntidad.setFechaScrap(LocalDate.now());
-//        unionEntidad.setCantidadDeProductosAlmacenados(productos.size());
-//        unionRepository.save(unionEntidad);
-//    }
 
     /**
      * Elimina los datos almacenados de cierta distribuidora y vuelve a guardar con datos nuevos.
      * Esto se realiza en la coleccion Entidad Especifica como en la de Productos
      * @param productos de ciertan entidad
 //     * @see BuscadorDeProductos#almacenarProductosEspecificos(List)
-     * @see UnionEntidad
      */
     public void actualizarProductosEnTodasLasColecciones(List<Entidad> productos){
-        unionRepository.deleteUnionEntidadByDistribuidora(distribuidora);
-//        almacenarProductosEspecificos(productos);
-
         this.productoServicio.actualizarProductosPorDistribuidora(
                 productoUtil.arregloToProducto(productos),
                 this.distribuidora
@@ -163,17 +127,12 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      * {@link BuscadorDeProductos#distribuidora},{@link BuscadorDeProductos#tipoDistribuidora}
      * para poder realizar esta verificacion.
      */
-    @Order(3)
     @PostConstruct
+    @Order(3)
     private void verificarExistenciaEnBaseDeDatosEspecifica() {
         if (!this.datosDistribuidoraRepository.existsByDistribuidora(getDistribuidora())){
             System.out.println(this.distribuidora +" no existe, creando ...");
-//            UnionEntidad<Entidad> union = new UnionEntidad<>();
-//            union.setDistribuidora(this.distribuidora);
-//            union.setTipoDistribuidora(this.tipoDistribuidora);
-//            union.setFechaScrap(LocalDate.now());
-//            this.unionRepository.save(union);
-//            this.datosDistribuidoraRepository()
+
             this.datosDistribuidoraRepository.save(
                     DatosDistribuidora.builder()
                             .distribuidora(getDistribuidora())

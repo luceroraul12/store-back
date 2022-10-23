@@ -3,7 +3,6 @@ package distribuidora.scrapping.controller;
 import distribuidora.scrapping.entities.*;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
-import distribuidora.scrapping.repositories.UnionRepository;
 import distribuidora.scrapping.services.ActualizacionPorWebScrappingServicio;
 import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +30,6 @@ public class ActualizacionController {
     @Autowired
     DatosDistribuidoraRepository datosDistribuidoraRepository;
 
-    @Autowired
-    UnionRepository<ProductoEspecifico> unionRepository;
-
-
 
 
     /**
@@ -60,13 +55,8 @@ public class ActualizacionController {
     public ResponseEntity<DatosDistribuidora> actualizacionPorWebScrappingIndividual
             (@RequestParam Distribuidora distribuidora){
         this.actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(distribuidora);
-        UnionEntidad<ProductoEspecifico> union = unionRepository.findByDistribuidora(distribuidora);
-        return new ResponseEntity<>(DatosDistribuidora.builder()
-                .fechaActualizacion(union.getFechaScrap().toString())
-                .cantidadDeProductosAlmacenados(union.getCantidadDeProductosAlmacenados())
-                .distribuidora(union.getDistribuidora())
-                .tipo(union.getTipoDistribuidora())
-                .build(),HttpStatus.OK);
+        DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidora(distribuidora);
+        return new ResponseEntity<>(resultado,HttpStatus.OK);
     }
 
 

@@ -7,4 +7,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface DatosDistribuidoraRepository extends MongoRepository<DatosDistribuidora, String> {
 
     boolean existsByDistribuidora(Distribuidora distribuidora);
+    DatosDistribuidora findByDistribuidora(Distribuidora distribuidora);
 }
