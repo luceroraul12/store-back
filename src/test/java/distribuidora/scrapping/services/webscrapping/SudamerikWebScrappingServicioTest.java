@@ -48,15 +48,15 @@ class SudamerikWebScrappingServicioTest {
 
     }
 
-    @Test
-    void obtenerProductosAPartirDeElements() throws IOException {
-        Document docBueno = Jsoup.parse(new File("src/main/resources/static/sudamerik.html"));
-        Elements cantidadDeProductosObtenidos = servicio.filtrarElementos(docBueno);
-        List<SudamerikEntidad> productosCreados = servicio.obtenerProductosAPartirDeElements(cantidadDeProductosObtenidos);
-
-        assertEquals(7, productosCreados.size());
-
-    }
+//    @Test
+//    void obtenerProductosAPartirDeElements() throws IOException {
+//        Document docBueno = Jsoup.parse(new File("src/main/resources/static/sudamerik.html"));
+//        Elements cantidadDeProductosObtenidos = servicio.filtrarElementos(docBueno);
+//        List<SudamerikEntidad> productosCreados = servicio.obtenerProductosAPartirDeElements(cantidadDeProductosObtenidos);
+//
+//        assertEquals(7, productosCreados.size());
+//
+//    }
 
     @Test
     void filtrarElementos() throws IOException {
@@ -66,19 +66,15 @@ class SudamerikWebScrappingServicioTest {
         assertEquals(7,cantidadDeProductosObtenidos.size());
     }
 
-    @Test
-    void mapearEntidadaProducto() throws IOException {
-        Document docBueno = Jsoup.parse(new File("src/main/resources/static/sudamerik.html"));
-        Elements cantidadDeProductosObtenidos = servicio.filtrarElementos(docBueno);
-        List<SudamerikEntidad> productosCreados = servicio.obtenerProductosAPartirDeElements(cantidadDeProductosObtenidos);
-
-        List<Producto> productosGenerados = util.convertirProductoyDevolverlo(productosCreados.get(6));
-
-        assertEquals(3, productosGenerados.size());
-    }
-
 //    @Test
-//    void almacenamiento() throws IOException {
-//        servicio.generarProductosEntidadYActualizarCollecciones(false);
+//    void mapearEntidadaProducto() throws IOException {
+//        Document docBueno = Jsoup.parse(new File("src/main/resources/static/sudamerik.html"));
+//        Elements cantidadDeProductosObtenidos = servicio.filtrarElementos(docBueno);
+//        List<SudamerikEntidad> productosCreados = servicio.obtenerProductosAPartirDeElements(cantidadDeProductosObtenidos);
+//
+//        List<Producto> productosGenerados = util.convertirProductoyDevolverlo(productosCreados.get(6));
+//
+//        assertEquals(3, productosGenerados.size());
 //    }
+
 }

@@ -1,7 +1,6 @@
 package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
-import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.util.LaGranjaDelCentroUtil;
 import org.jsoup.nodes.Document;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -41,28 +39,20 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
     }
 
     @Override
-    protected List<LaGranjaDelCentroEntidad> obtenerProductosAPartirDeElements(Elements elements) {
-        List<LaGranjaDelCentroEntidad> productosFinales = new ArrayList<>();
-        elements.forEach(
-                element -> {
-                    productosFinales.add(
-                            LaGranjaDelCentroEntidad.builder()
-                                    .distribuidora(getDistribuidora())
-                                    .nombreProducto(
-                                            element.getElementsByClass("h3-content-1").text()
-                                    )
-                                    .precio(
-                                            Double.valueOf(element
-                                                    .getElementsByClass("p-precio-content-1")
-                                                    .text()
-                                                    .replaceAll("[$.]","")
-                                                    .replaceAll(",","."))
-                                    )
-                                    .build()
-                    );
-                }
-        );
-        return productosFinales;
+    protected LaGranjaDelCentroEntidad obtenerProductosAPartirDeElements(Element elementProducto) {
+        return LaGranjaDelCentroEntidad.builder()
+                .distribuidora(getDistribuidora())
+                .nombreProducto(
+                        elementProducto.getElementsByClass("h3-content-1").text()
+                )
+                .precio(
+                        Double.valueOf(elementProducto
+                                .getElementsByClass("p-precio-content-1")
+                                .text()
+                                .replaceAll("[$.]","")
+                                .replaceAll(",","."))
+                )
+                .build();
     }
 
     @Override

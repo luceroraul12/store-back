@@ -1,6 +1,5 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
 import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad.SudamerikConjuntoEspecifico;
 import distribuidora.scrapping.enums.Distribuidora;
@@ -37,24 +36,16 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
     }
 
     @Override
-    protected List<SudamerikEntidad> obtenerProductosAPartirDeElements(Elements elements) {
-        List<SudamerikEntidad> productosCreados = new ArrayList<>();
-        elements.forEach(
-                elementProducto -> {
-                    String nombreProducto = elementProducto.getElementsByClass("nombre").text();
-                    Elements conjuntoPreciosElements = elementProducto.getElementsByClass("number");
-                    productosCreados.add(
-                            SudamerikEntidad.builder()
-                                    .distribuidora(getDistribuidora())
-                                    .nombreProducto(nombreProducto)
-                                    .cantidadesEspecificas(
-                                            obtenerTodosLosConjuntosDePrecios(conjuntoPreciosElements)
-                                    )
-                                    .build()
-                    );
-                }
-        );
-        return productosCreados;
+    protected SudamerikEntidad obtenerProductosAPartirDeElements(Element elementProducto) {
+        String nombreProducto = elementProducto.getElementsByClass("nombre").text();
+        Elements conjuntoPreciosElements = elementProducto.getElementsByClass("number");
+        return SudamerikEntidad.builder()
+                .distribuidora(getDistribuidora())
+                .nombreProducto(nombreProducto)
+                .cantidadesEspecificas(
+                        obtenerTodosLosConjuntosDePrecios(conjuntoPreciosElements)
+                )
+                .build();
     }
 
     @Override

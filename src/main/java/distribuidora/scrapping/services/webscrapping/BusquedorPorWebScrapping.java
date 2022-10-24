@@ -9,6 +9,7 @@ import distribuidora.scrapping.services.BuscadorDeProductos;
 import lombok.Data;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Clase base para los servicios basados en Web Scrapping.
@@ -54,13 +56,14 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
     public List<Entidad> adquirirProductosEntidad(PeticionWebScrapping peticionWebScrapping) {
         List<Entidad> productostotales = new ArrayList<>();
         try {
-            generarDocumentos().forEach(
-                    document -> {
-                        productostotales.addAll(
-                                obtenerProductosPorDocument(document)
-                        );
-                    }
-            );
+            generarDocumentos()
+                    .forEach(
+                            document -> {
+                                productostotales.addAll(
+                                        obtenerProductosPorDocument(document)
+                                );
+                            }
+                    );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -81,7 +84,8 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
             int contador = 1;
             Document doc = Jsoup.connect(generarNuevaURL(contador)).get();
             while(esDocumentValido(doc)){
-                documentos.add(
+                documentos
+                        .add(
                         doc
                 );
                 contador++;
@@ -148,17 +152,28 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
         List<Entidad> productosPorDocumento = new ArrayList<>();
         Elements elementosQueContienenDatosConvertible = filtrarElementos(documento);
         productosPorDocumento.addAll(
-                obtenerProductosAPartirDeElements(elementosQueContienenDatosConvertible)
+                obtenerTodosLosProductosDeLaPagina(elementosQueContienenDatosConvertible)
         );
         return productosPorDocumento;
     }
 
+    private List<Entidad> obtenerTodosLosProductosDeLaPagina(Elements elements){
+        List<Entidad> productosCreados = new ArrayList<>();
+        elements
+                .parallelStream()
+                .forEach(
+                elementProducto -> productosCreados.add(obtenerProductosAPartirDeElements(elementProducto))
+        );
+
+        return productosCreados;
+    }
+
     /**
-     * Genera un producto a partir de un elemento.
-     * @param elements elemento que contiene datos
+     * Genera un producto especifico a partir de un element.
+     * @param elementProducto elemento que contiene datos
      * @return un producto especifico
      */
-    protected abstract List<Entidad> obtenerProductosAPartirDeElements(Elements elements);
+    protected abstract Entidad obtenerProductosAPartirDeElements(Element elementProducto);
 
     /**
      * Deja solo los elementos que contienen datos convertibles a productos.
