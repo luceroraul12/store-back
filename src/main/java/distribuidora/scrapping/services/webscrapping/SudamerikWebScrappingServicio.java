@@ -93,7 +93,7 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
     }
 
     @Override
-    protected void initEspecifico() {
+    protected void initImplementacion() {
         setDistribuidora(Distribuidora.SUDAMERIK);
         setEsBuscadorConPaginador(true);
         setUrlBuscador("https://www.sudamerikargentina.com.ar/productos/pagina/");

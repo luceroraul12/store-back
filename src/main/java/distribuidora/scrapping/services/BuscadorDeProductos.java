@@ -5,14 +5,11 @@ import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.enums.TipoDistribuidora;
-import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.excel.BusquedorPorExcel;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
 import distribuidora.scrapping.util.ProductoUtil;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -56,24 +53,33 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
     @Autowired
     private DatoDistribuidoraServicio datoDistribuidoraServicio;
 
+    @PostConstruct
+    private void init(){
+        initTipoBusqueda();
+        initImplementacion();
+        verificarExistenciaEnBaseDeDatosEspecifica();
+    }
+
+    protected abstract void initTipoBusqueda();
+    protected abstract void initImplementacion();
 
     /**
      * Es el metodo de inicializacion para los tipos de busqueda.<br>
      * Se debe tener seteado {@link BuscadorDeProductos#tipoDistribuidora}
      * @see BuscadorDeProductos#setTipoDistribuidora(TipoDistribuidora)
      */
-    @PostConstruct
-    @Order(1)
-    protected abstract void initTipoDeBusqueda();
-
-    /**
-     * Es el metodo de inicializacion para las implementaciones.<br>
-     * Se debe tener seteado {@link BuscadorDeProductos#distribuidora}
-     * @see BuscadorDeProductos#setTipoDistribuidora(TipoDistribuidora)
-     */
-    @PostConstruct
-    @Order(2)
-    protected abstract void initEspecifico();
+//    @PostConstruct
+//    @Order(1)
+//    protected abstract void initTipoDeBusqueda();
+//
+//    /**
+//     * Es el metodo de inicializacion para las implementaciones.<br>
+//     * Se debe tener seteado {@link BuscadorDeProductos#distribuidora}
+//     * @see BuscadorDeProductos#setTipoDistribuidora(TipoDistribuidora)
+//     */
+//    @PostConstruct
+//    @Order(2)
+//    protected abstract void initEspecifico();
 
     @PreDestroy
     protected abstract void destroy();
@@ -131,8 +137,6 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      * {@link BuscadorDeProductos#distribuidora},{@link BuscadorDeProductos#tipoDistribuidora}
      * para poder realizar esta verificacion.
      */
-    @PostConstruct
-    @Order(Ordered.LOWEST_PRECEDENCE)
     private void verificarExistenciaEnBaseDeDatosEspecifica() {
         if (!this.datoDistribuidoraServicio.existsByDistribuidora(getDistribuidora())){
             System.out.println(this.distribuidora +" no existe, creando ...");

@@ -61,7 +61,7 @@ public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
     }
 
     @Override
-    protected void initEspecifico() {
+    protected void initImplementacion() {
         setDistribuidora(Distribuidora.FACUNDO);
     }
 }

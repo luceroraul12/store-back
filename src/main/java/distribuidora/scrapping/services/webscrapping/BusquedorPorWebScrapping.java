@@ -168,39 +168,23 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
     protected abstract Elements filtrarElementos(Document documento);
 
     @Override
-    public void initTipoDeBusqueda(){
+    protected void initTipoBusqueda() {
         setTipoDistribuidora(TipoDistribuidora.WEB_SCRAPPING);
-//        comunicador.getDisparadorActualizacionWebScrapping().subscribe(
-//                respuesta -> {
-//                    System.out.println("realizado desde:\t"+getDistribuidora());
-//                    generarProductosEntidadYActualizarCollecciones(false);
-//                }
-//        );
-//        comunicador.getDisparadorActualizacionWebScrappingPorDistribuidora().subscribe(
-//                distribuidora -> {
-//                    if(distribuidora == getDistribuidora()){
-//                        System.out.println("Servicio Seleccionado "+this.getClass());
-//                        this.generarProductosEntidadYActualizarCollecciones(false);
-//                    }
-//                }
-//        );
         comunicador.getDisparadorActualizacion()
                 .filter(peticion -> peticion.getClass() == PeticionWebScrapping.class)
                 .cast(PeticionWebScrapping.class)
                 .subscribe(peticionWebScrapping -> {
-                   if (peticionWebScrapping.getDistribuidora() == this.getDistribuidora()){
-                       System.out.println("actualiza "+ getDistribuidora());
-                       this.generarProductosEntidadYActualizarCollecciones(peticionWebScrapping);
-                   } else if (peticionWebScrapping.getDistribuidora() == Distribuidora.TODAS) {
-                       System.out.println("actualizacion General");
-                       this.generarProductosEntidadYActualizarCollecciones(peticionWebScrapping);
-                   } else {
-                       System.out.println("no actualiza "+ getDistribuidora());
-                   }
+                    if (peticionWebScrapping.getDistribuidora() == this.getDistribuidora()){
+                        System.out.println("actualiza "+ getDistribuidora());
+                        this.generarProductosEntidadYActualizarCollecciones(peticionWebScrapping);
+                    } else if (peticionWebScrapping.getDistribuidora() == Distribuidora.TODAS) {
+                        System.out.println("actualizacion General");
+                        this.generarProductosEntidadYActualizarCollecciones(peticionWebScrapping);
+                    } else {
+                        System.out.println("no actualiza "+ getDistribuidora());
+                    }
                 });
     }
-
-
 
     @Override
     public void destroy(){

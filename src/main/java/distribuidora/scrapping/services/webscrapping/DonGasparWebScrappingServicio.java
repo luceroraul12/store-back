@@ -57,7 +57,7 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
 
 
     @Override
-    protected void initEspecifico() {
+    protected void initImplementacion() {
         setDistribuidora(Distribuidora.DON_GASPAR);
         setUrlBuscador("https://pidorapido.com/dongasparsj");
         setEsNecesarioUsarWebDriver(true);

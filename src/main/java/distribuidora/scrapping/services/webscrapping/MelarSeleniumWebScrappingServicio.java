@@ -79,7 +79,7 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
     }
 
     @Override
-    protected void initEspecifico() {
+    protected void initImplementacion() {
         setDistribuidora(Distribuidora.MELAR);
         setEsNecesarioUsarWebDriver(true);
         setUrlBuscador("https://listadepreciosmelar.com.ar");

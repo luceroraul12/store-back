@@ -43,7 +43,7 @@ public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
     }
 
     @Override
-    protected void initEspecifico() {
+    protected void initImplementacion() {
         setDistribuidora(Distribuidora.INDIAS);
     }
 }

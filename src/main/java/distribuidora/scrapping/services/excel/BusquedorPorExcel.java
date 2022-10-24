@@ -40,23 +40,22 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
     }
 
     @Override
-    protected void initTipoDeBusqueda() {
+    protected void initTipoBusqueda() {
         setTipoDistribuidora(TipoDistribuidora.EXCEL);
-        System.out.println("buscadores excel");
         comunicador.getDisparadorActualizacion()
                 .filter(comunicadorInformacionAuxiliar
                         -> comunicadorInformacionAuxiliar.getClass() == PeticionExcel.class)
                 .cast(PeticionExcel.class)
                 .subscribe(
-                documento -> {
-                    if(documento.getDistribuidora() == getDistribuidora()){
-                        System.out.println("actualiza "+ getDistribuidora());
-                        this.generarProductosEntidadYActualizarCollecciones(documento);
-                    } else {
-                        System.out.println("no actualiza "+ getDistribuidora());
-                    }
-                }
-        );
+                        documento -> {
+                            if(documento.getDistribuidora() == getDistribuidora()){
+                                System.out.println("actualiza "+ getDistribuidora());
+                                this.generarProductosEntidadYActualizarCollecciones(documento);
+                            } else {
+                                System.out.println("no actualiza "+ getDistribuidora());
+                            }
+                        }
+                );
     }
 
     @Override

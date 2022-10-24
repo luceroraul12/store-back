@@ -72,7 +72,7 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
     }
 
     @Override
-    protected void initEspecifico() {
+    protected void initImplementacion() {
         setDistribuidora(Distribuidora.LA_GRANJA_DEL_CENTRO);
         setEsBuscadorConPaginador(true);
         setUrlBuscador("https://lagranjadelcentro.com.ar/productos.php?pagina=");
