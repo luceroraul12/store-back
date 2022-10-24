@@ -79,6 +79,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      */
     private List<Document> generarDocumentos() throws IOException {
         List<Document> documentos = new ArrayList<>();
+// TODO: investigar como poder ejecutar el cuerpo de este metodo de manera paralela para poder acelerar la creacion de documentos. Por ejemplo,  La granja del Centro tiene 132 paginas pero es relativamente rapida la busqueda.En cambio, sudamerik tiene 48 paginas pero la busqueda es demasiado lenta. Si pudiera ejecutar mas de una creacion de documentos al mismo tiempo, aceleraria bastante la parte de actualizacion de distribuidoras.
 
         if (esBuscadorConPaginador){
             int contador = 1;
