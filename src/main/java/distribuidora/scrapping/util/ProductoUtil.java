@@ -15,7 +15,9 @@ public abstract class ProductoUtil<Entidad> {
     public List<Producto> arregloToProducto(List<Entidad> productos){
         List<Producto> productosConvertidos = new ArrayList<>();
 
-        productos.forEach(p -> {
+        productos
+                .parallelStream()
+                .forEach(p -> {
             productosConvertidos.addAll(
                     convertirProductoyDevolverlo(p)
             );
@@ -42,11 +44,14 @@ public abstract class ProductoUtil<Entidad> {
      * @param propiedadesParaValidar
      * @return
      */
+//    TODO: hay que verificar que las implementaciones podriasn llegar a utilizarlo
     protected String validaryAgregarPropiedadesQueNoEstanRepetidasEnOriginal(
             String nombreProductoOriginal,
             List<String> propiedadesParaValidar){
         StringBuilder nombreProductoFinal = new StringBuilder(nombreProductoOriginal);
-        propiedadesParaValidar.forEach(
+        propiedadesParaValidar
+                .parallelStream()
+                .forEach(
                 propiedad -> {
                     if (!nombreProductoOriginal.contains(propiedad)){
                         nombreProductoFinal
