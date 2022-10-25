@@ -39,8 +39,10 @@ public class ActualizacionController {
      * @throws IOException
      */
     @PostMapping("excel")
-    public void actualizacionPorExcel(PeticionExcel documento) throws IOException {
+    public ResponseEntity<DatosDistribuidora> actualizacionPorExcel(PeticionExcel documento) throws IOException {
         actualizacionPorDocumentoServicio.recibirDocumento(documento);
+        DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidora(documento.getDistribuidora());
+        return new ResponseEntity<>(resultado,HttpStatus.OK);
     }
 
     /**
