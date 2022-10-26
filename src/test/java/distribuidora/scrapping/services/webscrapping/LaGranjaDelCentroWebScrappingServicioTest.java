@@ -36,7 +36,7 @@ class LaGranjaDelCentroWebScrappingServicioTest {
     @Test
     void esDocumentValido() throws IOException {
         Document docBueno = Jsoup.connect("https://lagranjadelcentro.com.ar/productos.php?pagina=2").get();
-        Document docLimite = Jsoup.connect("https://lagranjadelcentro.com.ar/productos.php?pagina=123").get();
+        Document docLimite = Jsoup.connect("https://lagranjadelcentro.com.ar/productos.php?pagina=122").get();
         Document docMalo = Jsoup.connect("https://lagranjadelcentro.com.ar/productos.php?pagina=124").get();
 
         assertTrue(servicio.esDocumentValido(docBueno));

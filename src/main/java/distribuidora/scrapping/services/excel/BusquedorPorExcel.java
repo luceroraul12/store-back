@@ -6,10 +6,8 @@ import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.BuscadorDeProductos;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -90,8 +88,17 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
      * @return una o varias sheets.
      * @throws IOException
      */
-    private ArrayList<Sheet> obtenerSheets(MultipartFile excel) throws IOException {
-        Workbook workbook = new HSSFWorkbook(excel.getInputStream());
+    private ArrayList<Sheet> obtenerSheets(MultipartFile excel)  {
+        Workbook workbook;
+        try {
+            workbook = new HSSFWorkbook(excel.getInputStream());
+        } catch (Exception e) {
+            try {
+                workbook = new XSSFWorkbook(excel.getInputStream());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
         ArrayList<Sheet> sheets = new ArrayList<>();
         workbook.forEach(sheets::add);
         return sheets;
@@ -106,7 +113,10 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
         Collection<Entidad> productosFinales = new ArrayList<>();
         sheet.forEach(
                 row -> {
-                    row.forEach(cell -> expandirValorDeCeldasFusionadas(sheet, cell));
+                    row.forEach(cell -> {
+                        expandirValorDeCeldasFusionadas(sheet, cell);
+                        aplicarFormular(cell);
+                    });
 
                     productosFinales.addAll(trabajarConRowyObtenerProducto(row));
                 }
@@ -134,6 +144,12 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
                     }
                 }
         );
+    }
+
+    private void aplicarFormular(Cell celda){
+        if (celda.getCellType() == CellType.FORMULA){
+            celda.removeFormula();
+        }
     }
 
     /**
