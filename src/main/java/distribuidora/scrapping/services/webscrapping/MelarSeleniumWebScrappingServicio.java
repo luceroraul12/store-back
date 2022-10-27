@@ -19,7 +19,7 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
 
 
     @Override
-    protected boolean esDocumentValido(Document document) {
+    protected boolean esDocumentValido(Document document) throws Exception {
         return false;
     }
 

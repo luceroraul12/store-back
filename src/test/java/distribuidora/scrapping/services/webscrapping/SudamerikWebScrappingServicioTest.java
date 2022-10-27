@@ -1,6 +1,5 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
 import distribuidora.scrapping.util.ProductoUtil;
 import org.jsoup.Jsoup;
@@ -12,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,9 +40,21 @@ class SudamerikWebScrappingServicioTest {
         Document docMalo = Jsoup
                 .connect("https://www.sudamerikargentina.com.ar/productos/pagina/22938470").get();
 
-        assertTrue(servicio.esDocumentValido(docBueno));
-        assertTrue(servicio.esDocumentValido(docLimite));
-        assertFalse(servicio.esDocumentValido(docMalo));
+        try {
+            assertTrue(servicio.esDocumentValido(docBueno));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            assertTrue(servicio.esDocumentValido(docLimite));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            assertFalse(servicio.esDocumentValido(docMalo));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

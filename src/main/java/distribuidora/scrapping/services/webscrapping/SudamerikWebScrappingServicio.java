@@ -27,7 +27,7 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
      * @return
      */
     @Override
-    protected boolean  esDocumentValido(Document document) {
+    protected boolean  esDocumentValido(Document document) throws Exception {
         boolean esDocumentoValido = false;
         document.location();
         Elements paginador = document.select("ul.pagination > li > a > b");

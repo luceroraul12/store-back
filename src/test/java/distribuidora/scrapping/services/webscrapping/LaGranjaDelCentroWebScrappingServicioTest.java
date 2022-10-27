@@ -1,6 +1,5 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -10,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,9 +37,21 @@ class LaGranjaDelCentroWebScrappingServicioTest {
         Document docLimite = Jsoup.connect("https://lagranjadelcentro.com.ar/productos.php?pagina=122").get();
         Document docMalo = Jsoup.connect("https://lagranjadelcentro.com.ar/productos.php?pagina=124").get();
 
-        assertTrue(servicio.esDocumentValido(docBueno));
-        assertTrue(servicio.esDocumentValido(docLimite));
-        assertFalse(servicio.esDocumentValido(docMalo));
+        try {
+            assertTrue(servicio.esDocumentValido(docBueno));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            assertTrue(servicio.esDocumentValido(docLimite));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            assertFalse(servicio.esDocumentValido(docMalo));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Clase base para los servicios basados en Web Scrapping.
@@ -64,8 +63,8 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
                                 );
                             }
                     );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.out.println("Problemas al generar productos");;
         }
         return productostotales;
     }
@@ -84,13 +83,17 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
         if (esBuscadorConPaginador){
             int contador = 1;
             Document doc = Jsoup.connect(generarNuevaURL(contador)).get();
-            while(esDocumentValido(doc)){
-                documentos
-                        .add(
-                        doc
-                );
-                contador++;
-                doc = generarDocumento(generarNuevaURL(contador));
+            try {
+                while(esDocumentValido(doc)){
+                    documentos
+                            .add(
+                            doc
+                    );
+                    contador++;
+                    doc = generarDocumento(generarNuevaURL(contador));
+                }
+            } catch (Exception e) {
+                System.out.println("problemas al validar Url: " + contador);;
             }
         } else {
             documentos.add(
@@ -141,7 +144,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * @see BusquedorPorWebScrapping#esBuscadorConPaginador
      * @see BusquedorPorWebScrapping#generarNuevaURL(int contador)
      */
-    protected abstract boolean esDocumentValido(Document document);
+    protected abstract boolean esDocumentValido(Document document) throws Exception;
 
     /**
      * Encargado de extraer productos Especificos de cada Document.
@@ -189,7 +192,8 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
         comunicador.getDisparadorActualizacion()
                 .filter(peticion -> peticion.getClass() == PeticionWebScrapping.class)
                 .cast(PeticionWebScrapping.class)
-                .subscribe(peticionWebScrapping -> {
+                .subscribe(
+                        peticionWebScrapping -> {
                     if (peticionWebScrapping.getDistribuidora() == this.getDistribuidora()){
                         System.out.println("actualiza "+ getDistribuidora());
                         this.generarProductosEntidadYActualizarCollecciones(peticionWebScrapping);
@@ -199,7 +203,8 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
                     } else {
                         System.out.println("no actualiza "+ getDistribuidora());
                     }
-                });
+                        },
+                        error -> System.out.println("error en "+ getDistribuidora()));
     }
 
     @Override

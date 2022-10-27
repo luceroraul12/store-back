@@ -9,9 +9,6 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapping<LaGranjaDelCentroEntidad> {
 
@@ -27,7 +24,7 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
      * @return
      */
     @Override
-    protected boolean esDocumentValido(Document document) {
+    protected boolean esDocumentValido(Document document) throws Exception {
         boolean esValido = false;
          for (Element element : document.getElementsByTag("span")){
             if (element.hasClass("p-activo")){

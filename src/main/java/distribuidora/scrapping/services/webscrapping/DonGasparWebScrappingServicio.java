@@ -18,7 +18,7 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
     DonGasparUtil donGasparUtil;
 
     @Override
-    protected boolean esDocumentValido(Document document) {
+    protected boolean esDocumentValido(Document document) throws Exception {
         return false;
     }
 
