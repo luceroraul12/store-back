@@ -6,29 +6,27 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 @Getter
 @Setter
-public abstract class GeneradorDeDocumentosConcurrente<Entidad extends ProductoEspecifico> implements Runnable{
+public class GeneradorDeDocumentosConcurrente implements Callable<List<Document>> {
 
     private String url;
     private Integer indiceInicial;
     private Integer indiceFinal;
 
-    private static Object serrojo;
-
-    private static List<Document> documentosTotales = new ArrayList<>();
-    private List<Document> documentosPorHilo = new ArrayList<>();
+    public GeneradorDeDocumentosConcurrente(String url, Integer indiceInicial, Integer indiceFinal) {
+        this.url = url;
+        this.indiceInicial = indiceInicial;
+        this.indiceFinal = indiceFinal;
+    }
 
     @Override
-    public void run()  {
+    public List<Document> call() throws Exception {
+        List<Document> documentosPorHilo = new ArrayList<>();
         for (int i = indiceInicial; i <= indiceFinal; i++) {
             try {
                 System.out.println(url+i);
@@ -37,25 +35,6 @@ public abstract class GeneradorDeDocumentosConcurrente<Entidad extends ProductoE
                 throw new RuntimeException(e);
             }
         }
-        synchronized (serrojo){
-            documentosTotales.addAll(documentosPorHilo);
-        }
+        return documentosPorHilo;
     }
-
-    @Bean
-    @Scope("prototype")
-    public GeneradorDeDocumentosConcurrente<Entidad> getInstancia(){
-        return new GeneradorDeDocumentosConcurrente<Entidad>() {};
-    }
-
-    /**
-     * metodo necesario por instancia
-     */
-    public void setearValoresIniciales(String url, Integer indiceInicial, Integer indiceFinal, List<Document> documetosFinales, Object cerrojo){
-        this.url = url;
-        this.indiceInicial = indiceInicial;
-        this.indiceFinal = indiceFinal;
-        documentosTotales = documetosFinales;
-        serrojo = cerrojo;
-    };
 }
