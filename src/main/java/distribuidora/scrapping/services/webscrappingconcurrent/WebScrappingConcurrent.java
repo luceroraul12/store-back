@@ -25,7 +25,7 @@ public abstract class WebScrappingConcurrent<Entidad extends ProductoEspecifico>
 
     @Override
     protected List<Document> generarDocumentos() throws IOException {
-        int hilosMaximos = 4;
+        int hilosMaximos = 1;
         int maximoIndicePaginador = generarUltimoIndicePaginador();
         int rangoPorHilo = maximoIndicePaginador / hilosMaximos;
 
