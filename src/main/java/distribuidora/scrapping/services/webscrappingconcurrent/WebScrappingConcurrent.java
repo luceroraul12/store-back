@@ -25,7 +25,7 @@ public abstract class WebScrappingConcurrent<Entidad extends ProductoEspecifico>
 
     @Override
     protected List<Document> generarDocumentos() throws IOException {
-        int hilosMaximos = 1;
+        int hilosMaximos = 4;
         int maximoIndicePaginador = generarUltimoIndicePaginador();
         int rangoPorHilo = maximoIndicePaginador / hilosMaximos;
 
@@ -38,13 +38,13 @@ public abstract class WebScrappingConcurrent<Entidad extends ProductoEspecifico>
         for (int i = 0; i < hilosMaximos; i++) {
             int indiceInicial = i == 0 ? 1 : i*rangoPorHilo;
             int indiceFinal = i == (hilosMaximos-1) ? maximoIndicePaginador : (i+1)*rangoPorHilo - 1;
-            GeneradorDeDocumentosConcurrente hilo = new GeneradorDeDocumentosConcurrente(
-                    getUrlBuscador(),
-                    indiceInicial,
-                    indiceFinal
-            );
-            System.out.println("esto es un bean: "+ hilo);
-            resultadosParciales.add(hilos.submit(hilo));
+            resultadosParciales.add(hilos.submit(
+                    new GeneradorDeDocumentosConcurrente(
+                            getUrlBuscador(),
+                            indiceInicial,
+                            indiceFinal
+                    )
+            ));
         }
         hilos.shutdown();
 
