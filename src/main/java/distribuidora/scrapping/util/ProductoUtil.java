@@ -5,6 +5,8 @@ import distribuidora.scrapping.entities.Producto;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public abstract class ProductoUtil<Entidad> {
@@ -15,9 +17,44 @@ public abstract class ProductoUtil<Entidad> {
      * @return
      */
     public List<Producto> arregloToProducto(List<Entidad> productos){
-        return productos
-                .stream()
-                .map(this::convertirProductoyDevolverlo)
+        int numeroDeHilos = 4;
+        int cantidadDeProductosEntidad = productos.size();
+        int intervalo = cantidadDeProductosEntidad / numeroDeHilos;
+        ExecutorService hilos = Executors.newFixedThreadPool(numeroDeHilos);
+
+        List<List<Entidad>> listaDivididaEnPartas = new ArrayList<>();
+        List<Future<List<Producto>>> futureList = new ArrayList<>();
+
+        for (int i = 0; i < numeroDeHilos; i++) {
+            int indiceInicial = i * intervalo;
+            int indiceFinal = i == numeroDeHilos-1 ? cantidadDeProductosEntidad : (i+1) * intervalo;
+            listaDivididaEnPartas.add(productos.subList(indiceInicial, indiceFinal));
+        };
+        for (List<Entidad> lista : listaDivididaEnPartas){
+            futureList.add(
+                    hilos.submit(new Callable<List<Producto>>() {
+                        @Override
+                        public List<Producto> call() throws Exception {
+                            return lista.stream()
+                                    .map(productoEntidad -> convertirProductoyDevolverlo(productoEntidad))
+                                    .flatMap(Collection::stream)
+                                    .collect(Collectors.toList());
+                        }
+                    })
+            );
+        }
+        hilos.shutdown();
+        return futureList.stream()
+                .map(listFuture -> {
+                    try {
+                        return listFuture.get();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    } catch (ExecutionException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .filter(Objects::nonNull)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
