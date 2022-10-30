@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 
-@Service
+//@Service
 public class SudamerikWebScrappingConcurrentServicio extends WebScrappingConcurrent<SudamerikEntidad>{
     @Override
     protected void initImplementacion() {
