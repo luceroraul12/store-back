@@ -3,6 +3,7 @@ package distribuidora.scrapping.util;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
@@ -47,13 +48,25 @@ public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
     }
     @Override
     public FacundoEntidad convertirRowEnProductoEspecifico(Row row, Distribuidora distribuidora) {
+        Double precioMayor = validarPrecio(row.getCell(3));
+        Double precioMenor = validarPrecio(row.getCell(4));
         return FacundoEntidad.builder()
                 .distribuidora(distribuidora)
                 .categoria(row.getCell(0).getStringCellValue())
                 .subcategoria(row.getCell(1).getStringCellValue())
                 .cantidad(row.getCell(2).getStringCellValue())
-                .precioMayor(Double.valueOf(row.getCell(3).toString()))
-                .precioMenor(Double.valueOf(row.getCell(4).toString()))
+                .precioMayor(precioMayor)
+                .precioMenor(precioMenor)
                 .build();
     }
+
+    private Double validarPrecio(Cell cell) {
+        try {
+            return cell.getNumericCellValue();
+        } catch (Exception e) {
+            return 0.0;
+        }
+    }
+
+
 }

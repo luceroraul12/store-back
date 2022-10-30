@@ -37,15 +37,14 @@ public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
     }
 
     private boolean contieneDouble(Cell celda) {
-        boolean resultado;
-        try {
-            Double.parseDouble(celda.toString());
-            resultado = true;
-        } catch (Exception e) {
-            resultado = false;
-        }
-
-        return resultado;
+//        boolean resultado;
+//        try {
+//            Double.parseDouble(celda.toString());
+//            resultado = true;
+//        } catch (Exception e) {
+//            resultado = false;
+//        }
+        return celda.getCellType() != CellType.STRING;
     }
 
     @Override
