@@ -3,13 +3,14 @@ package distribuidora.scrapping.util;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class FacundoUtil extends ProductoUtil<FacundoEntidad> {
+public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
     @Override
     public List<Producto> convertirProductoyDevolverlo(FacundoEntidad productoEntidad) {
         Distribuidora distribuidora = Distribuidora.FACUNDO;
@@ -44,6 +45,15 @@ public class FacundoUtil extends ProductoUtil<FacundoEntidad> {
 
         return productosGenerados;
     }
-
-
+    @Override
+    public FacundoEntidad convertirRowEnProductoEspecifico(Row row, Distribuidora distribuidora) {
+        return FacundoEntidad.builder()
+                .distribuidora(distribuidora)
+                .categoria(row.getCell(0).getStringCellValue())
+                .subcategoria(row.getCell(1).getStringCellValue())
+                .cantidad(row.getCell(2).getStringCellValue())
+                .precioMayor(Double.valueOf(row.getCell(3).toString()))
+                .precioMenor(Double.valueOf(row.getCell(4).toString()))
+                .build();
+    }
 }

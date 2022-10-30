@@ -5,6 +5,7 @@ import distribuidora.scrapping.entities.PeticionExcel;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.BuscadorDeProductos;
+import distribuidora.scrapping.util.ProductoExcelUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -28,6 +29,10 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
 
     @Autowired
     Comunicador comunicador;
+
+    @Autowired
+    ProductoExcelUtil<Entidad> util;
+
     @Override
     protected List<Entidad> adquirirProductosEntidad(PeticionExcel elementoAuxiliar) {
         List<Entidad> productosrecolectados;
@@ -161,7 +166,7 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
     private Collection<Entidad> trabajarConRowyObtenerProducto(Row row) {
         Collection<Entidad> productosPorRows = new ArrayList<>();
         if (esRowValido(row)){
-            productosPorRows.add(mapearRowPorProducto(row));
+            productosPorRows.add(util.convertirRowEnProductoEspecifico(row, getDistribuidora()));
         }
         return productosPorRows;
     }
