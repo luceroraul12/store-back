@@ -2,15 +2,19 @@ package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.services.webscrappingconcurrent.WebScrappingConcurrent;
 import distribuidora.scrapping.util.LaGranjaDelCentroUtil;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
-public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapping<LaGranjaDelCentroEntidad> {
+public class LaGranjaDelCentroWebScrappingServicio extends WebScrappingConcurrent<LaGranjaDelCentroEntidad> {
 
     @Autowired
     LaGranjaDelCentroUtil laGranjaDelCentroUtil;
@@ -63,5 +67,13 @@ public class LaGranjaDelCentroWebScrappingServicio extends BusquedorPorWebScrapp
         setDistribuidora(Distribuidora.LA_GRANJA_DEL_CENTRO);
         setEsBuscadorConPaginador(true);
         setUrlBuscador("https://lagranjadelcentro.com.ar/productos.php?pagina=");
+    }
+
+    @Override
+    protected int generarUltimoIndicePaginador() throws IOException {
+        Document document = Jsoup.connect(getUrlBuscador()).get();
+        Elements element = document.select(".paginador > .p");
+        String url = element.get(1).attr("href");
+        return Integer.parseInt(url.split("=")[1]);
     }
 }
