@@ -179,13 +179,5 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
      */
     abstract boolean esRowValido(Row row);
 
-    /**
-     * Encargado de mapear un renglon a Producto Entidad.
-     * toma todos las celdas de un renglon y las mapea al producto Entidad.
-     * @param row del sheet
-     * @return producto Entidad
-     */
-    abstract Entidad mapearRowPorProducto(Row row);
-
 
 }

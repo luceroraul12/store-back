@@ -32,17 +32,6 @@ public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
     }
 
     @Override
-    IndiasEntidad mapearRowPorProducto(Row row) {
-        return IndiasEntidad.builder()
-                .distribuidora(getDistribuidora())
-                .rubro(row.getCell(1).toString())
-                .codigo((int) row.getCell(2).getNumericCellValue())
-                .descripcion(row.getCell(3).toString())
-                .precio(row.getCell(4).getNumericCellValue())
-                .build();
-    }
-
-    @Override
     protected void initImplementacion() {
         setDistribuidora(Distribuidora.INDIAS);
     }
