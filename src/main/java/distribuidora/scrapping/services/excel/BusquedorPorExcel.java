@@ -14,8 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Encargada de configurar la busqueda por medio de documentos excel.
@@ -70,16 +72,12 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
      * @throws IOException
      */
     public List<Entidad> obtenerProductosApartirDeExcels(@NotNull MultipartFile[] excels) throws IOException {
-        List<Entidad> productosFinales = new ArrayList<>();
-        ArrayList<Sheet> sheets;
-        for (MultipartFile excel : excels) {
-            System.out.println(excel.getOriginalFilename());
-            sheets = obtenerSheets(excel);
-            sheets.forEach(s -> {
-                productosFinales.addAll(obtenerProductosPorSheet(s));
-            });
-        }
-        return productosFinales;
+        return Arrays.stream(excels)
+                .map(this::obtenerSheets)
+                .flatMap(Collection::stream)
+                .map(this::obtenerProductosPorSheet)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
 
@@ -121,7 +119,7 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
 
                     productosFinales.addAll(trabajarConRowyObtenerProducto(row));
                 }
-        );        
+        );
         return  productosFinales;
     }
 
