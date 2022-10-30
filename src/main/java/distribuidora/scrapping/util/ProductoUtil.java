@@ -2,6 +2,7 @@ package distribuidora.scrapping.util;
 
 import distribuidora.scrapping.entities.Producto;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,6 +39,9 @@ public abstract class ProductoUtil<Entidad> {
                             return lista.stream()
                                     .map(productoEntidad -> convertirProductoyDevolverlo(productoEntidad))
                                     .flatMap(Collection::stream)
+                                    .peek(p -> p.setDescripcion(
+                                            quitarAcentosYDevolverMayuscula(p.getDescripcion())
+                                    ))
                                     .collect(Collectors.toList());
                         }
                     })
@@ -73,9 +77,6 @@ public abstract class ProductoUtil<Entidad> {
      * Compara el nombre original del producto contra un conjunto de propiedades y agrega segun corresponda.
      * La idea es que contenga la mayor cantidad de propiedades utiles para el cliente siempre y cuando no se encuentren repetidas. Al ser algo que se puede llegar a repetir con varias Entidades Especificas prefiero colocarlo por herencia.
      * En caso de no tener ningun
-     * @param nombreProductoOriginal
-     * @param propiedadesParaValidar
-     * @return
      */
 //    TODO: hay que verificar que las implementaciones podriasn llegar a utilizarlo
     protected String validaryAgregarPropiedadesQueNoEstanRepetidasEnOriginal(
@@ -94,6 +95,12 @@ public abstract class ProductoUtil<Entidad> {
                 }
         );
         return nombreProductoFinal.toString();
+    }
+
+    private String quitarAcentosYDevolverMayuscula(String s) {
+        s = Normalizer.normalize(s, Normalizer.Form.NFD);
+        s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return s.toUpperCase();
     }
 
 
