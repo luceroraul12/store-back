@@ -3,7 +3,9 @@ package distribuidora.scrapping.util;
 import distribuidora.scrapping.entities.Producto;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class ProductoUtil<Entidad> {
 
@@ -13,17 +15,11 @@ public abstract class ProductoUtil<Entidad> {
      * @return
      */
     public List<Producto> arregloToProducto(List<Entidad> productos){
-        List<Producto> productosConvertidos = new ArrayList<>();
-
-        productos
-                .parallelStream()
-                .forEach(p -> {
-            productosConvertidos.addAll(
-                    convertirProductoyDevolverlo(p)
-            );
-        });
-
-        return productosConvertidos;
+        return productos
+                .stream()
+                .map(this::convertirProductoyDevolverlo)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     /**
