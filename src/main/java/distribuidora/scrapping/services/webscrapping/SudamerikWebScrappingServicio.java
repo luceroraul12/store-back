@@ -96,7 +96,7 @@ public class SudamerikWebScrappingServicio extends WebScrappingConcurrent<Sudame
 
     @Override
     protected int generarUltimoIndicePaginador() throws IOException {
-        Document document = Jsoup.parse(new File("src/main/resources/static/sudamerik.html"));
+        Document document = Jsoup.connect(getUrlBuscador()+1).get();
         Elements elements = document.select(".pagination > li");
         int indiceMaximo = Integer.parseInt(elements.get(elements.size()-2).text());
         return indiceMaximo;
