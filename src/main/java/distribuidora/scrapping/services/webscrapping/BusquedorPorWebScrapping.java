@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Clase base para los servicios basados en Web Scrapping.
@@ -55,14 +57,11 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
     public List<Entidad> adquirirProductosEntidad(PeticionWebScrapping peticionWebScrapping) {
         List<Entidad> productostotales = new ArrayList<>();
         try {
-            generarDocumentos()
-                    .forEach(
-                            document -> {
-                                productostotales.addAll(
-                                        obtenerProductosPorDocument(document)
-                                );
-                            }
-                    );
+            productostotales = generarDocumentos()
+                    .stream()
+                    .map(this::obtenerProductosPorDocument)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             System.out.println("Problemas al generar productos");;
         }

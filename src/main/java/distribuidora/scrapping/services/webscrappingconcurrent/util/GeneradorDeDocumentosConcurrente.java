@@ -1,4 +1,4 @@
-package distribuidora.scrapping.services.webscrappingconcurrent.generadordedocumentos;
+package distribuidora.scrapping.services.webscrappingconcurrent.util;
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import lombok.Data;
