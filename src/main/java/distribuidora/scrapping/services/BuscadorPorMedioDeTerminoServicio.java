@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.Producto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,24 +16,20 @@ import java.util.stream.Collectors;
 @Service
 public class BuscadorPorMedioDeTerminoServicio {
 
+    @Autowired
+    ProductoServicio productoServicio;
+
     /**
      * Filtra un conjunto de productos en funcion a un termino de busqueda.
-     * @param productos conjunto de productos a los que se realizara el filtrado.
      * @param busqueda termino de busqueda.
      * @return conjunto de productos que pasaron el filtrado.
      */
-    public Collection<Producto> filtrarProductos(Collection<Producto> productos, String busqueda){
-        Collection<Producto> productosFiltrados = new ArrayList<>();
+    public Collection<Producto> filtrarProductos(String busqueda){
         String[] partesDeBusqueda = busqueda.split(" ");
         Pattern patron = crearPatronRegex(partesDeBusqueda);
-
-        productosFiltrados = productos.stream()
-                .filter(
-                    p -> esProductoValido(p, patron)
-                )
+        return productoServicio.obtenerTodosLosProductosAlmacenados().stream()
+                .filter(p -> esProductoValido(p, patron))
                 .collect(Collectors.toList());
-
-        return productosFiltrados;
     }
 
     /**

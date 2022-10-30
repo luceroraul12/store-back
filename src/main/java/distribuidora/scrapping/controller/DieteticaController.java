@@ -1,7 +1,8 @@
 package distribuidora.scrapping.controller;
 
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.services.RecolectorDeProductosServicio;
+import distribuidora.scrapping.repositories.ProductoRepository;
+import distribuidora.scrapping.services.BuscadorPorMedioDeTerminoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,14 +11,16 @@ import java.util.Collection;
 
 /**
  * De momento solo se encarga de las busquedas sobre las bases de datos.
- * @see RecolectorDeProductosServicio
  */
 @RestController
 @RequestMapping(value = "scrapping")
 public class DieteticaController {
 
     @Autowired
-    RecolectorDeProductosServicio recolectorDeProductosServicio;
+    BuscadorPorMedioDeTerminoServicio buscador;
+
+    @Autowired
+    ProductoRepository repository;
 
     /**
      * Metodo para hacer busquedas en funcion a un termino de busqueda
@@ -28,7 +31,9 @@ public class DieteticaController {
      */
     @GetMapping("productos")
     public Collection<Producto> obtenerTodosLosProductos(@RequestParam(name = "busqueda") String busqueda) throws IOException {
-        return recolectorDeProductosServicio.obtenerTodosLosProductos(busqueda);
+//        return repository.buscarConTermino(busqueda);
+        return buscador.filtrarProductos(busqueda);
+//        return recolectorDeProductosServicio.obtenerTodosLosProductos(busqueda);
     }
 
 }
