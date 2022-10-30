@@ -3,18 +3,22 @@ package distribuidora.scrapping.services.webscrapping;
 import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
 import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad.SudamerikConjuntoEspecifico;
 import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.services.webscrappingconcurrent.WebScrappingConcurrent;
 import distribuidora.scrapping.util.SudamerikUtil;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<SudamerikEntidad> {
+public class SudamerikWebScrappingServicio extends WebScrappingConcurrent<SudamerikEntidad> {
 
     @Autowired
     SudamerikUtil sudamerikUtil;
@@ -88,5 +92,13 @@ public class SudamerikWebScrappingServicio extends BusquedorPorWebScrapping<Suda
         setDistribuidora(Distribuidora.SUDAMERIK);
         setEsBuscadorConPaginador(true);
         setUrlBuscador("https://www.sudamerikargentina.com.ar/productos/pagina/");
+    }
+
+    @Override
+    protected int generarUltimoIndicePaginador() throws IOException {
+        Document document = Jsoup.parse(new File("src/main/resources/static/sudamerik.html"));
+        Elements elements = document.select(".pagination > li");
+        int indiceMaximo = Integer.parseInt(elements.get(elements.size()-2).text());
+        return indiceMaximo;
     }
 }

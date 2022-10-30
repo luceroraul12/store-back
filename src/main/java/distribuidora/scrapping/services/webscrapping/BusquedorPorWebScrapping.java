@@ -59,6 +59,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
         try {
             productostotales = generarDocumentos()
                     .stream()
+                    .parallel()
                     .map(this::obtenerProductosPorDocument)
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
