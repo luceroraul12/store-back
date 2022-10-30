@@ -11,11 +11,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
 
-    @Autowired
-    LaGranjaDelCentroWebScrappingConcurrentServicio servicio;
+    LaGranjaDelCentroWebScrappingConcurrentServicio servicio = new LaGranjaDelCentroWebScrappingConcurrentServicio();
 
     @Test
     void pruebaInicial() throws IOException {
+        servicio.initImplementacion();
         int resultado = servicio.generarUltimoIndicePaginador();
 
         assertEquals(122, resultado);
@@ -23,6 +23,7 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
 
     @Test
     void pruebaGenerarDocumentos() throws IOException {
+        servicio.initImplementacion();
         int resultado = servicio.generarDocumentos().size();
 
         assertEquals(122, resultado);

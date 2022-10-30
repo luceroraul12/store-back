@@ -13,8 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class SudamerikWebScrappingConcurrentServicioTest {
 
-    @Autowired
-    SudamerikWebScrappingConcurrentServicio servicio;
+    SudamerikWebScrappingConcurrentServicio servicio = new SudamerikWebScrappingConcurrentServicio();
 
     @Test
     void generarUltimoIndicePaginador() throws IOException {
@@ -24,6 +23,7 @@ class SudamerikWebScrappingConcurrentServicioTest {
 
     @Test
     void generarDocumentos() throws IOException {
+        servicio.initImplementacion();
         List<Document> documentos = servicio.generarDocumentos();
         assertEquals(48, documentos.size());
     }
