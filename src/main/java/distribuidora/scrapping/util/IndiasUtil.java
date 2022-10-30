@@ -3,6 +3,7 @@ package distribuidora.scrapping.util;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +28,21 @@ public class IndiasUtil extends ProductoExcelUtil<IndiasEntidad>{
 
     @Override
     public IndiasEntidad convertirRowEnProductoEspecifico(Row row, Distribuidora distribuidora) {
+        double precio = validarPrecio(row.getCell(4));
         return IndiasEntidad.builder()
                 .distribuidora(distribuidora)
                 .rubro(row.getCell(1).toString())
                 .codigo((int) row.getCell(2).getNumericCellValue())
                 .descripcion(row.getCell(3).toString())
-                .precio(row.getCell(4).getNumericCellValue())
+                .precio(precio)
                 .build();
+    }
+
+    private double validarPrecio(Cell cell) {
+        try {
+            return cell.getNumericCellValue();
+        } catch (Exception e) {
+            return 0.0;
+        }
     }
 }

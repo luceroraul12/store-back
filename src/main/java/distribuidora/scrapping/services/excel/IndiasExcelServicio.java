@@ -20,9 +20,7 @@ public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
             if (row.getCell(1).getCellType().equals(CellType.STRING)){
                 if (row.getCell(2).getCellType().equals(CellType.NUMERIC)){
                     if (row.getCell(3).getCellType().equals(CellType.STRING)){
-                        if (row.getCell(4).getCellType().equals(CellType.NUMERIC)){
-                            resultado = true;
-                        }
+                        resultado = true;
                     }
                 }
             }
