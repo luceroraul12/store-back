@@ -157,14 +157,10 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
     }
 
     private List<Entidad> obtenerTodosLosProductosDeLaPagina(Elements elements){
-        List<Entidad> productosCreados = new ArrayList<>();
-        elements
-                .parallelStream()
-                .forEach(
-                elementProducto -> productosCreados.add(obtenerProductosAPartirDeElements(elementProducto))
-        );
-
-        return productosCreados;
+        return elements
+                .stream()
+                        .map(this::obtenerProductosAPartirDeElements)
+                                .collect(Collectors.toList());
     }
 
     /**
