@@ -152,11 +152,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * @return listado de productos especificos.
      */
     private List<Entidad> obtenerProductosPorDocument(Document documento){
-        List<Entidad> productosPorDocumento = new ArrayList<>();
-        Elements elementosQueContienenDatosConvertible = filtrarElementos(documento);
-        productosPorDocumento.addAll(
-                obtenerTodosLosProductosDeLaPagina(elementosQueContienenDatosConvertible)
-        );
+        List<Entidad> productosPorDocumento = obtenerTodosLosProductosDeLaPagina(filtrarElementos(documento));
         return productosPorDocumento;
     }
 
