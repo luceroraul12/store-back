@@ -7,8 +7,12 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+/**
+ * Servicio encargado de actualizaciones de base de dato del tipo excel.
+ */
 @Service
 public class ActualizacionPorDocumentoServicio {
+    //TODO: en cuanto sean mas de dos distribuidora, hay que ver de usar rxjava para mantener el orden del servicio.
     @Autowired
     private IndiasExcelServicio indiasExcelServicio;
     @Autowired

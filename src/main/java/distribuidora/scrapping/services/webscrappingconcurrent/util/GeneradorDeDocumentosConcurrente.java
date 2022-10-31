@@ -1,7 +1,5 @@
 package distribuidora.scrapping.services.webscrappingconcurrent.util;
 
-import distribuidora.scrapping.entities.ProductoEspecifico;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
@@ -10,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+/**
+ * Clase utilitaria para la generacion de documentos EXCEL de manera concurrente.
+ */
 @Getter
 @Setter
 public class GeneradorDeDocumentosConcurrente implements Callable<List<Document>> {
@@ -18,6 +19,12 @@ public class GeneradorDeDocumentosConcurrente implements Callable<List<Document>
     private Integer indiceInicial;
     private Integer indiceFinal;
 
+    /**
+     * Constructor por el cual se setea los valores obligatorios
+     * @param url de la distribuidora
+     * @param indiceInicial del bucle
+     * @param indiceFinal del bucle
+     */
     public GeneradorDeDocumentosConcurrente(String url, Integer indiceInicial, Integer indiceFinal) {
         this.url = url;
         this.indiceInicial = indiceInicial;

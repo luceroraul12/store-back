@@ -44,6 +44,10 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
         return productosrecolectados;
     }
 
+    /**
+     * Metodo que utiliza extensiones reactivas para poder realizar actualizaciones dinamicas.<br>
+     * De esta manera nunca se deben generar cases de switch cuando se agregen nuevas distribuidoras.
+     */
     @Override
     protected void initTipoBusqueda() {
         setTipoDistribuidora(TipoDistribuidora.EXCEL);
@@ -150,6 +154,10 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
         );
     }
 
+    /**
+     * En caso de que la celda contenga una formula, la aplica y deja el resultado en su lugar.
+     * @param celda
+     */
     private void aplicarFormular(Cell celda){
         if (celda.getCellType() == CellType.FORMULA){
             celda.removeFormula();

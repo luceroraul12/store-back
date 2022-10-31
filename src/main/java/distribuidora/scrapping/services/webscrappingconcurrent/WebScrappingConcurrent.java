@@ -16,11 +16,17 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
- * Es una clase muy similar
+ * Clase heredada de {@link BusquedorPorWebScrapping} que implementa concurrencia.
+ * De esta forma, se reducen los tiempos de espera cuando se trabje con ella.
  * @param <Entidad>
  */
 public abstract class WebScrappingConcurrent<Entidad extends ProductoEspecifico> extends BusquedorPorWebScrapping<Entidad> {
 
+    /**
+     * Metodo que usa concurrencia para generar los documentos.
+     * @return
+     * @throws IOException
+     */
     @Override
     protected List<Document> generarDocumentos() throws IOException {
         int hilosMaximos = 4;
@@ -64,5 +70,11 @@ public abstract class WebScrappingConcurrent<Entidad extends ProductoEspecifico>
 
         return documentosFinales;
     }
+
+    /**
+     * Meotodo que obtiene el indice maximo del paginador.
+     * @return indice maximo de paginador.
+     * @throws IOException
+     */
     protected abstract int generarUltimoIndicePaginador() throws IOException;
 }
