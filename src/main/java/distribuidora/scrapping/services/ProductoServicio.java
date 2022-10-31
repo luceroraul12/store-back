@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Encargada de la collecion de productos.
+ * Encargada de la collecion de productos finales.
  */
 @Service
 public class ProductoServicio {

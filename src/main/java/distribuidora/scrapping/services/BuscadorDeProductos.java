@@ -28,31 +28,42 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 {
 
     /**
-     * Cada servicio final tiene que tener la enumeracion de la distribuidora a la que pertenece.
+     * Es la enumercacion que identifica a cada implementacion de este servicio.
+     * Toda implementacion utilizada debe tenerlo seteado.
      */
     private Distribuidora distribuidora;
     /**
-     * Cada tipo de busqueda tiene que tener la enumeracion del tipo a la que pertenece
+     * Es el identificador del tipo de busqueda.
+     * Toda implementacion utilizada debe tenerlo seteado.
      */
     private TipoDistribuidora tipoDistribuidora;
 
     private LocalDate fechaUltimaActualizacion;
 
+    /**
+     * Componente utilitario para realizar conversiones.
+     */
     @Autowired
     private ProductoUtil<Entidad> productoUtil;
 
+    /**
+     * Servicio basado en Productos finales.
+     */
     @Autowired
     private ProductoServicio productoServicio;
 
+    /**
+     * Servicio que hace referencia a las diferentes implementaciones para productos especificos.
+     */
     @Autowired
     private ProductoEspecificoServicio<Entidad> productoEspecificoServicio;
-
-//    @Autowired
-//    private DatosDistribuidoraRepository datosDistribuidoraRepository;
 
     @Autowired
     private DatoDistribuidoraServicio datoDistribuidoraServicio;
 
+    /**
+     * Metodo post constructor para poder setear atributos de cada clase.
+     */
     @PostConstruct
     private void init(){
         initTipoBusqueda();
@@ -60,27 +71,20 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
         verificarExistenciaEnBaseDeDatosEspecifica();
     }
 
+    /**
+     * Metodo iniciador para el tipo de busqueda
+     */
     protected abstract void initTipoBusqueda();
+
+    /**
+     * Metodo iniciador para la implementacion.
+     */
     protected abstract void initImplementacion();
 
     /**
-     * Es el metodo de inicializacion para los tipos de busqueda.<br>
-     * Se debe tener seteado {@link BuscadorDeProductos#tipoDistribuidora}
-     * @see BuscadorDeProductos#setTipoDistribuidora(TipoDistribuidora)
+     * Metodo pre destruccion del bean.<br>
+     * De momento no hay nada asignado en el, pero esta.
      */
-//    @PostConstruct
-//    @Order(1)
-//    protected abstract void initTipoDeBusqueda();
-//
-//    /**
-//     * Es el metodo de inicializacion para las implementaciones.<br>
-//     * Se debe tener seteado {@link BuscadorDeProductos#distribuidora}
-//     * @see BuscadorDeProductos#setTipoDistribuidora(TipoDistribuidora)
-//     */
-//    @PostConstruct
-//    @Order(2)
-//    protected abstract void initEspecifico();
-
     @PreDestroy
     protected abstract void destroy();
 
@@ -100,7 +104,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
     }
 
     /**
-     * Metodo a implementar por cada clase de tipo de busqued.
+     * Metodo a implementar por cada clase de tipo de busqueda.
      * Este metodo permite unicamente la adquisicion de productos de cierta entidad y solo eso.
      * @param elementoAuxiliar
      * @return lista de productos

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Servicio encargado de trabajar con base de datos y los datos de distribuidora.
+ */
 @Service
 public class DatoDistribuidoraServicio implements AccionesBaseDeDatos<DatosDistribuidora> {
 

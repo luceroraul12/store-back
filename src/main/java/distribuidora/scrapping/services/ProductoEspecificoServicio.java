@@ -8,6 +8,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Servicio destinado a trabajar con la base de datos y los productos especificos.<br>
+ * Para este caso, opte por almacenar todos los productos de las diferentes distribuidoras en la misma coleccion.<br>
+ * Esto lo hice de esa manera por la libertad que brinda NoSQL con MongoDB.
+ * @param <Entidad>
+ */
 @Service
 public class ProductoEspecificoServicio<Entidad extends ProductoEspecifico> implements AccionesBaseDeDatos<Entidad> {
 
