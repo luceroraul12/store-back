@@ -21,13 +21,15 @@ public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
         Distribuidora distribuidora = Distribuidora.FACUNDO;
         List<Producto> productosGenerados = new ArrayList<>();
         String descripcionMenor = String.format(
-                "%s %s X %s X menor",
+                "%s %s %s X %s X menor",
+                productoEntidad.getCategoriaRenglon(),
                 productoEntidad.getCategoria(),
                 productoEntidad.getSubcategoria(),
                 productoEntidad.getCantidad()
         );
         String descripcionMayor = String.format(
-                "%s %s X %s X mayor",
+                "%s %s %s X %s X mayor",
+                productoEntidad.getCategoriaRenglon(),
                 productoEntidad.getCategoria(),
                 productoEntidad.getSubcategoria(),
                 productoEntidad.getCantidad()
