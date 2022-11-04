@@ -4,6 +4,7 @@ import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
 import distribuidora.scrapping.enums.Distribuidora;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,9 @@ import java.util.List;
 
 @Component
 public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
+
+    private String categoriaExcel;
+
     @Override
     public List<Producto> convertirProductoyDevolverlo(FacundoEntidad productoEntidad) {
         Distribuidora distribuidora = Distribuidora.FACUNDO;
@@ -48,16 +52,42 @@ public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
     }
     @Override
     public FacundoEntidad convertirRowEnProductoEspecifico(Row row, Distribuidora distribuidora) {
+
+        if(esRenglonCategoria(row)){
+            this.categoriaExcel = row.getCell(0).getStringCellValue();
+            return null;
+        }
+
         Double precioMayor = validarPrecio(row.getCell(3));
         Double precioMenor = validarPrecio(row.getCell(4));
         return FacundoEntidad.builder()
                 .distribuidora(distribuidora)
                 .categoria(row.getCell(0).getStringCellValue())
+                .categoriaRenglon(this.categoriaExcel)
                 .subcategoria(row.getCell(1).getStringCellValue())
                 .cantidad(row.getCell(2).getStringCellValue())
                 .precioMayor(precioMayor)
                 .precioMenor(precioMenor)
                 .build();
+    }
+
+    private boolean esRenglonCategoria(Row row) {
+        boolean resultado = false;
+        try{
+            if (row.getCell(0).getCellType().equals(CellType.STRING)){
+                if (row.getCell(1).getStringCellValue().length() <= 50){
+                    if (row.getCell(2).getCellType().equals(CellType.STRING)){
+                        if (row.getCell(3).getCellType().equals(CellType.STRING)){
+                            if (row.getCell(4).getCellType().equals(CellType.STRING)){
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored){
+        }
+        return resultado;
     }
 
     private Double validarPrecio(Cell cell) {
