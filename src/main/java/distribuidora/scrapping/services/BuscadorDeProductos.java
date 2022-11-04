@@ -98,9 +98,13 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      * @see BuscadorDeProductos#actualizarProductosEnTodasLasColecciones(List productos)
      */
     public void generarProductosEntidadYActualizarCollecciones(Auxiliar elementoAuxiliar){
-        actualizarProductosEnTodasLasColecciones(
-                adquirirProductosEntidad(elementoAuxiliar)
-        );
+        try {
+            actualizarProductosEnTodasLasColecciones(
+                    adquirirProductosEntidad(elementoAuxiliar)
+            );
+        } catch (Exception e) {
+            System.out.println("error en actualizar productos en todas las colecciones");;
+        }
     }
 
     /**
@@ -119,19 +123,31 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 //     * @see BuscadorDeProductos#almacenarProductosEspecificos(List)
      */
     public void actualizarProductosEnTodasLasColecciones(List<Entidad> productos){
-        this.productoServicio.actualizarProductosPorDistribuidora(
-                productoUtil.arregloToProducto(productos),
-                this.distribuidora
-        );
-        this.datoDistribuidoraServicio.actualizarDatos(
-                Collections.singletonList(DatosDistribuidora.builder()
-                        .distribuidora(getDistribuidora())
-                        .fechaActualizacion(LocalDate.now().toString())
-                        .tipo(getTipoDistribuidora())
-                        .cantidadDeProductosAlmacenados(productos.size())
-                        .build())
-        );
-        this.productoEspecificoServicio.guardarDatos(productos);
+        try {
+            this.productoServicio.actualizarProductosPorDistribuidora(
+                    productoUtil.arregloToProducto(productos),
+                    this.distribuidora
+            );
+        } catch (Exception e) {
+            System.out.println("error al actualizar productos Finales");
+        }
+        try {
+            this.datoDistribuidoraServicio.actualizarDatos(
+                    Collections.singletonList(DatosDistribuidora.builder()
+                            .distribuidora(getDistribuidora())
+                            .fechaActualizacion(LocalDate.now().toString())
+                            .tipo(getTipoDistribuidora())
+                            .cantidadDeProductosAlmacenados(productos.size())
+                            .build())
+            );
+        } catch (Exception e) {
+            System.out.println("error al actualizar datos de distribuidora");
+        }
+        try {
+            this.productoEspecificoServicio.actualizarDatos(productos);
+        } catch (Exception e) {
+            System.out.println("error al guardar productos especificos");
+        }
     }
 
     /**
