@@ -44,12 +44,10 @@ public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
         boolean resultado = false;
         try{
             if (row.getCell(0).getCellType().equals(CellType.STRING)){
-                if (row.getCell(1).getCellType().equals(CellType.STRING)){
-                    if (row.getCell(2).getCellType().equals(CellType.STRING)){
-                        if (contieneDouble(row.getCell(3))){
-                            if (contieneDouble(row.getCell(4))){
-                                resultado = true;
-                            }
+                if (row.getCell(2).getCellType().equals(CellType.STRING)){
+                    if (contieneDouble(row.getCell(3))){
+                        if (contieneDouble(row.getCell(4))){
+                            resultado = true;
                         }
                     }
                 }

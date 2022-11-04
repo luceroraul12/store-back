@@ -2,6 +2,7 @@ package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.Distribuidora;
+import distribuidora.scrapping.repositories.ProductoEspecificoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.util.List;
 public class ProductoEspecificoServicio<Entidad extends ProductoEspecifico> implements AccionesBaseDeDatos<Entidad> {
 
     @Autowired
-    private MongoRepository<Entidad, String> repository;
+    private ProductoEspecificoRepository<Entidad> repository;
 
     @Override
     public void actualizarDatos(List<Entidad> datos) {
@@ -34,6 +35,6 @@ public class ProductoEspecificoServicio<Entidad extends ProductoEspecifico> impl
 
     @Override
     public void eliminarDatos(Distribuidora distribuidora) {
-        repository.deleteAll();
+        repository.deleteAllByDistribuidora(distribuidora);
     }
 }

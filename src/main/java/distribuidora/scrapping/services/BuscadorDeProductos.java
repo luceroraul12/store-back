@@ -99,8 +99,9 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      */
     public void generarProductosEntidadYActualizarCollecciones(Auxiliar elementoAuxiliar){
         try {
+            List<Entidad> productosProcesados = adquirirProductosEntidad(elementoAuxiliar);
             actualizarProductosEnTodasLasColecciones(
-                    adquirirProductosEntidad(elementoAuxiliar)
+                    productosProcesados
             );
         } catch (Exception e) {
             System.out.println("error en actualizar productos en todas las colecciones");;

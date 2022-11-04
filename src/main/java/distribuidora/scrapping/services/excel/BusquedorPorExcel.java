@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -34,9 +35,11 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
     protected List<Entidad> adquirirProductosEntidad(PeticionExcel elementoAuxiliar) {
         List<Entidad> productosrecolectados;
         try {
-            productosrecolectados = new ArrayList<>(obtenerProductosApartirDeExcels(elementoAuxiliar.getExcels()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            productosrecolectados = obtenerProductosApartirDeExcels(elementoAuxiliar.getExcels());
+        } catch (Exception e) {
+            productosrecolectados = new ArrayList<>();
+            System.out.println("problemas al recolectar productos");
+            e.printStackTrace();
         }
         return productosrecolectados;
     }
@@ -123,7 +126,6 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
                         expandirValorDeCeldasFusionadas(sheet, cell);
                         aplicarFormular(cell);
                     });
-
                     productosFinales.addAll(trabajarConRowyObtenerProducto(row));
                 }
         );
@@ -172,7 +174,8 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
     private Collection<Entidad> trabajarConRowyObtenerProducto(Row row) {
         Collection<Entidad> productosPorRows = new ArrayList<>();
         if (esRowValido(row)){
-            productosPorRows.add(util.convertirRowEnProductoEspecifico(row, getDistribuidora()));
+            Entidad producto = util.convertirRowEnProductoEspecifico(row, getDistribuidora());
+            productosPorRows.add(producto);
         }
         return productosPorRows;
     }

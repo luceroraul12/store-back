@@ -66,7 +66,7 @@ public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
                 .distribuidora(distribuidora)
                 .categoria(row.getCell(0).getStringCellValue())
                 .categoriaRenglon(this.categoriaExcel)
-                .subcategoria(row.getCell(1).getStringCellValue())
+                .subcategoria(row.getCell(1).toString())
                 .cantidad(row.getCell(2).getStringCellValue())
                 .precioMayor(precioMayor)
                 .precioMenor(precioMenor)
