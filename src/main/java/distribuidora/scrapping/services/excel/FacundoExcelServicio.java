@@ -18,6 +18,29 @@ public class FacundoExcelServicio extends BusquedorPorExcel<FacundoEntidad> {
 
     @Override
     boolean esRowValido(Row row) {
+        return esRowCategoria(row) | esRowProducto(row);
+    }
+
+    private boolean esRowCategoria(Row row){
+        boolean resultado = false;
+        try{
+            if (row.getCell(0).getCellType().equals(CellType.STRING)){
+                if (row.getCell(1).getStringCellValue().length() <= 50){
+                    if (row.getCell(2).getCellType().equals(CellType.STRING)){
+                        if (row.getCell(3).getCellType().equals(CellType.STRING)){
+                            if (row.getCell(4).getCellType().equals(CellType.STRING)){
+                                resultado = true;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored){
+        }
+        return resultado;
+    }
+
+    private boolean esRowProducto(Row row){
         boolean resultado = false;
         try{
             if (row.getCell(0).getCellType().equals(CellType.STRING)){
