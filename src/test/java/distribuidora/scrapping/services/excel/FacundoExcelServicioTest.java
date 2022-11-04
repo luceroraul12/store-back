@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +29,27 @@ class FacundoExcelServicioTest {
         multipartFile[0] = new MockMultipartFile("facundo", new FileInputStream(file));
         List<FacundoEntidad> productos = servicio.obtenerProductosApartirDeExcels(multipartFile);
 
-        assertEquals("FRUTOS SECOS", productos.get(1).getCategoriaRenglon());
+        FacundoEntidad caso1 = productos.stream()
+                .filter(p -> p.getSubcategoria().equals("Bañadas con chocolate"))
+                .toList()
+                .get(0);
+        FacundoEntidad caso2 = productos.stream()
+                .filter(p -> p.getSubcategoria().equals("Limón (NUEVOS) \"Granix\""))
+                .toList()
+                .get(0);
+        FacundoEntidad caso3 = productos.stream()
+                .filter(p -> p.getSubcategoria().equals("Triturado Premium \"Importado\""))
+                .toList()
+                .get(0);
+        FacundoEntidad caso4 = productos.stream()
+                .filter(p -> p.getSubcategoria().equals("SIN PIEL \"PRODUCCION PROPIA\""))
+                .toList()
+                .get(0);
+
+
+        assertEquals("Chocolatería / Caramelos", caso1.getCategoriaRenglon());
+        assertEquals("CEREALES: \"GRANIX\"", caso2.getCategoriaRenglon());
+        assertEquals("Especias Gourmet", caso3.getCategoriaRenglon());
+        assertEquals("Harinas / Avena", caso4.getCategoriaRenglon());
     }
 }
