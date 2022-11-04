@@ -61,7 +61,7 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
                                 System.out.println("no actualiza "+ getDistribuidora());
                             }
                         },
-                        error -> System.out.println("error en "+ getDistribuidora())
+                        error -> System.out.println("error EXCEL en "+ getDistribuidora())
                 );
     }
 
