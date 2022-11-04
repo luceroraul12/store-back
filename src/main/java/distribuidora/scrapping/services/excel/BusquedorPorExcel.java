@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -86,6 +83,7 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
                 .flatMap(Collection::stream)
                 .map(this::obtenerProductosPorSheet)
                 .flatMap(Collection::stream)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
