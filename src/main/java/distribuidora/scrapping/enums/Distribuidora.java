@@ -5,5 +5,5 @@ package distribuidora.scrapping.enums;
  * Cualquier lugar que necesite una identificacion por medio de la distribuidora, debera utilizar esta enumeracion para llevar a cabo dicha actividad
  */
 public enum Distribuidora {
-    MELAR, SUDAMERIK, LA_GRANJA_DEL_CENTRO, DON_GASPAR, INDIAS, FACUNDO, TODAS
+    MELAR, LA_GRANJA_DEL_CENTRO, DON_GASPAR, INDIAS, FACUNDO, TODAS
 }
