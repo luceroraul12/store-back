@@ -20,32 +20,18 @@ public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
     public List<Producto> convertirProductoyDevolverlo(FacundoEntidad productoEntidad) {
         Distribuidora distribuidora = Distribuidora.FACUNDO;
         List<Producto> productosGenerados = new ArrayList<>();
-        String descripcionMenor = String.format(
-                "%s %s %s X %s Precio Venta",
-                productoEntidad.getCategoriaRenglon(),
-                productoEntidad.getCategoria(),
-                productoEntidad.getSubcategoria(),
-                productoEntidad.getCantidad()
-        );
         String descripcionMayor = String.format(
-                "%s %s %s X %s Precio por Mayor",
+                "%s - %s",
                 productoEntidad.getCategoriaRenglon(),
-                productoEntidad.getCategoria(),
-                productoEntidad.getSubcategoria(),
-                productoEntidad.getCantidad()
+                productoEntidad.getCategoria()
         );
 
         productosGenerados.add(
                 Producto.builder()
                         .descripcion(descripcionMayor)
-                        .precioPorCantidadEspecifica(productoEntidad.getPrecioMayor())
-                        .distribuidora(distribuidora)
-                        .build()
-        );
-        productosGenerados.add(
-                Producto.builder()
-                        .descripcion(descripcionMenor)
-                        .precioPorCantidadEspecifica(productoEntidad.getPrecioMenor())
+                        .precioPorCantidadEspecifica(productoEntidad.getPrecioMayor() != null
+                            ? productoEntidad.getPrecioMayor()
+                            : 0.0)
                         .distribuidora(distribuidora)
                         .build()
         );

@@ -29,7 +29,7 @@ public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrappin
         String nombre = elementProducto
                 .getElementsByTag("h5")
                 .textNodes().get(0).text()
-                .replaceAll("_","")
+                .replaceAll("_"," ")
                 .subSequence(0, elementProducto.getElementsByTag("h5").textNodes().get(0).text().length()-3)
                 .toString();
 
