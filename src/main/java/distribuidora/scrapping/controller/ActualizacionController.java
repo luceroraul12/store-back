@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Tiene la finalidad de realizar la actualizacion de datos por distribuidora como tambien el estado de cada una.
@@ -72,7 +73,11 @@ public class ActualizacionController {
     @GetMapping
     public ResponseEntity<List<DatosDistribuidora>> obtenerTipoyEstadoDeDistribuidora(){
 //        TODO: esto esta hecho por momentos, hay que sacar todo del controlador
-        List<DatosDistribuidora> datosDistribuidoras = this.datosDistribuidoraRepository.findAll();
+        List<DatosDistribuidora> datosDistribuidoras = this.datosDistribuidoraRepository
+                .findAll()
+                .stream()
+                .sorted((a,b) -> b.getDistribuidora().compareTo(a.getDistribuidora()))
+                .collect(Collectors.toList());
         return new ResponseEntity<>(datosDistribuidoras,HttpStatus.OK);
     }
 
