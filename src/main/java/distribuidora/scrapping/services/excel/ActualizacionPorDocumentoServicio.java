@@ -16,8 +16,6 @@ public class ActualizacionPorDocumentoServicio {
     @Autowired
     private IndiasExcelServicio indiasExcelServicio;
     @Autowired
-    private FacundoExcelServicio facundoExcelServicio;
-    @Autowired
     private Comunicador comunicador;
 
     public void recibirDocumento(PeticionExcel peticion) throws IOException {
@@ -25,10 +23,6 @@ public class ActualizacionPorDocumentoServicio {
     }
     private void identificarDistribuidorayEjecutar(PeticionExcel documento) throws IOException {
         switch (documento.getDistribuidora()){
-            case FACUNDO: {
-                facundoExcelServicio.generarProductosEntidadYActualizarCollecciones(documento);
-                break;
-            }
             case INDIAS: {
                 indiasExcelServicio.generarProductosEntidadYActualizarCollecciones(documento);
                 break;

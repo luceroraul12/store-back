@@ -83,10 +83,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
             Document doc = Jsoup.connect(generarNuevaURL(contador)).get();
             try {
                 while(esDocumentValido(doc)){
-                    documentos
-                            .add(
-                            doc
-                    );
+                    documentos.add(doc);
                     contador++;
                     doc = generarDocumento(generarNuevaURL(contador));
                 }
@@ -113,6 +110,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
             driver.get(url);
             String template = driver.getPageSource();
             documentoGenerado = Jsoup.parse(template);
+            driver.close();
         } else {
             try {
                 documentoGenerado = Jsoup.connect(url).get();

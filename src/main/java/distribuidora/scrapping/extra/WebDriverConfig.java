@@ -29,8 +29,7 @@ public class WebDriverConfig {
         }
     }
 
-    @Bean
-
+    @Bean(value = "prototype")
     public WebDriver driver(){
         return getDriver();
     }
