@@ -33,19 +33,27 @@ public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrappin
                 .subSequence(0, elementProducto.getElementsByTag("h5").textNodes().get(0).text().length()-3)
                 .toString();
 
-//        [\d.,]+ solo tomo numeros . y ,
+        String categoria = elementProducto
+                .parent()
+                .parent()
+                .parent()
+                .parent()
+                .getElementsByTag("h2")
+                .text();
+
         Double precio = Double.valueOf(elementProducto
                 .getElementsByTag("strong")
                 .text()
                 .replaceAll(" ","")
                 .subSequence(1, elementProducto.getElementsByTag("strong").text().length()-1)
                 .toString());
-//        Matcher m = Pattern.compile("[\\d.,]+").matcher(elementProducto.getElementsByTag("strong").text());
-//        String precio = m.group();
 
         return FacundoEntidad.builder()
                 .categoria(nombre)
                 .precioMayor(Double.valueOf(precio))
+                .categoriaRenglon(categoria)
+                .distribuidora(Distribuidora.FACUNDO)
+                .cantidad("")
                 .build();
     }
 
