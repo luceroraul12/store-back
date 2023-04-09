@@ -5,6 +5,7 @@ import distribuidora.scrapping.entities.PeticionWebScrapping;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.enums.TipoDistribuidora;
+import distribuidora.scrapping.extra.WebDriverConfig;
 import distribuidora.scrapping.services.BuscadorDeProductos;
 import lombok.Data;
 import org.jsoup.Jsoup;
@@ -13,6 +14,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,8 +50,8 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      */
     private Boolean esNecesarioUsarWebDriver = false;
 
-    @Autowired
-    WebDriver driver;
+//    @Autowired
+//    WebDriver driver;
 
 
 
@@ -107,6 +109,9 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
         Document documentoGenerado;
         System.out.println(url);
         if (esNecesarioUsarWebDriver){
+            WebDriverConfig config = new WebDriverConfig();
+            config.postConstrcut();
+            WebDriver driver = config.driver();
             driver.get(url);
             String template = driver.getPageSource();
             documentoGenerado = Jsoup.parse(template);
