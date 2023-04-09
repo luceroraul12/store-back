@@ -6,6 +6,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
@@ -19,7 +20,7 @@ public class WebDriverConfig {
     /**
      * Propongo una carpeta donde deben estar almacenado los drivers
      */
-    void postConstrcut(){
+    public void postConstrcut(){
         String systemOperative = System.getProperty("os.name");
         if (systemOperative.equals("Windows")){
             System.setProperty("webdriver.edge.driver","C:\\selenium\\msedgedriver.exe");
@@ -29,7 +30,8 @@ public class WebDriverConfig {
         }
     }
 
-    @Bean(value = "prototype")
+    @Bean()
+    @Scope("prototype")
     public WebDriver driver(){
         return getDriver();
     }
