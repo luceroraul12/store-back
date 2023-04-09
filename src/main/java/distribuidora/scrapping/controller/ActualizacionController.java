@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @see ActualizacionPorDocumentoServicio
  */
 @RestController
-@RequestMapping(value = "/scrapping-0.0.1-SNAPSHOT/actualizar")
+@RequestMapping(value = "/actualizar")
 public class ActualizacionController {
 
     @Autowired
