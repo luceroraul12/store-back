@@ -7,6 +7,8 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -89,6 +91,24 @@ public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad>{
 
     @Override
     public List<Producto> convertirProductoyDevolverlo(VillaresEntidad productoSinConvertir) {
-        return null;
+        String marca = !productoSinConvertir.getMarca().isEmpty()
+                ? productoSinConvertir.getMarca() + ":"
+                : "";
+        String cantidades = !productoSinConvertir.getCantidadMinima().isEmpty()
+                ? productoSinConvertir.getCantidad() + "-" + productoSinConvertir.getCantidadMinima()
+                : productoSinConvertir.getCantidad();
+        String descripcion = String.format(
+                "%s %s - %s [%s] EN: %s",
+                marca,
+                productoSinConvertir.getDescripcion(),
+                productoSinConvertir.getDetalle(),
+                cantidades,
+                productoSinConvertir.getUnidad()
+                );
+        return Collections.singletonList(Producto.builder()
+                .descripcion(descripcion)
+                .precioPorCantidadEspecifica(productoSinConvertir.getPrecioLista())
+                .distribuidora(Distribuidora.VILLARES)
+                .build());
     }
 }
