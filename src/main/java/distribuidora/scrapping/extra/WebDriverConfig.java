@@ -71,7 +71,7 @@ public class WebDriverConfig {
         try{
             System.out.println("usando firefox driver");
             DesiredCapabilities dcap = new DesiredCapabilities("firefox", "111.0", Platform.LINUX);
-            URL gamelan = new URL("http://172.17.0.2:4444/wd/hub");
+            URL gamelan = new URL("http://firefox:4444/wd/hub");
             driver = new RemoteWebDriver(gamelan, dcap);
         } catch (Exception e) {
             System.out.println("no es firefox");

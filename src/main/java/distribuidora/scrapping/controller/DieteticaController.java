@@ -13,7 +13,7 @@ import java.util.Collection;
  * De momento solo se encarga de las busquedas sobre las bases de datos.
  */
 @RestController
-@RequestMapping(value = "/scrapping")
+@RequestMapping(value = "/scrapping-0.0.1-SNAPSHOT/scrapping")
 public class DieteticaController {
 
     @Autowired
