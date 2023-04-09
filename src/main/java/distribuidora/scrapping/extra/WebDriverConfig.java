@@ -1,22 +1,22 @@
 package distribuidora.scrapping.extra;
 
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chromium.ChromiumOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Configuracion del Web driver de Selenium.
  */
-@Configuration
+//@Configuration
 public class WebDriverConfig {
 
-    @PostConstruct
+//    @PostConstruct
     /**
      * Propongo una carpeta donde deben estar almacenado los drivers
      */
@@ -30,8 +30,8 @@ public class WebDriverConfig {
         }
     }
 
-    @Bean()
-    @Scope("prototype")
+//    @Bean()
+//    @Scope("prototype")
     public WebDriver driver(){
         return getDriver();
     }
@@ -41,15 +41,20 @@ public class WebDriverConfig {
      * Puede ser de Edge o Chrome segun el navegador que tenga instalado en el computador
      */
     private WebDriver getDriver(){
+        ChromiumOptions options = null;
         WebDriver driver = null;
         try{
             System.out.println("usando edge driver");
-            driver = new EdgeDriver();
+            options = new EdgeOptions();
+            options.setPageLoadStrategy(PageLoadStrategy.NONE);
+            driver = new EdgeDriver(options);
         } catch (Exception e) {
             System.out.println("no es edge");
         }
         try{
             System.out.println("usando chrome driver");
+            options = new ChromeOptions();
+            options.setPageLoadStrategy(PageLoadStrategy.NONE);
             driver = new ChromeDriver();
         } catch (Exception e) {
             System.out.println("no es chrome");
@@ -57,6 +62,7 @@ public class WebDriverConfig {
         }
         try{
             System.out.println("usando firefox driver");
+            options.setPageLoadStrategy(PageLoadStrategy.NONE);
             driver = new FirefoxDriver();
         } catch (Exception e) {
             System.out.println("no es firefox");
