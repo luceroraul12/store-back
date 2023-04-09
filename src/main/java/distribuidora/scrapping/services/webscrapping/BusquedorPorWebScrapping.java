@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -105,7 +106,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * Tener en cuenta la variable esNecesarioWebDriver para esta generacion, debido a que el ordenador debera tener instalado los driver scomo el navegador seleccionado.
      * @return documento
      */
-    private Document generarDocumento(String url) {
+    private Document generarDocumento(String url) throws MalformedURLException {
         Document documentoGenerado;
         System.out.println(url);
         if (esNecesarioUsarWebDriver){
@@ -115,7 +116,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
             driver.get(url);
             String template = driver.getPageSource();
             documentoGenerado = Jsoup.parse(template);
-            driver.close();
+            driver.quit();
         } else {
             try {
                 documentoGenerado = Jsoup.connect(url).get();
