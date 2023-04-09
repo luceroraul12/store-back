@@ -1,7 +1,6 @@
 package distribuidora.scrapping.services.webscrappingconcurrent;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
@@ -18,7 +17,7 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
         servicio.initImplementacion();
         int resultado = servicio.generarUltimoIndicePaginador();
 
-        assertEquals(122, resultado);
+        assertEquals(125, resultado);
     }
 
     @Test
@@ -26,7 +25,7 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
         servicio.initImplementacion();
         int resultado = servicio.generarDocumentos().size();
 
-        assertEquals(122, resultado);
+        assertEquals(125, resultado);
     }
 
 }

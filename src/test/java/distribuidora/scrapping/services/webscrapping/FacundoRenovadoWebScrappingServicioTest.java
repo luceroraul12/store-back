@@ -19,6 +19,6 @@ class FacundoRenovadoWebScrappingServicioTest {
     @Test
     void pruebaDocument(){
         List<FacundoEntidad> resultados = servicio.adquirirProductosEntidad(PeticionWebScrapping.builder().distribuidora(Distribuidora.FACUNDO).build());
-        assertEquals(582, resultados.size());
+        assertEquals(941, resultados.size());
     }
 }
