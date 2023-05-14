@@ -26,7 +26,8 @@ public class WebDriverConfig {
      */
     public void postConstrcut() throws MalformedURLException {
         String systemOperative = System.getProperty("os.name");
-        if (systemOperative.equals("Windows")){
+        System.out.println("SO:"+ systemOperative);
+        if (systemOperative.toLowerCase().startsWith("window")){
             System.setProperty("webdriver.edge.driver","C:\\selenium\\msedgedriver.exe");
             System.setProperty("webdriver.chrome.driver","C:\\selenium\\chromedriver.exe");
         } else {

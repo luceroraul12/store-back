@@ -18,17 +18,37 @@ public class LaGranjaDelCentroWebScrappingConcurrentServicio extends WebScrappin
 
     @Override
     protected boolean esDocumentValido(Document document) throws Exception {
-        return false;
+        boolean esValido = false;
+        for (Element element : document.getElementsByTag("span")){
+            if (element.hasClass("p-activo")){
+                esValido = true;
+            };
+        }
+
+        return esValido;
     }
 
     @Override
     protected LaGranjaDelCentroEntidad obtenerProductosAPartirDeElements(Element elementProducto) {
-        return null;
+        return LaGranjaDelCentroEntidad.builder()
+                .distribuidora(getDistribuidora())
+                .nombreProducto(
+                        elementProducto.getElementsByClass("h3-content-1").text()
+                )
+                .precio(
+                        Double.valueOf(elementProducto
+                                .getElementsByClass("p-precio-content-1")
+                                .text()
+                                .replaceAll("[$.]","")
+                                .replaceAll(",","."))
+                )
+                .build();
     }
 
     @Override
     protected Elements filtrarElementos(Document documento) {
-        return null;
+        return documento
+                .select("div.box-content-1");
     }
 
     @Override
