@@ -27,4 +27,3 @@ services:
     depends_on:
       - buscador-mongo
       - buscador-selenium
-   jhgkjhgk
