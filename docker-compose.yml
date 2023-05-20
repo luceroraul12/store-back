@@ -1,24 +1,30 @@
 version: "3.3"
-
 services:
+#  buscador-ui: es el proyecto de Angular
   buscador-ui:
     image: pasionaria-buscador
     ports:
       - 4200:80
+# es una imagen base de mongo para almacenar algunos datos
   buscador-mongo:
     container_name: "mongodb"
     image: mongo
     ports:
       - 27017:27017
+# es un serviccio externo para simulario navegadores o hacer pruebas
   buscador-selenium:
     container_name: "firefox"
     image: selenium/standalone-firefox
     ports:
       - 4444:4444
+#  buscador-api: es el proyecto Java Spring Boot
   buscador-api:
     image: pasionaria-buscador-api
     ports:
       - 8080:8080
+# la app de java necesita hacer comprobaciones previas en la base de datos y descargar info de internet, por lo tanto
+# hago que este contenedor solo sea ejecutado luego de la base mongo y selenium
     depends_on:
       - buscador-mongo
       - buscador-selenium
+   jhgkjhgk
