@@ -59,7 +59,7 @@ class InventorySystemImplTest {
 						Collectors.toMap(i -> i.getId(), i -> i.getPrecioExterno() != null ? i.getPrecioExterno() : 0.0)));
 
 		assertEquals(mapInternos.get(Distribuidora.MELAR).get("8A"), mapEspecificos.get(Distribuidora.MELAR).get("8A"));
-		assertNotEquals(mapInternos.get(Distribuidora.VILLARES).get("8A"), mapEspecificos.get(Distribuidora.VILLARES).get("8A"));
+		assertEquals(mapInternos.get(Distribuidora.VILLARES).get("8A"), mapEspecificos.get(Distribuidora.VILLARES).get("8A"));
 		assertNotEquals(mapInternos.get(Distribuidora.VILLARES).get("11-2a2-336"), mapEspecificos.get(Distribuidora.VILLARES).get("11-2a2-336"));
 
 	}
