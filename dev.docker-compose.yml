@@ -11,3 +11,10 @@ services:
     image: selenium/standalone-firefox
     ports:
       - 4444:4444
+  pasionaria-db:
+      container_name: "pasionaria-db"
+      image: postgres:alpine3.17
+      environment:
+        - POSTGRES_PASSWORD=homito
+      ports:
+        - 6500:5432
