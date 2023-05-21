@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 public class ProductoInterno {
@@ -15,6 +17,9 @@ public class ProductoInterno {
 	private Double precio;
 	private String codigoReferencia;
 	private Distribuidora distribuidoraReferencia;
+
+	private LocalDate fechaCreacion;
+	private LocalDate fechaActualizacion;
 	
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion, Double precio, String codigoReferencia,

@@ -1,5 +1,6 @@
 package distribuidora.scrapping.services.internal;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -14,14 +15,18 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Override
 	public int actualizarPreciosAutomatico() {
-		// TODO Auto-generated method stub
+		// llamado a las bases de datos para obtener los productos especificos e internos
+		List<ProductoInterno> productoInternos = new ArrayList<>();
+		List<ProductoEspecifico> productoEspecificos = new ArrayList<>();
+		actualizarPrecioConProductosEspecificos(productoEspecificos, productoInternos);
+
+
 		return 0;
 	}
 
 	@Override
 	public void actualizarPrecioConProductosEspecificos(List<ProductoEspecifico> especificos,
 			List<ProductoInterno> internos) {
-		// TODO Auto-generated method stub
 		// agrupo por distribuidora / codigo de referencia tanto interno como especifico
 		Map<Distribuidora, Map<String, ProductoEspecifico>> mapEspecifico = especificos.stream()
 				.collect(
