@@ -13,9 +13,14 @@ public class DonGasparEntidad extends ProductoEspecifico {
     Double precio;
 
     @Builder
-    public DonGasparEntidad(Distribuidora distribuidora, String nombreProducto, Double precio) {
-        super(distribuidora);
-        this.nombreProducto = nombreProducto;
-        this.precio = precio;
-    }
+	public DonGasparEntidad(String id, Distribuidora distribuidora, String nombreProducto, Double precio) {
+		super(id, distribuidora);
+		this.nombreProducto = nombreProducto;
+		this.precio = precio;
+	}
+
+	@Override
+	public Double getPrecioExterno() {
+		return precio;
+	}
 }

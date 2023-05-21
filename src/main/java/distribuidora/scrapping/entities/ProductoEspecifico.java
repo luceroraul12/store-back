@@ -16,15 +16,31 @@ public abstract class ProductoEspecifico {
     private String id;
     private Distribuidora distribuidora;
 
-    public ProductoEspecifico(Distribuidora distribuidora) {
-        this.distribuidora = distribuidora;
-    }
+    
 
-    public Distribuidora getDistribuidora() {
+    public ProductoEspecifico(String id, Distribuidora distribuidora) {
+		super();
+		this.id = id;
+		this.distribuidora = distribuidora;
+	}
+
+	public Distribuidora getDistribuidora() {
         return this.distribuidora;
     }
 
     public void setDistribuidora(Distribuidora distribuidora) {
         this.distribuidora = distribuidora;
     }
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public abstract Double getPrecioExterno();
+    
+    
 }

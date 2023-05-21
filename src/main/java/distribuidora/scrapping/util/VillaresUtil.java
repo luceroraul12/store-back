@@ -75,6 +75,7 @@ public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad>{
         }
 
         return new VillaresEntidad(
+        		null,
                 Distribuidora.VILLARES,
                 descripcion,
                 cantidad,

@@ -15,11 +15,12 @@ public class SudamerikEntidad extends ProductoEspecifico {
     private List<SudamerikConjuntoEspecifico> cantidadesEspecificas;
 
     @Builder
-    public SudamerikEntidad(Distribuidora distribuidora, String nombreProducto, List<SudamerikConjuntoEspecifico> cantidadesEspecificas) {
-        super(distribuidora);
-        this.nombreProducto = nombreProducto;
-        this.cantidadesEspecificas = cantidadesEspecificas;
-    }
+    public SudamerikEntidad(String id, Distribuidora distribuidora, String nombreProducto,
+			List<SudamerikConjuntoEspecifico> cantidadesEspecificas) {
+		super(id, distribuidora);
+		this.nombreProducto = nombreProducto;
+		this.cantidadesEspecificas = cantidadesEspecificas;
+	}
 
     @Data
     @Builder
@@ -28,4 +29,9 @@ public class SudamerikEntidad extends ProductoEspecifico {
         private Double precio;
     }
 
+	@Override
+	public Double getPrecioExterno() {
+		// TODO Auto-generated method stub
+		return cantidadesEspecificas.get(0).getPrecio();
+	}
 }

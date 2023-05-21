@@ -12,14 +12,21 @@ public class IndiasEntidad extends ProductoEspecifico {
     private Integer     codigo;
     private String      descripcion;
     private Double      precio;
-
+    
     @Builder
+	public IndiasEntidad(String id, Distribuidora distribuidora, String rubro, Integer codigo, String descripcion,
+			Double precio) {
+		super(id, distribuidora);
+		this.rubro = rubro;
+		this.codigo = codigo;
+		this.descripcion = descripcion;
+		this.precio = precio;
+	}
 
-    public IndiasEntidad(Distribuidora distribuidora, String rubro, Integer codigo, String descripcion, Double precio) {
-        super(distribuidora);
-        this.rubro = rubro;
-        this.codigo = codigo;
-        this.descripcion = descripcion;
-        this.precio = precio;
-    }
+	@Override
+	public Double getPrecioExterno() {
+		// TODO Auto-generated method stub
+		return precio;
+	}
+    
 }

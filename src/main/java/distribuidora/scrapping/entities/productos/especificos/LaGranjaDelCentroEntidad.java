@@ -13,9 +13,15 @@ public class LaGranjaDelCentroEntidad extends ProductoEspecifico {
     private Double precio;
 
     @Builder
-    public LaGranjaDelCentroEntidad(Distribuidora distribuidora, String nombreProducto, Double precio) {
-        super(distribuidora);
-        this.nombreProducto = nombreProducto;
-        this.precio = precio;
-    }
+	public LaGranjaDelCentroEntidad(String id, Distribuidora distribuidora, String nombreProducto, Double precio) {
+		super(id, distribuidora);
+		this.nombreProducto = nombreProducto;
+		this.precio = precio;
+	}
+
+	@Override
+	public Double getPrecioExterno() {
+		// TODO Auto-generated method stub
+		return precio;
+	}
 }

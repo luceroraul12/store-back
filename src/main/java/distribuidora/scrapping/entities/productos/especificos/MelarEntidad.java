@@ -22,15 +22,22 @@ public class MelarEntidad extends ProductoEspecifico {
     private Double precioGranel;
 
     @Builder
-    public MelarEntidad(Distribuidora distribuidora, String codigo, String producto, String fraccion, String granel, String origen, String medida, Double precioFraccionado, Double precioGranel) {
-        super(distribuidora);
-        this.codigo = codigo;
-        this.producto = producto;
-        this.fraccion = fraccion;
-        this.granel = granel;
-        this.origen = origen;
-        this.medida = medida;
-        this.precioFraccionado = precioFraccionado;
-        this.precioGranel = precioGranel;
-    }
+	public MelarEntidad(String externalId, Distribuidora distribuidora, String codigo, String producto, String fraccion,
+			String granel, String origen, String medida, Double precioFraccionado, Double precioGranel) {
+		super(externalId, distribuidora);
+		this.codigo = codigo;
+		this.producto = producto;
+		this.fraccion = fraccion;
+		this.granel = granel;
+		this.origen = origen;
+		this.medida = medida;
+		this.precioFraccionado = precioFraccionado;
+		this.precioGranel = precioGranel;
+	}
+
+	@Override
+	public Double getPrecioExterno() {
+		// TODO Auto-generated method stub
+		return precioGranel;
+	}
 }

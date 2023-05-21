@@ -17,14 +17,23 @@ public class FacundoEntidad extends ProductoEspecifico {
     private String cantidad;
     private Double precioMayor;
     private Double precioMenor;
+    
     @Builder
-    public FacundoEntidad(Distribuidora distribuidora, String categoria, String categoriaRenglon, String subcategoria, String cantidad, Double precioMayor, Double precioMenor) {
-        super(distribuidora);
-        this.categoria = categoria;
-        this.categoriaRenglon = categoriaRenglon;
-        this.subcategoria = subcategoria;
-        this.cantidad = cantidad;
-        this.precioMayor = precioMayor;
-        this.precioMenor = precioMenor;
-    }
+	public FacundoEntidad(String id, Distribuidora distribuidora, String categoria, String categoriaRenglon,
+			String subcategoria, String cantidad, Double precioMayor, Double precioMenor) {
+		super(id, distribuidora);
+		this.categoria = categoria;
+		this.categoriaRenglon = categoriaRenglon;
+		this.subcategoria = subcategoria;
+		this.cantidad = cantidad;
+		this.precioMayor = precioMayor;
+		this.precioMenor = precioMenor;
+	}
+
+	@Override
+	public Double getPrecioExterno() {
+		// TODO Auto-generated method stub
+		return precioMayor;
+	}
+    
 }
