@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,21 +19,19 @@ public class ProductoInterno {
 	private String codigoReferencia;
 	private Distribuidora distribuidoraReferencia;
 
-	private LocalDate fechaCreacion;
-	private LocalDate fechaActualizacion;
+	private LocalDateTime fechaCreacion;
+	private LocalDateTime fechaActualizacion;
 	
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion, Double precio, String codigoReferencia,
-			Distribuidora distribuidoraReferencia) {
-		super();
+			Distribuidora distribuidoraReferencia, LocalDateTime fechaCreacion, LocalDateTime fechaActualizacion) {
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.precio = precio;
 		this.codigoReferencia = codigoReferencia;
 		this.distribuidoraReferencia = distribuidoraReferencia;
+		this.fechaCreacion = fechaCreacion;
+		this.fechaActualizacion = fechaActualizacion;
 	}
-	
-	
-	
 }

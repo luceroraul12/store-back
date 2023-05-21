@@ -27,9 +27,10 @@ public class InventorySystemImpl
 
 		// solo tengo en cuenta los productos que tienen fecha de modificacion por delante que la fecha en la que se
 		// inicia el actualizado
+		Map<Boolean, List<ProductoInterno>> mapEsActualizadoProductosInternos = productoInternos.stream()
+				.collect(Collectors.partitioningBy(producto -> now.isBefore(producto.getFechaActualizacion())));
 
-
-		return 0;
+		return mapEsActualizadoProductosInternos.get(true).size();
 	}
 
 	@Override
