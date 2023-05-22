@@ -1,7 +1,7 @@
 package distribuidora.scrapping.services.internal;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -21,14 +21,14 @@ public class InventorySystemImpl
 		List<ProductoInterno> productoInternos = new ArrayList<>();
 		List<ProductoEspecifico> productoEspecificos = new ArrayList<>();
 		// tengo en cuenta la fecha al comenzar el proceso
-		LocalDateTime now = LocalDateTime.now();
+		Date now = new Date();
 
 		actualizarPrecioConProductosEspecificos(productoEspecificos, productoInternos);
 
 		// solo tengo en cuenta los productos que tienen fecha de modificacion por delante que la fecha en la que se
 		// inicia el actualizado
 		Map<Boolean, List<ProductoInterno>> mapEsActualizadoProductosInternos = productoInternos.stream()
-				.collect(Collectors.partitioningBy(producto -> now.isBefore(producto.getFechaActualizacion())));
+				.collect(Collectors.partitioningBy(producto -> now.before(producto.getFechaActualizacion())));
 
 		return mapEsActualizadoProductosInternos.get(true).size();
 	}

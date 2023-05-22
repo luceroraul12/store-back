@@ -23,9 +23,11 @@ create table productos_internos(
 	id serial not null primary key,
 	nombre varchar null,
 	descripcion varchar null,
-	precio decimal not null,
+	precio float8 not null,
 	id_externo varchar null,
 	distribuidora_id int null,
+	fecha_creacion timestamp not null,
+	fecha_modificacion timestamp null,
 	constraint lv_distribuidora_fk foreign key (distribuidora_id) references lookup_valor(id),
 	constraint row_unique unique (id_externo, distribuidora_id)
 );
