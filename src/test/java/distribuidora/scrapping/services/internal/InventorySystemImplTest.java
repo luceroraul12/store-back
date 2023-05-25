@@ -6,7 +6,6 @@ import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.productos.especificos.MelarEntidad;
 import distribuidora.scrapping.entities.productos.especificos.VillaresEntidad;
-import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.services.general.LookupServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -94,24 +93,51 @@ class InventorySystemImplTest{
 	}
 
 	@Test
-	void test() {
+	void actualizacionPermitida(){
 		service.actualizarPrecioConProductosEspecificos(especificos, internos);
 		Map<String, Map<String, Double>> mapInternos = internos.stream().collect(
 				Collectors.groupingBy(i -> i.getDistribuidoraReferencia().getCodigo(),
-				                      Collectors.toMap(i -> i.getCodigoReferencia(), i -> i.getPrecio())));
+						Collectors.toMap(i -> i.getCodigoReferencia(), i -> i.getPrecio())));
 
 
 		Map<String, Map<String, Double>> mapEspecificos = especificos.stream().collect(
 				Collectors.groupingBy(e -> e.getDistribuidora(), Collectors.toMap(i -> i.getId(),
-				                                                                  i -> i.getPrecioExterno() != null ? i.getPrecioExterno() : 0.0)));
+						i -> i.getPrecioExterno() != null ? i.getPrecioExterno() : 0.0)));
 
 		assertEquals(mapInternos.get(Constantes.LV_DISTRIBUIDORA_MELAR).get("8A"),
-		             mapEspecificos.get(Constantes.LV_DISTRIBUIDORA_MELAR).get("8A"));
-		assertNotEquals(mapInternos.get(Constantes.LV_DISTRIBUIDORA_MELAR).get("8A"),
-		             mapEspecificos.get(Constantes.LV_DISTRIBUIDORA_VILLARES).get("8A"));
-		assertNotEquals(mapInternos.get(Constantes.LV_DISTRIBUIDORA_VILLARES).get("11-2a2-336"),
-		                mapEspecificos.get(Constantes.LV_DISTRIBUIDORA_VILLARES).get("11-2a2-336"));
+				mapEspecificos.get(Constantes.LV_DISTRIBUIDORA_MELAR).get("8A"));
+	}
 
+	@Test
+	void actualizacionCruzadaNoPermitida(){
+		service.actualizarPrecioConProductosEspecificos(especificos, internos);
+		Map<String, Map<String, Double>> mapInternos = internos.stream().collect(
+				Collectors.groupingBy(i -> i.getDistribuidoraReferencia().getCodigo(),
+						Collectors.toMap(i -> i.getCodigoReferencia(), i -> i.getPrecio())));
+
+
+		Map<String, Map<String, Double>> mapEspecificos = especificos.stream().collect(
+				Collectors.groupingBy(e -> e.getDistribuidora(), Collectors.toMap(i -> i.getId(),
+						i -> i.getPrecioExterno() != null ? i.getPrecioExterno() : 0.0)));
+
+		assertNotEquals(mapInternos.get(Constantes.LV_DISTRIBUIDORA_MELAR).get("8A"),
+				mapEspecificos.get(Constantes.LV_DISTRIBUIDORA_VILLARES).get("8A"));
+	}
+
+	@Test
+	void actualizacionNoPermitidaPorFaltaDeNuevoPrecio(){
+		service.actualizarPrecioConProductosEspecificos(especificos, internos);
+		Map<String, Map<String, Double>> mapInternos = internos.stream().collect(
+				Collectors.groupingBy(i -> i.getDistribuidoraReferencia().getCodigo(),
+						Collectors.toMap(i -> i.getCodigoReferencia(), i -> i.getPrecio())));
+
+
+		Map<String, Map<String, Double>> mapEspecificos = especificos.stream().collect(
+				Collectors.groupingBy(e -> e.getDistribuidora(), Collectors.toMap(i -> i.getId(),
+						i -> i.getPrecioExterno() != null ? i.getPrecioExterno() : 0.0)));
+
+		assertNotEquals(mapInternos.get(Constantes.LV_DISTRIBUIDORA_VILLARES).get("11-2a2-336"),
+				mapEspecificos.get(Constantes.LV_DISTRIBUIDORA_VILLARES).get("11-2a2-336"));
 	}
 
 }
