@@ -1,9 +1,8 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.comunicadores.Comunicador;
-import distribuidora.scrapping.entities.Peticion;
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.PeticionWebScrapping;
-import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class ActualizacionPorWebScrappingServicio {
      */
     public void actualizarTodasLasDistribuidoras(){
         PeticionWebScrapping peticion = PeticionWebScrapping.builder()
-                .distribuidora(Distribuidora.TODAS)
+                .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_TODAS)
                 .build();
         comunicador.getDisparadorActualizacion().onNext(peticion);
     }
@@ -30,11 +29,11 @@ public class ActualizacionPorWebScrappingServicio {
     /**
      * Emite una distribuidora a la que se quiera actualizar.
      * Condicion: que exista un bean de dicho servicio a actualizar.
-     * @param distribuidora
+     * @param distribuidoraCodigo
      */
-    public void actualizarPorDistribuidora(Distribuidora distribuidora){
+    public void actualizarPorDistribuidora(String distribuidoraCodigo){
         PeticionWebScrapping peticion = PeticionWebScrapping.builder()
-                .distribuidora(distribuidora)
+                .distribuidoraCodigo(distribuidoraCodigo)
                 .build();
         comunicador.getDisparadorActualizacion().onNext(
                 peticion

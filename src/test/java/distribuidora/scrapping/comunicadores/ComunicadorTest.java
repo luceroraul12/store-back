@@ -1,9 +1,9 @@
 package distribuidora.scrapping.comunicadores;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.Peticion;
 import distribuidora.scrapping.entities.PeticionExcel;
 import distribuidora.scrapping.entities.PeticionWebScrapping;
-import distribuidora.scrapping.enums.Distribuidora;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class ComunicadorTest {
                 .filter( peticion -> peticion.getClass() == PeticionWebScrapping.class)
                 .cast(PeticionWebScrapping.class)
                 .subscribe( peticionWebScrapping -> {
-                    if ( peticionWebScrapping.getDistribuidora() != null){
+                    if ( peticionWebScrapping.getDistribuidoraCodigo() != null){
                         resultado.set(1);
                     } else {
                         resultado.set(2);
@@ -45,10 +45,10 @@ class ComunicadorTest {
 
         Peticion peticionWSTodos = PeticionWebScrapping.builder().build();
         Peticion peticionWSIndividual = PeticionWebScrapping.builder()
-                .distribuidora(Distribuidora.MELAR)
+                .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR)
                 .build();
         Peticion peticionEIndividual = PeticionExcel.builder()
-                .distribuidora(Distribuidora.INDIAS)
+                .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_INDIAS)
                 .build();
         subject.onNext(peticionWSTodos);
         assertEquals(2, resultado.get());

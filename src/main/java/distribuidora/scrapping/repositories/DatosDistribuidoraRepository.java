@@ -1,13 +1,12 @@
 package distribuidora.scrapping.repositories;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
-import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface DatosDistribuidoraRepository extends MongoRepository<DatosDistribuidora, String> {
 
-    boolean existsByDistribuidora(Distribuidora distribuidora);
-    DatosDistribuidora findByDistribuidora(Distribuidora distribuidora);
+    boolean existsByDistribuidoraCodigo(String distribuidoraCodigo);
+    DatosDistribuidora findByDistribuidora(String distribuidoraCodigo);
 
-    void deleteByDistribuidora(Distribuidora distribuidora);
+    void deleteByDistribuidora(String distribuidoraCodigo);
 }

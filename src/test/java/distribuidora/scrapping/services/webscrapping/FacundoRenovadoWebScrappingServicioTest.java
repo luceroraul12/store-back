@@ -1,8 +1,8 @@
 package distribuidora.scrapping.services.webscrapping;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.PeticionWebScrapping;
 import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
-import distribuidora.scrapping.enums.Distribuidora;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +18,9 @@ class FacundoRenovadoWebScrappingServicioTest {
 
     @Test
     void pruebaDocument(){
-        List<FacundoEntidad> resultados = servicio.adquirirProductosEntidad(PeticionWebScrapping.builder().distribuidora(Distribuidora.FACUNDO).build());
+        List<FacundoEntidad> resultados = servicio
+                .adquirirProductosEntidad(PeticionWebScrapping.builder().distribuidoraCodigo(
+                        Constantes.LV_DISTRIBUIDORA_FACUNDO).build());
         assertEquals(941, resultados.size());
     }
 }

@@ -1,14 +1,10 @@
 package distribuidora.scrapping.services.excel;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
-import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.enums.Distribuidora;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.List;
 
 @Service
 public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
@@ -31,7 +27,7 @@ public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
 
     @Override
     protected void initImplementacion() {
-        setDistribuidora(Distribuidora.INDIAS);
+        setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_INDIAS);
     }
     
   

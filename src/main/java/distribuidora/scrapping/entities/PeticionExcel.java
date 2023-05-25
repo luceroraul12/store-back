@@ -1,8 +1,6 @@
 package distribuidora.scrapping.entities;
 
-import distribuidora.scrapping.enums.Distribuidora;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,11 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Getter
 public class PeticionExcel extends Peticion {
-    private MultipartFile[] excels;
+    private final MultipartFile[] excels;
 
     @Builder
-    public PeticionExcel(Distribuidora distribuidora, MultipartFile[] excels) {
-        super(distribuidora);
+    public PeticionExcel(String distribuidoraCodigo, MultipartFile[] excels) {
+        super(distribuidoraCodigo);
         this.excels = excels;
     }
 }

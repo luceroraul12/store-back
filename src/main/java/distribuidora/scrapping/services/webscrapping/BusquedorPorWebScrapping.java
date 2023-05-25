@@ -1,9 +1,9 @@
 package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.comunicadores.Comunicador;
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.PeticionWebScrapping;
 import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.extra.WebDriverConfig;
 import distribuidora.scrapping.services.BuscadorDeProductos;
@@ -14,7 +14,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -67,7 +66,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            System.out.println("Problemas al generar productos");;
+            System.out.println("Problemas al generar productos");
         }
         return productostotales;
     }
@@ -91,7 +90,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
                     doc = generarDocumento(generarNuevaURL(contador));
                 }
             } catch (Exception e) {
-                System.out.println("problemas al validar Url: " + contador);;
+                System.out.println("problemas al validar Url: " + contador);
             }
         } else {
             documentos.add(
@@ -188,17 +187,17 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
                 .cast(PeticionWebScrapping.class)
                 .subscribe(
                         peticionWebScrapping -> {
-                    if (peticionWebScrapping.getDistribuidora() == this.getDistribuidora()){
-                        System.out.println("actualiza "+ getDistribuidora());
+                    if (peticionWebScrapping.getDistribuidoraCodigo() == this.getDistribuidoraCodigo()){
+                        System.out.println("actualiza "+ getDistribuidoraCodigo());
                         this.generarProductosEntidadYActualizarCollecciones(peticionWebScrapping);
-                    } else if (peticionWebScrapping.getDistribuidora() == Distribuidora.TODAS) {
+                    } else if (peticionWebScrapping.getDistribuidoraCodigo().equals(Constantes.LV_DISTRIBUIDORA_TODAS)) {
                         System.out.println("actualizacion General");
                         this.generarProductosEntidadYActualizarCollecciones(peticionWebScrapping);
                     } else {
-                        System.out.println("no actualiza "+ getDistribuidora());
+                        System.out.println("no actualiza "+ getDistribuidoraCodigo());
                     }
                         },
-                        error -> System.out.println("error en "+ getDistribuidora()));
+                        error -> System.out.println("error en "+ getDistribuidoraCodigo()));
     }
 
     @Override

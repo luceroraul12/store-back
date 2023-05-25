@@ -1,8 +1,6 @@
 package distribuidora.scrapping.comunicadores;
 
 import distribuidora.scrapping.entities.Peticion;
-import distribuidora.scrapping.entities.PeticionExcel;
-import distribuidora.scrapping.enums.Distribuidora;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import lombok.Data;
 import org.springframework.stereotype.Component;

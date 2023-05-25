@@ -1,6 +1,5 @@
 package distribuidora.scrapping.entities;
 
-import distribuidora.scrapping.enums.Distribuidora;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,18 +24,17 @@ public class ProductoInterno {
 	private Double precio;
 	@Column(name = "id_externo")
 	private String codigoReferencia;
-	@Column(name = "distribuidora_id")
-	private Distribuidora distribuidoraReferencia;
-//	@Temporal(TemporalType.TIMESTAMP)
+	@ManyToOne
+	@JoinColumn(name = "distribuidora_referencia_id")
+	private LookupValor distribuidoraReferencia;
 	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
-//	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha_modificacion")
 	private Date fechaActualizacion;
 	
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion, Double precio, String codigoReferencia,
-			Distribuidora distribuidoraReferencia, Date fechaCreacion, Date fechaActualizacion) {
+			LookupValor distribuidoraReferencia, Date fechaCreacion, Date fechaActualizacion) {
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;

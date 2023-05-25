@@ -1,11 +1,10 @@
 package distribuidora.scrapping.services.webscrappingconcurrent;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.PeticionWebScrapping;
 import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
-import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroWebScrappingServicio;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +40,7 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
     void pruebaGenerarProductosConcurrent() {
         servicioConcurrent.initImplementacion();
         List<LaGranjaDelCentroEntidad> productos = servicioConcurrent
-                .adquirirProductosEntidad(new PeticionWebScrapping(Distribuidora.LA_GRANJA_DEL_CENTRO));
+                .adquirirProductosEntidad(new PeticionWebScrapping(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO));
 
         assertEquals(200, productos.size());
     }
@@ -50,7 +49,7 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
     void pruebaGenerarProductos() {
         servicioConcurrent.initImplementacion();
         List<LaGranjaDelCentroEntidad> productos = servicioConcurrent
-                .adquirirProductosEntidad(new PeticionWebScrapping(Distribuidora.LA_GRANJA_DEL_CENTRO));
+                .adquirirProductosEntidad(new PeticionWebScrapping(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO));
 
         assertEquals(200, productos.size());
     }

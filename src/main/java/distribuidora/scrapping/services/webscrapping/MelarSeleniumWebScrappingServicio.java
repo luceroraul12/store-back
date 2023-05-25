@@ -1,7 +1,7 @@
 package distribuidora.scrapping.services.webscrapping;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.MelarEntidad;
-import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.util.MelarUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -52,7 +52,7 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
         }
 
         return MelarEntidad.builder()
-                .distribuidora(getDistribuidora())
+                .distribuidoraCodigo(getDistribuidoraCodigo())
                 .codigo(renglon.get(0))
                 .producto(renglon.get(1))
                 .fraccion(renglon.get(2))
@@ -72,7 +72,7 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
 
     @Override
     protected void initImplementacion() {
-        setDistribuidora(Distribuidora.MELAR);
+        setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR);
         setEsNecesarioUsarWebDriver(true);
         setUrlBuscador("https://listadepreciosmelar.com.ar");
     }

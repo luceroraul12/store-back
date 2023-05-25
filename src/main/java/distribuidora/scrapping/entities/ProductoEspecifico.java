@@ -1,8 +1,7 @@
 package distribuidora.scrapping.entities;
 
-import distribuidora.scrapping.enums.Distribuidora;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -11,33 +10,17 @@ import org.springframework.data.annotation.Id;
  * Cada clase especifica a cada distribuidora debe heredar de esta clase.
  */
 
+@Getter
+@Setter
 public abstract class ProductoEspecifico {
     @Id
     private String id;
-    private Distribuidora distribuidora;
+    private String distribuidora;
 
-    
-
-    public ProductoEspecifico(String id, Distribuidora distribuidora) {
+    public ProductoEspecifico(String id, String distribuidora) {
 		super();
 		this.id = id;
 		this.distribuidora = distribuidora;
-	}
-
-	public Distribuidora getDistribuidora() {
-        return this.distribuidora;
-    }
-
-    public void setDistribuidora(Distribuidora distribuidora) {
-        this.distribuidora = distribuidora;
-    }
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public abstract Double getPrecioExterno();

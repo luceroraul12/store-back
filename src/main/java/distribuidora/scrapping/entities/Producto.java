@@ -1,6 +1,5 @@
 package distribuidora.scrapping.entities;
 
-import distribuidora.scrapping.enums.Distribuidora;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -19,7 +18,6 @@ public class Producto {
     private Double precioPorCantidadEspecifica;
     /**
      * nunca puede ser nulo, ya que es el dato necesario para identificar el origen de este producto
-     * @see Distribuidora
      */
-    private Distribuidora distribuidora;
+    private String distribuidoraCodigo;
 }

@@ -1,20 +1,17 @@
 package distribuidora.scrapping.services.webscrapping;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
-import distribuidora.scrapping.enums.Distribuidora;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Service
 public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrapping<FacundoEntidad>{
     @Override
     protected void initImplementacion() {
-        setDistribuidora(Distribuidora.FACUNDO);
+        setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_FACUNDO);
         setUrlBuscador("http://gglobal.net.ar/bernal/?cliente");
         setEsNecesarioUsarWebDriver(true);
     }
@@ -50,9 +47,9 @@ public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrappin
 
         return FacundoEntidad.builder()
                 .categoria(nombre)
-                .precioMayor(Double.valueOf(precio))
+                .precioMayor(precio)
                 .categoriaRenglon(categoria)
-                .distribuidora(Distribuidora.FACUNDO)
+                .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_FACUNDO)
                 .cantidad("")
                 .build();
     }

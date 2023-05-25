@@ -3,7 +3,6 @@ package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.excel.BusquedorPorExcel;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
@@ -31,7 +30,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      * Es la enumercacion que identifica a cada implementacion de este servicio.
      * Toda implementacion utilizada debe tenerlo seteado.
      */
-    private Distribuidora distribuidora;
+    private String distribuidoraCodigo;
     /**
      * Es el identificador del tipo de busqueda.
      * Toda implementacion utilizada debe tenerlo seteado.
@@ -104,7 +103,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
                     productosProcesados
             );
         } catch (Exception e) {
-            System.out.println("error en actualizar productos en todas las colecciones");;
+            System.out.println("error en actualizar productos en todas las colecciones");
         }
     }
 
@@ -114,10 +113,10 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      * @param elementoAuxiliar
      * @return lista de productos
      */
-    protected abstract List<Entidad> adquirirProductosEntidad(Auxiliar elementoAuxiliar);;
+    protected abstract List<Entidad> adquirirProductosEntidad(Auxiliar elementoAuxiliar);
 
 
-    /**
+	/**
      * Elimina los datos almacenados de cierta distribuidora y vuelve a guardar con datos nuevos.
      * Esto se realiza en la coleccion Entidad Especifica como en la de Productos
      * @param productos de ciertan entidad
@@ -127,7 +126,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
         try {
             this.productoServicio.actualizarProductosPorDistribuidora(
                     productoUtil.arregloToProducto(productos),
-                    this.distribuidora
+                    this.distribuidoraCodigo
             );
         } catch (Exception e) {
             System.out.println("error al actualizar productos Finales");
@@ -135,7 +134,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
         try {
             this.datoDistribuidoraServicio.actualizarDatos(
                     Collections.singletonList(DatosDistribuidora.builder()
-                            .distribuidora(getDistribuidora())
+                            .distribuidoraCodigo(getDistribuidoraCodigo())
                             .fechaActualizacion(LocalDate.now().toString())
                             .tipo(getTipoDistribuidora())
                             .cantidadDeProductosAlmacenados(productos.size())
@@ -159,18 +158,18 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      * para poder realizar esta verificacion.
      */
     private void verificarExistenciaEnBaseDeDatosEspecifica() {
-        if (!this.datoDistribuidoraServicio.existsByDistribuidora(getDistribuidora())){
-            System.out.println(this.distribuidora +" no existe, creando ...");
+        if (!this.datoDistribuidoraServicio.existsByDistribuidora(getDistribuidoraCodigo())){
+            System.out.println(this.distribuidoraCodigo +" no existe, creando ...");
 
             this.datoDistribuidoraServicio.actualizarDatos(
                     Collections.singletonList(DatosDistribuidora.builder()
-                            .distribuidora(getDistribuidora())
+                            .distribuidoraCodigo(getDistribuidoraCodigo())
                             .tipo(getTipoDistribuidora())
                             .cantidadDeProductosAlmacenados(0)
                             .fechaActualizacion(LocalDate.now().toString())
                             .build())
             );
-        };
+        }
     }
 
 }

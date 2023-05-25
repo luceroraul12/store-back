@@ -1,7 +1,7 @@
 package distribuidora.scrapping.services.webscrapping;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
-import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.services.webscrappingconcurrent.WebScrappingConcurrent;
 import distribuidora.scrapping.util.LaGranjaDelCentroUtil;
 import org.jsoup.Jsoup;
@@ -33,8 +33,8 @@ public class LaGranjaDelCentroWebScrappingServicio extends WebScrappingConcurren
          for (Element element : document.getElementsByTag("span")){
             if (element.hasClass("p-activo")){
                 esValido = true;
-            };
-        }
+            }
+         }
 
         return esValido;
     }
@@ -42,7 +42,7 @@ public class LaGranjaDelCentroWebScrappingServicio extends WebScrappingConcurren
     @Override
     protected LaGranjaDelCentroEntidad obtenerProductosAPartirDeElements(Element elementProducto) {
         return LaGranjaDelCentroEntidad.builder()
-                .distribuidora(getDistribuidora())
+                .distribuidoraCodigo(getDistribuidoraCodigo())
                 .nombreProducto(
                         elementProducto.getElementsByClass("h3-content-1").text()
                 )
@@ -64,7 +64,7 @@ public class LaGranjaDelCentroWebScrappingServicio extends WebScrappingConcurren
 
     @Override
     protected void initImplementacion() {
-        setDistribuidora(Distribuidora.LA_GRANJA_DEL_CENTRO);
+        setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
         setEsBuscadorConPaginador(true);
         setUrlBuscador("https://lagranjadelcentro.com.ar/productos.php?pagina=");
     }

@@ -1,10 +1,9 @@
 package distribuidora.scrapping.util;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
-import distribuidora.scrapping.enums.Distribuidora;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,7 @@ public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
 
     @Override
     public List<Producto> convertirProductoyDevolverlo(FacundoEntidad productoEntidad) {
-        Distribuidora distribuidora = Distribuidora.FACUNDO;
+        String distribuidoraCodigo = Constantes.LV_DISTRIBUIDORA_FACUNDO;
         List<Producto> productosGenerados = new ArrayList<>();
         String descripcionMayor = String.format(
                 "%s - %s",
@@ -32,14 +31,14 @@ public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
                         .precioPorCantidadEspecifica(productoEntidad.getPrecioMayor() != null
                             ? productoEntidad.getPrecioMayor()
                             : 0.0)
-                        .distribuidora(distribuidora)
+                        .distribuidoraCodigo(distribuidoraCodigo)
                         .build()
         );
 
         return productosGenerados;
     }
     @Override
-    public FacundoEntidad convertirRowEnProductoEspecifico(Row row, Distribuidora distribuidora) {
+    public FacundoEntidad convertirRowEnProductoEspecifico(Row row, String distribuidoraCodigo) {
 
 //        if(esRenglonCategoria(row)){
 //            this.categoriaExcel = row.getCell(0).getStringCellValue();
@@ -49,7 +48,7 @@ public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
         Double precioMayor = validarPrecio(row.getCell(2));
         Double precioMenor = validarPrecio(row.getCell(3));
         return FacundoEntidad.builder()
-                .distribuidora(distribuidora)
+                .distribuidoraCodigo(distribuidoraCodigo)
                 .categoria(row.getCell(0).getStringCellValue())
                 .categoriaRenglon(this.categoriaExcel)
                 .subcategoria(row.getCell(1).toString())

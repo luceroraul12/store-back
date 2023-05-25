@@ -1,7 +1,6 @@
 package distribuidora.scrapping.entities.productos.especificos;
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.enums.Distribuidora;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,10 +23,10 @@ public class VillaresEntidad extends ProductoEspecifico {
     private Double precioTercerBeneficio;
 
     @Builder
-   	public VillaresEntidad(String externalId, Distribuidora distribuidora, String descripcion, String cantidad,
+   	public VillaresEntidad(String externalId, String distribuidoraCodigo, String descripcion, String cantidad,
 			String cantidadMinima, String detalle, String marca, String unidad, Double precioLista,
 			Double precioPrimerBeneficio, Double precioSegundoBeneficio, Double precioTercerBeneficio) {
-		super(externalId, distribuidora);
+		super(externalId, distribuidoraCodigo);
 		this.descripcion = descripcion;
 		this.cantidad = cantidad;
 		this.cantidadMinima = cantidadMinima;

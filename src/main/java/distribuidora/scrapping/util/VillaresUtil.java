@@ -1,13 +1,12 @@
 package distribuidora.scrapping.util;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.VillaresEntidad;
-import distribuidora.scrapping.enums.Distribuidora;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
 public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad>{
 
     @Override
-    public VillaresEntidad convertirRowEnProductoEspecifico(Row row, Distribuidora distribuidora) {
+    public VillaresEntidad convertirRowEnProductoEspecifico(Row row, String distribuidoraCodigo) {
         Integer cantidadCeldas = row.getPhysicalNumberOfCells();
         Integer celdasGranel = 12;
         Integer celdasGourmetFraccionado = 11;
@@ -76,7 +75,7 @@ public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad>{
 
         return new VillaresEntidad(
         		null,
-                Distribuidora.VILLARES,
+                Constantes.LV_DISTRIBUIDORA_VILLARES,
                 descripcion,
                 cantidad,
                 cantidadMinima,
@@ -109,7 +108,7 @@ public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad>{
         return Collections.singletonList(Producto.builder()
                 .descripcion(descripcion)
                 .precioPorCantidadEspecifica(productoSinConvertir.getPrecioLista())
-                .distribuidora(Distribuidora.VILLARES)
+                .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_VILLARES)
                 .build());
     }
 }

@@ -1,7 +1,6 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
-import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,8 @@ public class DatoDistribuidoraServicio implements AccionesBaseDeDatos<DatosDistr
 
     @Override
     public void actualizarDatos(List<DatosDistribuidora> datos) {
-        Distribuidora distribuidora = datos.get(0).getDistribuidora();
-        eliminarDatos(distribuidora);
+        String distribuidoraCodigo = datos.get(0).getDistribuidoraCodigo();
+        eliminarDatos(distribuidoraCodigo);
         guardarDatos(datos);
     }
 
@@ -30,11 +29,11 @@ public class DatoDistribuidoraServicio implements AccionesBaseDeDatos<DatosDistr
     }
 
     @Override
-    public void eliminarDatos(Distribuidora distribuidora) {
-        repository.deleteByDistribuidora(distribuidora);
+    public void eliminarDatos(String distribuidoraCodigo) {
+        repository.deleteByDistribuidora(distribuidoraCodigo);
     }
 
-    public boolean existsByDistribuidora(Distribuidora distribuidora) {
-        return repository.existsByDistribuidora(distribuidora);
+    public boolean existsByDistribuidora(String distribuidoraCodigo) {
+        return repository.existsByDistribuidoraCodigo(distribuidoraCodigo);
     }
 }

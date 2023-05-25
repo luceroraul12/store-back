@@ -1,7 +1,6 @@
 package distribuidora.scrapping.entities.productos.especificos;
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.enums.Distribuidora;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -9,12 +8,12 @@ import lombok.ToString;
 @Getter
 @ToString
 public class LaGranjaDelCentroEntidad extends ProductoEspecifico {
-    private String nombreProducto;
-    private Double precio;
+    private final String nombreProducto;
+    private final Double precio;
 
     @Builder
-	public LaGranjaDelCentroEntidad(String id, Distribuidora distribuidora, String nombreProducto, Double precio) {
-		super(id, distribuidora);
+	public LaGranjaDelCentroEntidad(String id, String distribuidoraCodigo, String nombreProducto, Double precio) {
+		super(id, distribuidoraCodigo);
 		this.nombreProducto = nombreProducto;
 		this.precio = precio;
 	}

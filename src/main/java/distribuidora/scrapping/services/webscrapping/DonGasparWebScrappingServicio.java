@@ -1,7 +1,7 @@
 package distribuidora.scrapping.services.webscrapping;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
-import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.util.DonGasparUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -37,7 +37,7 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
         String descripcion = elementProducto.select(".dfloat-left").text();
 
         return DonGasparEntidad.builder()
-                .distribuidora(getDistribuidora())
+                .distribuidoraCodigo(getDistribuidoraCodigo())
                 .nombreProducto(descripcion)
                 .precio(precio)
                 .build();
@@ -51,7 +51,7 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
 
     @Override
     protected void initImplementacion() {
-        setDistribuidora(Distribuidora.DON_GASPAR);
+        setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_DON_GASPAR);
         setUrlBuscador("https://pidorapido.com/dongasparsj");
         setEsNecesarioUsarWebDriver(true);
     }

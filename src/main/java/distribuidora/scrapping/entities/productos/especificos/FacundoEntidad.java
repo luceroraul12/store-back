@@ -1,27 +1,24 @@
 package distribuidora.scrapping.entities.productos.especificos;
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.enums.Distribuidora;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Getter
 public class FacundoEntidad extends ProductoEspecifico {
-    private String categoria;
+    private final String categoria;
 
-    private String categoriaRenglon;
+    private final String categoriaRenglon;
 
-    private String subcategoria;
-    private String cantidad;
-    private Double precioMayor;
-    private Double precioMenor;
+    private final String subcategoria;
+    private final String cantidad;
+    private final Double precioMayor;
+    private final Double precioMenor;
     
     @Builder
-	public FacundoEntidad(String id, Distribuidora distribuidora, String categoria, String categoriaRenglon,
+	public FacundoEntidad(String id, String distribuidoraCodigo, String categoria, String categoriaRenglon,
 			String subcategoria, String cantidad, Double precioMayor, Double precioMenor) {
-		super(id, distribuidora);
+		super(id, distribuidoraCodigo);
 		this.categoria = categoria;
 		this.categoriaRenglon = categoriaRenglon;
 		this.subcategoria = subcategoria;

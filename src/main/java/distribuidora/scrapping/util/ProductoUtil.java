@@ -30,7 +30,7 @@ public abstract class ProductoUtil<Entidad> {
             int indiceInicial = i * intervalo;
             int indiceFinal = i == numeroDeHilos-1 ? cantidadDeProductosEntidad : (i+1) * intervalo;
             listaDivididaEnPartas.add(productos.subList(indiceInicial, indiceFinal));
-        };
+        }
         for (List<Entidad> lista : listaDivididaEnPartas){
             futureList.add(
                     hilos.submit(new Callable<List<Producto>>() {

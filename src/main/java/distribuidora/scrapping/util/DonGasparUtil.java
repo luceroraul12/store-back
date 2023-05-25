@@ -1,11 +1,10 @@
 package distribuidora.scrapping.util;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.enums.Distribuidora;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class DonGasparUtil extends ProductoUtil<DonGasparEntidad> {
         return Collections.singletonList(Producto.builder()
                 .descripcion(productoSinConvertir.getNombreProducto())
                 .precioPorCantidadEspecifica(productoSinConvertir.getPrecio())
-                .distribuidora(Distribuidora.DON_GASPAR)
+                .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_DON_GASPAR)
                 .build());
     }
 }

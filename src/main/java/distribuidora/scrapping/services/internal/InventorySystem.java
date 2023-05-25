@@ -2,6 +2,7 @@ package distribuidora.scrapping.services.internal;
 
 import java.util.List;
 
+import distribuidora.scrapping.entities.dto.ProductoInternoDto;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
@@ -25,5 +26,6 @@ public interface InventorySystem {
 	 * @see #actualizarPreciosAutomatico()
 	 */
 	void actualizarPrecioConProductosEspecificos(List<ProductoEspecifico> especificos, List<ProductoInterno> internos);
-	
+
+	Integer crearProductos(List<ProductoInternoDto> dtos);
 }

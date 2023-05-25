@@ -21,12 +21,4 @@ public class ActualizacionPorDocumentoServicio {
     public void recibirDocumento(PeticionExcel peticion) throws IOException {
         this.comunicador.getDisparadorActualizacion().onNext(peticion);
     }
-    private void identificarDistribuidorayEjecutar(PeticionExcel documento) throws IOException {
-        switch (documento.getDistribuidora()){
-            case INDIAS: {
-                indiasExcelServicio.generarProductosEntidadYActualizarCollecciones(documento);
-                break;
-            }
-        }
-    }
 }

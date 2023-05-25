@@ -1,9 +1,9 @@
 package distribuidora.scrapping.services.excel;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.PeticionExcel;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.VillaresEntidad;
-import distribuidora.scrapping.enums.Distribuidora;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +32,7 @@ class VillaresExcelServicioTest {
                 PeticionExcel
                         .builder()
                         .excels(multipartFile)
-                        .distribuidora(Distribuidora.VILLARES).build());
+                        .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_VILLARES).build());
         List<Producto> productosFinales = servicio.getProductoUtil().arregloToProducto(productos);
 
         assertEquals(1007, productosFinales.size());

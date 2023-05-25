@@ -1,7 +1,6 @@
 package distribuidora.scrapping.controller;
 
 import distribuidora.scrapping.entities.*;
-import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.ActualizacionPorWebScrappingServicio;
 import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
@@ -42,7 +41,7 @@ public class ActualizacionController {
     @PostMapping("excel")
     public ResponseEntity<DatosDistribuidora> actualizacionPorExcel(PeticionExcel documento) throws IOException {
         actualizacionPorDocumentoServicio.recibirDocumento(documento);
-        DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidora(documento.getDistribuidora());
+        DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidora(documento.getDistribuidoraCodigo());
         return new ResponseEntity<>(resultado,HttpStatus.OK);
     }
 
@@ -56,9 +55,9 @@ public class ActualizacionController {
 
     @PostMapping("web-scrapping/individual")
     public ResponseEntity<DatosDistribuidora> actualizacionPorWebScrappingIndividual
-            (@RequestParam Distribuidora distribuidora){
-        this.actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(distribuidora);
-        DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidora(distribuidora);
+            (@RequestParam String distribuidoraCodigo){
+        this.actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(distribuidoraCodigo);
+        DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidora(distribuidoraCodigo);
         return new ResponseEntity<>(resultado,HttpStatus.OK);
     }
 
@@ -76,7 +75,7 @@ public class ActualizacionController {
         List<DatosDistribuidora> datosDistribuidoras = this.datosDistribuidoraRepository
                 .findAll()
                 .stream()
-                .sorted((a,b) -> b.getDistribuidora().compareTo(a.getDistribuidora()))
+                .sorted((a,b) -> b.getDistribuidoraCodigo().compareTo(a.getDistribuidoraCodigo()))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(datosDistribuidoras,HttpStatus.OK);
     }

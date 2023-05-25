@@ -1,7 +1,6 @@
 package distribuidora.scrapping.services;
 
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.enums.Distribuidora;
 import distribuidora.scrapping.repositories.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +22,8 @@ public class ProductoServicio {
      * @param productos productos que se quiere almacenar.
      * @param distribuidora distribuidora con la que se quiere trabajar.
      */
-    public void actualizarProductosPorDistribuidora(List<Producto> productos, Distribuidora distribuidora){
-       eliminarProductosPorDistribuidora(distribuidora);
+    public void actualizarProductosPorDistribuidora(List<Producto> productos, String distribuidoraCodigo){
+       eliminarProductosPorDistribuidora(distribuidoraCodigo);
        crearProductosPorDistribuidora(productos);
     }
 
@@ -34,7 +33,7 @@ public class ProductoServicio {
     private void crearProductosPorDistribuidora(List<Producto> productos){
         this.productoRepository.saveAll(productos);
     }
-    private void eliminarProductosPorDistribuidora(Distribuidora distribuidora){
-        this.productoRepository.deleteAllByDistribuidora(distribuidora);
+    private void eliminarProductosPorDistribuidora(String distribuidoraCodigo){
+        this.productoRepository.deleteAllByDistribuidoraCodigo(distribuidoraCodigo);
     }
 }

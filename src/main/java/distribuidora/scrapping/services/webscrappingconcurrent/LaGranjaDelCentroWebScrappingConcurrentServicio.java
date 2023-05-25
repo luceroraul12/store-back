@@ -5,7 +5,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
@@ -17,12 +16,12 @@ public class LaGranjaDelCentroWebScrappingConcurrentServicio extends WebScrappin
     }
 
     @Override
-    protected boolean esDocumentValido(Document document) throws Exception {
+    protected boolean esDocumentValido(Document document) {
         boolean esValido = false;
         for (Element element : document.getElementsByTag("span")){
             if (element.hasClass("p-activo")){
                 esValido = true;
-            };
+            }
         }
 
         return esValido;
@@ -31,7 +30,7 @@ public class LaGranjaDelCentroWebScrappingConcurrentServicio extends WebScrappin
     @Override
     protected LaGranjaDelCentroEntidad obtenerProductosAPartirDeElements(Element elementProducto) {
         return LaGranjaDelCentroEntidad.builder()
-                .distribuidora(getDistribuidora())
+                .distribuidoraCodigo(getDistribuidoraCodigo())
                 .nombreProducto(
                         elementProducto.getElementsByClass("h3-content-1").text()
                 )

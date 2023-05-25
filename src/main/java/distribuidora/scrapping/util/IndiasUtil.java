@@ -1,8 +1,8 @@
 package distribuidora.scrapping.util;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
-import distribuidora.scrapping.enums.Distribuidora;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,6 @@ import java.util.List;
 public class IndiasUtil extends ProductoExcelUtil<IndiasEntidad>{
     @Override
     public List<Producto> convertirProductoyDevolverlo(IndiasEntidad productoEntidad) {
-        Distribuidora distribuidora = Distribuidora.INDIAS;
         String descripcion = String.format(
                 "%s",
                 productoEntidad.getDescripcion()
@@ -22,15 +21,15 @@ public class IndiasUtil extends ProductoExcelUtil<IndiasEntidad>{
         return Collections.singletonList(Producto.builder()
                 .descripcion(descripcion)
                 .precioPorCantidadEspecifica(productoEntidad.getPrecio())
-                .distribuidora(distribuidora)
+                .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_INDIAS)
                 .build());
     }
 
     @Override
-    public IndiasEntidad convertirRowEnProductoEspecifico(Row row, Distribuidora distribuidora) {
+    public IndiasEntidad convertirRowEnProductoEspecifico(Row row, String distribuidoraCodigo) {
         double precio = validarPrecio(row.getCell(4));
         return IndiasEntidad.builder()
-                .distribuidora(distribuidora)
+                .distribuidoraCodigo(distribuidoraCodigo)
                 .rubro(row.getCell(1).toString())
                 .codigo((int) row.getCell(2).getNumericCellValue())
                 .descripcion(row.getCell(3).toString())
