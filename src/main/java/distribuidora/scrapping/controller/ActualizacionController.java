@@ -41,7 +41,7 @@ public class ActualizacionController {
     @PostMapping("excel")
     public ResponseEntity<DatosDistribuidora> actualizacionPorExcel(PeticionExcel documento) throws IOException {
         actualizacionPorDocumentoServicio.recibirDocumento(documento);
-        DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidora(documento.getDistribuidoraCodigo());
+        DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidoraCodigo(documento.getDistribuidoraCodigo());
         return new ResponseEntity<>(resultado,HttpStatus.OK);
     }
 
@@ -57,7 +57,7 @@ public class ActualizacionController {
     public ResponseEntity<DatosDistribuidora> actualizacionPorWebScrappingIndividual
             (@RequestParam String distribuidoraCodigo){
         this.actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(distribuidoraCodigo);
-        DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidora(distribuidoraCodigo);
+        DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidoraCodigo(distribuidoraCodigo);
         return new ResponseEntity<>(resultado,HttpStatus.OK);
     }
 

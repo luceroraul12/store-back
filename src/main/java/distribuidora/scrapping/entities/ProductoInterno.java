@@ -10,11 +10,13 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Entity(name = "productos_internos")
+@Entity
+@Table(name = "productos_internos")
 @NoArgsConstructor
 public class ProductoInterno {
 
 	@Id
+	@Column(name = "id")
 	private Integer id;
 	@Column(name = "nombre")
 	private String nombre;
@@ -25,11 +27,13 @@ public class ProductoInterno {
 	@Column(name = "id_externo")
 	private String codigoReferencia;
 	@ManyToOne
-	@JoinColumn(name = "distribuidora_referencia_id")
+	@JoinColumn(name = "distribuidora_id")
 	private LookupValor distribuidoraReferencia;
 	@Column(name = "fecha_creacion")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaCreacion;
 	@Column(name = "fecha_modificacion")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaActualizacion;
 	
 	@Builder

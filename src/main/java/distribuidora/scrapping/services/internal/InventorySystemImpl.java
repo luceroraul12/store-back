@@ -7,15 +7,16 @@ import java.util.stream.Collectors;
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.dto.ProductoInternoDto;
 import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.general.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+@Service
 public class InventorySystemImpl
         implements InventorySystem {
 
@@ -31,7 +32,7 @@ public class InventorySystemImpl
     @Override
     public int actualizarPreciosAutomatico() {
         // llamado a las bases de datos para obtener los productos especificos e internos
-        List<ProductoInterno> productoInternos = productoInternoRepository.findAllWhenHasPrecioReferencia();
+        List<ProductoInterno> productoInternos = productoInternoRepository.getProductosReferenciados();
         List<Producto> productoEspecificos = productoRepository.findAll();
         // tengo en cuenta la fecha al comenzar el proceso
         Date now = new Date();

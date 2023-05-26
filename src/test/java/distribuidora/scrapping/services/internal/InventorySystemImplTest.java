@@ -3,11 +3,7 @@ package distribuidora.scrapping.services.internal;
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.entities.productos.especificos.MelarEntidad;
-import distribuidora.scrapping.entities.productos.especificos.VillaresEntidad;
-import distribuidora.scrapping.repositories.ProductoEspecificoRepository;
 import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.general.LookupServiceImpl;
@@ -94,7 +90,7 @@ class InventorySystemImplTest {
                 .thenReturn(Arrays.asList(new LookupValor(Constantes.LV_DISTRIBUIDORA_MELAR),
                         new LookupValor(Constantes.LV_DISTRIBUIDORA_VILLARES)));
 
-		Mockito.when(productoInternoRepository.findAllWhenHasPrecioReferencia())
+		Mockito.when(productoInternoRepository.getProductosReferenciados())
 				.thenReturn(internos);
 
 		Mockito.when(productoRepository.findAll())

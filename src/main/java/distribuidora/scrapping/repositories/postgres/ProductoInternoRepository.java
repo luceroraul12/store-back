@@ -9,8 +9,8 @@ import java.util.List;
 public interface ProductoInternoRepository extends JpaRepository<ProductoInterno, Integer> {
 
     @Query("SELECT pi FROM ProductoInterno pi " +
-            "   INNER JOIN pi.distribuidora d " +
+            "   INNER JOIN pi.distribuidoraReferencia d " +
             "WHERE pi.codigoReferencia IS NOT NULL " +
             "   AND d IS NOT NULL ")
-    List<ProductoInterno> findAllWhenHasPrecioReferencia();
+    List<ProductoInterno> getProductosReferenciados();
 }

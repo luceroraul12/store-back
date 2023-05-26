@@ -30,7 +30,7 @@ public class DatoDistribuidoraServicio implements AccionesBaseDeDatos<DatosDistr
 
     @Override
     public void eliminarDatos(String distribuidoraCodigo) {
-        repository.deleteByDistribuidora(distribuidoraCodigo);
+        repository.deleteByDistribuidoraCodigo(distribuidoraCodigo);
     }
 
     public boolean existsByDistribuidora(String distribuidoraCodigo) {

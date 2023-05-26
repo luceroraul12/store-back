@@ -21,6 +21,8 @@ public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad>{
         Integer celdasDistribuido = 10;
         Integer indiceInicioCeldaPrecio = 0;
 //        inicializo
+        String id = String.valueOf(Math.round(row.getCell(1).getNumericCellValue())
+                + "R-" + row.getRowNum());
         String descripcion = "";
         String cantidad = "";
         String cantidadMinima = "";
@@ -74,7 +76,7 @@ public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad>{
         }
 
         return new VillaresEntidad(
-        		null,
+        		id,
                 Constantes.LV_DISTRIBUIDORA_VILLARES,
                 descripcion,
                 cantidad,
@@ -106,6 +108,7 @@ public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad>{
                 productoSinConvertir.getUnidad()
                 );
         return Collections.singletonList(Producto.builder()
+                .id(productoSinConvertir.getId())
                 .descripcion(descripcion)
                 .precioPorCantidadEspecifica(productoSinConvertir.getPrecioLista())
                 .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_VILLARES)

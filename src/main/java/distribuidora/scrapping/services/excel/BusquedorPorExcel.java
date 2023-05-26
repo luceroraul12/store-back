@@ -119,11 +119,12 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
      */
     private Collection<Entidad> obtenerProductosPorSheet(Sheet sheet){
         Collection<Entidad> productosFinales = new ArrayList<>();
-        sheet.forEach(
-                row -> {
-                    row.forEach(cell -> {
-                        expandirValorDeCeldasFusionadas(sheet, cell);
-                        aplicarFormular(cell);
+        sheet.rowIterator()
+                .forEachRemaining(row -> {
+                    row.cellIterator()
+                            .forEachRemaining(cell -> {
+                                expandirValorDeCeldasFusionadas(sheet, cell);
+                                aplicarFormular(cell);
                     });
                     productosFinales.addAll(trabajarConRowyObtenerProducto(row));
                 }

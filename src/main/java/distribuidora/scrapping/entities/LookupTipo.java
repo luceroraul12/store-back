@@ -12,7 +12,7 @@ public class LookupTipo {
 
 	@Id
 	@Column(name = "id", nullable = false)
-	private Long id;
+	private Integer id;
 	private String codigo;
 	private String descripcion;
 
