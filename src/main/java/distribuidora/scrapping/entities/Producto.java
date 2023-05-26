@@ -20,4 +20,12 @@ public class Producto {
      * nunca puede ser nulo, ya que es el dato necesario para identificar el origen de este producto
      */
     private String distribuidoraCodigo;
+
+    /**
+     * Retorna el valor del precio
+     * @return en caso de que el valor sea null se retornara 0.0
+     */
+    public Double getPrecioPorCantidadEspecifica() {
+        return precioPorCantidadEspecifica != null ? precioPorCantidadEspecifica : 0.0;
+    }
 }

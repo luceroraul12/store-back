@@ -6,10 +6,11 @@ import java.util.stream.Collectors;
 
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.LookupValor;
+import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.dto.ProductoInternoDto;
-import distribuidora.scrapping.repositories.ProductoEspecificoRepository;
+import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.general.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,13 @@ public class InventorySystemImpl
     private ProductoInternoRepository productoInternoRepository;
 
     @Autowired
-    private ProductoEspecificoRepository productoEspecificoRepository;
+    private ProductoRepository productoRepository;
 
     @Override
     public int actualizarPreciosAutomatico() {
         // llamado a las bases de datos para obtener los productos especificos e internos
         List<ProductoInterno> productoInternos = productoInternoRepository.findAllWhenHasPrecioReferencia();
-        List<ProductoEspecifico> productoEspecificos = productoEspecificoRepository.findAll();
+        List<Producto> productoEspecificos = productoRepository.findAll();
         // tengo en cuenta la fecha al comenzar el proceso
         Date now = new Date();
 
@@ -54,15 +55,15 @@ public class InventorySystemImpl
     }
 
     @Override
-    public void actualizarPrecioConProductosEspecificos(List<ProductoEspecifico> especificos,
+    public void actualizarPrecioConProductosEspecificos(List<Producto> especificos,
                                                         List<ProductoInterno> internos) {
         Map<String, LookupValor> mapDistribuidoras = lookupService.getLookupValoresPorLookupTipoCodigo(
                 Constantes.LV_DISTRIBUIDORAS).stream().collect(
                 Collectors.toMap(d -> d.getCodigo(), Function.identity()));
 
         // agrupo por distribuidora / codigo de referencia tanto interno como especifico
-        Map<String, Map<String, ProductoEspecifico>> mapEspecifico = especificos.stream().collect(
-                Collectors.groupingBy(e -> e.getDistribuidora(),
+        Map<String, Map<String, Producto>> mapEspecifico = especificos.stream().collect(
+                Collectors.groupingBy(e -> e.getDistribuidoraCodigo(),
                         Collectors.toMap(e -> e.getId(), Function.identity())));
 
         Map<String, Map<String, ProductoInterno>> mapInterno = internos.stream().collect(
@@ -71,15 +72,15 @@ public class InventorySystemImpl
 
         // recorro los internos por que son los unicos que me interesan
         for (Map.Entry<String, Map<String, ProductoInterno>> mapInternoByDistribuidora : mapInterno.entrySet()) {
-            Map<String, ProductoEspecifico> matchDistribuidora = mapEspecifico.getOrDefault(
+            Map<String, Producto> matchDistribuidora = mapEspecifico.getOrDefault(
                     mapInternoByDistribuidora.getKey(), null);
             if (!CollectionUtils.isEmpty(matchDistribuidora)) {
                 for (Map.Entry<String, ProductoInterno> mapInternoCodigoReferenciaProducto : mapInternoByDistribuidora.getValue()
                         .entrySet()) {
-                    ProductoEspecifico matchProducto = matchDistribuidora.get(
+                    Producto matchProducto = matchDistribuidora.get(
                             mapInternoCodigoReferenciaProducto.getKey());
                     if (matchProducto != null) {
-                        Double precio = matchProducto.getPrecioExterno();
+                        Double precio = matchProducto.getPrecioPorCantidadEspecifica();
                         if (precio != null && precio > 0.0) {
                             mapInternoCodigoReferenciaProducto.getValue().setPrecio(precio);
                             mapInternoCodigoReferenciaProducto.getValue().setFechaActualizacion(new Date());
