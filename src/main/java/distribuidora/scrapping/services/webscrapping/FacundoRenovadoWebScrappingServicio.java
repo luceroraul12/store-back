@@ -23,6 +23,7 @@ public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrappin
 
     @Override
     protected FacundoEntidad obtenerProductosAPartirDeElements(Element elementProducto) {
+        String id = elementProducto.attr("data-idproducto");
         String nombre = elementProducto
                 .getElementsByTag("h5")
                 .textNodes().get(0).text()
@@ -46,6 +47,7 @@ public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrappin
                 .toString());
 
         return FacundoEntidad.builder()
+                .id(id)
                 .categoria(nombre)
                 .precioMayor(precio)
                 .categoriaRenglon(categoria)

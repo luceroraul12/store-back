@@ -27,6 +27,7 @@ public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
 
         productosGenerados.add(
                 Producto.builder()
+                        .id(productoEntidad.getId())
                         .descripcion(descripcionMayor)
                         .precioPorCantidadEspecifica(productoEntidad.getPrecioMayor() != null
                             ? productoEntidad.getPrecioMayor()
