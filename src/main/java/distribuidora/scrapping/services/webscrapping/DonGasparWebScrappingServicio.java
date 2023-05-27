@@ -25,7 +25,7 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
     @Override
     protected DonGasparEntidad obtenerProductosAPartirDeElements(Element elementProducto) {
         List<DonGasparEntidad> productosGenerados = new ArrayList<>();
-
+        String id = elementProducto.attr("id").toString();
         double precio;
         try {
             precio = Double.parseDouble(
@@ -37,6 +37,7 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
         String descripcion = elementProducto.select(".dfloat-left").text();
 
         return DonGasparEntidad.builder()
+                .id(id)
                 .distribuidoraCodigo(getDistribuidoraCodigo())
                 .nombreProducto(descripcion)
                 .precio(precio)
@@ -45,7 +46,7 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
 
     @Override
     protected Elements filtrarElementos(Document documento) {
-        return documento.getElementsByClass("producto_fila");
+        return documento.getElementsByClass("producto");
     }
 
 

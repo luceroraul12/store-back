@@ -153,16 +153,10 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * @param documento uno de los tanttos document que puede traer una pagina Web.
      * @return listado de productos especificos.
      */
-    private List<Entidad> obtenerProductosPorDocument(Document documento){
-        List<Entidad> productosPorDocumento = obtenerTodosLosProductosDeLaPagina(filtrarElementos(documento));
-        return productosPorDocumento;
-    }
-
-    private List<Entidad> obtenerTodosLosProductosDeLaPagina(Elements elements){
-        return elements
-                .stream()
-                        .map(this::obtenerProductosAPartirDeElements)
-                                .collect(Collectors.toList());
+    protected List<Entidad> obtenerProductosPorDocument(Document documento){
+        return filtrarElementos(documento).stream()
+                .map(this::obtenerProductosAPartirDeElements)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -187,7 +181,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
                 .cast(PeticionWebScrapping.class)
                 .subscribe(
                         peticionWebScrapping -> {
-                    if (peticionWebScrapping.getDistribuidoraCodigo() == this.getDistribuidoraCodigo()){
+                    if (peticionWebScrapping.getDistribuidoraCodigo().equals(this.getDistribuidoraCodigo())){
                         System.out.println("actualiza "+ getDistribuidoraCodigo());
                         this.generarProductosEntidadYActualizarCollecciones(peticionWebScrapping);
                     } else if (peticionWebScrapping.getDistribuidoraCodigo().equals(Constantes.LV_DISTRIBUIDORA_TODAS)) {

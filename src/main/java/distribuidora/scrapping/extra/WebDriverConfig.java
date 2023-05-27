@@ -70,12 +70,12 @@ public class WebDriverConfig {
 
         }
         try{
-            System.out.println("usando firefox driver");
+            System.out.println("usando Selenium Grid driver");
             DesiredCapabilities dcap = new DesiredCapabilities("firefox", "111.0", Platform.LINUX);
-            URL gamelan = new URL("http://firefox:4444/wd/hub");
+            URL gamelan = new URL("http://localhost:4444/wd/hub");
             driver = new RemoteWebDriver(gamelan, dcap);
         } catch (Exception e) {
-            System.out.println("no es firefox");
+            System.out.println("no es Selenium Grid driver");
         }
         return driver;
     }
