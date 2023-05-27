@@ -53,6 +53,7 @@ public class MelarUtil extends ProductoUtil<MelarEntidad>{
         productosCreados.add(
                 Producto
                         .builder()
+                        .id(productoSinConvertir.getCodigo() + "F")
                         .descripcion(descripcionFraccion)
                         .precioPorCantidadEspecifica(preciosCalculados.get("fraccion"))
                         .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR)
@@ -61,6 +62,7 @@ public class MelarUtil extends ProductoUtil<MelarEntidad>{
         productosCreados.add(
                 Producto
                         .builder()
+                        .id(productoSinConvertir.getCodigo() + "G")
                         .descripcion(descripcionGranel)
                         .precioPorCantidadEspecifica(preciosCalculados.get("granel"))
                         .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR)
