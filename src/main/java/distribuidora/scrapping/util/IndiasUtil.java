@@ -19,6 +19,7 @@ public class IndiasUtil extends ProductoExcelUtil<IndiasEntidad>{
                 productoEntidad.getDescripcion()
         );
         return Collections.singletonList(Producto.builder()
+                .id(productoEntidad.getCodigo().toString())
                 .descripcion(descripcion)
                 .precioPorCantidadEspecifica(productoEntidad.getPrecio())
                 .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_INDIAS)
