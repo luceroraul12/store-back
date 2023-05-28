@@ -107,8 +107,18 @@ public class InventorySystemImpl implements InventorySystem {
 
     @Override
     public ProductoInternoDto modificarProducto(ProductoInternoDto dto) {
-        ProductoInterno producto = productoInternoConverter.toEntidad(dto);
-        ProductoInterno productoGuardado = productoInternoRepository.save(producto);
+        if (dto.getId() == null)
+            return null;
+
+        ProductoInterno producto = productoInternoRepository.getReferenceById(dto.getId());
+        if (producto == null)
+            return null;
+
+        ProductoInterno dtoToEntidad = productoInternoConverter.toEntidad(dto);
+        dtoToEntidad.setFechaCreacion(producto.getFechaCreacion());
+        dtoToEntidad.setFechaActualizacion(new Date());
+
+        ProductoInterno productoGuardado = productoInternoRepository.save(dtoToEntidad);
         return productoInternoConverter.toDto(productoGuardado);
     }
 

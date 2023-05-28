@@ -19,13 +19,13 @@ public class InventorySystemController {
 	InventorySystem service;
 
 	@PostMapping(value = "create")
-	ProductoInternoDto crearProducto(@RequestBody ProductoInternoDto dtos){
-		return service.crearProducto(dtos);
+	ProductoInternoDto crearProducto(@RequestBody ProductoInternoDto dto){
+		return service.crearProducto(dto);
 	}
 
 	@PutMapping(value = "update")
-	ProductoInternoDto modificarProducto(@RequestBody ProductoInternoDto dtos){
-		return service.modificarProducto(dtos);
+	ProductoInternoDto modificarProducto(@RequestBody ProductoInternoDto dto){
+		return service.modificarProducto(dto);
 	}
 
 	@GetMapping

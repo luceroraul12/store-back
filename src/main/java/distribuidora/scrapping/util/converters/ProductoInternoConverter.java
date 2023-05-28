@@ -39,17 +39,20 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 	@Override
 	public ProductoInterno toEntidad(ProductoInternoDto productoInternoDto) {
 		Map<String, LookupValor> mapDistribuidoras = lookupService.getLookupValoresPorLookupTipoCodigo(
-				Constantes.LV_DISTRIBUIDORAS).stream().collect(
-				Collectors.toMap(LookupValor::getCodigo, Function.identity()));
+				Constantes.LV_DISTRIBUIDORAS).stream()
+				.collect(Collectors.toMap(LookupValor::getCodigo, Function.identity()));
 		ProductoInterno entidad = ProductoInterno.builder()
 				.id(productoInternoDto.getId())
 				.nombre(productoInternoDto.getNombre())
 				.descripcion(productoInternoDto.getDescripcion())
 				.precio(productoInternoDto.getPrecio())
 				.build();
+		// si se le pasa el codigo de la distribuidora
+		// deberias tener el codigo del producto al que queres hacer referencia
 		if (productoInternoDto.getDistribuidoraReferenciaCodigo() != null){
 			String distribuidoraCodigo = productoInternoDto.getDistribuidoraReferenciaCodigo();
 			entidad.setDistribuidoraReferencia(mapDistribuidoras.get(distribuidoraCodigo));
+			entidad.setCodigoReferencia(productoInternoDto.getCodigoReferencia());
 		}
 		return entidad;
 	}
