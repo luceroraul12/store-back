@@ -33,7 +33,7 @@ public class InventorySystemController {
 		return service.getProductos();
 	}
 
-	@DeleteMapping
+	@DeleteMapping(value = "delete")
 	List<ProductoInternoDto> eliminarProductos(@RequestBody List<Integer> dtos){
 		return service.eliminarProductos(dtos);
 	}
