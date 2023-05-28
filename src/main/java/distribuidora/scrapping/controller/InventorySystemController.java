@@ -18,9 +18,14 @@ public class InventorySystemController {
 	@Autowired
 	InventorySystem service;
 
-	@PostMapping(value = "createUpdate")
-	List<ProductoInternoDto> crearModificarProductos(@RequestBody(required = false) List<ProductoInternoDto> dtos){
-		return service.crearActualizarProductos(dtos);
+	@PostMapping(value = "create")
+	ProductoInternoDto crearProducto(@RequestBody ProductoInternoDto dtos){
+		return service.crearProducto(dtos);
+	}
+
+	@PutMapping(value = "update")
+	ProductoInternoDto modificarProducto(@RequestBody ProductoInternoDto dtos){
+		return service.modificarProducto(dtos);
 	}
 
 	@GetMapping

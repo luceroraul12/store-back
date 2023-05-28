@@ -26,9 +26,8 @@ public interface InventorySystem {
 	 * @see #actualizarPreciosAutomatico()
 	 */
 	void actualizarPrecioConProductosEspecificos(List<Producto> especificos, List<ProductoInterno> internos);
-
-	List<ProductoInternoDto> crearActualizarProductos(List<ProductoInternoDto> dtos);
-
+	ProductoInternoDto crearProducto(ProductoInternoDto dto);
+	ProductoInternoDto modificarProducto(ProductoInternoDto dto);
 	List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds);
 
 	List<ProductoInternoDto> getProductos();

@@ -18,8 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 @Service
-public class InventorySystemImpl
-        implements InventorySystem {
+public class InventorySystemImpl implements InventorySystem {
 
     @Autowired
     private LookupService lookupService;
@@ -95,12 +94,22 @@ public class InventorySystemImpl
             }
         }
     }
+    @Override
+    public ProductoInternoDto crearProducto(ProductoInternoDto dto) {
+        if (dto.getId() != null)
+            return null;
+
+        ProductoInterno producto = productoInternoConverter.toEntidad(dto);
+        producto.setFechaCreacion(new Date());
+        ProductoInterno productoGuardado = productoInternoRepository.save(producto);
+        return productoInternoConverter.toDto(productoGuardado);
+    }
 
     @Override
-    public List<ProductoInternoDto> crearActualizarProductos(List<ProductoInternoDto> dtos) {
-        List<ProductoInterno> productos = productoInternoConverter.toEntidadList(dtos);
-        List<ProductoInterno> productosGuardados = productoInternoRepository.saveAll(productos);
-        return productoInternoConverter.toDtoList(productosGuardados);
+    public ProductoInternoDto modificarProducto(ProductoInternoDto dto) {
+        ProductoInterno producto = productoInternoConverter.toEntidad(dto);
+        ProductoInterno productoGuardado = productoInternoRepository.save(producto);
+        return productoInternoConverter.toDto(productoGuardado);
     }
 
     @Override

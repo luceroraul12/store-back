@@ -19,16 +19,21 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 
 	@Override
 	public ProductoInternoDto toDto(ProductoInterno productoInterno) {
-		return ProductoInternoDto.builder()
+		ProductoInternoDto dto = ProductoInternoDto.builder()
 				.id(productoInterno.getId())
 				.nombre(productoInterno.getNombre())
 				.descripcion(productoInterno.getDescripcion())
 				.codigoReferencia(productoInterno.getCodigoReferencia())
 				.fechaCreacion(productoInterno.getFechaCreacion())
 				.fechaActualizacion(productoInterno.getFechaActualizacion())
-				.distribuidoraReferenciaNombre(productoInterno.getDistribuidoraReferencia().getDescripcion())
-				.distribuidoraReferenciaCodigo(productoInterno.getDistribuidoraReferencia().getCodigo())
 				.build();
+
+		if (productoInterno.getDistribuidoraReferencia() != null){
+			LookupValor distribuidora = productoInterno.getDistribuidoraReferencia();
+			dto.setDistribuidoraReferenciaCodigo(distribuidora.getCodigo());
+			dto.setDistribuidoraReferenciaNombre(distribuidora.getDescripcion());
+		}
+		return dto;
 	}
 
 	@Override
@@ -36,13 +41,16 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 		Map<String, LookupValor> mapDistribuidoras = lookupService.getLookupValoresPorLookupTipoCodigo(
 				Constantes.LV_DISTRIBUIDORAS).stream().collect(
 				Collectors.toMap(LookupValor::getCodigo, Function.identity()));
-		return ProductoInterno.builder()
+		ProductoInterno entidad = ProductoInterno.builder()
 				.id(productoInternoDto.getId())
-				.fechaActualizacion(productoInternoDto.getFechaActualizacion())
-				.fechaCreacion(productoInternoDto.getFechaCreacion())
 				.nombre(productoInternoDto.getNombre())
 				.descripcion(productoInternoDto.getDescripcion())
-				.distribuidoraReferencia(mapDistribuidoras.get(productoInternoDto.getDistribuidoraReferenciaCodigo()))
+				.precio(productoInternoDto.getPrecio())
 				.build();
+		if (productoInternoDto.getDistribuidoraReferenciaCodigo() != null){
+			String distribuidoraCodigo = productoInternoDto.getDistribuidoraReferenciaCodigo();
+			entidad.setDistribuidoraReferencia(mapDistribuidoras.get(distribuidoraCodigo));
+		}
+		return entidad;
 	}
 }
