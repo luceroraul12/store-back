@@ -1,6 +1,5 @@
 package distribuidora.scrapping.controller;
 
-import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.dto.ProductoInternoDto;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.internal.InventorySystem;
@@ -19,18 +18,18 @@ public class InventorySystemController {
 	@Autowired
 	InventorySystem service;
 
-	@PostMapping("create")
-	Integer crearProductos(List<ProductoInternoDto> dtos){
-		return service.crearProductos(dtos);
+	@PostMapping(value = "createUpdate")
+	List<ProductoInternoDto> crearModificarProductos(@RequestBody(required = false) List<ProductoInternoDto> dtos){
+		return service.crearActualizarProductos(dtos);
 	}
 
-	@GetMapping()
-	List<ProductoInterno> getProductos(){
-		return repository.findAll();
+	@GetMapping
+	List<ProductoInternoDto> getProductos(){
+		return service.getProductos();
 	}
 
 	@DeleteMapping
-	Boolean eliminarProductos(List<ProductoInternoDto> dtos){
-		return null;
+	List<ProductoInternoDto> eliminarProductos(@RequestBody List<Integer> dtos){
+		return service.eliminarProductos(dtos);
 	}
 }

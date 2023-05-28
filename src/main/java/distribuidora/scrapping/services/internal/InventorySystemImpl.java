@@ -12,6 +12,7 @@ import distribuidora.scrapping.entities.dto.ProductoInternoDto;
 import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.general.LookupService;
+import distribuidora.scrapping.util.converters.ProductoInternoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -28,6 +29,9 @@ public class InventorySystemImpl
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private ProductoInternoConverter productoInternoConverter;
 
     @Override
     public int actualizarPreciosAutomatico() {
@@ -93,7 +97,24 @@ public class InventorySystemImpl
     }
 
     @Override
-    public Integer crearProductos(List<ProductoInternoDto> dtos) {
-        return null;
+    public List<ProductoInternoDto> crearActualizarProductos(List<ProductoInternoDto> dtos) {
+        List<ProductoInterno> productos = productoInternoConverter.toEntidadList(dtos);
+        List<ProductoInterno> productosGuardados = productoInternoRepository.saveAll(productos);
+        return productoInternoConverter.toDtoList(productosGuardados);
+    }
+
+    @Override
+    public List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds) {
+        List<ProductoInterno> productosEncontrados = productoInternoRepository.getProductosPorId(productoInternoIds);
+        List<Integer> productoIdsEncontrados = productosEncontrados.stream()
+                        .map(ProductoInterno::getId)
+                                .collect(Collectors.toList());
+        productoInternoRepository.deleteAllById(productoIdsEncontrados);
+        return productoInternoConverter.toDtoList(productosEncontrados);
+    }
+
+    @Override
+    public List<ProductoInternoDto> getProductos() {
+        return productoInternoConverter.toDtoList(productoInternoRepository.findAll());
     }
 }

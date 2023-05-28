@@ -1,14 +1,15 @@
 package distribuidora.scrapping.entities.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Getter
-@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductoInternoDto {
 	private Integer id;
 	private String nombre;
