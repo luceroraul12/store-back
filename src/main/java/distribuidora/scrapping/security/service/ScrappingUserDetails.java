@@ -1,4 +1,4 @@
-package distribuidora.scrapping.security;
+package distribuidora.scrapping.security.service;
 
 import distribuidora.scrapping.security.entity.RolEntity;
 import distribuidora.scrapping.security.entity.UsuarioEntity;
