@@ -2,7 +2,9 @@ package distribuidora.scrapping.security;
 
 import distribuidora.scrapping.security.entity.UsuarioDto;
 import distribuidora.scrapping.security.entity.UsuarioEntity;
+import distribuidora.scrapping.security.repository.UsuarioRepository;
 import distribuidora.scrapping.security.service.JwtUtilService;
+import distribuidora.scrapping.security.service.LoginService;
 import distribuidora.scrapping.security.service.ScrappingUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,30 +21,12 @@ import java.util.Map;
 public class LoginController {
 
     @Autowired
-    private ScrappingUserDetails scrappingUserDetails;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtUtilService jwtUtilService;
+    private LoginService loginService;
 
     @PostMapping("/login")
     public Map<String, String> loginUser(@RequestBody UsuarioDto usuario){
-        UserDetails user = scrappingUserDetails.loadUserByUsername(usuario.getUsername());
-
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                usuario.getUsername(),
-                usuario.getPassword()));
-
-        UserDetails userDetails = scrappingUserDetails.loadUserByUsername(
-                usuario.getUsername());
-
-        String jwt = jwtUtilService.generateToken(userDetails);
-
-
         Map<String, String> map = new HashMap<>();
-        map.put("jwt", jwt);
+        map.put("jwt", loginService.generateTokenWithDataUserByUsername(usuario));
         return map;
     }
 

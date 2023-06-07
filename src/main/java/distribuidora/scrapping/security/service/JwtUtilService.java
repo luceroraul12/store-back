@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -37,12 +40,14 @@ public class JwtUtilService {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(Map<String, String> mapExtraData) {
         Map<String, Object> claims = new HashMap<>();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // Agregando informacion adicional como "claim"
-        var rol = userDetails.getAuthorities().stream().collect(Collectors.toList()).get(0);
+        var rol = auth.getAuthorities().stream().collect(Collectors.toList()).get(0);
         claims.put("rol", rol);
-        return createToken(claims, userDetails.getUsername());
+        claims.putAll(mapExtraData);
+        return createToken(claims, auth.getName());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {

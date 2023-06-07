@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,10 @@ public class ScrappingAuthenticationProvider implements AuthenticationProvider {
             roles = usuarioTieneRolRepository.getRolesDelUsuario(username);
         }
 
-        return new UsernamePasswordAuthenticationToken(username, null, roles);
+        Authentication auth = new UsernamePasswordAuthenticationToken(username, null, roles);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        return auth;
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(Set<RolEntity> authorities) {
