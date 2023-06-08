@@ -14,6 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -135,7 +136,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
             this.datoDistribuidoraServicio.actualizarDatos(
                     Collections.singletonList(DatosDistribuidora.builder()
                             .distribuidoraCodigo(getDistribuidoraCodigo())
-                            .fechaActualizacion(LocalDate.now().toString())
+                            .fechaActualizacion(new Date())
                             .tipo(getTipoDistribuidora())
                             .cantidadDeProductosAlmacenados(productos.size())
                             .build())
@@ -154,7 +155,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
      * Inicializacion encargada de verificar Base de datos.<br>
      * Verifica si existe la implementacion en la base de datos, en caso de no existir, crea una con los datos de la misma.<br>
      * Toda implementacion debe tener seteado:
-     * {@link BuscadorDeProductos#distribuidora},{@link BuscadorDeProductos#tipoDistribuidora}
+     * {@link BuscadorDeProductos#distribuidoraCodigo},{@link BuscadorDeProductos#tipoDistribuidora}
      * para poder realizar esta verificacion.
      */
     private void verificarExistenciaEnBaseDeDatosEspecifica() {
@@ -166,7 +167,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
                             .distribuidoraCodigo(getDistribuidoraCodigo())
                             .tipo(getTipoDistribuidora())
                             .cantidadDeProductosAlmacenados(0)
-                            .fechaActualizacion(LocalDate.now().toString())
+                            .fechaActualizacion(new Date())
                             .build())
             );
         }

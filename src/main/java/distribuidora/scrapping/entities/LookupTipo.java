@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+@Table(name = "lookup_tipo")
 public class LookupTipo {
 
 	@Id

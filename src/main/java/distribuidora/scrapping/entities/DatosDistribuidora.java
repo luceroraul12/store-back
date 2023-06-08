@@ -6,6 +6,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Builder
 @Data
 @Document(collection = "DatosDistribuidora")
@@ -14,6 +16,6 @@ public class DatosDistribuidora {
     private String id;
     private String distribuidoraCodigo;
     private TipoDistribuidora tipo;
-    private String fechaActualizacion;
+    private Date fechaActualizacion;
     private Integer cantidadDeProductosAlmacenados;
 }
