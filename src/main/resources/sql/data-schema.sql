@@ -23,13 +23,15 @@ create table productos_internos(
 	id serial not null primary key,
 	nombre varchar null,
 	descripcion varchar null,
-	precio float8 not null,
+	precio float8 not null default 0,
 	id_externo varchar null,
 	distribuidora_id int null,
+	lv_categoria_id int null,
 	fecha_creacion timestamp not null default now(),
 	fecha_modificacion timestamp null,
 	constraint lv_distribuidora_fk foreign key (distribuidora_id) references lookup_valor(id),
-	constraint row_unique unique (nombre, descripcion)
+	constraint lv_categoria_fk foreign key (lv_categoria_id) references lookup_valor(id),
+	constraint row_unique unique (nombre, lv_categoria_id, descripcion)
 );
 
 --agrego el tipo de las distribuidoras
@@ -70,6 +72,8 @@ create table usuarios(
 	email varchar not null unique,
 	telefono varchar not null,
 	perfil_id int not null,
+	password_hash varchar not null,
+	usuario varchar not null unique,
 	constraint usuarios_perfil_fk foreign key(perfil_id) references perfiles(id)
 );
 
@@ -78,3 +82,28 @@ insert into roles(codigo, descripcion) values ('ALL', 'Todos los permisos');
 insert into perfiles(codigo, descripcion) values ('DIET_SALESMAN', 'Vendedor de dietetica');
 insert into perfil_tiene_roles(perfil_id, rol_id) values
 	((select id from perfiles where codigo = 'DIET_SALESMAN'), (select id from roles where codigo = 'ALL'));
+
+--creo lookup tipo para categorias de productos
+insert into lookup_tipo(codigo, descripcion) values ('CATEGORIA_DIETETICA', 'Categorias para comercio dietetico');
+
+--creo los lookup valores para la categoria de e
+insert into lookup_valor(lookup_tipo_id, codigo, descripcion) values
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'CEREALES', 				'CEREALES'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'ESPECIES', 				'ESPECIES'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'SEMILLAS', 				'SEMILLAS'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'LEGUMBRES', 				'LEGUMBRES'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'PERFUMERIA', 				'PERFUMERIA'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'COMPLEMENTOS_ECOLOGICOS', 	'COMPLEMENTOS ECOLOGICOS'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'COMPLEMENTO_DIARIA', 		'COMPLEMENTO DIARIA'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'POMADAS_MEDICINALES', 		'POMADAS MEDICINALES'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'REUTILIZABLES', 			'REUTILIZABLES'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'CONGELADOS', 				'CONGELADOS'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'LECHES_VEGETALES', 		'LECHES VEGETALES'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'REPOSTERIA', 				'REPOSTERIA'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'PLANIFICADOS', 			'PLANIFICADOS'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'VINOS_ORGANICOS', 			'VINOS ORGANICOS'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'GALLETERIA_SIN_TACC', 		'GALLETERIA SIN TACC'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'SNACK', 					'SNACK'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'HIERBAS_MEDICINALES', 		'HIERBAS MEDICINALES'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'FRUTOS_SECOS', 			'FRUTOS SECOS'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'HARINAS', 					'HARINAS');
