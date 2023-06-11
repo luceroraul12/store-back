@@ -36,6 +36,9 @@ public class ProductoInterno {
 	@Column(name = "fecha_modificacion")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaActualizacion;
+	@ManyToOne
+	@JoinColumn(name = "lv_categoria_id")
+	private LookupValor lvCategoria;
 	
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion, Double precio, String codigoReferencia,

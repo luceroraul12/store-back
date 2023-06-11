@@ -26,7 +26,16 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 				.codigoReferencia(productoInterno.getCodigoReferencia())
 				.fechaCreacion(productoInterno.getFechaCreacion())
 				.fechaActualizacion(productoInterno.getFechaActualizacion())
+				.precio(productoInterno.getPrecio())
 				.build();
+
+		if (productoInterno.getLvCategoria() != null){
+			dto.setCategoriaCodigo(productoInterno.getLvCategoria().getCodigo());
+			dto.setCategoriaNombre(productoInterno.getLvCategoria().getDescripcion());
+		} else {
+			dto.setCategoriaNombre("-");
+			dto.setCategoriaCodigo("-");
+		}
 
 		if (productoInterno.getDistribuidoraReferencia() != null){
 			LookupValor distribuidora = productoInterno.getDistribuidoraReferencia();

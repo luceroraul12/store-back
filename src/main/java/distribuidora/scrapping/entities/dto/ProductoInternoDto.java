@@ -19,6 +19,8 @@ public class ProductoInternoDto {
 	private String codigoReferencia;
 	private String distribuidoraReferenciaCodigo;
 	private String distribuidoraReferenciaNombre;
+	private String categoriaCodigo;
+	private String categoriaNombre;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 }

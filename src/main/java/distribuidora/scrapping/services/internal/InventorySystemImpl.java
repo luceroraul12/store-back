@@ -134,6 +134,7 @@ public class InventorySystemImpl implements InventorySystem {
 
     @Override
     public List<ProductoInternoDto> getProductos() {
-        return productoInternoConverter.toDtoList(productoInternoRepository.findAll());
+        List<ProductoInternoDto> productos = productoInternoConverter.toDtoList(productoInternoRepository.getAllProductos());
+        return productos;
     }
 }
