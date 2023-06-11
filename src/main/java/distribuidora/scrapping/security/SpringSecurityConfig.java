@@ -42,7 +42,7 @@ public class SpringSecurityConfig {
                 .csrf().disable() // (2)
                 .authorizeHttpRequests(aut-> aut
                         .antMatchers("/login/**").permitAll()
-                        .antMatchers("/inventory-system/**").hasRole("ALL")
+                        .antMatchers("/inventory-system/**").hasAuthority("ALL")
                         .anyRequest().authenticated()
                 )
                 .cors(withDefaults())
