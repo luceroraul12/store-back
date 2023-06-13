@@ -63,6 +63,10 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 			entidad.setDistribuidoraReferencia(mapDistribuidoras.get(distribuidoraCodigo));
 			entidad.setCodigoReferencia(productoInternoDto.getCodigoReferencia());
 		}
+		if(productoInternoDto.getCategoriaCodigo() != null){
+			LookupValor lvCategoria = lookupService.getlookupValorPorCodigo(productoInternoDto.getCategoriaCodigo());
+			entidad.setLvCategoria(lvCategoria);
+		}
 		return entidad;
 	}
 }

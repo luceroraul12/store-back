@@ -18,4 +18,9 @@ public class LookupServiceImpl implements LookupService{
 	public List<LookupValor> getLookupValoresPorLookupTipoCodigo(String lookupTipoCodigo) {
 		return repository.getLookupValoresPorLookupTipoCodigo(lookupTipoCodigo);
 	}
+
+    @Override
+    public LookupValor getlookupValorPorCodigo(String categoriaCodigo) {
+        return repository.getlookupValorPorCodigo(categoriaCodigo);
+    }
 }

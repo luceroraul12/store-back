@@ -12,4 +12,7 @@ public interface LookupValorRepository extends JpaRepository<LookupValor, Intege
             "   INNER JOIN lv.lookupTipo lt " +
             "WHERE lt.codigo = :lookupTipoCodigo ")
     List<LookupValor> getLookupValoresPorLookupTipoCodigo(@Param("lookupTipoCodigo") String lookupTipoCodigo);
+
+    @Query("SELECT lv FROM LookupValor lv WHERE lv.codigo = :codigo")
+    LookupValor getlookupValorPorCodigo(@Param("codigo") String codigo);
 }

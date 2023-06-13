@@ -8,4 +8,5 @@ public interface LookupService {
 
 	List<LookupValor> getLookupValoresPorLookupTipoCodigo(String codigo);
 
+    LookupValor getlookupValorPorCodigo(String categoriaCodigo);
 }
