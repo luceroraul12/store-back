@@ -30,11 +30,12 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 				.build();
 
 		if (productoInterno.getLvCategoria() != null){
-			dto.setCategoriaCodigo(productoInterno.getLvCategoria().getCodigo());
-			dto.setCategoriaNombre(productoInterno.getLvCategoria().getDescripcion());
+			dto.setLvCategoria(productoInterno.getLvCategoria());
 		} else {
-			dto.setCategoriaNombre("-");
-			dto.setCategoriaCodigo("-");
+			LookupValor lv = new LookupValor();
+			lv.setCodigo("CEREALES");
+			lv.setDescripcion("CEREALES");
+			dto.setLvCategoria(lv);
 		}
 
 		if (productoInterno.getDistribuidoraReferencia() != null){
@@ -63,8 +64,8 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 			entidad.setDistribuidoraReferencia(mapDistribuidoras.get(distribuidoraCodigo));
 			entidad.setCodigoReferencia(productoInternoDto.getCodigoReferencia());
 		}
-		if(productoInternoDto.getCategoriaCodigo() != null){
-			LookupValor lvCategoria = lookupService.getlookupValorPorCodigo(productoInternoDto.getCategoriaCodigo());
+		if(productoInternoDto.getLvCategoria() != null){
+			LookupValor lvCategoria = lookupService.getlookupValorPorCodigo(productoInternoDto.getLvCategoria().getCodigo());
 			entidad.setLvCategoria(lvCategoria);
 		}
 		return entidad;

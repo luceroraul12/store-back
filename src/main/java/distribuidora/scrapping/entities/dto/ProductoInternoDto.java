@@ -1,9 +1,8 @@
 package distribuidora.scrapping.entities.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import distribuidora.scrapping.entities.LookupValor;
 import lombok.*;
 
-import java.io.Serializable;
 import java.util.Date;
 
 @Getter
@@ -19,8 +18,7 @@ public class ProductoInternoDto {
 	private String codigoReferencia;
 	private String distribuidoraReferenciaCodigo;
 	private String distribuidoraReferenciaNombre;
-	private String categoriaCodigo;
-	private String categoriaNombre;
+	private LookupValor lvCategoria;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 }
