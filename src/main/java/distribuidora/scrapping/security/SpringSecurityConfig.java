@@ -43,6 +43,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(aut-> aut
                         .antMatchers("/login/**").permitAll()
                         .antMatchers("/inventory-system/**").hasAuthority("ALL")
+                        .antMatchers("/lookup/**").hasAuthority("ALL")
                         .anyRequest().authenticated()
                 )
                 .cors(withDefaults())
