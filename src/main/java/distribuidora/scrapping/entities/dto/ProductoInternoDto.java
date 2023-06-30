@@ -18,6 +18,7 @@ public class ProductoInternoDto {
 	private String codigoReferencia;
 	private String distribuidoraReferenciaCodigo;
 	private String distribuidoraReferenciaNombre;
+	private String referenciaNombre;
 	private LookupValor lvCategoria;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;

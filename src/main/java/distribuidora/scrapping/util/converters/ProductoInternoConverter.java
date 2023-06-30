@@ -2,12 +2,15 @@ package distribuidora.scrapping.util.converters;
 
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.LookupValor;
+import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.dto.ProductoInternoDto;
+import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.services.general.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -16,6 +19,9 @@ import java.util.stream.Collectors;
 public class ProductoInternoConverter extends Converter<ProductoInterno, ProductoInternoDto>{
 	@Autowired
 	LookupService lookupService;
+
+	@Autowired
+	ProductoRepository productoRepository;
 
 	@Override
 	public ProductoInternoDto toDto(ProductoInterno productoInterno) {
@@ -69,5 +75,23 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 			entidad.setLvCategoria(lvCategoria);
 		}
 		return entidad;
+	}
+
+	@Override
+	public List<ProductoInternoDto> toDtoList(List<ProductoInterno> productoInternos) {
+		List<ProductoInternoDto> list = super.toDtoList(productoInternos);
+		Map<String, Map<String, Producto>> mapProductFixed = productoRepository.findAll().stream()
+				.collect(Collectors.groupingBy(Producto::getDistribuidoraCodigo,
+						Collectors.toMap(p -> p.getId(), Function.identity())));
+		list = list.stream()
+				.map(p -> {
+					if (p.getDistribuidoraReferenciaCodigo() != null){
+						Producto producto = mapProductFixed.get(p.getDistribuidoraReferenciaCodigo()).get(p.getCodigoReferencia());
+						p.setReferenciaNombre(producto.getDescripcion());
+					}
+					return p;
+				})
+				.collect(Collectors.toList());
+		return list;
 	}
 }
