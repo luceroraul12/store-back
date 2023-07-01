@@ -7,6 +7,8 @@ import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.dto.ProductoInternoDto;
 import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.services.general.LookupService;
+import io.opentelemetry.api.internal.StringUtils;
+import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -85,9 +87,12 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 						Collectors.toMap(p -> p.getId(), Function.identity())));
 		list = list.stream()
 				.map(p -> {
+					// TODO: reveer esto por que algunas veces viene null
 					if (p.getDistribuidoraReferenciaCodigo() != null){
 						Producto producto = mapProductFixed.get(p.getDistribuidoraReferenciaCodigo()).get(p.getCodigoReferencia());
-						p.setReferenciaNombre(producto.getDescripcion());
+						if (producto != null){
+							p.setReferenciaNombre(producto.getDescripcion());
+						}
 					}
 					return p;
 				})
