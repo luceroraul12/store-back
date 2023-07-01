@@ -115,27 +115,27 @@ public class InventorySystemImpl implements InventorySystem {
         if (dto.getId() == null)
             return null;
 
-        ProductoInterno producto = productoInternoRepository.getReferenceById(dto.getId());
-        if (producto == null)
+        ProductoInterno oldEntidadInterno = productoInternoRepository.getReferenceById(dto.getId());
+        if (oldEntidadInterno == null)
             return null;
 
-        ProductoInterno entidad = productoInternoConverter.toEntidad(dto);
+        ProductoInterno newEntidadInterno = productoInternoConverter.toEntidad(dto);
         Producto productoVinculado = null;
-        //Actualizo el precio del producto con el precio del producto si es que existe
-        if(entidad.getDistribuidoraReferencia() != null){
-            String distribuidoraCodigo = entidad.getDistribuidoraReferencia().getCodigo();
-            String idReferencia = entidad.getCodigoReferencia();
+
+        //Actualizo el precio del oldEntidadInterno con el precio del oldEntidadInterno si es que existe
+        if(newEntidadInterno.getDistribuidoraReferencia() != null){
+            String distribuidoraCodigo = newEntidadInterno.getDistribuidoraReferencia().getCodigo();
+            String idReferencia = newEntidadInterno.getCodigoReferencia();
             productoVinculado = productoServicio.getProductoByDistribuidoraCodigoAndId(distribuidoraCodigo,idReferencia);
-            entidad.setCodigoReferencia(productoVinculado.getId());
+            newEntidadInterno.setCodigoReferencia(productoVinculado.getId());
         }
-
+        newEntidadInterno.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
         // si existe diferencia entre el precio anterior y el nuevo le actualizo la fecha de actualizacion
-        if(entidad.getPrecio() != producto.getPrecio()){
-            entidad.setFechaActualizacion(new Date());
-        }
+        newEntidadInterno.setFechaActualizacion(
+                !newEntidadInterno.getPrecio().equals(oldEntidadInterno.getPrecio())
+                    ? new Date() : oldEntidadInterno.getFechaActualizacion());
 
-        entidad.setFechaCreacion(producto.getFechaCreacion());
-        ProductoInterno productoGuardado = productoInternoRepository.save(entidad);
+        ProductoInterno productoGuardado = productoInternoRepository.save(newEntidadInterno);
 
         dto = productoInternoConverter.toDto(productoGuardado);
         if (productoVinculado != null)

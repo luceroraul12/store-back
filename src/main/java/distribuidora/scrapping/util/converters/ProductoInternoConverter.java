@@ -63,8 +63,9 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 				.id(productoInternoDto.getId())
 				.nombre(productoInternoDto.getNombre())
 				.descripcion(productoInternoDto.getDescripcion())
-				.precio(productoInternoDto.getPrecio())
+				.precio(productoInternoDto.getPrecio() != null ? productoInternoDto.getPrecio() : 0.0)
 				.build();
+
 		// si se le pasa el codigo de la distribuidora
 		// deberias tener el codigo del producto al que queres hacer referencia
 		if (productoInternoDto.getDistribuidoraReferenciaCodigo() != null){
