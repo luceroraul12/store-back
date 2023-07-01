@@ -36,4 +36,7 @@ public class ProductoServicio {
     private void eliminarProductosPorDistribuidora(String distribuidoraCodigo){
         this.productoRepository.deleteAllByDistribuidoraCodigo(distribuidoraCodigo);
     }
+    public Producto getProductoByDistribuidoraCodigoAndId(String distribuidoraCodigo, String idReferencia) {
+        return this.productoRepository.findByDistribuidoraCodigoAndId(distribuidoraCodigo, idReferencia);
+    }
 }

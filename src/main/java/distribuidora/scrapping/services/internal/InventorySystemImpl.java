@@ -11,6 +11,7 @@ import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.dto.ProductoInternoDto;
 import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
+import distribuidora.scrapping.services.ProductoServicio;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.converters.ProductoInternoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class InventorySystemImpl implements InventorySystem {
 
     @Autowired
     private ProductoInternoConverter productoInternoConverter;
+
+    @Autowired
+    private ProductoServicio productoServicio;
 
     @Override
     public int actualizarPreciosAutomatico() {
@@ -105,6 +109,7 @@ public class InventorySystemImpl implements InventorySystem {
         return productoInternoConverter.toDto(productoGuardado);
     }
 
+    //TODO: Ordenar este metodo, que si bien funciona parece que se esta empezando a complicar la lectura
     @Override
     public ProductoInternoDto modificarProducto(ProductoInternoDto dto) {
         if (dto.getId() == null)
@@ -114,12 +119,29 @@ public class InventorySystemImpl implements InventorySystem {
         if (producto == null)
             return null;
 
-        ProductoInterno dtoToEntidad = productoInternoConverter.toEntidad(dto);
-        dtoToEntidad.setFechaCreacion(producto.getFechaCreacion());
-        dtoToEntidad.setFechaActualizacion(new Date());
+        ProductoInterno entidad = productoInternoConverter.toEntidad(dto);
+        Producto productoVinculado = null;
+        //Actualizo el precio del producto con el precio del producto si es que existe
+        if(entidad.getDistribuidoraReferencia() != null){
+            String distribuidoraCodigo = entidad.getDistribuidoraReferencia().getCodigo();
+            String idReferencia = entidad.getCodigoReferencia();
+            productoVinculado = productoServicio.getProductoByDistribuidoraCodigoAndId(distribuidoraCodigo,idReferencia);
+            entidad.setCodigoReferencia(productoVinculado.getId());
+        }
 
-        ProductoInterno productoGuardado = productoInternoRepository.save(dtoToEntidad);
-        return productoInternoConverter.toDto(productoGuardado);
+        // si existe diferencia entre el precio anterior y el nuevo le actualizo la fecha de actualizacion
+        if(entidad.getPrecio() != producto.getPrecio()){
+            entidad.setFechaActualizacion(new Date());
+        }
+
+        entidad.setFechaCreacion(producto.getFechaCreacion());
+        ProductoInterno productoGuardado = productoInternoRepository.save(entidad);
+
+        dto = productoInternoConverter.toDto(productoGuardado);
+        if (productoVinculado != null)
+            dto.setReferenciaNombre(productoVinculado.getDescripcion());
+
+        return dto;
     }
 
     @Override

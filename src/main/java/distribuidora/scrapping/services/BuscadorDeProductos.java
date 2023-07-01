@@ -5,6 +5,7 @@ import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.excel.BusquedorPorExcel;
+import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
 import distribuidora.scrapping.util.ProductoUtil;
 import lombok.Data;
@@ -61,6 +62,9 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
     @Autowired
     private DatoDistribuidoraServicio datoDistribuidoraServicio;
 
+    @Autowired
+    private InventorySystem inventorySystemService;
+
     /**
      * Metodo post constructor para poder setear atributos de cada clase.
      */
@@ -100,9 +104,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
     public void generarProductosEntidadYActualizarCollecciones(Auxiliar elementoAuxiliar){
         try {
             List<Entidad> productosProcesados = adquirirProductosEntidad(elementoAuxiliar);
-            actualizarProductosEnTodasLasColecciones(
-                    productosProcesados
-            );
+            actualizarProductosEnTodasLasColecciones(productosProcesados);
         } catch (Exception e) {
             System.out.println("error en actualizar productos en todas las colecciones");
         }
@@ -126,9 +128,9 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
     public void actualizarProductosEnTodasLasColecciones(List<Entidad> productos){
         try {
             this.productoServicio.actualizarProductosPorDistribuidora(
-                    productoUtil.arregloToProducto(productos),
-                    this.distribuidoraCodigo
-            );
+                    productoUtil.arregloToProducto(productos),this.distribuidoraCodigo);
+            // Intento actualizar los productos internos a los productos de la distribuidora actual;
+            inventorySystemService.actualizarPreciosAutomatico();
         } catch (Exception e) {
             System.out.println("error al actualizar productos Finales");
         }

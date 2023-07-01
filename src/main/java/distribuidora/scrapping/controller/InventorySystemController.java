@@ -37,4 +37,10 @@ public class InventorySystemController {
 	List<ProductoInternoDto> eliminarProductos(@RequestBody List<Integer> dtos){
 		return service.eliminarProductos(dtos);
 	}
+
+	@GetMapping("updateAll")
+	List<ProductoInternoDto> actualizarAllProductos(){
+		service.actualizarPreciosAutomatico();
+		return getProductos();
+	}
 }
