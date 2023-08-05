@@ -1,5 +1,6 @@
 package distribuidora.scrapping.controller;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.*;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.ActualizacionPorWebScrappingServicio;
@@ -75,6 +76,7 @@ public class ActualizacionController {
         List<DatosDistribuidora> datosDistribuidoras = this.datosDistribuidoraRepository
                 .findAll()
                 .stream()
+                .filter(a -> !Constantes.DISTRIBUIDORAS_SIN_USO.contains(a.getDistribuidoraCodigo()))
                 .sorted((a,b) -> b.getDistribuidoraCodigo().compareTo(a.getDistribuidoraCodigo()))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(datosDistribuidoras,HttpStatus.OK);
