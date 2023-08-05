@@ -5,18 +5,15 @@ import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.PeticionWebScrapping;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.TipoDistribuidora;
-import distribuidora.scrapping.extra.WebDriverConfig;
 import distribuidora.scrapping.services.BuscadorDeProductos;
 import lombok.Data;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +21,6 @@ import java.util.stream.Collectors;
 
 /**
  * Clase base para los servicios basados en Web Scrapping.
- * En caso de que alguna pagina no carge el template desde el programa pero si en el navegador, se debera utilizar un WebDriver que simule el uso del navegador.
  * @param <Entidad>
  */
 @Data
@@ -44,12 +40,6 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * @see BusquedorPorWebScrapping#generarNuevaURL(int)
      */
     private Boolean esBuscadorConPaginador = false;
-
-    @Deprecated
-    /**
-     * Variable booleana utilizada para indicar si es necesario contar con un Webdriver para generar los templates de la pagina Web.
-     */
-    private Boolean esNecesarioUsarWebDriver = false;
 
     @Override
     public List<Entidad> adquirirProductosEntidad(PeticionWebScrapping peticionWebScrapping) {
@@ -102,7 +92,6 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
 
     /**
      * Encargado de generar un documento.
-     * Tener en cuenta la variable esNecesarioWebDriver para esta generacion, debido a que el ordenador debera tener instalado los driver scomo el navegador seleccionado.
      * @return documento
      */
     private Document generarDocumento(String url) throws IOException {

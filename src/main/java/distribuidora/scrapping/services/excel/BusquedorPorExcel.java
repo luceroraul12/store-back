@@ -9,7 +9,6 @@ import distribuidora.scrapping.util.ProductoExcelUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -79,7 +78,7 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
      * @return Lista de productos en entidad especifica
      * @throws IOException
      */
-    public List<Entidad> obtenerProductosApartirDeExcels(@NotNull MultipartFile[] excels) throws IOException {
+    public List<Entidad> obtenerProductosApartirDeExcels(MultipartFile[] excels) throws IOException {
         return Arrays.stream(excels)
                 .map(this::obtenerSheets)
                 .flatMap(Collection::stream)

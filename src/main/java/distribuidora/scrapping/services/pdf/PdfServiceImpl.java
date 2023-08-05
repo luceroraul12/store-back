@@ -8,7 +8,7 @@ import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.dto.ProductoInternoDto;
 import distribuidora.scrapping.services.internal.InventorySystem;
-import io.opentelemetry.api.internal.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -123,7 +123,7 @@ public class PdfServiceImpl implements PdfService {
             List list = new List();
             for (ProductoInternoDto p : productList) {
                 ListItem listItem = new ListItem();
-                String label = !StringUtils.isNullOrEmpty(p.getDescripcion())
+                String label = StringUtils.isNotEmpty(p.getDescripcion())
                         ? String.format("%s (%s)", p.getNombre(), p.getDescripcion())
                         : p.getNombre();
                 listItem.add(label);
