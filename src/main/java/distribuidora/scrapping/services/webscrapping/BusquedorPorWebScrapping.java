@@ -45,15 +45,11 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      */
     private Boolean esBuscadorConPaginador = false;
 
+    @Deprecated
     /**
      * Variable booleana utilizada para indicar si es necesario contar con un Webdriver para generar los templates de la pagina Web.
      */
     private Boolean esNecesarioUsarWebDriver = false;
-
-//    @Autowired
-//    WebDriver driver;
-
-
 
     @Override
     public List<Entidad> adquirirProductosEntidad(PeticionWebScrapping peticionWebScrapping) {
@@ -82,7 +78,12 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
         List<Document> documentos = new ArrayList<>();
         if (esBuscadorConPaginador){
             int contador = 1;
-            Document doc = Jsoup.connect(generarNuevaURL(contador)).get();
+            String str = Jsoup.connect(generarNuevaURL(contador))
+                    .timeout(0)
+                    .maxBodySize(0)
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(str);
             try {
                 while(esDocumentValido(doc)){
                     documentos.add(doc);
@@ -93,8 +94,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
                 System.out.println("problemas al validar Url: " + contador);
             }
         } else {
-            documentos.add(
-                    generarDocumento(urlBuscador)
+            documentos.add(generarDocumento(urlBuscador)
             );
         }
         return documentos;
@@ -105,24 +105,14 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * Tener en cuenta la variable esNecesarioWebDriver para esta generacion, debido a que el ordenador debera tener instalado los driver scomo el navegador seleccionado.
      * @return documento
      */
-    private Document generarDocumento(String url) throws MalformedURLException {
+    private Document generarDocumento(String url) throws IOException {
         Document documentoGenerado;
-        System.out.println(url);
-        if (esNecesarioUsarWebDriver){
-            WebDriverConfig config = new WebDriverConfig();
-            config.postConstrcut();
-            WebDriver driver = config.driver();
-            driver.get(url);
-            String template = driver.getPageSource();
-            documentoGenerado = Jsoup.parse(template);
-            driver.quit();
-        } else {
-            try {
-                documentoGenerado = Jsoup.connect(url).get();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        String str = Jsoup.connect(url)
+                .timeout(0)
+                .maxBodySize(0)
+                .execute()
+                .body();
+        documentoGenerado = Jsoup.parse(str);
         return documentoGenerado;
     }
 

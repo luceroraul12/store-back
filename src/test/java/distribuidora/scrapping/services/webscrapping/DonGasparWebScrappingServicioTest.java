@@ -36,14 +36,28 @@ class DonGasparWebScrappingServicioTest {
     void setUp() throws IOException {
         servicio.initImplementacion();
 
-        File file = new File("src/main/resources/static/don-gaspar.html");
-        document = Jsoup.parse(file);
+        int tries = 3;
+        boolean existDocument = false;
+        int index = 0;
+        while (!existDocument & index != tries){
+            System.out.println("intento"+ index);
+            document = Jsoup.connect("https://pidorapido.com/dongasparsj")
+                    .timeout(0)
+                    .execute()
+                    .parse();
+            if (document == null){
+                index++;
+            } else {
+                existDocument = true;
+            }
+        }
+
 
     }
 
     @Test
     void obtenerProductosPorDocument() {
         List<DonGasparEntidad> productos = servicio.obtenerProductosPorDocument(document);
-        assertEquals(373, productos.size());
+        assertEquals(368, productos.size());
     }
 }

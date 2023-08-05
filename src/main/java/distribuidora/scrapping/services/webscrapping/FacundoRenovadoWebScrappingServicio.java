@@ -13,7 +13,6 @@ public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrappin
     protected void initImplementacion() {
         setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_FACUNDO);
         setUrlBuscador("http://gglobal.net.ar/bernal/?cliente");
-        setEsNecesarioUsarWebDriver(true);
     }
 
     @Override

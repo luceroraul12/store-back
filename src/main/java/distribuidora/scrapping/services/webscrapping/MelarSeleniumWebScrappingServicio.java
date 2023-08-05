@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Deprecated
 public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<MelarEntidad> {
     @Autowired
     MelarUtil melarUtil;
@@ -73,7 +74,6 @@ public class MelarSeleniumWebScrappingServicio extends BusquedorPorWebScrapping<
     @Override
     protected void initImplementacion() {
         setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR);
-        setEsNecesarioUsarWebDriver(true);
         setUrlBuscador("https://listadepreciosmelar.com.ar");
     }
 }
