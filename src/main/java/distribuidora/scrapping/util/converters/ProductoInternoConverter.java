@@ -88,9 +88,14 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 				.map(p -> {
 					// TODO: reveer esto por que algunas veces viene null
 					if (p.getDistribuidoraReferenciaCodigo() != null){
-						Producto producto = mapProductFixed.get(p.getDistribuidoraReferenciaCodigo()).get(p.getCodigoReferencia());
-						if (producto != null){
-							p.setReferenciaNombre(producto.getDescripcion());
+						if (mapProductFixed.containsKey(p.getDistribuidoraReferenciaCodigo())){
+							Map<String, Producto> mapDistro = mapProductFixed.get(p.getDistribuidoraReferenciaCodigo());
+							if (mapDistro.containsKey(p.getCodigoReferencia())){
+								Producto productDistro = mapDistro.get(p.getCodigoReferencia());
+								if (productDistro != null){
+									p.setReferenciaNombre(productDistro.getDescripcion());
+								}
+							}
 						}
 					}
 					return p;
