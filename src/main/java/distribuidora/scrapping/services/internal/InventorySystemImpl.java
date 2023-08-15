@@ -124,10 +124,15 @@ public class InventorySystemImpl implements InventorySystem {
 
         //Actualizo el precio del oldEntidadInterno con el precio del oldEntidadInterno si es que existe
         if(newEntidadInterno.getDistribuidoraReferencia() != null){
-            String distribuidoraCodigo = newEntidadInterno.getDistribuidoraReferencia().getCodigo();
-            String idReferencia = newEntidadInterno.getCodigoReferencia();
-            productoVinculado = productoServicio.getProductoByDistribuidoraCodigoAndId(distribuidoraCodigo,idReferencia);
-            newEntidadInterno.setCodigoReferencia(productoVinculado.getId());
+            if (!oldEntidadInterno.getDistribuidoraReferencia().getCodigo()
+                    .equalsIgnoreCase(newEntidadInterno.getDistribuidoraReferencia().getCodigo())
+                && !oldEntidadInterno.getCodigoReferencia()
+                    .equalsIgnoreCase(newEntidadInterno.getCodigoReferencia())){
+                String distribuidoraCodigo = newEntidadInterno.getDistribuidoraReferencia().getCodigo();
+                String idReferencia = newEntidadInterno.getCodigoReferencia();
+                productoVinculado = productoServicio.getProductoByDistribuidoraCodigoAndId(distribuidoraCodigo,idReferencia);
+                newEntidadInterno.setCodigoReferencia(productoVinculado.getId());
+            }
         }
         newEntidadInterno.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
         // si existe diferencia entre el precio anterior y el nuevo le actualizo la fecha de actualizacion
