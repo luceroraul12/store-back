@@ -135,9 +135,60 @@ public class InventorySystemImpl implements InventorySystem {
             }
         }
         newEntidadInterno.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
-        // si existe diferencia entre el precio anterior y el nuevo le actualizo la fecha de actualizacion
-        // la diferencia de precio podria ser ocacionada por
-        // precio base, transporte, empaquetado, ganancia
+        verificaryActualizarFechaModificacio(oldEntidadInterno, newEntidadInterno);
+
+
+        ProductoInterno productoGuardado = productoInternoRepository.save(newEntidadInterno);
+
+        dto = productoInternoConverter.toDto(productoGuardado);
+        if (productoVinculado != null)
+            dto.setReferenciaNombre(productoVinculado.getDescripcion());
+
+        return dto;
+    }
+
+    @Override
+    public List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds) {
+        List<ProductoInterno> productosEncontrados = productoInternoRepository.getProductosPorIds(productoInternoIds);
+        List<Integer> productoIdsEncontrados = productosEncontrados.stream()
+                        .map(ProductoInterno::getId)
+                                .collect(Collectors.toList());
+        productoInternoRepository.deleteAllById(productoIdsEncontrados);
+        return productoInternoConverter.toDtoList(productosEncontrados);
+    }
+
+    @Override
+    public List<ProductoInternoDto> getProductos() {
+        List<ProductoInterno> productos = productoInternoRepository.getAllProductos();
+        return productoInternoConverter.toDtoList(productos);
+    }
+
+    @Override
+    public List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos) {
+        // Busco todos los productos por Id con un unico llamado
+        List<Integer> productoInternoIds = dtos.stream()
+                        .map(ProductoInternoDto::getId)
+                                .collect(Collectors.toList());
+        List<ProductoInterno> productoInternoList = productoInternoRepository.getProductosPorIds(productoInternoIds);
+        // Utilizo el converter para que verifique los cambios en precios
+
+        // Los guardo
+        // retorno todos
+        return null;
+    }
+
+    /**
+     * Encargado de verificar si hay cambios en alguno tipo de producto como:
+     * precio base
+     * precio de transporte
+     * precio de empaquetado
+     * porcentaje de ganancia
+     *
+     * Para poder decidir cuando debe actualizar la fecha de actualizacion
+     * @param oldEntidadInterno
+     * @param newEntidadInterno
+     */
+    private void verificaryActualizarFechaModificacio(ProductoInterno oldEntidadInterno, ProductoInterno newEntidadInterno){
         boolean priceUpdated = false;
         boolean priceTransportUpdated = false;
         boolean pricePackageUpdated = false;
@@ -154,31 +205,10 @@ public class InventorySystemImpl implements InventorySystem {
         if (newEntidadInterno.getPorcentajeGanancia() != null)
             priceGainUpdated = !newEntidadInterno.getPorcentajeGanancia().equals(oldEntidadInterno.getPorcentajeGanancia());
 
-        if (priceUpdated || priceTransportUpdated || pricePackageUpdated || priceGainUpdated)
+        if (priceUpdated || priceTransportUpdated || pricePackageUpdated || priceGainUpdated){
             newEntidadInterno.setFechaActualizacion(new Date());
-
-        ProductoInterno productoGuardado = productoInternoRepository.save(newEntidadInterno);
-
-        dto = productoInternoConverter.toDto(productoGuardado);
-        if (productoVinculado != null)
-            dto.setReferenciaNombre(productoVinculado.getDescripcion());
-
-        return dto;
-    }
-
-    @Override
-    public List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds) {
-        List<ProductoInterno> productosEncontrados = productoInternoRepository.getProductosPorId(productoInternoIds);
-        List<Integer> productoIdsEncontrados = productosEncontrados.stream()
-                        .map(ProductoInterno::getId)
-                                .collect(Collectors.toList());
-        productoInternoRepository.deleteAllById(productoIdsEncontrados);
-        return productoInternoConverter.toDtoList(productosEncontrados);
-    }
-
-    @Override
-    public List<ProductoInternoDto> getProductos() {
-        List<ProductoInterno> productos = productoInternoRepository.getAllProductos();
-        return productoInternoConverter.toDtoList(productos);
-    }
+        } else {
+            newEntidadInterno.setFechaActualizacion(oldEntidadInterno.getFechaActualizacion());
+        }
+    };
 }

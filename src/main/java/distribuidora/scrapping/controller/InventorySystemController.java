@@ -28,6 +28,11 @@ public class InventorySystemController {
 		return service.modificarProducto(dto);
 	}
 
+	@PutMapping(value = "updates")
+	List<ProductoInternoDto> updateManyProducto(@RequestBody List<ProductoInternoDto> dtos){
+		return service.updateManyProducto(dtos);
+	}
+
 	@GetMapping
 	List<ProductoInternoDto> getProductos(){
 		return service.getProductos();

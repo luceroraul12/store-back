@@ -31,4 +31,6 @@ public interface InventorySystem {
 	List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds);
 
 	List<ProductoInternoDto> getProductos();
+
+	List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos);
 }
