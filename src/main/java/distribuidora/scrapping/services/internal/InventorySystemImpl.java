@@ -169,12 +169,12 @@ public class InventorySystemImpl implements InventorySystem {
         List<Integer> productoInternoIds = dtos.stream()
                         .map(ProductoInternoDto::getId)
                                 .collect(Collectors.toList());
-        List<ProductoInterno> productoInternoList = productoInternoRepository.getProductosPorIds(productoInternoIds);
-        // Utilizo el converter para que verifique los cambios en precios
-
-        // Los guardo
+        List<ProductoInternoDto> resultado = new ArrayList<>();
+        for (ProductoInternoDto dto : dtos) {
+            resultado.add(modificarProducto(dto));
+        }
         // retorno todos
-        return null;
+        return resultado;
     }
 
     /**
