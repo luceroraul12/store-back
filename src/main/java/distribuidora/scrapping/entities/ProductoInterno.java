@@ -39,6 +39,12 @@ public class ProductoInterno {
 	@ManyToOne
 	@JoinColumn(name = "lv_categoria_id")
 	private LookupValor lvCategoria;
+	@Column(name = "precio_transporte")
+	private Double precioTransporte;
+	@Column(name = "precio_empaquetado")
+	private Double precioEmpaquetado;
+	@Column(name = "porcentaje_ganancia")
+	private Double porcentajeGanancia;
 	
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion, Double precio, String codigoReferencia,

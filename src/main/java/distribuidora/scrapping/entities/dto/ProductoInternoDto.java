@@ -22,4 +22,7 @@ public class ProductoInternoDto {
 	private LookupValor lvCategoria;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	private Double precioTransporte;
+	private Double precioEmpaquetado;
+	private Double porcentajeGanancia;
 }

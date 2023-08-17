@@ -24,19 +24,19 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 	ProductoRepository productoRepository;
 
 	@Override
-	public ProductoInternoDto toDto(ProductoInterno productoInterno) {
+	public ProductoInternoDto toDto(ProductoInterno entidad) {
 		ProductoInternoDto dto = ProductoInternoDto.builder()
-				.id(productoInterno.getId())
-				.nombre(productoInterno.getNombre())
-				.descripcion(productoInterno.getDescripcion())
-				.codigoReferencia(productoInterno.getCodigoReferencia())
-				.fechaCreacion(productoInterno.getFechaCreacion())
-				.fechaActualizacion(productoInterno.getFechaActualizacion())
-				.precio(productoInterno.getPrecio())
+				.id(entidad.getId())
+				.nombre(entidad.getNombre())
+				.descripcion(entidad.getDescripcion())
+				.codigoReferencia(entidad.getCodigoReferencia())
+				.fechaCreacion(entidad.getFechaCreacion())
+				.fechaActualizacion(entidad.getFechaActualizacion())
+				.precio(entidad.getPrecio())
 				.build();
 
-		if (productoInterno.getLvCategoria() != null){
-			dto.setLvCategoria(productoInterno.getLvCategoria());
+		if (entidad.getLvCategoria() != null){
+			dto.setLvCategoria(entidad.getLvCategoria());
 		} else {
 			LookupValor lv = new LookupValor();
 			lv.setCodigo("CEREALES");
@@ -44,37 +44,43 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 			dto.setLvCategoria(lv);
 		}
 
-		if (productoInterno.getDistribuidoraReferencia() != null){
-			LookupValor distribuidora = productoInterno.getDistribuidoraReferencia();
+		if (entidad.getDistribuidoraReferencia() != null){
+			LookupValor distribuidora = entidad.getDistribuidoraReferencia();
 			dto.setDistribuidoraReferenciaCodigo(distribuidora.getCodigo());
 			dto.setDistribuidoraReferenciaNombre(distribuidora.getDescripcion());
 		}
+		dto.setPrecioTransporte(entidad.getPrecioTransporte());
+		dto.setPrecioEmpaquetado(entidad.getPrecioEmpaquetado());
+		dto.setPorcentajeGanancia(entidad.getPorcentajeGanancia());
 		return dto;
 	}
 
 	@Override
-	public ProductoInterno toEntidad(ProductoInternoDto productoInternoDto) {
+	public ProductoInterno toEntidad(ProductoInternoDto dto) {
 		Map<String, LookupValor> mapDistribuidoras = lookupService.getLookupValoresPorLookupTipoCodigo(
 				Constantes.LV_DISTRIBUIDORAS).stream()
 				.collect(Collectors.toMap(LookupValor::getCodigo, Function.identity()));
 		ProductoInterno entidad = ProductoInterno.builder()
-				.id(productoInternoDto.getId())
-				.nombre(productoInternoDto.getNombre())
-				.descripcion(productoInternoDto.getDescripcion())
-				.precio(productoInternoDto.getPrecio() != null ? productoInternoDto.getPrecio() : 0.0)
+				.id(dto.getId())
+				.nombre(dto.getNombre())
+				.descripcion(dto.getDescripcion())
+				.precio(dto.getPrecio() != null ? dto.getPrecio() : 0.0)
 				.build();
 
 		// si se le pasa el codigo de la distribuidora
 		// deberias tener el codigo del producto al que queres hacer referencia
-		if (productoInternoDto.getDistribuidoraReferenciaCodigo() != null){
-			String distribuidoraCodigo = productoInternoDto.getDistribuidoraReferenciaCodigo();
+		if (dto.getDistribuidoraReferenciaCodigo() != null){
+			String distribuidoraCodigo = dto.getDistribuidoraReferenciaCodigo();
 			entidad.setDistribuidoraReferencia(mapDistribuidoras.get(distribuidoraCodigo));
-			entidad.setCodigoReferencia(productoInternoDto.getCodigoReferencia());
+			entidad.setCodigoReferencia(dto.getCodigoReferencia());
 		}
-		if(productoInternoDto.getLvCategoria() != null){
-			LookupValor lvCategoria = lookupService.getlookupValorPorCodigo(productoInternoDto.getLvCategoria().getCodigo());
+		if(dto.getLvCategoria() != null){
+			LookupValor lvCategoria = lookupService.getlookupValorPorCodigo(dto.getLvCategoria().getCodigo());
 			entidad.setLvCategoria(lvCategoria);
 		}
+		entidad.setPrecioTransporte(dto.getPrecioTransporte());
+		entidad.setPrecioEmpaquetado(dto.getPrecioEmpaquetado());
+		entidad.setPorcentajeGanancia(dto.getPorcentajeGanancia());
 		return entidad;
 	}
 
