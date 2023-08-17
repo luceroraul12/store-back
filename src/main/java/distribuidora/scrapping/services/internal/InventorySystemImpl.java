@@ -136,9 +136,26 @@ public class InventorySystemImpl implements InventorySystem {
         }
         newEntidadInterno.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
         // si existe diferencia entre el precio anterior y el nuevo le actualizo la fecha de actualizacion
-        newEntidadInterno.setFechaActualizacion(
-                !newEntidadInterno.getPrecio().equals(oldEntidadInterno.getPrecio())
-                    ? new Date() : oldEntidadInterno.getFechaActualizacion());
+        // la diferencia de precio podria ser ocacionada por
+        // precio base, transporte, empaquetado, ganancia
+        boolean priceUpdated = false;
+        boolean priceTransportUpdated = false;
+        boolean pricePackageUpdated = false;
+        boolean priceGainUpdated = false;
+        if (newEntidadInterno.getPrecio() != null) {
+            priceUpdated = !newEntidadInterno.getPrecio().equals(oldEntidadInterno.getPrecio());
+        }
+        if (newEntidadInterno.getPrecioTransporte() != null) {
+            priceTransportUpdated = !newEntidadInterno.getPrecioTransporte().equals(oldEntidadInterno.getPrecioTransporte());
+        }
+        if (newEntidadInterno.getPrecioEmpaquetado() != null) {
+            pricePackageUpdated = !newEntidadInterno.getPrecioEmpaquetado().equals(oldEntidadInterno.getPrecioEmpaquetado());
+        }
+        if (newEntidadInterno.getPorcentajeGanancia() != null)
+            priceGainUpdated = !newEntidadInterno.getPorcentajeGanancia().equals(oldEntidadInterno.getPorcentajeGanancia());
+
+        if (priceUpdated || priceTransportUpdated || pricePackageUpdated || priceGainUpdated)
+            newEntidadInterno.setFechaActualizacion(new Date());
 
         ProductoInterno productoGuardado = productoInternoRepository.save(newEntidadInterno);
 
