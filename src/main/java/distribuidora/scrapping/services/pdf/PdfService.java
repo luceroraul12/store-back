@@ -5,6 +5,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public interface PdfService {
@@ -14,7 +15,7 @@ public interface PdfService {
     static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 
-    void generatePdf() throws IOException, DocumentException;
+    void generatePdf(HttpServletResponse response) throws IOException, DocumentException;
 
     void addTitlePage(Document document)
             throws DocumentException, IOException;

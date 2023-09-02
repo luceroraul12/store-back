@@ -20,7 +20,7 @@ class PdfServiceImplTest {
 
     @Test
     void generatePdf() throws DocumentException, IOException {
-        service.generatePdf();
+        service.generatePdf(null);
     }
 
 
