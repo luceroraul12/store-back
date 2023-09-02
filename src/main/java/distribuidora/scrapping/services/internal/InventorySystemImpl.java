@@ -74,29 +74,57 @@ public class InventorySystemImpl implements InventorySystem {
                 Collectors.groupingBy(e -> e.getDistribuidoraCodigo(),
                         Collectors.toMap(e -> e.getId(), Function.identity())));
 
-        Map<String, Map<String, ProductoInterno>> mapInterno = internos.stream().collect(
-                Collectors.groupingBy(e -> e.getDistribuidoraReferencia().getCodigo(),
-                        Collectors.toMap(e -> e.getCodigoReferencia(), Function.identity())));
+        //Agrupo por distribuidora de referencia
+        Map<String, List<ProductoInterno>> mapDistribuidoraReferencia = internos.stream().collect(
+                Collectors.groupingBy(e -> e.getDistribuidoraReferencia().getCodigo()));
+        //Recorro la agrupacion por distribuidora de referencia
+        for (Map.Entry<String, List<ProductoInterno>> entry : mapDistribuidoraReferencia.entrySet()) {
+            String codigoDistribuidoraReferencia = entry.getKey();
+            List<ProductoInterno> pDistribuidoraReferencia = entry.getValue();
 
-        // recorro los internos por que son los unicos que me interesan
-        for (Map.Entry<String, Map<String, ProductoInterno>> mapInternoByDistribuidora : mapInterno.entrySet()) {
-            Map<String, Producto> matchDistribuidora = mapEspecifico.getOrDefault(
-                    mapInternoByDistribuidora.getKey(), null);
-            if (!CollectionUtils.isEmpty(matchDistribuidora)) {
-                for (Map.Entry<String, ProductoInterno> mapInternoCodigoReferenciaProducto : mapInternoByDistribuidora.getValue()
-                        .entrySet()) {
-                    Producto matchProducto = matchDistribuidora.get(
-                            mapInternoCodigoReferenciaProducto.getKey());
+            //Agrupo nuevamente los productos pero por codigo del producto de referencia
+            Map<String, List<ProductoInterno>> mapCodigoReferencia = pDistribuidoraReferencia.stream()
+                    .collect(Collectors.groupingBy(p -> p.getCodigoReferencia()));
+
+            //Recorro cada uno de estos productos
+            for (Map.Entry<String, List<ProductoInterno>> e : mapCodigoReferencia.entrySet()) {
+                String codigoReferencia = e.getKey();
+                List<ProductoInterno> productosCompartidos = e.getValue();
+                Map<String, Producto> first = mapEspecifico.get(codigoDistribuidoraReferencia);
+                if (first != null && first.containsKey(codigoReferencia)){
+                    Producto matchProducto = first.get(codigoReferencia);
                     if (matchProducto != null) {
                         Double precio = matchProducto.getPrecioPorCantidadEspecifica();
-                        if (precio != null && precio > 0.0) {
-                            mapInternoCodigoReferenciaProducto.getValue().setPrecio(precio);
-                            mapInternoCodigoReferenciaProducto.getValue().setFechaActualizacion(new Date());
+                        for (ProductoInterno pi : productosCompartidos) {
+                            if (precio != null && precio > 0.0) {
+                                pi.setPrecio(precio);
+                                pi.setFechaActualizacion(new Date());
+                            }
                         }
                     }
                 }
             }
         }
+
+//        // recorro los internos por que son los unicos que me interesan
+//        for (Map.Entry<String, Map<String, ProductoInterno>> mapInternoByDistribuidora : mapInterno.entrySet()) {
+//            Map<String, Producto> matchDistribuidora = mapEspecifico.getOrDefault(
+//                    mapInternoByDistribuidora.getKey(), null);
+//            if (!CollectionUtils.isEmpty(matchDistribuidora)) {
+//                for (Map.Entry<String, ProductoInterno> mapInternoCodigoReferenciaProducto : mapInternoByDistribuidora.getValue()
+//                        .entrySet()) {
+//                    Producto matchProducto = matchDistribuidora.get(
+//                            mapInternoCodigoReferenciaProducto.getKey());
+//                    if (matchProducto != null) {
+//                        Double precio = matchProducto.getPrecioPorCantidadEspecifica();
+//                        if (precio != null && precio > 0.0) {
+//                            mapInternoCodigoReferenciaProducto.getValue().setPrecio(precio);
+//                            mapInternoCodigoReferenciaProducto.getValue().setFechaActualizacion(new Date());
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
     @Override
     public ProductoInternoDto crearProducto(ProductoInternoDto dto) {
@@ -123,10 +151,11 @@ public class InventorySystemImpl implements InventorySystem {
         Producto productoVinculado = null;
 
         //Actualizo el precio del oldEntidadInterno con el precio del oldEntidadInterno si es que existe
-        if(newEntidadInterno.getDistribuidoraReferencia() != null){
+        if(newEntidadInterno.getDistribuidoraReferencia() != null
+                && oldEntidadInterno.getDistribuidoraReferencia() != null) {
             if (!oldEntidadInterno.getDistribuidoraReferencia().getCodigo()
                     .equalsIgnoreCase(newEntidadInterno.getDistribuidoraReferencia().getCodigo())
-                && !oldEntidadInterno.getCodigoReferencia()
+                    && !oldEntidadInterno.getCodigoReferencia()
                     .equalsIgnoreCase(newEntidadInterno.getCodigoReferencia())){
                 String distribuidoraCodigo = newEntidadInterno.getDistribuidoraReferencia().getCodigo();
                 String idReferencia = newEntidadInterno.getCodigoReferencia();
