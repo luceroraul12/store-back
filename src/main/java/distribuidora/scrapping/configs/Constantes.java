@@ -19,4 +19,5 @@ public class Constantes {
 	public static final List<String> DISTRIBUIDORAS_SIN_USO = Arrays.asList(
 		LV_DISTRIBUIDORA_MELAR
 	);
+    public static final String LV_CATEGORIAS_CEREALES = "CEREALES";
 }
