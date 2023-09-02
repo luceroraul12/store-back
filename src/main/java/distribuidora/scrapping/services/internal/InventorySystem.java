@@ -3,7 +3,7 @@ package distribuidora.scrapping.services.internal;
 import java.util.List;
 
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.dto.ProductoInternoDto;
+import distribuidora.scrapping.dto.ProductoInternoDto;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.entities.ProductoInterno;

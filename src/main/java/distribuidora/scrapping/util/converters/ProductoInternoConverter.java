@@ -4,7 +4,7 @@ import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.entities.dto.ProductoInternoDto;
+import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.services.general.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +52,7 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 		dto.setPrecioTransporte(entidad.getPrecioTransporte());
 		dto.setPrecioEmpaquetado(entidad.getPrecioEmpaquetado());
 		dto.setPorcentajeGanancia(entidad.getPorcentajeGanancia());
+		dto.setIsUnit(entidad.getIsUnit());
 		return dto;
 	}
 
@@ -64,7 +65,12 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 				.id(dto.getId())
 				.nombre(dto.getNombre())
 				.descripcion(dto.getDescripcion())
-				.precio(dto.getPrecio() != null ? dto.getPrecio() : 0.0)
+				.precio(dto.getPrecio() != null
+						? dto.getPrecio()
+						: 0.0)
+				.isUnit(dto.getIsUnit() != null
+						? dto.getIsUnit()
+						: true)
 				.build();
 
 		// si se le pasa el codigo de la distribuidora

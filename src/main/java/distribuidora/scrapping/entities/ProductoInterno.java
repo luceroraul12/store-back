@@ -45,10 +45,12 @@ public class ProductoInterno {
 	private Double precioEmpaquetado;
 	@Column(name = "porcentaje_ganancia")
 	private Double porcentajeGanancia;
+	@Column(name = "is_unit", nullable = false)
+	private Boolean isUnit;
 	
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion, Double precio, String codigoReferencia,
-			LookupValor distribuidoraReferencia, Date fechaCreacion, Date fechaActualizacion) {
+			LookupValor distribuidoraReferencia, Date fechaCreacion, Date fechaActualizacion, Boolean isUnit) {
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -57,5 +59,6 @@ public class ProductoInterno {
 		this.distribuidoraReferencia = distribuidoraReferencia;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
+		this.isUnit = isUnit;
 	}
 }

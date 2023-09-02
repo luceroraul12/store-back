@@ -1,6 +1,6 @@
 package distribuidora.scrapping.controller;
 
-import distribuidora.scrapping.entities.dto.ProductoInternoDto;
+import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import org.springframework.beans.factory.annotation.Autowired;

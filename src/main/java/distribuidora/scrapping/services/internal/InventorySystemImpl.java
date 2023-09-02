@@ -8,7 +8,7 @@ import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.entities.dto.ProductoInternoDto;
+import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.ProductoServicio;
@@ -134,6 +134,13 @@ public class InventorySystemImpl implements InventorySystem {
                 newEntidadInterno.setCodigoReferencia(productoVinculado.getId());
             }
         }
+        //validacion del tipo de unidad
+        newEntidadInterno.setIsUnit(
+                dto.getIsUnit() != null
+                        ? dto.getIsUnit()
+                        : newEntidadInterno.getIsUnit()
+        );
+
         newEntidadInterno.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
         verificaryActualizarFechaModificacio(oldEntidadInterno, newEntidadInterno);
 

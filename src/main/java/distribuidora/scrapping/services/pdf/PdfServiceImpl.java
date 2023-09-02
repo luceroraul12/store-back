@@ -6,7 +6,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import distribuidora.scrapping.entities.LookupValor;
-import distribuidora.scrapping.entities.dto.ProductoInternoDto;
+import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

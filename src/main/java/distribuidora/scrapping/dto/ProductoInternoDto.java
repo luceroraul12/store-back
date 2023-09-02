@@ -1,4 +1,4 @@
-package distribuidora.scrapping.entities.dto;
+package distribuidora.scrapping.dto;
 
 import distribuidora.scrapping.entities.LookupValor;
 import lombok.*;
@@ -25,4 +25,5 @@ public class ProductoInternoDto {
 	private Double precioTransporte;
 	private Double precioEmpaquetado;
 	private Double porcentajeGanancia;
+	private Boolean isUnit;
 }
