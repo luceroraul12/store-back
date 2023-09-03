@@ -36,7 +36,6 @@ public class GeneradorDeDocumentosConcurrente implements Callable<List<Document>
         List<Document> documentosPorHilo = new ArrayList<>();
         for (int i = indiceInicial; i <= indiceFinal; i++) {
             try {
-                System.out.println(url+i);
                 documentosPorHilo.add(Jsoup.connect(url+i).get());
             } catch (Exception e) {
                 throw new RuntimeException(e);

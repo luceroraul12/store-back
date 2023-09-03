@@ -40,7 +40,6 @@ class DonGasparWebScrappingServicioTest {
         boolean existDocument = false;
         int index = 0;
         while (!existDocument & index != tries){
-            System.out.println("intento"+ index);
             document = Jsoup.connect("https://pidorapido.com/dongasparsj")
                     .timeout(0)
                     .execute()

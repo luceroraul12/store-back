@@ -62,10 +62,8 @@ public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad>{
             marca = row.getCell(5).toString();
         }
 
-//        System.out.println("cantidad de celdas:" + cantidadCeldas + " - " + "indice celda precio:" + indiceInicioCeldaPrecio);
         Boolean estaDisponible = row.getCell(indiceInicioCeldaPrecio).getCellType().equals(CellType.NUMERIC);
         if (estaDisponible){
-            System.out.println(row.getCell(indiceInicioCeldaPrecio).toString());
             precioLista = row.getCell(indiceInicioCeldaPrecio).getNumericCellValue();
             try{
                 precioPrimero = row.getCell(indiceInicioCeldaPrecio+1).getNumericCellValue();
