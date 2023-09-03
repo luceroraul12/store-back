@@ -107,3 +107,35 @@ insert into lookup_valor(lookup_tipo_id, codigo, descripcion) values
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'HIERBAS_MEDICINALES', 		'HIERBAS MEDICINALES'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'FRUTOS_SECOS', 			'FRUTOS SECOS'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'HARINAS', 					'HARINAS');
+
+--agrego las columnas extras para los productos
+alter table productos_internos
+	add precio_transporte float,
+	add precio_empaquetado float,
+	add porcentaje_ganancia float;
+
+--agrego una columna extra a lookup_valor llamada valor que va a ser util cuando un lookup ademas de tener una descripcion textual deba contener una equivalencia numerica o de algun tipo
+alter table lookup_valor
+	add valor varchar;
+
+--agrego lookup tipo para medidas de ventas
+insert into lookup_tipo(codigo, descripcion) values
+('MEDIDAS_VENTAS','Medidas para ventas');
+
+--agrego lookup valores para medidas de ventas
+do $$
+	declare lookupTipoId int := (select lt.id from lookup_tipo lt where lt.codigo = 'MEDIDAS_VENTAS');
+begin
+	insert into lookup_valor(lookup_tipo_id, codigo, descripcion, valor) values
+	(lookupTipoId, 'MEDIDAS_VENTAS_50G','x50gr','0.05'),
+	(lookupTipoId, 'MEDIDAS_VENTAS_100G','x100gr','0.1'),
+	(lookupTipoId, 'MEDIDAS_VENTAS_250G','x250gr','0.25'),
+	(lookupTipoId, 'MEDIDAS_VENTAS_500G','x500gr','0.5'),
+	(lookupTipoId, 'MEDIDAS_VENTAS_1000G','x1kg','1'),
+	(lookupTipoId, 'MEDIDAS_VENTAS_1U','Unidad','1');
+end $$;
+
+-- agrego columna para indicar el tipo de medida unidad o fraccion de cada producto_interno
+alter table productos_internos
+	add is_unit bool not null default true;
+
