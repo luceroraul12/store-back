@@ -1,29 +1,58 @@
-version: "3.3"
+version: "3.8"
 services:
 #  buscador-ui: es el proyecto de Angular
   buscador-ui:
-    image: pasionaria-buscador
+    image: front-parcial
     ports:
       - 4200:80
-# es una imagen base de mongo para almacenar algunos datos
+    networks:
+      pasionaria_network:
+        aliases:
+          - buscador-ui
+  # es una imagen base de mongo para almacenar algunos datos
   buscador-mongo:
-    container_name: "mongodb"
     image: mongo
     ports:
       - 27017:27017
-# es un serviccio externo para simulario navegadores o hacer pruebas
-  buscador-selenium:
-    container_name: "firefox"
-    image: selenium/standalone-firefox
+    networks:
+      pasionaria_network:
+        aliases:
+          - buscador-mongo
+  # es una imagen de postgresql para almacenar toda la data referida al proyecto y que sigue una estructura en concreto
+  buscador-db:
+    image: postgres:alpine3.17
+    environment:
+      - POSTGRES_PASSWORD=homito
     ports:
-      - 4444:4444
+      - 6500:5432
+    networks:
+      pasionaria_network:
+        aliases:
+          - buscador-db
 #  buscador-api: es el proyecto Java Spring Boot
   buscador-api:
-    image: pasionaria-buscador-api
+    image: app-parcial
     ports:
       - 8080:8080
-# la app de java necesita hacer comprobaciones previas en la base de datos y descargar info de internet, por lo tanto
-# hago que este contenedor solo sea ejecutado luego de la base mongo y selenium
+    environment:
+#      postgresql
+      SPRING_DATASOURCE_URL: jdbc:postgresql://buscador-db/pasionaria
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: homito
+#      mongodb
+      SPRING_DATA_MONGODB_DATABASE: pasionaria
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_URI: mongodb://buscador-mongo/docker-db
+    networks:
+      pasionaria_network:
+        aliases:
+          - buscador-api
     depends_on:
       - buscador-mongo
-      - buscador-selenium
+      - buscador-db
+networks:
+  pasionaria_network:
+    name: pasionaria_net
+    driver: bridge
+    ipam:
+      driver: default
