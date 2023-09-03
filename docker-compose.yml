@@ -9,6 +9,8 @@ services:
       pasionaria_network:
         aliases:
           - buscador-ui
+    depends_on:
+      - buscador-api
   # es una imagen base de mongo para almacenar algunos datos
   buscador-mongo:
     image: mongo
