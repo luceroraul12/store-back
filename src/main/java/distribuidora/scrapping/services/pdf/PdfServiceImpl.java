@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.dto.ProductoInternoDto;
+import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,13 +129,21 @@ public class PdfServiceImpl implements PdfService {
                         : p.getNombre();
                 listItem.add(label);
                 listItem.add(leader);
-                listItem.add(String.format("ARS %s", p.getPrecio()));
+                listItem.add(String.format("ARS %s", generatePrecio(p)));
                 list.add(listItem);
             }
             document.add(list);
 
 
         }
+    }
+
+    private String generatePrecio(ProductoInternoDto p) {
+        double precio = p.getPrecio() != null ? p.getPrecio() : 0.0;
+        double transporte = p.getPrecioTransporte() != null ? p.getPrecioTransporte() : 0.0;
+        double empaquetado = p.getPrecioEmpaquetado() != null ? p.getPrecioEmpaquetado() : 0.0;
+        double ganancia = ((p.getPorcentajeGanancia() != null ? p.getPorcentajeGanancia() : 0.0) / 100) * precio;
+        return String.valueOf(precio + transporte + empaquetado + ganancia);
     }
 
     private static void addEmptyLine(Paragraph paragraph, int number) {
