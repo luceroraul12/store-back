@@ -3,19 +3,20 @@ package distribuidora.scrapping.services.pdf;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
+import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.dto.ProductoInternoDto;
-import distribuidora.scrapping.entities.ProductoInterno;
+import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,6 +27,9 @@ public class PdfServiceImpl implements PdfService {
 
     @Autowired
     private InventorySystem inventorySystemService;
+
+    @Autowired
+    private CategoryHasUnitRepository categoryHasUnitRepository;
 
     @Override
     public void generatePdf(HttpServletResponse response) throws IOException, DocumentException {
@@ -102,6 +106,9 @@ public class PdfServiceImpl implements PdfService {
 
     @Override
     public void addContent(Document document) throws DocumentException {
+        Map<LookupValor, List<CategoryHasUnit>> categoryHasUnitListByCategory = categoryHasUnitRepository.findAll().stream()
+                .collect(Collectors.groupingBy(CategoryHasUnit::getCategory));
+
         Paragraph title = new Paragraph("Categorias".toUpperCase(),subFont);
         title.setAlignment(Element.ALIGN_CENTER);
 
@@ -119,31 +126,71 @@ public class PdfServiceImpl implements PdfService {
             java.util.List<ProductoInternoDto> productList = entry.getValue();
             productList.sort((a,b) -> a.getNombre().compareTo(b.getNombre()));
 
-            Paragraph category = new Paragraph(lvCategory.getDescripcion(), catFont);
-            document.add(category);
-            List list = new List();
-            for (ProductoInternoDto p : productList) {
-                ListItem listItem = new ListItem();
-                String label = StringUtils.isNotEmpty(p.getDescripcion())
-                        ? String.format("%s (%s)", p.getNombre(), p.getDescripcion())
-                        : p.getNombre();
-                listItem.add(label);
-                listItem.add(leader);
-                listItem.add(String.format("ARS %s", generatePrecio(p)));
-                list.add(listItem);
+            Paragraph category = new Paragraph("SIN UNIT", catFont);
+            com.itextpdf.text.List list = new com.itextpdf.text.List();
+            if (!categoryHasUnitListByCategory.containsKey(lvCategory)){
+                category = new Paragraph(lvCategory.getDescripcion()+" unidad", catFont);
+                for (ProductoInternoDto p : productList) {
+                    ListItem listItem = new ListItem();
+                    String label = StringUtils.isNotEmpty(p.getDescripcion())
+                            ? String.format("%s (%s)", p.getNombre(), p.getDescripcion())
+                            : p.getNombre();
+                    listItem.add(label);
+                    listItem.add(leader);
+                    listItem.add(String.format("ARS %s", generatePrecio(p)));
+                    list.add(listItem);
+                }
+                document.add(category);
+                document.add(list);
+            } else if(categoryHasUnitListByCategory.containsKey(lvCategory) && categoryHasUnitListByCategory.get(lvCategory).size() == 1) {
+                String unit = categoryHasUnitListByCategory.get(lvCategory).get(0).getUnit().getDescripcion();
+                category = new Paragraph(lvCategory.getDescripcion()+" "+unit, catFont);
+                for (ProductoInternoDto p : productList) {
+                    ListItem listItem = new ListItem();
+                    String label = StringUtils.isNotEmpty(p.getDescripcion())
+                            ? String.format("%s (%s)", p.getNombre(), p.getDescripcion())
+                            : p.getNombre();
+                    listItem.add(label);
+                    listItem.add(leader);
+                    listItem.add(String.format("ARS %s", generatePrecio(p)));
+                    list.add(listItem);
+                }
+                document.add(category);
+                document.add(list);
+            } else if(categoryHasUnitListByCategory.containsKey(lvCategory) && categoryHasUnitListByCategory.get(lvCategory).size() > 1) {
+                category = new Paragraph(lvCategory.getDescripcion(), catFont);
+                for (ProductoInternoDto p : productList) {
+                    for (CategoryHasUnit chu : categoryHasUnitListByCategory.get(lvCategory)) {
+                        ListItem listItem = new ListItem();
+                        String unitName = chu.getUnit().getDescripcion();
+                        Double unitPercentage = chu.getUnit().getValor();
+                        String label = (StringUtils.isNotEmpty(p.getDescripcion())
+                                ? String.format("%s (%s)", p.getNombre(), p.getDescripcion())
+                                : p.getNombre()) + " " + unitName;
+                        listItem.add(label);
+                        listItem.add(leader);
+                        listItem.add(String.format("ARS %s", generatePrecio(p, unitPercentage)));
+                        list.add(listItem);
+                    }
+                }
+                document.add(category);
+                document.add(list);
             }
-            document.add(list);
 
 
         }
     }
 
-    private String generatePrecio(ProductoInternoDto p) {
+    private Double generatePrecio(ProductoInternoDto p) {
         double precio = p.getPrecio() != null ? p.getPrecio() : 0.0;
         double transporte = p.getPrecioTransporte() != null ? p.getPrecioTransporte() : 0.0;
         double empaquetado = p.getPrecioEmpaquetado() != null ? p.getPrecioEmpaquetado() : 0.0;
         double ganancia = ((p.getPorcentajeGanancia() != null ? p.getPorcentajeGanancia() : 0.0) / 100) * precio;
-        return String.valueOf(precio + transporte + empaquetado + ganancia);
+        return precio + transporte + empaquetado + ganancia;
+    }
+
+    private Double generatePrecio(ProductoInternoDto p, Double unitPercentage){
+        return generatePrecio(p) * unitPercentage;
     }
 
     private static void addEmptyLine(Paragraph paragraph, int number) {
