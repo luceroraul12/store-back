@@ -2,8 +2,10 @@ package distribuidora.scrapping.controller;
 
 import com.itextpdf.text.DocumentException;
 import distribuidora.scrapping.dto.ProductoInternoDto;
+import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.internal.InventorySystem;
+import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
 import distribuidora.scrapping.services.pdf.PdfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -29,6 +31,9 @@ public class InventorySystemController {
 
 	@Autowired
 	InventorySystem service;
+
+	@Autowired
+	ProductoInternoStatusService productoInternoStatusService;
 
 	@Autowired
 	PdfService pdfService;
@@ -75,8 +80,16 @@ public class InventorySystemController {
 		String headerValue = "attachment; filename=pasionaria-catalogo" + currentDateTime + ".pdf";
 		response.setHeader(headerKey, headerValue);
 
-
 		pdfService.generatePdf(response);
+	}
 
+	@GetMapping("status")
+	List<ProductoInternoStatusDto> getStatus(){
+		return productoInternoStatusService.getAll();
+	}
+
+	@PutMapping("status")
+	ProductoInternoStatusDto updateStatus(@RequestBody ProductoInternoStatusDto dto) {
+		return productoInternoStatusService.update(dto);
 	}
 }
