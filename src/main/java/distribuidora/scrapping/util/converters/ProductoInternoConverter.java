@@ -52,7 +52,6 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 		dto.setPrecioTransporte(entidad.getPrecioTransporte());
 		dto.setPrecioEmpaquetado(entidad.getPrecioEmpaquetado());
 		dto.setPorcentajeGanancia(entidad.getPorcentajeGanancia());
-		dto.setIsUnit(entidad.getIsUnit());
 		return dto;
 	}
 
@@ -68,9 +67,6 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 				.precio(dto.getPrecio() != null
 						? dto.getPrecio()
 						: 0.0)
-				.isUnit(dto.getIsUnit() != null
-						? dto.getIsUnit()
-						: true)
 				.build();
 
 		// si se le pasa el codigo de la distribuidora

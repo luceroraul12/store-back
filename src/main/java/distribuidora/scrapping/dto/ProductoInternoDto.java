@@ -25,5 +25,4 @@ public class ProductoInternoDto {
 	private Double precioTransporte;
 	private Double precioEmpaquetado;
 	private Double porcentajeGanancia;
-	private Boolean isUnit;
 }

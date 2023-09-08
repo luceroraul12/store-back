@@ -163,12 +163,6 @@ public class InventorySystemImpl implements InventorySystem {
                 newEntidadInterno.setCodigoReferencia(productoVinculado.getId());
             }
         }
-        //validacion del tipo de unidad
-        newEntidadInterno.setIsUnit(
-                dto.getIsUnit() != null
-                        ? dto.getIsUnit()
-                        : newEntidadInterno.getIsUnit()
-        );
 
         newEntidadInterno.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
         verificaryActualizarFechaModificacio(oldEntidadInterno, newEntidadInterno);
