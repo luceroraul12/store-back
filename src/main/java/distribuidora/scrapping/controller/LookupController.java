@@ -1,5 +1,6 @@
 package distribuidora.scrapping.controller;
 
+import distribuidora.scrapping.dto.LookupValueDto;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.services.general.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class LookupController {
     LookupService lookupService;
 
     @GetMapping
-    public List<LookupValor> getLookupValoresByTipo(@RequestParam String codigoTipo){
-        return lookupService.getLookupValoresPorLookupTipoCodigo(codigoTipo);
+    public List<LookupValueDto> getLookupValoresByTipo(@RequestParam String code){
+        return lookupService.getLookupValueDtoListByLookupTypeCode(code);
     }
 }

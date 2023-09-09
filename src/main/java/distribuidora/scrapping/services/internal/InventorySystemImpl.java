@@ -5,11 +5,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.repositories.ProductoRepository;
+import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.ProductoServicio;
 import distribuidora.scrapping.services.general.LookupService;
@@ -29,6 +31,9 @@ public class InventorySystemImpl implements InventorySystem {
 
     @Autowired
     private ProductoRepository productoRepository;
+    
+    @Autowired
+    private CategoryHasUnitRepository categoryHasUnitRepository;
 
     @Autowired
     private ProductoInternoConverter productoInternoConverter;
@@ -240,5 +245,10 @@ public class InventorySystemImpl implements InventorySystem {
         } else {
             newEntidadInterno.setFechaActualizacion(oldEntidadInterno.getFechaActualizacion());
         }
-    };
+    }
+
+	@Override
+	public List<CategoryHasUnit> getCategoryDtoList() {
+		return categoryHasUnitRepository.findAll();
+	};
 }
