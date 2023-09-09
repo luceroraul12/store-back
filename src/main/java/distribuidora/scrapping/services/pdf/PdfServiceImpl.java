@@ -250,12 +250,12 @@ public class PdfServiceImpl implements PdfService {
 				.equals(Constantes.LV_MEDIDAS_VENTAS_1U);
 		// si la categoria esta marcada como unidad solo retorno el precio
 		if (isCategoryUnit) {
-			result = basePrice * Double.parseDouble(lvUnit.getValor());
+			result = basePrice;
 			// en caso contrario tengo que reducir el precio a la fraccion
 			// especificada por
 			// la unidad
 		} else {
-			result = basePrice;
+			result = basePrice * Double.parseDouble(lvUnit.getValor());;
 		}
 		return result;
 	}
