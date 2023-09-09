@@ -1,6 +1,30 @@
 package distribuidora.scrapping.services.pdf;
 
-import com.itextpdf.text.*;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.itextpdf.text.Anchor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.ListItem;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
@@ -12,26 +36,6 @@ import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
 import distribuidora.scrapping.services.internal.InventorySystem;
-import io.jsonwebtoken.lang.Collections;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 @Service
 public class PdfServiceImpl implements PdfService {
@@ -205,7 +209,8 @@ public class PdfServiceImpl implements PdfService {
 	private String generateProductName(ProductoInternoStatus productStatus,
 			LookupValor lvUnit) {
 		String result;
-		String productName = org.springframework.util.StringUtils.capitalize(productStatus.getProductoInterno().getNombre());
+		String productName = org.springframework.util.StringUtils
+				.capitalize(productStatus.getProductoInterno().getNombre());
 		String description = productStatus.getProductoInterno()
 				.getDescripcion();
 		boolean isCategoryUnit = lvUnit.getCodigo()
