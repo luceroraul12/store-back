@@ -22,6 +22,9 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 
 	@Autowired
 	ProductoRepository productoRepository;
+	
+	@Autowired
+	LookupValueDtoConverter lookupValueDtoConverter;
 
 	@Override
 	public ProductoInternoDto toDto(ProductoInterno entidad) {
@@ -36,12 +39,12 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 				.build();
 
 		if (entidad.getLvCategoria() != null){
-			dto.setLvCategoria(entidad.getLvCategoria());
+			dto.setCategory(lookupValueDtoConverter.toDto(entidad.getLvCategoria()));
 		} else {
 			LookupValor lv = new LookupValor();
 			lv.setCodigo(Constantes.LV_CATEGORIAS_CEREALES);
 			lv.setDescripcion(Constantes.LV_CATEGORIAS_CEREALES_DESCRIPTION);
-			dto.setLvCategoria(lv);
+			dto.setCategory(lookupValueDtoConverter.toDto(lv));
 		}
 
 		if (entidad.getDistribuidoraReferencia() != null){
@@ -76,8 +79,8 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 			entidad.setDistribuidoraReferencia(mapDistribuidoras.get(distribuidoraCodigo));
 			entidad.setCodigoReferencia(dto.getCodigoReferencia());
 		}
-		if(dto.getLvCategoria() != null){
-			LookupValor lvCategoria = lookupService.getlookupValorPorCodigo(dto.getLvCategoria().getCodigo());
+		if(dto.getCategory() != null){
+			LookupValor lvCategoria = lookupService.getlookupValorPorCodigo(dto.getCategory().getCode());
 			entidad.setLvCategoria(lvCategoria);
 		} else {
 			LookupValor lvCategoria = lookupService.getlookupValorPorCodigo(Constantes.LV_CATEGORIAS_CEREALES);
