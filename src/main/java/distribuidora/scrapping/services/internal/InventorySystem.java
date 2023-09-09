@@ -2,7 +2,9 @@ package distribuidora.scrapping.services.internal;
 
 import java.util.List;
 
+import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import org.springframework.stereotype.Service;
 
@@ -33,4 +35,6 @@ public interface InventorySystem {
 	List<ProductoInternoDto> getProductos();
 
 	List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos);
+
+	List<CategoryHasUnitDto> getCategoryDtoList();
 }

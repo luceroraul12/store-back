@@ -1,8 +1,11 @@
 package distribuidora.scrapping.controller;
 
 import com.itextpdf.text.DocumentException;
+
+import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.dto.ProductoInternoStatusDto;
+import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
@@ -91,5 +94,10 @@ public class InventorySystemController {
 	@PutMapping("status")
 	ProductoInternoStatusDto updateStatus(@RequestBody ProductoInternoStatusDto dto) {
 		return productoInternoStatusService.update(dto);
+	}
+	
+	@GetMapping("categories")
+	List<CategoryHasUnitDto> getCategoryDtoList(){
+		return service.getCategoryDtoList();
 	}
 }

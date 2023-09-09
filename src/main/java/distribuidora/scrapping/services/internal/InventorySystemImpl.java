@@ -9,12 +9,14 @@ import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.ProductoInterno;
+import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.ProductoServicio;
 import distribuidora.scrapping.services.general.LookupService;
+import distribuidora.scrapping.util.converters.CategoryHasUnitDtoConverter;
 import distribuidora.scrapping.util.converters.ProductoInternoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,9 @@ public class InventorySystemImpl implements InventorySystem {
 
     @Autowired
     private ProductoServicio productoServicio;
+    
+    @Autowired
+    private CategoryHasUnitDtoConverter categoryHasUnitDtoConverter;
 
     @Override
     public int actualizarPreciosAutomatico() {
@@ -248,7 +253,7 @@ public class InventorySystemImpl implements InventorySystem {
     }
 
 	@Override
-	public List<CategoryHasUnit> getCategoryDtoList() {
-		return categoryHasUnitRepository.findAll();
+	public List<CategoryHasUnitDto> getCategoryDtoList() {
+		return categoryHasUnitDtoConverter.toDtoList(categoryHasUnitRepository.findAll());
 	};
 }
