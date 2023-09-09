@@ -39,8 +39,8 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 			dto.setLvCategoria(entidad.getLvCategoria());
 		} else {
 			LookupValor lv = new LookupValor();
-			lv.setCodigo("CEREALES");
-			lv.setDescripcion("CEREALES");
+			lv.setCodigo(Constantes.LV_CATEGORIAS_CEREALES);
+			lv.setDescripcion(Constantes.LV_CATEGORIAS_CEREALES_DESCRIPTION);
 			dto.setLvCategoria(lv);
 		}
 
