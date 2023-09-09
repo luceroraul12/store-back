@@ -15,9 +15,12 @@ public class LookupValor {
 	@Id
 	@Column(name = "id", nullable = false)
 	private Integer id;
+	@Column
 	private String codigo;
+	@Column
 	private String descripcion;
-	private Double valor;
+	@Column
+	private String valor;
 	@ManyToOne
 	@JoinColumn(name = "lookup_tipo_id")
 	private LookupTipo lookupTipo;

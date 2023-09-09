@@ -45,8 +45,6 @@ public class ProductoInterno {
 	private Double precioEmpaquetado;
 	@Column(name = "porcentaje_ganancia")
 	private Double porcentajeGanancia;
-	@Column(name = "is_unit", nullable = false)
-	private Boolean isUnit;
 	
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion, Double precio, String codigoReferencia,
@@ -59,6 +57,5 @@ public class ProductoInterno {
 		this.distribuidoraReferencia = distribuidoraReferencia;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
-		this.isUnit = isUnit;
 	}
 }
