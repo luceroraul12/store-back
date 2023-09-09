@@ -37,4 +37,8 @@ public interface InventorySystem {
 	List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos);
 
 	List<CategoryHasUnitDto> getCategoryDtoList();
+
+	CategoryHasUnitDto updateCategoryHasUnit(CategoryHasUnitDto dto);
+	
+	
 }

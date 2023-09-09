@@ -100,4 +100,9 @@ public class InventorySystemController {
 	List<CategoryHasUnitDto> getCategoryDtoList(){
 		return service.getCategoryDtoList();
 	}
+	
+	@PutMapping("categories")
+	CategoryHasUnitDto updateCategoryHasUnit(@RequestBody CategoryHasUnitDto dto){
+		return service.updateCategoryHasUnit(dto);
+	}
 }

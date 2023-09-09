@@ -116,25 +116,6 @@ public class InventorySystemImpl implements InventorySystem {
             }
         }
 
-//        // recorro los internos por que son los unicos que me interesan
-//        for (Map.Entry<String, Map<String, ProductoInterno>> mapInternoByDistribuidora : mapInterno.entrySet()) {
-//            Map<String, Producto> matchDistribuidora = mapEspecifico.getOrDefault(
-//                    mapInternoByDistribuidora.getKey(), null);
-//            if (!CollectionUtils.isEmpty(matchDistribuidora)) {
-//                for (Map.Entry<String, ProductoInterno> mapInternoCodigoReferenciaProducto : mapInternoByDistribuidora.getValue()
-//                        .entrySet()) {
-//                    Producto matchProducto = matchDistribuidora.get(
-//                            mapInternoCodigoReferenciaProducto.getKey());
-//                    if (matchProducto != null) {
-//                        Double precio = matchProducto.getPrecioPorCantidadEspecifica();
-//                        if (precio != null && precio > 0.0) {
-//                            mapInternoCodigoReferenciaProducto.getValue().setPrecio(precio);
-//                            mapInternoCodigoReferenciaProducto.getValue().setFechaActualizacion(new Date());
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
     @Override
     public ProductoInternoDto crearProducto(ProductoInternoDto dto) {
@@ -255,5 +236,11 @@ public class InventorySystemImpl implements InventorySystem {
 	@Override
 	public List<CategoryHasUnitDto> getCategoryDtoList() {
 		return categoryHasUnitDtoConverter.toDtoList(categoryHasUnitRepository.findAll());
+	}
+
+	@Override
+	public CategoryHasUnitDto updateCategoryHasUnit(CategoryHasUnitDto dto) {
+		CategoryHasUnit entity = categoryHasUnitRepository.save(categoryHasUnitDtoConverter.toEntidad(dto));
+		return categoryHasUnitDtoConverter.toDto(entity);
 	};
 }
