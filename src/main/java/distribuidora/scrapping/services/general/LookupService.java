@@ -9,7 +9,7 @@ public interface LookupService {
 
 	List<LookupValor> getLookupValoresPorLookupTipoCodigo(String codigo);
 
-    LookupValor getlookupValorPorCodigo(String categoriaCodigo);
+    LookupValor getLookupValueByCode(String code);
 
 	List<LookupValueDto> getLookupValueDtoListByLookupTypeCode(String code);
 }

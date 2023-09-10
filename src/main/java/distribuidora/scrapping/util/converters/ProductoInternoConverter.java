@@ -80,10 +80,10 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 			entidad.setCodigoReferencia(dto.getCodigoReferencia());
 		}
 		if(dto.getCategory() != null){
-			LookupValor lvCategoria = lookupService.getlookupValorPorCodigo(dto.getCategory().getCode());
+			LookupValor lvCategoria = lookupService.getLookupValueByCode(dto.getCategory().getCode());
 			entidad.setLvCategoria(lvCategoria);
 		} else {
-			LookupValor lvCategoria = lookupService.getlookupValorPorCodigo(Constantes.LV_CATEGORIAS_CEREALES);
+			LookupValor lvCategoria = lookupService.getLookupValueByCode(Constantes.LV_CATEGORIAS_CEREALES);
 			entidad.setLvCategoria(lvCategoria);
 		}
 		entidad.setPrecioTransporte(dto.getPrecioTransporte());

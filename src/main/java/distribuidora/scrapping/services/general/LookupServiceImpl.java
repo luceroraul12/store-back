@@ -25,7 +25,7 @@ public class LookupServiceImpl implements LookupService{
 	}
 
     @Override
-    public LookupValor getlookupValorPorCodigo(String categoriaCodigo) {
+    public LookupValor getLookupValueByCode(String categoriaCodigo) {
         return repository.getlookupValorPorCodigo(categoriaCodigo);
     }
 
