@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonGasparEntidad> {
@@ -24,7 +23,7 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
 
     @Override
     protected DonGasparEntidad obtenerProductosAPartirDeElements(Element elementProducto) {
-        List<DonGasparEntidad> productosGenerados = new ArrayList<>();
+        new ArrayList<>();
         String id = elementProducto.attr("id").toString();
         double precio;
         try {

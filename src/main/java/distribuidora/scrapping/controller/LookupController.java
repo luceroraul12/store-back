@@ -1,7 +1,6 @@
 package distribuidora.scrapping.controller;
 
 import distribuidora.scrapping.dto.LookupValueDto;
-import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.services.general.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

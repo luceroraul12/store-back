@@ -1,6 +1,5 @@
 package distribuidora.scrapping.dto;
 
-import distribuidora.scrapping.entities.LookupValor;
 import lombok.*;
 
 import java.util.Date;

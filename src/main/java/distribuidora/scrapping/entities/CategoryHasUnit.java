@@ -1,6 +1,5 @@
 package distribuidora.scrapping.entities;
 
-import distribuidora.scrapping.entities.LookupValor;
 import lombok.Getter;
 import lombok.Setter;
 

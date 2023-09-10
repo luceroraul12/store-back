@@ -1,6 +1,5 @@
 package distribuidora.scrapping.util.converters;
 
-import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import org.springframework.beans.factory.annotation.Autowired;

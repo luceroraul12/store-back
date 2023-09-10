@@ -12,9 +12,6 @@ import java.io.IOException;
  */
 @Service
 public class ActualizacionPorDocumentoServicio {
-    //TODO: en cuanto sean mas de dos distribuidora, hay que ver de usar rxjava para mantener el orden del servicio.
-    @Autowired
-    private IndiasExcelServicio indiasExcelServicio;
     @Autowired
     private Comunicador comunicador;
 

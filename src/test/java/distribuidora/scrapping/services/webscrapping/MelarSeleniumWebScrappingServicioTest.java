@@ -1,7 +1,6 @@
 package distribuidora.scrapping.services.webscrapping;
 
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.productos.especificos.MelarEntidad;
 import distribuidora.scrapping.util.MelarUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 

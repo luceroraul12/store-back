@@ -4,9 +4,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.CategoryHasUnit;
-import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.dto.CategoryHasUnitDto;
@@ -15,18 +13,13 @@ import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.ProductoServicio;
-import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.converters.CategoryHasUnitDtoConverter;
 import distribuidora.scrapping.util.converters.ProductoInternoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 @Service
 public class InventorySystemImpl implements InventorySystem {
-
-    @Autowired
-    private LookupService lookupService;
 
     @Autowired
     private ProductoInternoRepository productoInternoRepository;
@@ -75,10 +68,6 @@ public class InventorySystemImpl implements InventorySystem {
     @Override
     public void actualizarPrecioConProductosEspecificos(List<Producto> especificos,
                                                         List<ProductoInterno> internos) {
-        Map<String, LookupValor> mapDistribuidoras = lookupService.getLookupValoresPorLookupTipoCodigo(
-                Constantes.LV_DISTRIBUIDORAS).stream().collect(
-                Collectors.toMap(d -> d.getCodigo(), Function.identity()));
-
         // agrupo por distribuidora / codigo de referencia tanto interno como especifico
         Map<String, Map<String, Producto>> mapEspecifico = especificos.stream().collect(
                 Collectors.groupingBy(e -> e.getDistribuidoraCodigo(),
@@ -186,10 +175,6 @@ public class InventorySystemImpl implements InventorySystem {
 
     @Override
     public List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos) {
-        // Busco todos los productos por Id con un unico llamado
-        List<Integer> productoInternoIds = dtos.stream()
-                        .map(ProductoInternoDto::getId)
-                                .collect(Collectors.toList());
         List<ProductoInternoDto> resultado = new ArrayList<>();
         for (ProductoInternoDto dto : dtos) {
             resultado.add(modificarProducto(dto));

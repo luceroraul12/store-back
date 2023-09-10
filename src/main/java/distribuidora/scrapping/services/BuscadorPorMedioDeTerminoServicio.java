@@ -4,7 +4,6 @@ import distribuidora.scrapping.entities.Producto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;

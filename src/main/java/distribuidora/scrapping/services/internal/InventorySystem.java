@@ -2,7 +2,6 @@ package distribuidora.scrapping.services.internal;
 
 import java.util.List;
 
-import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;

@@ -1,7 +1,6 @@
 package distribuidora.scrapping.controller;
 
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.services.BuscadorPorMedioDeTerminoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

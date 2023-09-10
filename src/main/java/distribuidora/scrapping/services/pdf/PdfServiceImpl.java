@@ -35,13 +35,9 @@ import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
-import distribuidora.scrapping.services.internal.InventorySystem;
 
 @Service
 public class PdfServiceImpl implements PdfService {
-
-	@Autowired
-	private InventorySystem inventorySystemService;
 
 	@Autowired
 	private CategoryHasUnitRepository categoryHasUnitRepository;

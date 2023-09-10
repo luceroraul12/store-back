@@ -1,17 +1,10 @@
 package distribuidora.scrapping.security;
 
 import distribuidora.scrapping.security.entity.UsuarioDto;
-import distribuidora.scrapping.security.entity.UsuarioEntity;
-import distribuidora.scrapping.security.repository.UsuarioRepository;
-import distribuidora.scrapping.security.service.JwtUtilService;
 import distribuidora.scrapping.security.service.LoginService;
-import distribuidora.scrapping.security.service.ScrappingUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;

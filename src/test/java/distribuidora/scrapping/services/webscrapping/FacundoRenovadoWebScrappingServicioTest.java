@@ -1,9 +1,6 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.PeticionWebScrapping;
 import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
 import distribuidora.scrapping.util.FacundoUtil;
 import org.jsoup.Jsoup;
@@ -12,17 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
