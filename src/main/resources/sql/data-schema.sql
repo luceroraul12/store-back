@@ -1,6 +1,7 @@
 --creo la base de datos
 create database pasionaria;
 
+
 --creo tablas genericas
 create table lookup_tipo(
 	id serial not null primary key,
@@ -44,7 +45,8 @@ insert into lookup_valor(lookup_tipo_id, codigo, descripcion)
 		((select id from lookup_tipo lt where codigo = 'DISTRIBUIDORAS'), 'VILLARES', 'VILLARES'),
 		((select id from lookup_tipo lt where codigo = 'DISTRIBUIDORAS'), 'DON_GASPAR', 'DON GASPAR'),
 		((select id from lookup_tipo lt where codigo = 'DISTRIBUIDORAS'), 'MELAR', 'MELAR'),
-		((select id from lookup_tipo lt where codigo = 'DISTRIBUIDORAS'), 'INDIAS', 'INDIAS');
+		((select id from lookup_tipo lt where codigo = 'DISTRIBUIDORAS'), 'LA_GRANJA_DEL_CENTRO', 'LA GRANJA DEL CENTRO'),
+		((select id from lookup_tipo lt where codigo = 'DISTRIBUIDORAS'), 'INDIAS', 'INDIAS');   
 
 --creo tablas para seguridad y usuarios
 create table perfiles(
@@ -95,12 +97,14 @@ insert into lookup_valor(lookup_tipo_id, codigo, descripcion) values
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'PERFUMERIA', 				'PERFUMERIA'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'COMPLEMENTOS_ECOLOGICOS', 	'COMPLEMENTOS ECOLOGICOS'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'COMPLEMENTO_DIARIA', 		'COMPLEMENTO DIARIA'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'COSMETICA_NATURAL', 		'COSMETICA NATURAL'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'POMADAS_MEDICINALES', 		'POMADAS MEDICINALES'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'REUTILIZABLES', 			'REUTILIZABLES'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'CONGELADOS', 				'CONGELADOS'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'LECHES_VEGETALES', 		'LECHES VEGETALES'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'REPOSTERIA', 				'REPOSTERIA'),
-	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'PLANIFICADOS', 			'PLANIFICADOS'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'PANIFICADOS', 				'PANIFICADOS'),
+	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'PERMITIDOS', 				'PERMITIDOS	'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'VINOS_ORGANICOS', 			'VINOS ORGANICOS'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'GALLETERIA_SIN_TACC', 		'GALLETERIA SIN TACC'),
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'SNACK', 					'SNACK'),
@@ -109,22 +113,22 @@ insert into lookup_valor(lookup_tipo_id, codigo, descripcion) values
 	((SELECT id FROM lookup_tipo WHERE codigo = 'CATEGORIA_DIETETICA'), 'HARINAS', 					'HARINAS');
 
 --agrego las columnas extras para los productos
-alter table productos_internos
+alter table productos_internos 
 	add precio_transporte float,
 	add precio_empaquetado float,
 	add porcentaje_ganancia float;
-
+	
 --agrego una columna extra a lookup_valor llamada valor que va a ser util cuando un lookup ademas de tener una descripcion textual deba contener una equivalencia numerica o de algun tipo
-alter table lookup_valor
+alter table lookup_valor 
 	add valor varchar;
-
+	
 --agrego lookup tipo para medidas de ventas
 insert into lookup_tipo(codigo, descripcion) values
 ('MEDIDAS_VENTAS','Medidas para ventas');
 
 --agrego lookup valores para medidas de ventas
 do $$
-	declare lookupTipoId int := (select lt.id from lookup_tipo lt where lt.codigo = 'MEDIDAS_VENTAS');
+	declare lookupTipoId int := (select lt.id from lookup_tipo lt where lt.codigo = 'MEDIDAS_VENTAS'); 
 begin
 	insert into lookup_valor(lookup_tipo_id, codigo, descripcion, valor) values
 	(lookupTipoId, 'MEDIDAS_VENTAS_50G','x50gr','0.05'),
@@ -135,7 +139,142 @@ begin
 	(lookupTipoId, 'MEDIDAS_VENTAS_1U','Unidad','1');
 end $$;
 
--- agrego columna para indicar el tipo de medida unidad o fraccion de cada producto_interno
-alter table productos_internos
-	add is_unit bool not null default true;
+-- agrego usuarios por defecto
+insert into usuarios (email, telefono, perfil_id, password_hash, usuario) values
+	('luceroraul12@gmail.com', '2657678661', 1, '$2a$12$yd3lWqNjwKVeVYzpziI/D.KA1li.YpfC8pxc4erMQlV06M4eRDBJy', 'homitowen'),
+	('pasionaria@gmail.com', '2664312837', 1, '$2a$12$5n.98mnq24l0Axnqa8d3xua05n4sunJRdkX/R5dzU8kjwZaV1ZYF6', 'pasionaria_juan');
+
+-- SCRIPT DE UNIDADES
+-- creo tabla de lookups para las unidades por categoria
+create table lv_category_has_lv_unit (
+	id serial primary key,
+	lv_category_id 	int not null,
+	lv_unit_id 		int not null,
+	constraint lv_category_fk foreign key (lv_category_id) references lookup_valor(id),
+	constraint lv_unit_fk foreign key (lv_unit_id) references lookup_valor(id),
+	constraint lv_category_has_lv_unit_row_unique unique (lv_category_id, lv_unit_id)
+);
+
+do $$
+	declare u50g int 	= (select id from lookup_valor lv where lv.codigo = 'MEDIDAS_VENTAS_50G');
+	declare u100g int 	= (select id from lookup_valor lv where lv.codigo = 'MEDIDAS_VENTAS_100G');
+	declare u250g int 	= (select id from lookup_valor lv where lv.codigo = 'MEDIDAS_VENTAS_250G');
+	declare u500g int 	= (select id from lookup_valor lv where lv.codigo = 'MEDIDAS_VENTAS_500G');
+	declare u1000g int 	= (select id from lookup_valor lv where lv.codigo = 'MEDIDAS_VENTAS_1000G');
+	declare unidad int 	= (select id from lookup_valor lv where lv.codigo = 'MEDIDAS_VENTAS_1U');
+
+	declare cereales 			        int = (select id from lookup_valor lv where lv.codigo = 'CEREALES');
+	declare especies 			        int = (select id from lookup_valor lv where lv.codigo = 'ESPECIES');
+	declare semillas 			        int = (select id from lookup_valor lv where lv.codigo = 'SEMILLAS');
+	declare legumbres 			        int = (select id from lookup_valor lv where lv.codigo = 'LEGUMBRES');
+	declare cosmeticaNatural 	        int = (select id from lookup_valor lv where lv.codigo = 'COSMETICA_NATURAL');
+	declare congelados 			        int = (select id from lookup_valor lv where lv.codigo = 'CONGELADOS');
+	declare panificados 		        int = (select id from lookup_valor lv where lv.codigo = 'PANIFICADOS');
+	declare vinosOrganicos 		        int = (select id from lookup_valor lv where lv.codigo = 'VINOS_ORGANICOS');
+	declare permitidos 			        int = (select id from lookup_valor lv where lv.codigo = 'PERMITIDOS');
+	declare lechesVegetales 	        int = (select id from lookup_valor lv where lv.codigo = 'LECHES_VEGETALES');
+	declare reposteria 			        int = (select id from lookup_valor lv where lv.codigo = 'REPOSTERIA');
+	declare galleteriaSinTacc 	        int = (select id from lookup_valor lv where lv.codigo = 'GALLETERIA_SIN_TACC');
+	declare hierbasMedicinales 	        int = (select id from lookup_valor lv where lv.codigo = 'HIERBAS_MEDICINALES');
+	declare perfumeria		 	        int = (select id from lookup_valor lv where lv.codigo = 'PERFUMERIA');
+	declare complementosEcologicos 		int = (select id from lookup_valor lv where lv.codigo = 'COMPLEMENTOS_ECOLOGICOS');
+	declare complementoDiaria 			int = (select id from lookup_valor lv where lv.codigo = 'COMPLEMENTO_DIARIA');
+	declare reutilizables	 			int = (select id from lookup_valor lv where lv.codigo = 'REUTILIZABLES');
+	declare pomadasMedicinales 			int = (select id from lookup_valor lv where lv.codigo = 'POMADAS_MEDICINALES');
+	declare snack 						int = (select id from lookup_valor lv where lv.codigo = 'SNACK');
+	declare frutosSecos 				int = (select id from lookup_valor lv where lv.codigo = 'FRUTOS_SECOS');
+	declare harinas 					int = (select id from lookup_valor lv where lv.codigo = 'HARINAS');
+	
+begin
+	--agrego todas las relaciones
+insert into lv_category_has_lv_unit (lv_category_id, lv_unit_id) values
+	(cereales, 			     u250g),
+	(cereales, 			     u50g),
+	(especies, 			     u50g),
+	(semillas, 			     u100g),
+	(legumbres, 		     u500g),
+	(legumbres, 		     u100g),
+	(cosmeticaNatural, 	     unidad),
+	(congelados, 		     unidad),
+	(panificados, 		     unidad),
+	(vinosOrganicos, 	     unidad),
+	(permitidos, 		     unidad),
+	(lechesVegetales, 	     unidad),
+	(reposteria, 		     u100g),
+	(galleteriaSinTacc,      unidad),
+	(hierbasMedicinales,     u50g),
+	(perfumeria, 			 unidad),
+	(complementosEcologicos, unidad),
+	(complementoDiaria, 	 unidad),
+	(reutilizables, 	 	 unidad),
+	(pomadasMedicinales, 	 unidad),
+	(snack, 				 unidad),
+	(frutosSecos, 			 u50g),
+	(harinas, 				 u500g),
+	(harinas, 				 u100g);
+end $$
+
+-- SCRIPT DE ESTADOS DE PRODUCTOS
+create table productos_internos_status(
+	id serial primary key,
+	producto_interno_id int not null unique,
+	is_unit bool not null default true,
+	has_stock bool not null default true,
+	constraint productos_internos_fk foreign key (producto_interno_id) references productos_internos(id)
+);
+
+insert into productos_internos_status (producto_interno_id)
+	select id from productos_internos;
+	
+-- trigger cuando se crea un nuevo producto interno
+create or replace function productos_internos_new_status_fn()
+	returns trigger 
+	language plpgsql
+as $$
+	declare isUnit bool = (
+		select count(*) > 0 from lv_category_has_lv_unit lchlu 
+			inner join lookup_valor lvUnit on lvunit.id = lchlu.lv_unit_id  
+		where lv_category_id = new.lv_categoria_id
+			and lvunit.codigo = 'MEDIDAS_VENTAS_1U'
+	);
+begin 
+	insert into productos_internos_status (producto_interno_id, is_unit) 
+		values (new.id, isUnit);
+	return new;
+end
+$$;
+
+create or replace trigger productos_internos_new_status_tr
+	after insert 
+	on productos_internos
+	for each row
+	execute procedure productos_internos_new_status_fn();
+
+-- trigger cuando se elimina un producto interno
+create or replace function productos_internos_delete_status_fn()
+	returns trigger 
+	language plpgsql
+as $$
+begin 
+	delete from productos_internos_status where producto_interno_id = old.id;
+	return old;
+end
+$$;
+
+create or replace trigger productos_internos_delete_status_tr
+	before delete
+	on productos_internos
+	for each row
+	execute procedure productos_internos_delete_status_fn();
+
+
+
+
+
+
+
+
+
+
+
 
