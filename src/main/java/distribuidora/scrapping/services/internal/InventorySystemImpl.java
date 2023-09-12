@@ -165,14 +165,16 @@ public class InventorySystemImpl implements InventorySystem {
 			productoVinculado = productoServicio
 					.getProductoByDistribuidoraCodigoAndId(distribuidoraCodigo,
 							idReferencia);
-			newEntidadInterno.setCodigoReferencia(productoVinculado.getId());
-			LookupValor lv = lookupService.getLookupValueByCode(distribuidoraCodigo);
-			newEntidadInterno.setDistribuidoraReferencia(lv);
+			if (productoVinculado != null) {
+				newEntidadInterno.setCodigoReferencia(productoVinculado.getId());
+				LookupValor lv = lookupService.getLookupValueByCode(distribuidoraCodigo);
+				newEntidadInterno.setDistribuidoraReferencia(lv);
+			}
 		}
 
 		newEntidadInterno
 				.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
-		verificaryActualizarFechaModificacio(oldEntidadInterno,
+		verifyAndUpdateDateModified(oldEntidadInterno,
 				newEntidadInterno);
 
 		ProductoInterno productoGuardado = productoInternoRepository
@@ -224,7 +226,7 @@ public class InventorySystemImpl implements InventorySystem {
 	 * @param oldEntidadInterno
 	 * @param newEntidadInterno
 	 */
-	private void verificaryActualizarFechaModificacio(
+	private void verifyAndUpdateDateModified(
 			ProductoInterno oldEntidadInterno,
 			ProductoInterno newEntidadInterno) {
 		boolean priceUpdated = false;
