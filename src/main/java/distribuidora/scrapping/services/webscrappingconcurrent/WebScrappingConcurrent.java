@@ -36,7 +36,6 @@ public abstract class WebScrappingConcurrent<Entidad extends ProductoEspecifico>
         ExecutorService hilos = Executors.newFixedThreadPool(4);
         List<Future<List<Document>>> resultadosParciales = new ArrayList<>();
 
-        //        TODO: esto deberia ser concurrente
         for (int i = 0; i < hilosMaximos; i++) {
             int indiceInicial = i == 0 ? 1 : i*rangoPorHilo;
             int indiceFinal = i == (hilosMaximos-1) ? maximoIndicePaginador : (i+1)*rangoPorHilo - 1;

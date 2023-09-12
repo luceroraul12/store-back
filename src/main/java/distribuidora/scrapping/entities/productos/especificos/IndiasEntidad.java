@@ -23,7 +23,6 @@ public class IndiasEntidad extends ProductoEspecifico {
 
 	@Override
 	public Double getPrecioExterno() {
-		// TODO Auto-generated method stub
 		return precio;
 	}
     
