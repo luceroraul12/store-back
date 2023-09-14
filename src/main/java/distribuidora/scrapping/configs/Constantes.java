@@ -14,13 +14,14 @@ public class Constantes {
 	public static final String LV_DISTRIBUIDORA_TODAS = "TODAS";
 
 	/**
-	 * TODO: cuando comiencen a aparecer y desaparecer varias veces habra que acentarlo con estado en las bases de datos para que no hay que har un compilado nuevo a cada rato
+	 * TODO: cuando comiencen a aparecer y desaparecer varias veces habra que
+	 * acentarlo con estado en las bases de datos para que no hay que har un
+	 * compilado nuevo a cada rato
 	 */
-	public static final List<String> DISTRIBUIDORAS_SIN_USO = Arrays.asList(
-		LV_DISTRIBUIDORA_MELAR
-	);
-    public static final String 	LV_CATEGORIAS_CEREALES 							= "CEREALES";
-    public static final String 	LV_CATEGORIAS_CEREALES_DESCRIPTION 	= "CEREALES";
-	public static final String	LV_MEDIDAS_VENTAS_1U 								= "MEDIDAS_VENTAS_1U";
-	public static final String 	LV_MEDIDAS_VENTAS_1U_DESCRIPTION 		= "UNIDAD";
+	public static final List<String> DISTRIBUIDORAS_SIN_USO = Arrays
+			.asList(LV_DISTRIBUIDORA_MELAR);
+	public static final String LV_CATEGORIAS_CEREALES = "CEREALES";
+	public static final String LV_CATEGORIAS_CEREALES_DESCRIPTION = "CEREALES";
+	public static final String LV_MEDIDAS_VENTAS_1U = "MEDIDAS_VENTAS_1U";
+	public static final String LV_MEDIDAS_VENTAS_1U_DESCRIPTION = "UNIDAD";
 }
