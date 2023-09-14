@@ -10,86 +10,73 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
-public class MelarUtil extends ProductoUtil<MelarEntidad>{
-    @Override
-    public List<Producto> convertirProductoyDevolverlo(MelarEntidad productoSinConvertir) {
-        List<Producto> productosCreados = new ArrayList<>();
+public class MelarUtil extends ProductoUtil<MelarEntidad> {
+	@Override
+	public List<Producto> convertirProductoyDevolverlo(
+			MelarEntidad productoSinConvertir) {
+		List<Producto> productosCreados = new ArrayList<>();
 
-        /*
-        Hay que tener cuidado cons los precios, debido a que el monto siempre lo muestran  por 1 kilo,
-        Se debe multiplicar por la medida correspondiente para obtener la el precio que se paga por la minima cantidad adquirible
-         */
-        HashMap<String, Double> preciosCalculados = new HashMap<>();
-        preciosCalculados.put("fraccion", 0.0);
-        preciosCalculados.put("granel", 0.0);
+		/*
+		 * Hay que tener cuidado cons los precios, debido a que el monto siempre
+		 * lo muestran por 1 kilo, Se debe multiplicar por la medida
+		 * correspondiente para obtener la el precio que se paga por la minima
+		 * cantidad adquirible
+		 */
+		HashMap<String, Double> preciosCalculados = new HashMap<>();
+		preciosCalculados.put("fraccion", 0.0);
+		preciosCalculados.put("granel", 0.0);
 
-        verificaryCalcularPrecio(productoSinConvertir,preciosCalculados);
+		verificaryCalcularPrecio(productoSinConvertir, preciosCalculados);
 
+		/*
+		 * Quiero tener un descripcion en el siguiente orden 1.producto 2.origen
+		 * 3.cantidad 4.precio
+		 */
 
-        /*
-        Quiero tener un descripcion en el siguiente orden
-        1.producto
-        2.origen
-        3.cantidad
-        4.precio
-         */
+		String descripcionFraccion = String.format("%s - %s X %s%s",
+				productoSinConvertir.getProducto(),
+				productoSinConvertir.getOrigen(),
+				productoSinConvertir.getFraccion(),
+				productoSinConvertir.getMedida());
 
-        String descripcionFraccion = String.format(
-                "%s - %s X %s%s",
-                productoSinConvertir.getProducto(),
-                productoSinConvertir.getOrigen(),
-                productoSinConvertir.getFraccion(),
-                productoSinConvertir.getMedida()
-        );
+		String descripcionGranel = String.format("%s - %s X %s%s",
+				productoSinConvertir.getProducto(),
+				productoSinConvertir.getOrigen(),
+				productoSinConvertir.getGranel(),
+				productoSinConvertir.getMedida());
 
-        String descripcionGranel = String.format(
-                "%s - %s X %s%s",
-                productoSinConvertir.getProducto(),
-                productoSinConvertir.getOrigen(),
-                productoSinConvertir.getGranel(),
-                productoSinConvertir.getMedida()
-        );
+		productosCreados.add(Producto.builder()
+				.id(productoSinConvertir.getCodigo() + "F")
+				.descripcion(descripcionFraccion)
+				.precioPorCantidadEspecifica(preciosCalculados.get("fraccion"))
+				.distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR)
+				.build());
+		productosCreados.add(Producto.builder()
+				.id(productoSinConvertir.getCodigo() + "G")
+				.descripcion(descripcionGranel)
+				.precioPorCantidadEspecifica(preciosCalculados.get("granel"))
+				.distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR)
+				.build());
 
-        productosCreados.add(
-                Producto
-                        .builder()
-                        .id(productoSinConvertir.getCodigo() + "F")
-                        .descripcion(descripcionFraccion)
-                        .precioPorCantidadEspecifica(preciosCalculados.get("fraccion"))
-                        .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR)
-                        .build()
-        );
-        productosCreados.add(
-                Producto
-                        .builder()
-                        .id(productoSinConvertir.getCodigo() + "G")
-                        .descripcion(descripcionGranel)
-                        .precioPorCantidadEspecifica(preciosCalculados.get("granel"))
-                        .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR)
-                        .build()
-        );
+		return productosCreados;
+	}
 
-        return productosCreados;
-    }
+	private void verificaryCalcularPrecio(MelarEntidad productoSinConvertir,
+			HashMap<String, Double> preciosCalculados) {
+		try {
+			preciosCalculados.replace("granel",
+					productoSinConvertir.getPrecioGranel() * Double
+							.parseDouble(productoSinConvertir.getGranel()));
+		} catch (Exception e) {
+			preciosCalculados.replace("granel", 0.0);
+		}
 
-    private void verificaryCalcularPrecio(MelarEntidad productoSinConvertir, HashMap<String, Double> preciosCalculados) {
-        try{
-            preciosCalculados
-                    .replace("granel",
-                    productoSinConvertir.getPrecioGranel() * Double.parseDouble(productoSinConvertir.getGranel()
-                    ));
-        } catch(Exception e) {
-            preciosCalculados
-                    .replace("granel", 0.0);
-        }
-
-        try {
-            preciosCalculados
-                    .replace("fraccion",
-                            productoSinConvertir.getPrecioFraccionado() * Double.parseDouble(productoSinConvertir.getFraccion()));
-        } catch (Exception e) {
-            preciosCalculados
-                    .replace("fraccion",0.0);
-        }
-    }
+		try {
+			preciosCalculados.replace("fraccion",
+					productoSinConvertir.getPrecioFraccionado() * Double
+							.parseDouble(productoSinConvertir.getFraccion()));
+		} catch (Exception e) {
+			preciosCalculados.replace("fraccion", 0.0);
+		}
+	}
 }

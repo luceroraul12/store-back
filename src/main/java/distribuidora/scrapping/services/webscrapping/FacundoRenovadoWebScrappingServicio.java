@@ -16,7 +16,7 @@ public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrappin
     }
 
     @Override
-    protected boolean esDocumentValido(Document document) throws Exception {
+    protected boolean esDocumentValido(Document document) {
         return false;
     }
 

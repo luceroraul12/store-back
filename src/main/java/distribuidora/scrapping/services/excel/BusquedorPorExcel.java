@@ -32,13 +32,7 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
     @Override
     protected List<Entidad> adquirirProductosEntidad(PeticionExcel elementoAuxiliar) {
         List<Entidad> productosrecolectados;
-        try {
-            productosrecolectados = obtenerProductosApartirDeExcels(elementoAuxiliar.getExcels());
-        } catch (Exception e) {
-            productosrecolectados = new ArrayList<>();
-            System.out.println("problemas al recolectar productos");
-            e.printStackTrace();
-        }
+        productosrecolectados = obtenerProductosApartirDeExcels(elementoAuxiliar.getExcels());
         return productosrecolectados;
     }
 
@@ -78,7 +72,7 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
      * @return Lista de productos en entidad especifica
      * @throws IOException
      */
-    public List<Entidad> obtenerProductosApartirDeExcels(MultipartFile[] excels) throws IOException {
+    public List<Entidad> obtenerProductosApartirDeExcels(MultipartFile[] excels) {
         return Arrays.stream(excels)
                 .map(this::obtenerSheets)
                 .flatMap(Collection::stream)

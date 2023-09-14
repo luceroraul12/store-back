@@ -13,78 +13,46 @@ import java.util.List;
 @Component
 public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
 
-    private String categoriaExcel;
+	private String categoriaExcel;
 
-    @Override
-    public List<Producto> convertirProductoyDevolverlo(FacundoEntidad productoEntidad) {
-        String distribuidoraCodigo = Constantes.LV_DISTRIBUIDORA_FACUNDO;
-        List<Producto> productosGenerados = new ArrayList<>();
-        String descripcionMayor = String.format(
-                "%s - %s",
-                productoEntidad.getCategoriaRenglon(),
-                productoEntidad.getCategoria()
-        );
+	@Override
+	public List<Producto> convertirProductoyDevolverlo(
+			FacundoEntidad productoEntidad) {
+		String distribuidoraCodigo = Constantes.LV_DISTRIBUIDORA_FACUNDO;
+		List<Producto> productosGenerados = new ArrayList<>();
+		String descripcionMayor = String.format("%s - %s",
+				productoEntidad.getCategoriaRenglon(),
+				productoEntidad.getCategoria());
 
-        productosGenerados.add(
-                Producto.builder()
-                        .id(productoEntidad.getId())
-                        .descripcion(descripcionMayor)
-                        .precioPorCantidadEspecifica(productoEntidad.getPrecioMayor() != null
-                            ? productoEntidad.getPrecioMayor()
-                            : 0.0)
-                        .distribuidoraCodigo(distribuidoraCodigo)
-                        .build()
-        );
+		productosGenerados.add(Producto.builder().id(productoEntidad.getId())
+				.descripcion(descripcionMayor)
+				.precioPorCantidadEspecifica(
+						productoEntidad.getPrecioMayor() != null
+								? productoEntidad.getPrecioMayor()
+								: 0.0)
+				.distribuidoraCodigo(distribuidoraCodigo).build());
 
-        return productosGenerados;
-    }
-    @Override
-    public FacundoEntidad convertirRowEnProductoEspecifico(Row row, String distribuidoraCodigo) {
+		return productosGenerados;
+	}
+	@Override
+	public FacundoEntidad convertirRowEnProductoEspecifico(Row row,
+			String distribuidoraCodigo) {
 
-//        if(esRenglonCategoria(row)){
-//            this.categoriaExcel = row.getCell(0).getStringCellValue();
-//            return null;
-//        }
+		Double precioMayor = validarPrecio(row.getCell(2));
+		Double precioMenor = validarPrecio(row.getCell(3));
+		return FacundoEntidad.builder().distribuidoraCodigo(distribuidoraCodigo)
+				.categoria(row.getCell(0).getStringCellValue())
+				.categoriaRenglon(this.categoriaExcel)
+				.subcategoria(row.getCell(1).toString())
+				.precioMayor(precioMayor).precioMenor(precioMenor).build();
+	}
 
-        Double precioMayor = validarPrecio(row.getCell(2));
-        Double precioMenor = validarPrecio(row.getCell(3));
-        return FacundoEntidad.builder()
-                .distribuidoraCodigo(distribuidoraCodigo)
-                .categoria(row.getCell(0).getStringCellValue())
-                .categoriaRenglon(this.categoriaExcel)
-                .subcategoria(row.getCell(1).toString())
-//                .cantidad(row.getCell(2).getStringCellValue())
-                .precioMayor(precioMayor)
-                .precioMenor(precioMenor)
-                .build();
-    }
-
-//    private boolean esRenglonCategoria(Row row) {
-//        boolean resultado = false;
-//        try{
-//            if (row.getCell(0).getCellType().equals(CellType.STRING)){
-//                if (row.getCell(1).getStringCellValue().length() <= 50){
-//                    if (row.getCell(2).getCellType().equals(CellType.STRING)){
-//                        if (row.getCell(3).getCellType().equals(CellType.STRING)){
-//                            if (row.getCell(4).getCellType().equals(CellType.STRING)){
-//                                resultado = true;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (Exception ignored){
-//        }
-//        return resultado;
-//    }
-
-    private Double validarPrecio(Cell cell) {
-        try {
-            return cell.getNumericCellValue();
-        } catch (Exception e) {
-            return 0.0;
-        }
-    }
-
+	private Double validarPrecio(Cell cell) {
+		try {
+			return cell.getNumericCellValue();
+		} catch (Exception e) {
+			return 0.0;
+		}
+	}
 
 }

@@ -37,7 +37,7 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
     }
 
     @Test
-    void pruebaGenerarProductosConcurrent() {
+    void pruebaGenerarProductosConcurrent() throws IOException {
         servicioConcurrent.initImplementacion();
         List<LaGranjaDelCentroEntidad> productos = servicioConcurrent
                 .adquirirProductosEntidad(new PeticionWebScrapping(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO));
@@ -46,7 +46,7 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
     }
 
     @Test
-    void pruebaGenerarProductos() {
+    void pruebaGenerarProductos() throws IOException {
         servicioConcurrent.initImplementacion();
         List<LaGranjaDelCentroEntidad> productos = servicioConcurrent
                 .adquirirProductosEntidad(new PeticionWebScrapping(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO));

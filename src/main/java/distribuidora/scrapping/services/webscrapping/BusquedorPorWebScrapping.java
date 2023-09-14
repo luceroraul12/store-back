@@ -42,18 +42,14 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
     private Boolean esBuscadorConPaginador = false;
 
     @Override
-    public List<Entidad> adquirirProductosEntidad(PeticionWebScrapping peticionWebScrapping) {
+    public List<Entidad> adquirirProductosEntidad(PeticionWebScrapping peticionWebScrapping) throws IOException {
         List<Entidad> productostotales = new ArrayList<>();
-        try {
-            productostotales = generarDocumentos()
-                    .stream()
-                    .parallel()
-                    .map(this::obtenerProductosPorDocument)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            System.out.println("Problemas al generar productos");
-        }
+        productostotales = generarDocumentos()
+                .stream()
+                .parallel()
+                .map(this::obtenerProductosPorDocument)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
         return productostotales;
     }
 
@@ -74,14 +70,10 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
                     .execute()
                     .body();
             Document doc = Jsoup.parse(str);
-            try {
-                while(esDocumentValido(doc)){
-                    documentos.add(doc);
-                    contador++;
-                    doc = generarDocumento(generarNuevaURL(contador));
-                }
-            } catch (Exception e) {
-                System.out.println("problemas al validar Url: " + contador);
+            while(esDocumentValido(doc)){
+                documentos.add(doc);
+                contador++;
+                doc = generarDocumento(generarNuevaURL(contador));
             }
         } else {
             documentos.add(generarDocumento(urlBuscador)
@@ -124,7 +116,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
      * @see BusquedorPorWebScrapping#esBuscadorConPaginador
      * @see BusquedorPorWebScrapping#generarNuevaURL(int contador)
      */
-    protected abstract boolean esDocumentValido(Document document) throws Exception;
+    protected abstract boolean esDocumentValido(Document document);
 
     /**
      * Encargado de extraer productos Especificos de cada Document.
