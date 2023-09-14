@@ -5,11 +5,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import distribuidora.scrapping.entities.CategoryHasUnit;
+import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.ProductoInterno;
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
+import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
@@ -43,6 +46,9 @@ public class InventorySystemImpl implements InventorySystem {
 	
 	@Autowired
 	private LookupService lookupService;
+	
+	@Autowired
+	private DatosDistribuidoraRepository datosDistribuidoraRepository;
 
 	@Override
 	public int actualizarPreciosAutomatico() {
@@ -269,5 +275,15 @@ public class InventorySystemImpl implements InventorySystem {
 		CategoryHasUnit entity = categoryHasUnitRepository
 				.save(categoryHasUnitDtoConverter.toEntidad(dto));
 		return categoryHasUnitDtoConverter.toDto(entity);
+	}
+
+	@Override
+	public List<DatosDistribuidora> getDistribuidoraStatus() {
+		return this.datosDistribuidoraRepository
+                .findAll()
+                .stream()
+                .filter(a -> !Constantes.DISTRIBUIDORAS_SIN_USO.contains(a.getDistribuidoraCodigo()))
+                .sorted((a,b) -> b.getDistribuidoraCodigo().compareTo(a.getDistribuidoraCodigo()))
+                .collect(Collectors.toList());
 	};
 }

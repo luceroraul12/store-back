@@ -20,7 +20,6 @@ public class LaGranjaDelCentroEntidad extends ProductoEspecifico {
 
 	@Override
 	public Double getPrecioExterno() {
-		// TODO Auto-generated method stub
 		return precio;
 	}
 }

@@ -100,7 +100,6 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 						Collectors.toMap(p -> p.getId(), Function.identity())));
 		list = list.stream()
 				.map(p -> {
-					// TODO: reveer esto por que algunas veces viene null
 					if (p.getDistribuidoraReferenciaCodigo() != null){
 						if (mapProductFixed.containsKey(p.getDistribuidoraReferenciaCodigo())){
 							Map<String, Producto> mapDistro = mapProductFixed.get(p.getDistribuidoraReferenciaCodigo());

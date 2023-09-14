@@ -30,7 +30,6 @@ public class SudamerikEntidad extends ProductoEspecifico {
 
 	@Override
 	public Double getPrecioExterno() {
-		// TODO Auto-generated method stub
 		return cantidadesEspecificas.get(0).getPrecio();
 	}
 }

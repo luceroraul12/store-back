@@ -36,7 +36,6 @@ public class MelarEntidad extends ProductoEspecifico {
 
 	@Override
 	public Double getPrecioExterno() {
-		// TODO Auto-generated method stub
 		return precioGranel;
 	}
 }

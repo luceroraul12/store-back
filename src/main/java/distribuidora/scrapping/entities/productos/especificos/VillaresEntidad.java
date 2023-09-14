@@ -41,7 +41,6 @@ public class VillaresEntidad extends ProductoEspecifico {
 
 	@Override
 	public Double getPrecioExterno() {
-		// TODO Auto-generated method stub
 		return precioLista;
 	}
     

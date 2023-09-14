@@ -2,6 +2,7 @@ package distribuidora.scrapping.services.internal;
 
 import java.util.List;
 
+import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
@@ -38,6 +39,8 @@ public interface InventorySystem {
 	List<CategoryHasUnitDto> getCategoryDtoList();
 
 	CategoryHasUnitDto updateCategoryHasUnit(CategoryHasUnitDto dto);
+
+	List<DatosDistribuidora> getDistribuidoraStatus();
 	
 	
 }
