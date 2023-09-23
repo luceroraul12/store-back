@@ -2,12 +2,14 @@ package distribuidora.scrapping.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
+@ToString
 @Table(name = "lv_category_has_lv_unit")
 public class CategoryHasUnit {
     @Id

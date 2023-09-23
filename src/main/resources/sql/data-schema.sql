@@ -289,6 +289,52 @@ create or replace trigger productos_internos_delete_status_tr
 	for each row
 	execute procedure productos_internos_delete_status_fn();
 
+-- agrego tabla de datos de comercios
+do $$
+begin
+	create table client (
+		id serial primary key,
+		name varchar unique,
+		address varchar,
+		address_link varchar,
+		phone varchar,
+		phone_link varchar,
+		instagram varchar,
+		instagram_link varchar,
+		facebook varchar,
+		facebook_link varchar
+	);
+end $$
+-- agrego data de pasionaria
+do $$
+begin
+	insert into client
+		(
+			name,
+			address,
+			address_link,
+			phone,
+			phone_link,
+			instagram,
+			instagram_link,
+			facebook,
+			facebook_link
+		) values 
+		(
+		'PASIONARIA',
+		'Av. 25 de mayo 1006',
+		'https://goo.gl/maps/4K6m4uivZY6CHYeH7',
+		'+542664312837',
+		'https://api.whatsapp.com/send/?phone=542664312837&text&type=phone_number&app_absent=0',
+		'pasionaria.vm.sl',
+		'https://www.instagram.com/pasionaria.vm.sl',
+		'Pasionaria',
+		'https://www.facebook.com/profile.php?id=100070005324554'
+		);
+end $$
+
+
+
 
 
 

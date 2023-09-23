@@ -17,12 +17,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.itextpdf.text.Anchor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
-import com.itextpdf.text.Image;
 import com.itextpdf.text.ListItem;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -30,11 +28,13 @@ import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.CategoryHasUnit;
+import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
+import distribuidora.scrapping.services.ClientDataService;
 
 @Service
 public class PdfServiceImpl implements PdfService {
@@ -43,6 +43,9 @@ public class PdfServiceImpl implements PdfService {
 	private CategoryHasUnitRepository categoryHasUnitRepository;
 	@Autowired
 	private ProductoInternoStatusRepository productoInternoStatusRepository;
+
+	@Autowired
+	private ClientDataService clientDataService;
 
 	@Override
 	public void generatePdf(HttpServletResponse response)
@@ -69,12 +72,9 @@ public class PdfServiceImpl implements PdfService {
 	public void addTitlePage(Document document)
 			throws DocumentException, IOException {
 
-		String phone = "https://api.whatsapp.com/send/?phone=542664312837&text&type=phone_number&app_absent=0";
-		String instagram = "https://www.instagram.com/pasionaria.vm.sl/";
-		String address = "https://goo.gl/maps/4K6m4uivZY6CHYeH7";
-		String facebook = "https://www.facebook.com/profile.php?id=100070005324554";
+		Client data = clientDataService.getById(1);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy",
+		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy",
 				new Locale("es", "ES"));
 		String dateConverted = sdf.format(new Date());
 
@@ -83,44 +83,38 @@ public class PdfServiceImpl implements PdfService {
 		addEmptyLine(preface, 1);
 		// Lets write a big header
 		Paragraph p = new Paragraph(
-				String.format("PASIONARIA CATALOGO - %s", dateConverted)
+				String.format("%s CATALOGO", data.getName().toUpperCase())
 						.toUpperCase(),
 				catFont);
 		p.setAlignment(Element.ALIGN_CENTER);
 		preface.add(p);
-		addEmptyLine(preface, 1);
+		p = new Paragraph(dateConverted, smallBold);
+		p.setAlignment(Element.ALIGN_CENTER);
+		preface.add(p);
+//		addEmptyLine(preface, 1);
+
+		// Chunk link = null;
 
 		preface.add(new Paragraph("Datos de contacto".toUpperCase(), subFont));
-		addEmptyLine(preface, 1);
 
-		Anchor anchor;
-
-		Image image = Image
-				.getInstance("src/main/resources/static/instagram.png");
-		image.scaleToFit(20, 20);
-		anchor = new Anchor(new Chunk(image, 0, 0, true));
-		anchor.setReference(instagram);
-		preface.add(anchor);
-
-		image = Image.getInstance("src/main/resources/static/facebook.png");
-		image.scaleToFit(20, 20);
-		anchor = new Anchor(new Chunk(image, 0, 0, true));
-		anchor.setReference(facebook);
-		preface.add(anchor);
-
-		image = Image.getInstance("src/main/resources/static/whatsapp.png");
-		image.scaleToFit(20, 20);
-		anchor = new Anchor(new Chunk(image, 0, 0, true));
-		anchor.setReference(phone);
-		preface.add(anchor);
-
-		image = Image.getInstance("src/main/resources/static/gmaps.png");
-		image.scaleToFit(20, 20);
-		anchor = new Anchor(new Chunk(image, 0, 0, true));
-		anchor.setReference(address);
-		preface.add(anchor);
+		preface.add(generateParagraphLink("Direccion", data.getAddress(),
+				data.getAddressLink()));
+		preface.add(generateParagraphLink("Telefono", data.getPhone(),
+				data.getPhoneLink()));
+		preface.add(generateParagraphLink("Instagram", data.getInstagram(),
+				data.getInstagramLink()));
+		preface.add(generateParagraphLink("Facebook", data.getFacebook(),
+				data.getFacebookLink()));
 
 		document.add(preface);
+	}
+
+	private Paragraph generateParagraphLink(String label, String name,
+			String link) {
+		Chunk result = new Chunk(String.format("%s - %s", label, name),
+				smallFont);
+		result.setAnchor(link);
+		return new Paragraph(result);
 	}
 
 	@Override
@@ -175,9 +169,8 @@ public class PdfServiceImpl implements PdfService {
 					listItem.add(
 							generateProductName(productoInternoStatus, lvUnit));
 					listItem.add(leader);
-					listItem.add(String.valueOf(generatePrecio(
-							productoInternoStatus.getProductoInterno(),
-							lvUnit)));
+					listItem.add(String.valueOf(generatePriceWithUnitLogic(
+							productoInternoStatus, lvUnit)));
 					list.add(listItem);
 				}
 				document.add(list);
@@ -228,6 +221,13 @@ public class PdfServiceImpl implements PdfService {
 		return result;
 	}
 
+	/**
+	 * Genera el precio del producto basado en - precio base - precio de flete -
+	 * precio de empaquetado - porcentaje de ganancia
+	 * 
+	 * @param p
+	 * @return
+	 */
 	private Double generateBasePrice(ProductoInterno p) {
 		double result = 0.0;
 		double precio = p.getPrecio() != null ? p.getPrecio() : 0.0;
@@ -244,13 +244,27 @@ public class PdfServiceImpl implements PdfService {
 		return result;
 	}
 
-	private Double generatePrecio(ProductoInterno p, LookupValor lvUnit) {
-		double basePrice = generateBasePrice(p);
+	/**
+	 * Toma el resultado de {@link #generateBasePrice(ProductoInterno)} y le
+	 * aplica la logica de las unidades. Existen dos casos - Categoria unidad
+	 * (no importa unidad del producto): devuelve el precio base - Categoria
+	 * fraccionada y producto unidad: devuelve precio base - Categoria
+	 * fraccionada y producto fraccionado: devuelve precio fraccionado
+	 * 
+	 * @param productoInternoStatus
+	 * @param lvUnit
+	 * @return
+	 */
+	private Double generatePriceWithUnitLogic(
+			ProductoInternoStatus productoInternoStatus, LookupValor lvUnit) {
+		double basePrice = generateBasePrice(
+				productoInternoStatus.getProductoInterno());
 		double result;
 		boolean isCategoryUnit = lvUnit.getCodigo()
 				.equals(Constantes.LV_MEDIDAS_VENTAS_1U);
+		boolean isProductUnit = productoInternoStatus.getIsUnit();
 		// si la categoria esta marcada como unidad solo retorno el precio
-		if (isCategoryUnit) {
+		if (isCategoryUnit || isProductUnit) {
 			result = basePrice;
 			// en caso contrario tengo que reducir el precio a la fraccion
 			// especificada por

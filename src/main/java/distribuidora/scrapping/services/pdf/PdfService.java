@@ -14,7 +14,8 @@ public interface PdfService {
     static Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.RED);
     static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
-
+    static Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.BLUE);
+    
     void generatePdf(HttpServletResponse response) throws IOException, DocumentException;
 
     void addTitlePage(Document document)

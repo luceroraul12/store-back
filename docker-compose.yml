@@ -2,7 +2,7 @@ version: "3.8"
 services:
 #  buscador-ui: es el proyecto de Angular
   buscador-ui:
-    image: luceroraul12/pasionaria-buscador:1.2t
+    image: front-parcial:1.2
     ports:
       - 4200:80
     networks:
@@ -57,7 +57,7 @@ services:
           memory: 50M
 #  buscador-api: es el proyecto Java Spring Boot
   buscador-api:
-    image: luceroraul12/pasionaria-buscador-api:1.2t
+    image: back-parcial:1.2
     ports:
       - 8080:8080
     environment:
