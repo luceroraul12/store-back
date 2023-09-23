@@ -91,7 +91,7 @@ public class PdfServiceImpl implements PdfService {
 		p = new Paragraph(dateConverted, smallBold);
 		p.setAlignment(Element.ALIGN_CENTER);
 		preface.add(p);
-//		addEmptyLine(preface, 1);
+		// addEmptyLine(preface, 1);
 
 		// Chunk link = null;
 
@@ -146,8 +146,6 @@ public class PdfServiceImpl implements PdfService {
 					.stream()
 					.filter(p -> p.getProductoInterno().getLvCategoria()
 							.equals(lvCategory))
-					// deben tener stock
-					.filter(p -> p.getHasStock())
 					// ordeno productos por nombre y si hay unidades los dejo al
 					// final
 					.sorted(orderProductoInternoStatusList()).toList();
@@ -169,8 +167,8 @@ public class PdfServiceImpl implements PdfService {
 					listItem.add(
 							generateProductName(productoInternoStatus, lvUnit));
 					listItem.add(leader);
-					listItem.add(String.valueOf(generatePriceWithUnitLogic(
-							productoInternoStatus, lvUnit)));
+					listItem.add(generatePriceWithUnitLogic(
+							productoInternoStatus, lvUnit));
 					list.add(listItem);
 				}
 				document.add(list);
@@ -178,7 +176,16 @@ public class PdfServiceImpl implements PdfService {
 		}
 	}
 
+	/**
+	 * Encargado de generar el comparator final. El orden propuesto fue hay
+	 * stock, no es unidad, nombre ascendente
+	 * 
+	 * @return
+	 */
 	private Comparator<ProductoInternoStatus> orderProductoInternoStatusList() {
+		// Comparator auxiliar por check stock
+		Comparator<ProductoInternoStatus> compartorByHasStock = (a, b) -> b
+				.getHasStock().compareTo(a.getHasStock());
 		// Comparator auxiliar por nombre de productos
 		Comparator<ProductoInternoStatus> comparatorByProductName = (a, b) -> a
 				.getProductoInterno().getNombre()
@@ -189,7 +196,8 @@ public class PdfServiceImpl implements PdfService {
 
 		// Hago que primero haga por nombre, luego por flag y por ultimo de
 		// nuevo nombre
-		Comparator<ProductoInternoStatus> resultComparator = comparatorByIsUnit
+		Comparator<ProductoInternoStatus> resultComparator = compartorByHasStock
+				.thenComparing(comparatorByIsUnit)
 				.thenComparing(comparatorByProductName);
 
 		return resultComparator;
@@ -246,31 +254,40 @@ public class PdfServiceImpl implements PdfService {
 
 	/**
 	 * Toma el resultado de {@link #generateBasePrice(ProductoInterno)} y le
-	 * aplica la logica de las unidades. Existen dos casos - Categoria unidad
-	 * (no importa unidad del producto): devuelve el precio base - Categoria
-	 * fraccionada y producto unidad: devuelve precio base - Categoria
-	 * fraccionada y producto fraccionado: devuelve precio fraccionado
+	 * aplica la logica de las unidades. Existen los siguientes casos -
+	 * Categoria unidad (no importa unidad del producto): devuelve el precio
+	 * base - Categoria fraccionada y producto unidad: devuelve precio base -
+	 * Categoria fraccionada y producto fraccionado: devuelve precio fraccionado
 	 * 
 	 * @param productoInternoStatus
 	 * @param lvUnit
 	 * @return
 	 */
-	private Double generatePriceWithUnitLogic(
+	private String generatePriceWithUnitLogic(
 			ProductoInternoStatus productoInternoStatus, LookupValor lvUnit) {
 		double basePrice = generateBasePrice(
 				productoInternoStatus.getProductoInterno());
-		double result;
+		String result;
 		boolean isCategoryUnit = lvUnit.getCodigo()
 				.equals(Constantes.LV_MEDIDAS_VENTAS_1U);
 		boolean isProductUnit = productoInternoStatus.getIsUnit();
+		boolean hasStock = productoInternoStatus.getHasStock();
+
+		// En caso de que el producto se encuentre marcado sin stock,
+		// directamente retorno eso
+		if (!hasStock) {
+			return "SIN STOCK";
+		}
+
 		// si la categoria esta marcada como unidad solo retorno el precio
 		if (isCategoryUnit || isProductUnit) {
-			result = basePrice;
+			result = String.valueOf(basePrice);
 			// en caso contrario tengo que reducir el precio a la fraccion
 			// especificada por
 			// la unidad
 		} else {
-			result = basePrice * Double.parseDouble(lvUnit.getValor());;
+			result = String.valueOf(
+					basePrice * Double.parseDouble(lvUnit.getValor()));;
 		}
 		return result;
 	}
