@@ -82,10 +82,7 @@ public class PdfServiceImpl implements PdfService {
 		// We add one empty line
 		addEmptyLine(preface, 1);
 		// Lets write a big header
-		Paragraph p = new Paragraph(
-				String.format("%s CATALOGO", data.getName().toUpperCase())
-						.toUpperCase(),
-				catFont);
+		Paragraph p = new Paragraph(data.getName().toUpperCase(), catFont);
 		p.setAlignment(Element.ALIGN_CENTER);
 		preface.add(p);
 		p = new Paragraph(dateConverted, smallBold);
