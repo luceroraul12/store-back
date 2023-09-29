@@ -278,13 +278,12 @@ public class PdfServiceImpl implements PdfService {
 
 		// si la categoria esta marcada como unidad solo retorno el precio
 		if (isCategoryUnit || isProductUnit) {
-			result = String.valueOf(basePrice);
+			result = String.valueOf((int) basePrice);
 			// en caso contrario tengo que reducir el precio a la fraccion
 			// especificada por
 			// la unidad
 		} else {
-			result = String.valueOf(
-					basePrice * Double.parseDouble(lvUnit.getValor()));;
+			result = String.valueOf((int) basePrice * Double.parseDouble(lvUnit.getValor()));
 		}
 		return result;
 	}
