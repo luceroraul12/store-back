@@ -1,19 +1,20 @@
 package distribuidora.scrapping.util.converters;
 
-import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.LookupValor;
-import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.dto.ProductoInternoDto;
-import distribuidora.scrapping.repositories.ProductoRepository;
-import distribuidora.scrapping.services.general.LookupService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.dto.ProductoInternoDto;
+import distribuidora.scrapping.entities.LookupValor;
+import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ProductoInterno;
+import distribuidora.scrapping.repositories.ProductoRepository;
+import distribuidora.scrapping.services.general.LookupService;
 
 @Component
 public class ProductoInternoConverter extends Converter<ProductoInterno, ProductoInternoDto>{

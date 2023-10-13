@@ -1,13 +1,14 @@
 package distribuidora.scrapping.services.internal;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
 import distribuidora.scrapping.util.converters.ProductoInternoStatusConverter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ProductoInternoStatusServiceImp implements ProductoInternoStatusService {

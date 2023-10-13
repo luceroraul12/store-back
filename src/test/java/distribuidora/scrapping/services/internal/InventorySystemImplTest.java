@@ -1,12 +1,15 @@
 package distribuidora.scrapping.services.internal;
 
-import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.LookupValor;
-import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.repositories.ProductoRepository;
-import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
-import distribuidora.scrapping.services.general.LookupServiceImpl;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,11 +18,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.LookupValor;
+import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ProductoInterno;
+import distribuidora.scrapping.repositories.ProductoRepository;
+import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
+import distribuidora.scrapping.services.general.LookupServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class InventorySystemImplTest {

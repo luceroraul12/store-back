@@ -1,5 +1,15 @@
 package distribuidora.scrapping.services;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.enums.TipoDistribuidora;
@@ -8,16 +18,6 @@ import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
 import distribuidora.scrapping.util.ProductoUtil;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Clase padre de todos los servicios de tipos de busqueda. Contiene metodos
@@ -74,27 +74,14 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 	 */
 	@PostConstruct
 	private void init() {
-		initTipoBusqueda();
 		initImplementacion();
 		verificarExistenciaEnBaseDeDatosEspecifica();
 	}
 
 	/**
-	 * Metodo iniciador para el tipo de busqueda
-	 */
-	protected abstract void initTipoBusqueda();
-
-	/**
 	 * Metodo iniciador para la implementacion.
 	 */
 	protected abstract void initImplementacion();
-
-	/**
-	 * Metodo pre destruccion del bean.<br>
-	 * De momento no hay nada asignado en el, pero esta.
-	 */
-	@PreDestroy
-	protected abstract void destroy();
 
 	/**
 	 * Metodo por el cual se inicia el proceso de busqueda de datos en el
@@ -147,7 +134,6 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 				productoUtil.arregloToProducto(productos),
 				this.distribuidoraCodigo);
 		// Intento actualizar los productos internos a los productos de la
-		// distribuidora actual;
 		inventorySystemService.actualizarPreciosAutomatico();
 
 		this.datoDistribuidoraServicio

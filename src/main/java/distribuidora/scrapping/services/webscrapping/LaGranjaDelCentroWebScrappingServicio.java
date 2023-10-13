@@ -1,9 +1,7 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
-import distribuidora.scrapping.services.webscrappingconcurrent.WebScrappingConcurrent;
-import distribuidora.scrapping.util.LaGranjaDelCentroUtil;
+import java.io.IOException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,7 +9,11 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
+import distribuidora.scrapping.enums.TipoDistribuidora;
+import distribuidora.scrapping.services.webscrappingconcurrent.WebScrappingConcurrent;
+import distribuidora.scrapping.util.LaGranjaDelCentroUtil;
 
 @Service
 public class LaGranjaDelCentroWebScrappingServicio
@@ -78,4 +80,11 @@ public class LaGranjaDelCentroWebScrappingServicio
 		String url = element.get(1).attr("href");
 		return Integer.parseInt(url.split("=")[1]);
 	}
+
+	@Override
+	public TipoDistribuidora getTipoDistribuidora() {
+		return TipoDistribuidora.WEB_SCRAPPING;
+	}
+	
+	
 }

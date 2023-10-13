@@ -1,9 +1,12 @@
 package distribuidora.scrapping.services;
 
-import distribuidora.scrapping.configs.Constantes;
+import java.io.IOException;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import distribuidora.scrapping.configs.Constantes;
 
 @SpringBootTest
 class ActualizacionPorWebScrappingServicioTest {
@@ -16,7 +19,9 @@ class ActualizacionPorWebScrappingServicioTest {
 //    }
 
     @Test
-    void actualizarIndividual(){
+    void actualizarIndividual() throws IOException{
         actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(Constantes.LV_DISTRIBUIDORA_DON_GASPAR);
+        actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(Constantes.LV_DISTRIBUIDORA_FACUNDO);
+        actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
     }
 }

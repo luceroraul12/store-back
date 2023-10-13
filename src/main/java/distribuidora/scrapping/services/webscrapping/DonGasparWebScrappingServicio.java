@@ -1,15 +1,17 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
-import distribuidora.scrapping.util.DonGasparUtil;
+import java.util.ArrayList;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
+import distribuidora.scrapping.enums.TipoDistribuidora;
+import distribuidora.scrapping.util.DonGasparUtil;
 
 @Service
 public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonGasparEntidad> {
@@ -54,4 +56,11 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
         setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_DON_GASPAR);
         setUrlBuscador("https://pidorapido.com/dongasparsj");
     }
+
+	@Override
+	public TipoDistribuidora getTipoDistribuidora() {
+		return TipoDistribuidora.WEB_SCRAPPING;
+	}
+    
+    
 }

@@ -1,17 +1,24 @@
 package distribuidora.scrapping.services.internal;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.dto.CategoryHasUnitDto;
+import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.dto.CategoryHasUnitDto;
-import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
@@ -20,8 +27,6 @@ import distribuidora.scrapping.services.ProductoServicio;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.converters.CategoryHasUnitDtoConverter;
 import distribuidora.scrapping.util.converters.ProductoInternoConverter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class InventorySystemImpl implements InventorySystem {

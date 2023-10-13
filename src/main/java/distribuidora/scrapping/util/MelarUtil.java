@@ -1,13 +1,14 @@
 package distribuidora.scrapping.util;
 
-import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.productos.especificos.MelarEntidad;
-import distribuidora.scrapping.entities.Producto;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
+import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.productos.especificos.MelarEntidad;
 
 @Component
 public class MelarUtil extends ProductoUtil<MelarEntidad> {

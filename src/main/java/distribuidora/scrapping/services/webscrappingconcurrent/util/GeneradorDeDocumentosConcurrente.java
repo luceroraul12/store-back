@@ -1,12 +1,14 @@
 package distribuidora.scrapping.services.webscrappingconcurrent.util;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Clase utilitaria para la generacion de documentos EXCEL de manera concurrente.

@@ -10,6 +10,7 @@ public interface MongoService {
 	
 	DatosDistribuidora updatedistribuidoraExcel(PeticionExcel request) throws IOException;
 	
-	DatosDistribuidora updateDistribuidoraWebScrapping(PeticionWebScrapping request);
+	DatosDistribuidora updateDistribuidoraWebScrapping(PeticionWebScrapping request) throws IOException;
 
 }
+

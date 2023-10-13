@@ -1,9 +1,10 @@
 package distribuidora.scrapping.util.converters;
 
-import distribuidora.scrapping.dto.ProductoInternoStatusDto;
-import distribuidora.scrapping.entities.ProductoInternoStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import distribuidora.scrapping.dto.ProductoInternoStatusDto;
+import distribuidora.scrapping.entities.ProductoInternoStatus;
 
 @Component
 public class ProductoInternoStatusConverter extends Converter<ProductoInternoStatus, ProductoInternoStatusDto>{

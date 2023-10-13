@@ -1,9 +1,9 @@
 package distribuidora.scrapping.services.general;
 
+import java.util.List;
+
 import distribuidora.scrapping.dto.LookupValueDto;
 import distribuidora.scrapping.entities.LookupValor;
-
-import java.util.List;
 
 public interface LookupService {
 

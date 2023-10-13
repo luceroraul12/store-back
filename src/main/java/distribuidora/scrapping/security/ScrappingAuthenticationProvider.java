@@ -1,9 +1,9 @@
 package distribuidora.scrapping.security;
 
-import distribuidora.scrapping.security.entity.RolEntity;
-import distribuidora.scrapping.security.entity.UsuarioEntity;
-import distribuidora.scrapping.security.repository.UsuarioRepository;
-import distribuidora.scrapping.security.repository.UsuarioTieneRolRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,9 +15,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import distribuidora.scrapping.security.entity.RolEntity;
+import distribuidora.scrapping.security.entity.UsuarioEntity;
+import distribuidora.scrapping.security.repository.UsuarioRepository;
+import distribuidora.scrapping.security.repository.UsuarioTieneRolRepository;
 
 @Component
 public class ScrappingAuthenticationProvider implements AuthenticationProvider {

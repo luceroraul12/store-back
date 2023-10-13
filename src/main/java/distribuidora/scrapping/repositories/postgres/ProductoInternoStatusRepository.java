@@ -1,7 +1,8 @@
 package distribuidora.scrapping.repositories.postgres;
 
-import distribuidora.scrapping.entities.ProductoInternoStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import distribuidora.scrapping.entities.ProductoInternoStatus;
 
 public interface ProductoInternoStatusRepository extends JpaRepository<ProductoInternoStatus, Integer> {
 

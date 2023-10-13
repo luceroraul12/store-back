@@ -1,7 +1,8 @@
 package distribuidora.scrapping.services.internal;
 
-import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 import java.util.List;
+
+import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 
 public interface ProductoInternoStatusService {
 

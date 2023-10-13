@@ -1,7 +1,8 @@
 package distribuidora.scrapping.repositories;
 
-import distribuidora.scrapping.entities.DatosDistribuidora;
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import distribuidora.scrapping.entities.DatosDistribuidora;
 
 public interface DatosDistribuidoraRepository extends MongoRepository<DatosDistribuidora, String> {
 

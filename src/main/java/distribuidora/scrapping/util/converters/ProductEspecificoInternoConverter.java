@@ -1,15 +1,16 @@
 package distribuidora.scrapping.util.converters;
 
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.services.general.LookupService;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ProductEspecificoInternoConverter extends Converter<ProductoEspecifico, ProductoInterno> {
 

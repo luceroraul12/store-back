@@ -1,11 +1,12 @@
 package distribuidora.scrapping.services;
 
-import distribuidora.scrapping.entities.DatosDistribuidora;
-import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import distribuidora.scrapping.entities.DatosDistribuidora;
+import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 
 /**
  * Servicio encargado de trabajar con base de datos y los datos de distribuidora.

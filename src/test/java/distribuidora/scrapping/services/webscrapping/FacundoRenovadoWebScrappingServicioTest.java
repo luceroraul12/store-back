@@ -1,8 +1,13 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
-import distribuidora.scrapping.util.FacundoUtil;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,13 +16,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
+import distribuidora.scrapping.util.FacundoUtil;
 
 @ExtendWith(MockitoExtension.class)
 class FacundoRenovadoWebScrappingServicioTest {

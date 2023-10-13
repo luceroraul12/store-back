@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,31 +54,16 @@ public class ActualizacionController {
 	 * @throws IOException
 	 */
 	@PostMapping("excel")
-	public ResponseEntity<DatosDistribuidora> actualizacionPorExcel(
+	public DatosDistribuidora actualizacionPorExcel(
 			PeticionExcel documento) throws IOException {
-		return new ResponseEntity<>(
-				mongoService.updatedistribuidoraExcel(documento),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * Permite actualizar los productos de las distribuidoras que dependan de
-	 * Web Scrapping. Actualiza todas las distribuidoras de este tipo al mismo
-	 * tiempo.
-	 */
-	@GetMapping("web-scrapping")
-	public void actualizacionPorWebScrappingTodos() {
-		this.actualizacionPorWebScrappingServicio
-				.actualizarTodasLasDistribuidoras();
+		return mongoService.updatedistribuidoraExcel(documento);
 	}
 
 	@PostMapping("web-scrapping/individual")
-	public ResponseEntity<DatosDistribuidora> actualizacionPorWebScrappingIndividual(
-			@RequestParam String distribuidoraCodigo) {
-		return new ResponseEntity<>(
-				mongoService.updateDistribuidoraWebScrapping(
-						new PeticionWebScrapping(distribuidoraCodigo)),
-				HttpStatus.OK);
+	public DatosDistribuidora actualizacionPorWebScrappingIndividual(
+			@RequestParam String distribuidoraCodigo) throws IOException {
+		return mongoService.updateDistribuidoraWebScrapping(
+				new PeticionWebScrapping(distribuidoraCodigo));
 	}
 
 	// TODO: este metodo de momento va aquedar fijo aca, pero en un futuro
@@ -94,9 +77,8 @@ public class ActualizacionController {
 	 *         Distribuidora
 	 */
 	@GetMapping
-	public ResponseEntity<List<DatosDistribuidora>> obtenerTipoyEstadoDeDistribuidora() {
-		return new ResponseEntity<>(inventorySystem.getDistribuidoraStatus(),
-				HttpStatus.OK);
+	public List<DatosDistribuidora> obtenerTipoyEstadoDeDistribuidora() {
+		return inventorySystem.getDistribuidoraStatus();
 	}
 
 }

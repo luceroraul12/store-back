@@ -1,7 +1,10 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
-import distribuidora.scrapping.util.DonGasparUtil;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.util.List;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,10 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.io.IOException;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
+import distribuidora.scrapping.util.DonGasparUtil;
 
 @ExtendWith(MockitoExtension.class)
 class DonGasparWebScrappingServicioTest {

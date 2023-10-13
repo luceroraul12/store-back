@@ -1,15 +1,16 @@
 package distribuidora.scrapping.util;
 
-import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
+import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
 
 @Component
 public class IndiasUtil extends ProductoExcelUtil<IndiasEntidad> {

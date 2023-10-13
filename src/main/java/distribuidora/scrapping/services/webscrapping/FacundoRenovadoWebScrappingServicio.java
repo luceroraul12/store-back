@@ -1,11 +1,13 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
+
+import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
+import distribuidora.scrapping.enums.TipoDistribuidora;
 
 @Service
 public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrapping<FacundoEntidad>{
@@ -59,4 +61,11 @@ public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrappin
     protected Elements filtrarElementos(Document documento) {
         return documento.getElementsByClass("item row pointer");
     }
+
+	@Override
+	public TipoDistribuidora getTipoDistribuidora() {
+		return TipoDistribuidora.WEB_SCRAPPING;
+	}
+    
+    
 }

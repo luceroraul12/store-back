@@ -1,14 +1,18 @@
 package distribuidora.scrapping.security;
 
-import distribuidora.scrapping.security.entity.UsuarioDto;
-import distribuidora.scrapping.security.service.LoginService;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import distribuidora.scrapping.security.entity.UsuarioDto;
+import distribuidora.scrapping.security.service.LoginService;
 
 @RestController
 public class LoginController {

@@ -1,14 +1,18 @@
 package distribuidora.scrapping.util;
 
-import distribuidora.scrapping.entities.Producto;
-
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
+
+import distribuidora.scrapping.entities.Producto;
 
 public abstract class ProductoUtil<Entidad> {
 

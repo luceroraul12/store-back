@@ -1,23 +1,20 @@
 package distribuidora.scrapping.services.webscrapping;
 
-import distribuidora.scrapping.comunicadores.Comunicador;
-import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.PeticionWebScrapping;
-import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.enums.TipoDistribuidora;
-import distribuidora.scrapping.services.BuscadorDeProductos;
-import lombok.Data;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import distribuidora.scrapping.entities.PeticionWebScrapping;
+import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.services.BuscadorDeProductos;
+import lombok.Data;
 
 /**
  * Clase base para los servicios basados en Web Scrapping.
@@ -28,9 +25,6 @@ import java.util.stream.Collectors;
 public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecifico>
 		extends
 			BuscadorDeProductos<Entidad, PeticionWebScrapping> {
-
-	@Autowired
-	private Comunicador comunicador;
 
 	/**
 	 * Obligatorio para poder comenzar a utilizar el servicio
@@ -152,37 +146,5 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
 	 * @return elementos filtrados
 	 */
 	protected abstract Elements filtrarElementos(Document documento);
-
-	@Override
-	protected void initTipoBusqueda() {
-		setTipoDistribuidora(TipoDistribuidora.WEB_SCRAPPING);
-		comunicador.getDisparadorActualizacion().filter(
-				peticion -> peticion.getClass() == PeticionWebScrapping.class)
-				.cast(PeticionWebScrapping.class)
-				.subscribe(peticionWebScrapping -> {
-					if (peticionWebScrapping.getDistribuidoraCodigo()
-							.equals(this.getDistribuidoraCodigo())) {
-						System.out.println(
-								"actualiza " + getDistribuidoraCodigo());
-						this.generarProductosEntidadYActualizarCollecciones(
-								peticionWebScrapping);
-					} else if (peticionWebScrapping.getDistribuidoraCodigo()
-							.equals(Constantes.LV_DISTRIBUIDORA_TODAS)) {
-						System.out.println("actualizacion General");
-						this.generarProductosEntidadYActualizarCollecciones(
-								peticionWebScrapping);
-					} else {
-						System.out.println(
-								"no actualiza " + getDistribuidoraCodigo());
-					}
-				}, error -> System.out
-						.println("error en " + getDistribuidoraCodigo()));
-	}
-
-	@Override
-	public void destroy() {
-		System.out.println("finalizando comunicador: " + this.getClass());
-		comunicador.getDisparadorActualizacion().onComplete();
-	}
 
 }

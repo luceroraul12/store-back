@@ -1,13 +1,13 @@
 package distribuidora.scrapping.services.webscrappingconcurrent;
 
-import org.jsoup.nodes.Document;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.jsoup.nodes.Document;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class SudamerikWebScrappingConcurrentServicioTest {

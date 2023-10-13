@@ -1,12 +1,13 @@
 package distribuidora.scrapping.services;
 
-import distribuidora.scrapping.entities.Producto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.Collection;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import distribuidora.scrapping.entities.Producto;
 
 /**
  * Servicio encargado del filtrado de productos.

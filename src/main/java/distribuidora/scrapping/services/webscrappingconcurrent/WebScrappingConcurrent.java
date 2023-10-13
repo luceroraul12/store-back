@@ -1,10 +1,5 @@
 package distribuidora.scrapping.services.webscrappingconcurrent;
 
-import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
-import distribuidora.scrapping.services.webscrappingconcurrent.util.GeneradorDeDocumentosConcurrente;
-import org.jsoup.nodes.Document;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +9,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
+
+import org.jsoup.nodes.Document;
+
+import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
+import distribuidora.scrapping.services.webscrappingconcurrent.util.GeneradorDeDocumentosConcurrente;
 
 /**
  * Clase heredada de {@link BusquedorPorWebScrapping} que implementa concurrencia.

@@ -1,12 +1,13 @@
 package distribuidora.scrapping.security.repository;
 
-import distribuidora.scrapping.security.entity.PerfilTieneRoles;
-import distribuidora.scrapping.security.entity.RolEntity;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+import distribuidora.scrapping.security.entity.PerfilTieneRoles;
+import distribuidora.scrapping.security.entity.RolEntity;
 
 public interface UsuarioTieneRolRepository extends JpaRepository<PerfilTieneRoles, Integer> {
 

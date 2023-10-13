@@ -2,12 +2,12 @@ package distribuidora.scrapping.services.internal;
 
 import java.util.List;
 
-import distribuidora.scrapping.entities.DatosDistribuidora;
-import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.dto.CategoryHasUnitDto;
-import distribuidora.scrapping.dto.ProductoInternoDto;
 import org.springframework.stereotype.Service;
 
+import distribuidora.scrapping.dto.CategoryHasUnitDto;
+import distribuidora.scrapping.dto.ProductoInternoDto;
+import distribuidora.scrapping.entities.DatosDistribuidora;
+import distribuidora.scrapping.entities.Producto;
 import distribuidora.scrapping.entities.ProductoInterno;
 
 @Service

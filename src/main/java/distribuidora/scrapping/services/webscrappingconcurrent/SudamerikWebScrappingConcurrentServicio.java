@@ -1,12 +1,14 @@
 package distribuidora.scrapping.services.webscrappingconcurrent;
 
-import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
+import java.io.File;
+import java.io.IOException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import java.io.File;
-import java.io.IOException;
+
+import distribuidora.scrapping.entities.productos.especificos.SudamerikEntidad;
 
 //@Service
 public class SudamerikWebScrappingConcurrentServicio

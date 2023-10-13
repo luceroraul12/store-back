@@ -34,7 +34,7 @@ public class MongoServiceImpl implements MongoService {
 
 	@Override
 	public DatosDistribuidora updateDistribuidoraWebScrapping(
-			PeticionWebScrapping request) {
+			PeticionWebScrapping request) throws IOException {
 		actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(request.getDistribuidoraCodigo());
         DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidoraCodigo(request.getDistribuidoraCodigo());
 		return resultado;

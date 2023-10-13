@@ -1,12 +1,13 @@
 package distribuidora.scrapping.services.pdf;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 public interface PdfService {
     static String FILE = "src/main/resources/static/ejemplo.pdf";

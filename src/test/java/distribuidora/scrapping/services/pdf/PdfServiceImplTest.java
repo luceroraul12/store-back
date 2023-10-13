@@ -1,11 +1,12 @@
 package distribuidora.scrapping.services.pdf;
 
-import com.itextpdf.text.DocumentException;
+import java.io.IOException;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.IOException;
+import com.itextpdf.text.DocumentException;
 
 @SpringBootTest
 class PdfServiceImplTest {

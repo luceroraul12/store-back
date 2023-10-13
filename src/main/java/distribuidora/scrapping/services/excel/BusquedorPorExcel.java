@@ -1,20 +1,27 @@
 package distribuidora.scrapping.services.excel;
 
-import distribuidora.scrapping.comunicadores.Comunicador;
-import distribuidora.scrapping.entities.PeticionExcel;
-import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.enums.TipoDistribuidora;
-import distribuidora.scrapping.services.BuscadorDeProductos;
-import distribuidora.scrapping.util.ProductoExcelUtil;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import distribuidora.scrapping.entities.PeticionExcel;
+import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.services.BuscadorDeProductos;
+import distribuidora.scrapping.util.ProductoExcelUtil;
 
 /**
  * Encargada de configurar la busqueda por medio de documentos excel.
@@ -24,9 +31,6 @@ import java.util.stream.Collectors;
 public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> extends BuscadorDeProductos<Entidad, PeticionExcel> {
 
     @Autowired
-    Comunicador comunicador;
-
-    @Autowired
     ProductoExcelUtil<Entidad> util;
 
     @Override
@@ -34,35 +38,6 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> exte
         List<Entidad> productosrecolectados;
         productosrecolectados = obtenerProductosApartirDeExcels(elementoAuxiliar.getExcels());
         return productosrecolectados;
-    }
-
-    /**
-     * Metodo que utiliza extensiones reactivas para poder realizar actualizaciones dinamicas.<br>
-     * De esta manera nunca se deben generar cases de switch cuando se agregen nuevas distribuidoras.
-     */
-    @Override
-    protected void initTipoBusqueda() {
-        setTipoDistribuidora(TipoDistribuidora.EXCEL);
-        comunicador.getDisparadorActualizacion()
-                .filter(comunicadorInformacionAuxiliar
-                        -> comunicadorInformacionAuxiliar.getClass() == PeticionExcel.class)
-                .cast(PeticionExcel.class)
-                .subscribe(
-                        documento -> {
-                            if(documento.getDistribuidoraCodigo().equals(getDistribuidoraCodigo())){
-                                System.out.println("actualiza "+ getDistribuidoraCodigo());
-                                this.generarProductosEntidadYActualizarCollecciones(documento);
-                            } else {
-                                System.out.println("no actualiza "+ getDistribuidoraCodigo());
-                            }
-                        },
-                        error -> System.out.println("error EXCEL en "+ getDistribuidoraCodigo())
-                );
-    }
-
-    @Override
-    protected void destroy() {
-        comunicador.getDisparadorActualizacion().onComplete();
     }
 
     /**

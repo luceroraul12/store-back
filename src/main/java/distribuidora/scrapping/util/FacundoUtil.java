@@ -1,14 +1,15 @@
 package distribuidora.scrapping.util;
 
-import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
 
 @Component
 public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {

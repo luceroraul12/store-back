@@ -1,8 +1,9 @@
 package distribuidora.scrapping.entities;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Es el tipo de dato que se obtiene del FrontEnd cuando se quiere hacer una actualizacion por medio de Documento
