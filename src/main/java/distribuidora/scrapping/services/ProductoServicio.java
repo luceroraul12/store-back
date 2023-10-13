@@ -5,6 +5,7 @@ import distribuidora.scrapping.repositories.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,8 +24,9 @@ public class ProductoServicio {
      * @param distribuidora distribuidora con la que se quiere trabajar.
      */
     public void actualizarProductosPorDistribuidora(List<Producto> productos, String distribuidoraCodigo){
-       eliminarProductosPorDistribuidora(distribuidoraCodigo);
-       crearProductosPorDistribuidora(productos);
+    	Date date = new Date();
+    	productos.forEach(p -> p.setDate(date));
+    	crearProductosPorDistribuidora(productos);
     }
 
     public List<Producto> obtenerTodosLosProductosAlmacenados(){

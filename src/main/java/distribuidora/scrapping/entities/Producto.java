@@ -1,9 +1,12 @@
 package distribuidora.scrapping.entities;
 
-import lombok.Builder;
-import lombok.Data;
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.Builder;
+import lombok.Data;
 
 /**
  * Es la entidad con la que llegan al FrontEnd
@@ -16,6 +19,8 @@ public class Producto {
     private String id;
     private String descripcion;
     private Double precioPorCantidadEspecifica;
+    
+    private Date date;
     /**
      * nunca puede ser nulo, ya que es el dato necesario para identificar el origen de este producto
      */
