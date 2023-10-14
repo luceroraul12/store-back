@@ -68,6 +68,7 @@ public class LaGranjaDelCentroWebScrappingServicio
 	protected void initImplementacion() {
 		setDistribuidoraCodigo(
 				Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
+		setTipoDistribuidora(TipoDistribuidora.WEB_SCRAPPING);
 		setEsBuscadorConPaginador(true);
 		setUrlBuscador(
 				"https://lagranjadelcentro.com.ar/productos.php?pagina=");
@@ -80,11 +81,4 @@ public class LaGranjaDelCentroWebScrappingServicio
 		String url = element.get(1).attr("href");
 		return Integer.parseInt(url.split("=")[1]);
 	}
-
-	@Override
-	public TipoDistribuidora getTipoDistribuidora() {
-		return TipoDistribuidora.WEB_SCRAPPING;
-	}
-	
-	
 }

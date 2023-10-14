@@ -290,5 +290,10 @@ public class InventorySystemImpl implements InventorySystem {
                 .filter(a -> !Constantes.DISTRIBUIDORAS_SIN_USO.contains(a.getDistribuidoraCodigo()))
                 .sorted((a,b) -> b.getDistribuidoraCodigo().compareTo(a.getDistribuidoraCodigo()))
                 .collect(Collectors.toList());
+	}
+
+	@Override
+	public void eliminarIndices() {
+		productoRepository.deleteAll();
 	};
 }

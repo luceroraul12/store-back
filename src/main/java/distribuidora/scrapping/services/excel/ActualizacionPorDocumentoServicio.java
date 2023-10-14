@@ -24,13 +24,13 @@ public class ActualizacionPorDocumentoServicio {
     	switch (peticion.getDistribuidoraCodigo()){
     		case Constantes.LV_DISTRIBUIDORA_VILLARES : {
     			System.out.println("Actualiza villares");
-				villaresService.adquirirProductosEntidad(peticion);
+				villaresService.generarProductosEntidadYActualizarCollecciones(peticion);
 				break;
 			}
     		
     		case Constantes.LV_DISTRIBUIDORA_INDIAS : {
     			System.out.println("Actualiza indias");
-				indiasService.adquirirProductosEntidad(peticion);
+				indiasService.generarProductosEntidadYActualizarCollecciones(peticion);
 				break;
 			}
 			default :

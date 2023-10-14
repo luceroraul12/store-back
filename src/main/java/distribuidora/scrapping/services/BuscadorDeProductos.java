@@ -135,13 +135,16 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 				this.distribuidoraCodigo);
 		// Intento actualizar los productos internos a los productos de la
 		inventorySystemService.actualizarPreciosAutomatico();
+		
+		// Valido cuantos productos existen luego de agregar nuevos
+		Integer size = productoServicio.countProductosByDistribuidoraCode(distribuidoraCodigo);
 
 		this.datoDistribuidoraServicio
 				.actualizarDatos(Collections.singletonList(DatosDistribuidora
 						.builder().distribuidoraCodigo(getDistribuidoraCodigo())
 						.fechaActualizacion(new Date())
 						.tipo(getTipoDistribuidora())
-						.cantidadDeProductosAlmacenados(productos.size())
+						.cantidadDeProductosAlmacenados(size)
 						.build()));
 
 		this.productoEspecificoServicio.actualizarDatos(productos);

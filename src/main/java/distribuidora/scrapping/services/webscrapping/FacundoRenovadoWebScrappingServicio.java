@@ -14,6 +14,7 @@ public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrappin
     @Override
     protected void initImplementacion() {
         setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_FACUNDO);
+        setTipoDistribuidora(TipoDistribuidora.WEB_SCRAPPING);
         setUrlBuscador("http://gglobal.net.ar/bernal/?cliente");
     }
 
@@ -61,11 +62,4 @@ public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrappin
     protected Elements filtrarElementos(Document documento) {
         return documento.getElementsByClass("item row pointer");
     }
-
-	@Override
-	public TipoDistribuidora getTipoDistribuidora() {
-		return TipoDistribuidora.WEB_SCRAPPING;
-	}
-    
-    
 }

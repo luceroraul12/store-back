@@ -66,9 +66,6 @@ public class ActualizacionController {
 				new PeticionWebScrapping(distribuidoraCodigo));
 	}
 
-	// TODO: este metodo de momento va aquedar fijo aca, pero en un futuro
-	// habria que crear un servicio o almacenar este dato en algun lado
-
 	/**
 	 * Devuelve un map con el tipo de busqueda por distribuidora
 	 * 
@@ -79,6 +76,11 @@ public class ActualizacionController {
 	@GetMapping
 	public List<DatosDistribuidora> obtenerTipoyEstadoDeDistribuidora() {
 		return inventorySystem.getDistribuidoraStatus();
+	}
+	
+	@GetMapping("/eliminarIndices")
+	public void eliminarIndices() {
+		inventorySystem.eliminarIndices();
 	}
 
 }

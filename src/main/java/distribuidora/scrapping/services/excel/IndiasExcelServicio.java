@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
+import distribuidora.scrapping.enums.TipoDistribuidora;
 
 @Service
 public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
@@ -38,6 +39,7 @@ public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
     @Override
     protected void initImplementacion() {
         setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_INDIAS);
+        setTipoDistribuidora(TipoDistribuidora.EXCEL);
     }
     
   

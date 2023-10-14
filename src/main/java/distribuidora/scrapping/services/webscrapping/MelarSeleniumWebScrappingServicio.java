@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.MelarEntidad;
+import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.util.MelarUtil;
 
 @Service
@@ -71,6 +72,7 @@ public class MelarSeleniumWebScrappingServicio
 	@Override
 	protected void initImplementacion() {
 		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR);
+		setTipoDistribuidora(TipoDistribuidora.WEB_SCRAPPING);
 		setUrlBuscador("https://listadepreciosmelar.com.ar");
 	}
 }
