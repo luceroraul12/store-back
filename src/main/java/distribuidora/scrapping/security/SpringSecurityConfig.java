@@ -40,6 +40,7 @@ public class SpringSecurityConfig {
         http
                 .csrf().disable() // (2)
                 .authorizeHttpRequests(aut-> aut
+                		.antMatchers("/customer/**").permitAll()
                         .antMatchers("/login/**").permitAll()
                         .antMatchers("/inventory-system/**").hasAuthority("ALL")
                         .antMatchers("/lookup/**").hasAuthority("ALL")
