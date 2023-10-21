@@ -16,8 +16,8 @@ import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.DatosDistribuidora;
-import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ExternalProduct;
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
@@ -174,11 +174,14 @@ public class InventorySystemImpl implements InventorySystem {
 					.getDistribuidoraReferencia().getCodigo();
 			String idReferencia = newEntidadInterno.getCodigoReferencia();
 			productoVinculado = productoServicio
-					.getProductoByDistribuidoraCodigoAndId(distribuidoraCodigo,
-							idReferencia);
+					.getByDistribuidoraCodeAndProductCode(distribuidoraCodigo,
+							idReferencia)
+					.stream().findFirst().orElse(null);
 			if (productoVinculado != null) {
-				newEntidadInterno.setCodigoReferencia(productoVinculado.getCode());
-				LookupValor lv = lookupService.getLookupValueByCode(distribuidoraCodigo);
+				newEntidadInterno
+						.setCodigoReferencia(productoVinculado.getCode());
+				LookupValor lv = lookupService
+						.getLookupValueByCode(distribuidoraCodigo);
 				newEntidadInterno.setDistribuidoraReferencia(lv);
 			}
 		}

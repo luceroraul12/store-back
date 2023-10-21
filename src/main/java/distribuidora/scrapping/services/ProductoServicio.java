@@ -30,11 +30,12 @@ public class ProductoServicio {
 	 */
 	public void actualizarProductosPorDistribuidora(List<ExternalProduct> productos,
 			String distribuidoraCodigo) {
+		//TODO: Adaptar a SQL
 		Date date = new Date();
 		productos.forEach(p -> p.setDate(date));
 		// Hago la validacion de productos existentes
-		List<ExternalProduct> productExisted = getProductosByDistribuidoraCodigo(
-				distribuidoraCodigo);
+		List<ExternalProduct> productExisted = getByDistribuidoraCodeAndProductCode(
+				distribuidoraCodigo, null);
 		List<ExternalProduct> productToUpdate = new ArrayList();
 		List<ExternalProduct> productToNew = new ArrayList<>();
 		for (ExternalProduct p : productos) {
@@ -61,22 +62,15 @@ public class ProductoServicio {
 	public List<ExternalProduct> obtenerTodosLosProductosAlmacenados() {
 		return this.productoRepository.findAll();
 	}
-	private void eliminarProductosPorDistribuidora(String distribuidoraCodigo) {
-		this.productoRepository
-				.deleteAllByDistribuidoraCodigo(distribuidoraCodigo);
-	}
 
-	private List<ExternalProduct> getProductosByDistribuidoraCodigo(
-			String distribuidoraCodigo) {
-		return productoRepository.findByDistribuidoraCodigo(distribuidoraCodigo);
-	}
-	public ExternalProduct getProductoByDistribuidoraCodigoAndId(
+	public List<ExternalProduct> getByDistribuidoraCodeAndProductCode(
 			String distribuidoraCodigo, String idReferencia) {
-		return this.productoRepository.findByDistribuidoraCodigoAndId(
+		return this.productoRepository.findByDistribuidoraCodeAndProductCode(
 				distribuidoraCodigo, idReferencia);
 	}
-	
-	public Integer countProductosByDistribuidoraCode(String distribuidoraCode){
-		return getProductosByDistribuidoraCodigo(distribuidoraCode).size();
+
+	public Integer countProductosByDistribuidoraCode(
+			String distribuidoraCodigo) {
+		return null;
 	}
 }
