@@ -22,8 +22,8 @@ import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
-import distribuidora.scrapping.repositories.postgres.ProductoRepository;
-import distribuidora.scrapping.services.ProductoServicio;
+import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
+import distribuidora.scrapping.services.ExternalProductService;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.converters.CategoryHasUnitDtoConverter;
 import distribuidora.scrapping.util.converters.ProductoInternoConverter;
@@ -35,7 +35,7 @@ public class InventorySystemImpl implements InventorySystem {
 	private ProductoInternoRepository productoInternoRepository;
 
 	@Autowired
-	private ProductoRepository productoRepository;
+	private ExternalProductRepository productoRepository;
 
 	@Autowired
 	private CategoryHasUnitRepository categoryHasUnitRepository;
@@ -44,7 +44,7 @@ public class InventorySystemImpl implements InventorySystem {
 	private ProductoInternoConverter productoInternoConverter;
 
 	@Autowired
-	private ProductoServicio productoServicio;
+	private ExternalProductService productoServicio;
 
 	@Autowired
 	private CategoryHasUnitDtoConverter categoryHasUnitDtoConverter;

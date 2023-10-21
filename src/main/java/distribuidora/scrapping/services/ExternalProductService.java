@@ -1,23 +1,31 @@
 package distribuidora.scrapping.services;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.entities.ExternalProduct;
-import distribuidora.scrapping.repositories.postgres.ProductoRepository;
+import distribuidora.scrapping.entities.LookupValor;
+import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
+import distribuidora.scrapping.services.general.LookupService;
+import io.jsonwebtoken.lang.Collections;
 
 /**
  * Encargada de la collecion de productos finales.
  */
 @Service
-public class ProductoServicio {
+public class ExternalProductService {
 
 	@Autowired
-	ProductoRepository productoRepository;
+	ExternalProductRepository productoRepository;
+	
+	@Autowired
+	LookupService lookupService;
 
 	/**
 	 * Actualiza los productos de cierta distribuidora. Almacena productos, en
@@ -38,7 +46,10 @@ public class ProductoServicio {
 				distribuidoraCodigo, null);
 		List<ExternalProduct> productToUpdate = new ArrayList();
 		List<ExternalProduct> productToNew = new ArrayList<>();
+		LookupValor lvDistribuidora = lookupService.getLookupValueByCode(distribuidoraCodigo);
 		for (ExternalProduct p : productos) {
+			// Actualizo el lookup a cada producto
+			p.setDistribuidora(lvDistribuidora);
 			boolean isRepeated = false;
 			for (ExternalProduct pE : productExisted) {
 				if(p.getTitle().equals(pE.getTitle())) {
@@ -53,14 +64,13 @@ public class ProductoServicio {
 			if(!isRepeated)
 				productToNew.add(p);
 		}
-		
-		// Persisto los datos
+		// En una unica lista meto todos los productos y los persisto
+		productToNew.addAll(productToUpdate);
 		productoRepository.saveAll(productToNew);
-		productoRepository.saveAll(productToUpdate);
 	}
 
-	public List<ExternalProduct> obtenerTodosLosProductosAlmacenados() {
-		return this.productoRepository.findAll();
+	public List<ExternalProduct> getBySearch(String search) {
+		return this.productoRepository.findBySearch(search);
 	}
 
 	public List<ExternalProduct> getByDistribuidoraCodeAndProductCode(

@@ -54,7 +54,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 	 * Servicio basado en Productos finales.
 	 */
 	@Autowired
-	private ProductoServicio productoServicio;
+	private ExternalProductService productoServicio;
 
 	/**
 	 * Servicio que hace referencia a las diferentes implementaciones para

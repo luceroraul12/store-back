@@ -1,7 +1,7 @@
 package distribuidora.scrapping.controller;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.entities.ExternalProduct;
-import distribuidora.scrapping.services.BuscadorPorMedioDeTerminoServicio;
+import distribuidora.scrapping.services.ExternalProductService;
 
 /**
  * De momento solo se encarga de las busquedas sobre las bases de datos.
@@ -20,7 +20,7 @@ import distribuidora.scrapping.services.BuscadorPorMedioDeTerminoServicio;
 public class DieteticaController {
 
     @Autowired
-    BuscadorPorMedioDeTerminoServicio buscador;
+    ExternalProductService productoService;
 
     /**
      * Metodo para hacer busquedas en funcion a un termino de busqueda
@@ -29,11 +29,11 @@ public class DieteticaController {
      * @see ExternalProduct
      * @throws IOException
      */
-    @GetMapping("productos")
-    public Collection<ExternalProduct> obtenerTodosLosProductos(@RequestParam(name = "busqueda") String busqueda) throws IOException {
-//        return repository.buscarConTermino(busqueda);
-        return buscador.filtrarProductos(busqueda);
-//        return recolectorDeProductosServicio.obtenerTodosLosProductos(busqueda);
-    }
+	@GetMapping("productos")
+	public List<ExternalProduct> obtenerTodosLosProductos(
+			@RequestParam(name = "busqueda") String busqueda)
+			throws IOException {
+		return productoService.getBySearch(busqueda);
+	}
 
 }

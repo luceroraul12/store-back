@@ -23,7 +23,7 @@ import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
-import distribuidora.scrapping.repositories.postgres.ProductoRepository;
+import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
 import distribuidora.scrapping.services.general.LookupServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,7 +39,7 @@ class InventorySystemImplTest {
 	ProductoInternoRepository productoInternoRepository;
 
     @Mock
-    ProductoRepository productoRepository;
+    ExternalProductRepository productoRepository;
 
     List<ExternalProduct> especificos;
     List<ProductoInterno> internos;

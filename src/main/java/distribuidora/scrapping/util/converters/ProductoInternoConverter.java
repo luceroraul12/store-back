@@ -13,7 +13,7 @@ import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.repositories.postgres.ProductoRepository;
+import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
 import distribuidora.scrapping.services.general.LookupService;
 
 @Component
@@ -22,7 +22,7 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 	LookupService lookupService;
 
 	@Autowired
-	ProductoRepository productoRepository;
+	ExternalProductRepository productoRepository;
 	
 	@Autowired
 	LookupValueDtoConverter lookupValueDtoConverter;
