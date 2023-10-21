@@ -51,6 +51,7 @@ public class LaGranjaDelCentroWebScrappingServicio
 			Element elementProducto) {
 		return LaGranjaDelCentroEntidad.builder()
 				.distribuidoraCodigo(getDistribuidoraCodigo())
+				.id(elementProducto.attr("data-product-id"))
 				.nombreProducto(elementProducto
 						.getElementsByClass("h3-content-1").text())
 				.precio(Double.valueOf(elementProducto
