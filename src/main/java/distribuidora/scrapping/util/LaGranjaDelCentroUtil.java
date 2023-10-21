@@ -17,6 +17,7 @@ public class LaGranjaDelCentroUtil extends ProductoUtil<LaGranjaDelCentroEntidad
         return Collections.singletonList(ExternalProduct.builder()
                 .title(productoSinConvertir.getNombreProducto())
                 .price(productoSinConvertir.getPrecio())
+                .code(productoSinConvertir.getId())
                 .distribuidora(new LookupValor(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO))
                 .build());
     }

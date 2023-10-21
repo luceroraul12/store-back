@@ -18,6 +18,7 @@ public class DonGasparUtil extends ProductoUtil<DonGasparEntidad> {
         return Collections.singletonList(ExternalProduct.builder()
                 .title(productoSinConvertir.getNombreProducto())
                 .price(productoSinConvertir.getPrecio())
+                .code(productoSinConvertir.getId())
                 .distribuidora(new LookupValor(Constantes.LV_DISTRIBUIDORA_DON_GASPAR))
                 .build());
     }
