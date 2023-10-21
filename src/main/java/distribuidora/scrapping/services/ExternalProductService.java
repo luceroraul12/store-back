@@ -88,7 +88,7 @@ public class ExternalProductService {
 	}
 
 	public Integer countProductosByDistribuidoraCode(
-			String distribuidoraCodigo) {
-		return null;
+			String distribuidoraCode) {
+		return productoRepository.countExternalProductsByDistribuidoraCode(distribuidoraCode);
 	}
 }

@@ -23,4 +23,10 @@ public interface ExternalProductRepository extends JpaRepository<ExternalProduct
 			+ "FROM ExternalProduct ep "
 			+ "WHERE ep.title LIKE CONCAT('%', :search, '%') ")
 	List<ExternalProduct> findBySearch(@Param("search") String search);
+
+	@Query("SELECT COUNT(ep) "
+			+ "FROM ExternalProduct ep "
+			+ "	INNER JOIN ep.distribuidora d "
+			+ "WHERE d.codigo = :distribuidoraCode ")
+	Integer countExternalProductsByDistribuidoraCode(String distribuidoraCode);
 }
