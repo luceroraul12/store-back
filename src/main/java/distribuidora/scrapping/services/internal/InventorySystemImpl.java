@@ -17,12 +17,12 @@ import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.LookupValor;
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
-import distribuidora.scrapping.repositories.ProductoRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
+import distribuidora.scrapping.repositories.postgres.ProductoRepository;
 import distribuidora.scrapping.services.ProductoServicio;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.converters.CategoryHasUnitDtoConverter;
@@ -61,7 +61,7 @@ public class InventorySystemImpl implements InventorySystem {
 		// internos
 		List<ProductoInterno> productoInternos = productoInternoRepository
 				.getProductosReferenciados();
-		List<Producto> productoEspecificos = productoRepository.findAll();
+		List<ExternalProduct> productoEspecificos = productoRepository.findAll();
 		// tengo en cuenta la fecha al comenzar el proceso
 		Date now = new Date();
 
@@ -91,11 +91,11 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Override
 	public void actualizarPrecioConProductosEspecificos(
-			List<Producto> especificos, List<ProductoInterno> internos) {
+			List<ExternalProduct> especificos, List<ProductoInterno> internos) {
 		// agrupo por distribuidora / codigo de referencia tanto interno como
 		// especifico
-		Map<String, Map<String, Producto>> mapEspecifico = especificos.stream()
-				.collect(Collectors.groupingBy(e -> e.getDistribuidoraCodigo(),
+		Map<String, Map<Integer, ExternalProduct>> mapEspecifico = especificos.stream()
+				.collect(Collectors.groupingBy(e -> e.getDistribuidora().getCodigo(),
 						Collectors.toMap(e -> e.getId(), Function.identity())));
 
 		// Agrupo por distribuidora de referencia
@@ -119,10 +119,10 @@ public class InventorySystemImpl implements InventorySystem {
 					.entrySet()) {
 				String codigoReferencia = e.getKey();
 				List<ProductoInterno> productosCompartidos = e.getValue();
-				Map<String, Producto> first = mapEspecifico
+				Map<Integer, ExternalProduct> first = mapEspecifico
 						.get(codigoDistribuidoraReferencia);
 				if (first != null && first.containsKey(codigoReferencia)) {
-					Producto matchProducto = first.get(codigoReferencia);
+					ExternalProduct matchProducto = first.get(codigoReferencia);
 					if (matchProducto != null) {
 						Double precio = matchProducto
 								.getPrecioPorCantidadEspecifica();
@@ -164,7 +164,7 @@ public class InventorySystemImpl implements InventorySystem {
 
 		ProductoInterno newEntidadInterno = productoInternoConverter
 				.toEntidad(dto);
-		Producto productoVinculado = null;
+		ExternalProduct productoVinculado = null;
 
 		// Actualizo el precio del oldEntidadInterno con el precio del
 		// oldEntidadInterno si es que existe
@@ -177,7 +177,7 @@ public class InventorySystemImpl implements InventorySystem {
 					.getProductoByDistribuidoraCodigoAndId(distribuidoraCodigo,
 							idReferencia);
 			if (productoVinculado != null) {
-				newEntidadInterno.setCodigoReferencia(productoVinculado.getId());
+				newEntidadInterno.setCodigoReferencia(productoVinculado.getCode());
 				LookupValor lv = lookupService.getLookupValueByCode(distribuidoraCodigo);
 				newEntidadInterno.setDistribuidoraReferencia(lv);
 			}
@@ -193,7 +193,7 @@ public class InventorySystemImpl implements InventorySystem {
 
 		dto = productoInternoConverter.toDto(productoGuardado);
 		if (productoVinculado != null)
-			dto.setReferenciaNombre(productoVinculado.getDescripcion());
+			dto.setReferenciaNombre(productoVinculado.getTitle());
 
 		return dto;
 	}

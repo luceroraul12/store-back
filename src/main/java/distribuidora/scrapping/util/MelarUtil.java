@@ -7,15 +7,16 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.productos.especificos.MelarEntidad;
 
 @Component
 public class MelarUtil extends ProductoUtil<MelarEntidad> {
 	@Override
-	public List<Producto> convertirProductoyDevolverlo(
+	public List<ExternalProduct> convertirProductoyDevolverlo(
 			MelarEntidad productoSinConvertir) {
-		List<Producto> productosCreados = new ArrayList<>();
+		List<ExternalProduct> productosCreados = new ArrayList<>();
 
 		/*
 		 * Hay que tener cuidado cons los precios, debido a que el monto siempre
@@ -46,17 +47,17 @@ public class MelarUtil extends ProductoUtil<MelarEntidad> {
 				productoSinConvertir.getGranel(),
 				productoSinConvertir.getMedida());
 
-		productosCreados.add(Producto.builder()
-				.id(productoSinConvertir.getCodigo() + "F")
-				.descripcion(descripcionFraccion)
-				.precioPorCantidadEspecifica(preciosCalculados.get("fraccion"))
-				.distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR)
+		productosCreados.add(ExternalProduct.builder()
+				.code(productoSinConvertir.getCodigo() + "F")
+				.title(descripcionFraccion)
+				.price(preciosCalculados.get("fraccion"))
+				.distribuidora(new LookupValor(Constantes.LV_DISTRIBUIDORA_MELAR))
 				.build());
-		productosCreados.add(Producto.builder()
-				.id(productoSinConvertir.getCodigo() + "G")
-				.descripcion(descripcionGranel)
-				.precioPorCantidadEspecifica(preciosCalculados.get("granel"))
-				.distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_MELAR)
+		productosCreados.add(ExternalProduct.builder()
+				.code(productoSinConvertir.getCodigo() + "G")
+				.title(descripcionGranel)
+				.price(preciosCalculados.get("granel"))
+				.distribuidora(new LookupValor(Constantes.LV_DISTRIBUIDORA_MELAR))
 				.build());
 
 		return productosCreados;

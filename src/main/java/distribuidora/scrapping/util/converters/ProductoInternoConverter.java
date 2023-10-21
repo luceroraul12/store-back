@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.LookupValor;
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.repositories.ProductoRepository;
+import distribuidora.scrapping.repositories.postgres.ProductoRepository;
 import distribuidora.scrapping.services.general.LookupService;
 
 @Component
@@ -96,18 +96,18 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 	@Override
 	public List<ProductoInternoDto> toDtoList(List<ProductoInterno> productoInternos) {
 		List<ProductoInternoDto> list = super.toDtoList(productoInternos);
-		Map<String, Map<String, Producto>> mapProductFixed = productoRepository.findAll().stream()
-				.collect(Collectors.groupingBy(Producto::getDistribuidoraCodigo,
+		Map<String, Map<Integer, ExternalProduct>> mapProductFixed = productoRepository.findAll().stream()
+				.collect(Collectors.groupingBy(ep -> ep.getDistribuidora().getCodigo(),
 						Collectors.toMap(p -> p.getId(), Function.identity())));
 		list = list.stream()
 				.map(p -> {
 					if (p.getDistribuidoraReferenciaCodigo() != null){
 						if (mapProductFixed.containsKey(p.getDistribuidoraReferenciaCodigo())){
-							Map<String, Producto> mapDistro = mapProductFixed.get(p.getDistribuidoraReferenciaCodigo());
+							Map<Integer, ExternalProduct> mapDistro = mapProductFixed.get(p.getDistribuidoraReferenciaCodigo());
 							if (mapDistro.containsKey(p.getCodigoReferencia())){
-								Producto productDistro = mapDistro.get(p.getCodigoReferencia());
+								ExternalProduct productDistro = mapDistro.get(p.getCodigoReferencia());
 								if (productDistro != null){
-									p.setReferenciaNombre(productDistro.getDescripcion());
+									p.setReferenciaNombre(productDistro.getTitle());
 								}
 							}
 						}

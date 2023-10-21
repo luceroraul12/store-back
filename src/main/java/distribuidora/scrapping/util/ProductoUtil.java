@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
 
 public abstract class ProductoUtil<Entidad> {
 
@@ -23,14 +23,14 @@ public abstract class ProductoUtil<Entidad> {
 	 * @param productos
 	 * @return
 	 */
-	public List<Producto> arregloToProducto(List<Entidad> productos) {
+	public List<ExternalProduct> arregloToProducto(List<Entidad> productos) {
 		int numeroDeHilos = 4;
 		int cantidadDeProductosEntidad = productos.size();
 		int intervalo = cantidadDeProductosEntidad / numeroDeHilos;
 		ExecutorService hilos = Executors.newFixedThreadPool(numeroDeHilos);
 
 		List<List<Entidad>> listaDivididaEnPartas = new ArrayList<>();
-		List<Future<List<Producto>>> futureList = new ArrayList<>();
+		List<Future<List<ExternalProduct>>> futureList = new ArrayList<>();
 
 		for (int i = 0; i < numeroDeHilos; i++) {
 			int indiceInicial = i * intervalo;
@@ -41,16 +41,16 @@ public abstract class ProductoUtil<Entidad> {
 					.add(productos.subList(indiceInicial, indiceFinal));
 		}
 		for (List<Entidad> lista : listaDivididaEnPartas) {
-			futureList.add(hilos.submit(new Callable<List<Producto>>() {
+			futureList.add(hilos.submit(new Callable<List<ExternalProduct>>() {
 				@Override
-				public List<Producto> call() throws Exception {
+				public List<ExternalProduct> call() throws Exception {
 					return lista.stream().map(
 							productoEntidad -> convertirProductoyDevolverlo(
 									productoEntidad))
 							.flatMap(Collection::stream)
-							.peek(p -> p.setDescripcion(
+							.peek(p -> p.setTitle(
 									quitarAcentosYDevolverMayuscula(
-											p.getDescripcion())))
+											p.getTitle())))
 							.collect(Collectors.toList());
 				}
 			}));
@@ -79,7 +79,7 @@ public abstract class ProductoUtil<Entidad> {
 	 * @see ProductoUtil#validaryAgregarPropiedadesQueNoEstanRepetidasEnOriginal(String,
 	 *      List)
 	 */
-	public abstract List<Producto> convertirProductoyDevolverlo(
+	public abstract List<ExternalProduct> convertirProductoyDevolverlo(
 			Entidad productoSinConvertir);
 
 	private String quitarAcentosYDevolverMayuscula(String s) {

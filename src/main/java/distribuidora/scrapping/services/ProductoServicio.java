@@ -7,8 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import distribuidora.scrapping.entities.Producto;
-import distribuidora.scrapping.repositories.ProductoRepository;
+import distribuidora.scrapping.entities.ExternalProduct;
+import distribuidora.scrapping.repositories.postgres.ProductoRepository;
 
 /**
  * Encargada de la collecion de productos finales.
@@ -28,22 +28,22 @@ public class ProductoServicio {
 	 * @param distribuidora
 	 *            distribuidora con la que se quiere trabajar.
 	 */
-	public void actualizarProductosPorDistribuidora(List<Producto> productos,
+	public void actualizarProductosPorDistribuidora(List<ExternalProduct> productos,
 			String distribuidoraCodigo) {
 		Date date = new Date();
 		productos.forEach(p -> p.setDate(date));
 		// Hago la validacion de productos existentes
-		List<Producto> productExisted = getProductosByDistribuidoraCodigo(
+		List<ExternalProduct> productExisted = getProductosByDistribuidoraCodigo(
 				distribuidoraCodigo);
-		List<Producto> productToUpdate = new ArrayList();
-		List<Producto> productToNew = new ArrayList<>();
-		for (Producto p : productos) {
+		List<ExternalProduct> productToUpdate = new ArrayList();
+		List<ExternalProduct> productToNew = new ArrayList<>();
+		for (ExternalProduct p : productos) {
 			boolean isRepeated = false;
-			for (Producto pE : productExisted) {
-				if(p.getDescripcion().equals(pE.getDescripcion())) {
+			for (ExternalProduct pE : productExisted) {
+				if(p.getTitle().equals(pE.getTitle())) {
 					// Actualizo al antiguo producto, los valores nuevos
 					pE.setDate(date);
-					pE.setPrecioPorCantidadEspecifica(p.getPrecioPorCantidadEspecifica());
+					pE.setPrice(p.getPrecioPorCantidadEspecifica());
 					// Agrego al listado
 					productToUpdate.add(pE);
 					isRepeated = true;
@@ -58,7 +58,7 @@ public class ProductoServicio {
 		productoRepository.saveAll(productToUpdate);
 	}
 
-	public List<Producto> obtenerTodosLosProductosAlmacenados() {
+	public List<ExternalProduct> obtenerTodosLosProductosAlmacenados() {
 		return this.productoRepository.findAll();
 	}
 	private void eliminarProductosPorDistribuidora(String distribuidoraCodigo) {
@@ -66,11 +66,11 @@ public class ProductoServicio {
 				.deleteAllByDistribuidoraCodigo(distribuidoraCodigo);
 	}
 
-	private List<Producto> getProductosByDistribuidoraCodigo(
+	private List<ExternalProduct> getProductosByDistribuidoraCodigo(
 			String distribuidoraCodigo) {
 		return productoRepository.findByDistribuidoraCodigo(distribuidoraCodigo);
 	}
-	public Producto getProductoByDistribuidoraCodigoAndId(
+	public ExternalProduct getProductoByDistribuidoraCodigoAndId(
 			String distribuidoraCodigo, String idReferencia) {
 		return this.productoRepository.findByDistribuidoraCodigoAndId(
 				distribuidoraCodigo, idReferencia);

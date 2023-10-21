@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.services.BuscadorPorMedioDeTerminoServicio;
 
 /**
@@ -26,11 +26,11 @@ public class DieteticaController {
      * Metodo para hacer busquedas en funcion a un termino de busqueda
      * @param busqueda Solo tiene en cuenta la descripcion. Puede ser nulo para traer todos los datos.
      * @return Devuelve una collecion de Productos, cada uno tiene una descripcion y precio por cierta cantidad especifica.
-     * @see Producto
+     * @see ExternalProduct
      * @throws IOException
      */
     @GetMapping("productos")
-    public Collection<Producto> obtenerTodosLosProductos(@RequestParam(name = "busqueda") String busqueda) throws IOException {
+    public Collection<ExternalProduct> obtenerTodosLosProductos(@RequestParam(name = "busqueda") String busqueda) throws IOException {
 //        return repository.buscarConTermino(busqueda);
         return buscador.filtrarProductos(busqueda);
 //        return recolectorDeProductosServicio.obtenerTodosLosProductos(busqueda);

@@ -9,21 +9,22 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
 
 @Component
 public class IndiasUtil extends ProductoExcelUtil<IndiasEntidad> {
 	@Override
-	public List<Producto> convertirProductoyDevolverlo(
+	public List<ExternalProduct> convertirProductoyDevolverlo(
 			IndiasEntidad productoEntidad) {
 		String descripcion = String.format("%s",
 				productoEntidad.getDescripcion());
-		return Collections.singletonList(Producto.builder()
-				.id(productoEntidad.getCodigo().toString())
-				.descripcion(descripcion)
-				.precioPorCantidadEspecifica(productoEntidad.getPrecio())
-				.distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_INDIAS)
+		return Collections.singletonList(ExternalProduct.builder()
+				.code(productoEntidad.getCodigo().toString())
+				.title(descripcion)
+				.price(productoEntidad.getPrecio())
+				.distribuidora(new LookupValor(Constantes.LV_DISTRIBUIDORA_INDIAS))
 				.build());
 	}
 

@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.productos.especificos.VillaresEntidad;
 import distribuidora.scrapping.util.VillaresUtil;
 
@@ -50,17 +50,17 @@ class VillaresExcelServicioTest {
         MultipartFile[] multipartFile = new MultipartFile[1];
         multipartFile[0] = new MockMultipartFile("villares", new FileInputStream(file));
         List<VillaresEntidad> productos = servicio.obtenerProductosApartirDeExcels(multipartFile);
-        List<Producto> productosFinales = villaresUtil.arregloToProducto(productos);
+        List<ExternalProduct> productosFinales = villaresUtil.arregloToProducto(productos);
 
         assertEquals(1007, productosFinales.size());
     }
 
     @Test
     void buscoProductosExistentes() throws IOException {
-        Map<String, Producto> mapProductosFinales = villaresUtil.arregloToProducto(productos).stream()
-                .collect(Collectors.toMap(Producto::getId, Function.identity()));
+        Map<Integer, ExternalProduct> mapProductosFinales = villaresUtil.arregloToProducto(productos).stream()
+                .collect(Collectors.toMap(ExternalProduct::getId, Function.identity()));
 
-        assertTrue(mapProductosFinales.get("44955R-48").getDescripcion().toUpperCase()
+        assertTrue(mapProductosFinales.get("44955R-48").getTitle().toUpperCase()
                 .contains("Almendra pelada".toUpperCase()));
     }
 }

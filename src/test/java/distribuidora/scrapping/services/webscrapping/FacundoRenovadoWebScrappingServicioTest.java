@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
 import distribuidora.scrapping.util.FacundoUtil;
 
@@ -42,8 +42,8 @@ class FacundoRenovadoWebScrappingServicioTest {
     @Test
     void pruebaIds(){
         List<FacundoEntidad> productos = servicio.obtenerProductosPorDocument(document);
-        Map<String, Double> mapProductos = facundoUtil.arregloToProducto(productos).stream()
-                .collect(Collectors.toMap(Producto::getId, Producto::getPrecioPorCantidadEspecifica));
+        Map<Integer, Double> mapProductos = facundoUtil.arregloToProducto(productos).stream()
+                .collect(Collectors.toMap(ExternalProduct::getId, ExternalProduct::getPrice));
         assertEquals(2200, mapProductos.get("482"));
         assertEquals(7500, mapProductos.get("519"));
         assertEquals(200, mapProductos.get("237"));

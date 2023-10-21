@@ -8,7 +8,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
 
 @Component
@@ -17,21 +18,20 @@ public class FacundoUtil extends ProductoExcelUtil<FacundoEntidad> {
 	private String categoriaExcel;
 
 	@Override
-	public List<Producto> convertirProductoyDevolverlo(
+	public List<ExternalProduct> convertirProductoyDevolverlo(
 			FacundoEntidad productoEntidad) {
 		String distribuidoraCodigo = Constantes.LV_DISTRIBUIDORA_FACUNDO;
-		List<Producto> productosGenerados = new ArrayList<>();
+		List<ExternalProduct> productosGenerados = new ArrayList<>();
 		String descripcionMayor = String.format("%s - %s",
 				productoEntidad.getCategoriaRenglon(),
 				productoEntidad.getCategoria());
 
-		productosGenerados.add(Producto.builder().id(productoEntidad.getId())
-				.descripcion(descripcionMayor)
-				.precioPorCantidadEspecifica(
-						productoEntidad.getPrecioMayor() != null
-								? productoEntidad.getPrecioMayor()
-								: 0.0)
-				.distribuidoraCodigo(distribuidoraCodigo).build());
+		productosGenerados.add(ExternalProduct.builder()
+				.code(productoEntidad.getId()).title(descripcionMayor)
+				.price(productoEntidad.getPrecioMayor() != null
+						? productoEntidad.getPrecioMayor()
+						: 0.0)
+				.distribuidora(new LookupValor(distribuidoraCodigo)).build());
 
 		return productosGenerados;
 	}

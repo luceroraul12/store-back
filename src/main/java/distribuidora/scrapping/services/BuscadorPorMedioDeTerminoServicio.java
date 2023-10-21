@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
 
 /**
  * Servicio encargado del filtrado de productos.
@@ -24,7 +24,7 @@ public class BuscadorPorMedioDeTerminoServicio {
      * @param busqueda termino de busqueda.
      * @return conjunto de productos que pasaron el filtrado.
      */
-    public Collection<Producto> filtrarProductos(String busqueda){
+    public Collection<ExternalProduct> filtrarProductos(String busqueda){
         String[] partesDeBusqueda = busqueda.split(" ");
         Pattern patron = crearPatronRegex(partesDeBusqueda);
         return productoServicio.obtenerTodosLosProductosAlmacenados().stream()
@@ -39,9 +39,9 @@ public class BuscadorPorMedioDeTerminoServicio {
      * @param patron patron de busqueda para utilizar
      * @return booleano que indica si ha pasado la validacion
      */
-    private boolean esProductoValido(Producto p, Pattern patron) {
+    private boolean esProductoValido(ExternalProduct p, Pattern patron) {
         return patron
-                .matcher(p.getDescripcion())
+                .matcher(p.getTitle())
                 .find();
     }
 

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.DatosDistribuidora;
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.ProductoInterno;
 
 @Service
@@ -27,7 +27,7 @@ public interface InventorySystem {
 	 * @param internos lista de productos de la tienda actual
 	 * @see #actualizarPreciosAutomatico()
 	 */
-	void actualizarPrecioConProductosEspecificos(List<Producto> especificos, List<ProductoInterno> internos);
+	void actualizarPrecioConProductosEspecificos(List<ExternalProduct> especificos, List<ProductoInterno> internos);
 	ProductoInternoDto crearProducto(ProductoInternoDto dto);
 	ProductoInternoDto modificarProducto(ProductoInternoDto dto);
 	List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds);

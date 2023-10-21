@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
 import distribuidora.scrapping.util.IndiasUtil;
 
@@ -44,15 +44,15 @@ class IndiasExcelServicioTest {
 
     @Test
     void pruebaRow() throws IOException {
-        List<Producto> productosFinales = indiasUtil.arregloToProducto(productos);
+        List<ExternalProduct> productosFinales = indiasUtil.arregloToProducto(productos);
 
         assertEquals(405, productosFinales.size());
     }
 
     @Test
     void buscoProductosExistentes() throws IOException {
-        Map<String, String> mapProductosFinales = indiasUtil.arregloToProducto(productos).stream()
-                .collect(Collectors.toMap(Producto::getId, Producto::getDescripcion));
+        Map<Integer, String> mapProductosFinales = indiasUtil.arregloToProducto(productos).stream()
+                .collect(Collectors.toMap(ExternalProduct::getId, ExternalProduct::getTitle));
 
         assertTrue("LECHE DE COCO CELEBES 24x400".equalsIgnoreCase(mapProductosFinales.get("2217")));
         assertTrue("CIRUELAS SIN CAROZO x 5 kg.".equalsIgnoreCase(mapProductosFinales.get("3193")));

@@ -8,7 +8,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.productos.especificos.VillaresEntidad;
 
 @Component
@@ -91,7 +92,7 @@ public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad>{
     }
 
     @Override
-    public List<Producto> convertirProductoyDevolverlo(VillaresEntidad productoSinConvertir) {
+    public List<ExternalProduct> convertirProductoyDevolverlo(VillaresEntidad productoSinConvertir) {
         String marca = !productoSinConvertir.getMarca().isEmpty()
                 ? productoSinConvertir.getMarca() + ":"
                 : "";
@@ -106,11 +107,11 @@ public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad>{
                 cantidades,
                 productoSinConvertir.getUnidad()
                 );
-        return Collections.singletonList(Producto.builder()
-                .id(productoSinConvertir.getId())
-                .descripcion(descripcion)
-                .precioPorCantidadEspecifica(productoSinConvertir.getPrecioLista())
-                .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_VILLARES)
+        return Collections.singletonList(ExternalProduct.builder()
+                .code(productoSinConvertir.getId())
+                .title(descripcion)
+                .price(productoSinConvertir.getPrecioLista())
+                .distribuidora(new LookupValor(Constantes.LV_DISTRIBUIDORA_VILLARES))
                 .build());
     }
 }

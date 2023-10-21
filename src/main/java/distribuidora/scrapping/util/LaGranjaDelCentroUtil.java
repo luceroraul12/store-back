@@ -6,17 +6,18 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.Producto;
+import distribuidora.scrapping.entities.ExternalProduct;
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
 
 @Component
 public class LaGranjaDelCentroUtil extends ProductoUtil<LaGranjaDelCentroEntidad>{
     @Override
-    public List<Producto> convertirProductoyDevolverlo(LaGranjaDelCentroEntidad productoSinConvertir) {
-        return Collections.singletonList(Producto.builder()
-                .descripcion(productoSinConvertir.getNombreProducto())
-                .precioPorCantidadEspecifica(productoSinConvertir.getPrecio())
-                .distribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO)
+    public List<ExternalProduct> convertirProductoyDevolverlo(LaGranjaDelCentroEntidad productoSinConvertir) {
+        return Collections.singletonList(ExternalProduct.builder()
+                .title(productoSinConvertir.getNombreProducto())
+                .price(productoSinConvertir.getPrecio())
+                .distribuidora(new LookupValor(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO))
                 .build());
     }
 }
