@@ -9,10 +9,13 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import distribuidora.scrapping.dto.ExternalProductDto;
+import distribuidora.scrapping.dto.LookupValueDto;
 import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
 import distribuidora.scrapping.services.general.LookupService;
+import distribuidora.scrapping.util.converters.ExternalProductDtoConverter;
 import io.jsonwebtoken.lang.Collections;
 
 /**
@@ -26,6 +29,9 @@ public class ExternalProductService {
 	
 	@Autowired
 	LookupService lookupService;
+	
+	@Autowired
+	ExternalProductDtoConverter externalProductDtoConverter;
 
 	/**
 	 * Actualiza los productos de cierta distribuidora. Almacena productos, en
@@ -70,8 +76,9 @@ public class ExternalProductService {
 		productoRepository.saveAll(productToNew);
 	}
 
-	public List<ExternalProduct> getBySearch(String search) {
-		return this.productoRepository.findBySearch(search);
+	public List<ExternalProductDto> getBySearch(String search) {
+		return externalProductDtoConverter.toDtoList(this.productoRepository
+				.findBySearch(search.toUpperCase())); 
 	}
 
 	public List<ExternalProduct> getByDistribuidoraCodeAndProductCode(

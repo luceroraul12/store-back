@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import distribuidora.scrapping.dto.ExternalProductDto;
 import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.services.ExternalProductService;
 
@@ -30,7 +31,7 @@ public class DieteticaController {
      * @throws IOException
      */
 	@GetMapping("productos")
-	public List<ExternalProduct> obtenerTodosLosProductos(
+	public List<ExternalProductDto> obtenerTodosLosProductos(
 			@RequestParam(name = "busqueda") String busqueda)
 			throws IOException {
 		return productoService.getBySearch(busqueda);

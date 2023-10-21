@@ -1,5 +1,6 @@
 package distribuidora.scrapping.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
