@@ -56,6 +56,7 @@ public class ExternalProductService {
 					// Actualizo al antiguo producto, los valores nuevos
 					pE.setDate(date);
 					pE.setPrice(p.getPrecioPorCantidadEspecifica());
+					pE.setTitle(p.getTitle());
 					// Agrego al listado
 					productToUpdate.add(pE);
 					isRepeated = true;
