@@ -18,10 +18,7 @@ public class ProductoInternoDto {
 	private String nombre;
 	private String descripcion;
 	private Double precio;
-	private String codigoReferencia;
-	private String distribuidoraReferenciaCodigo;
-	private String distribuidoraReferenciaNombre;
-	private String referenciaNombre;
+	private ExternalProductDto externalProduct;
 	private LookupValueDto category;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;

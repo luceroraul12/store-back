@@ -55,6 +55,9 @@ public class ProductoInterno {
 	private Double precioEmpaquetado;
 	@Column(name = "porcentaje_ganancia")
 	private Double porcentajeGanancia;
+	@ManyToOne
+	@JoinColumn(name = "external_product_id")
+	private ExternalProduct externalProduct;
 	
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion, Double precio, String codigoReferencia,

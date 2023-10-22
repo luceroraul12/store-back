@@ -14,13 +14,16 @@ public class ExternalProductDtoConverter extends Converter<ExternalProduct, Exte
 	
 	@Override
 	public ExternalProductDto toDto(ExternalProduct entidad) {
-		ExternalProductDto dto = new ExternalProductDto();
-		dto.setId(entidad.getId());
-		dto.setCode(entidad.getCode());
-		dto.setDate(entidad.getDate());
-		dto.setDistribuidora(lookupValueDtoConverter.toDto(entidad.getDistribuidora()));
-		dto.setPrice(entidad.getPrice());
-		dto.setTitle(entidad.getTitle());
+		ExternalProductDto dto = null;
+		if(entidad != null) {
+			dto = new ExternalProductDto();
+			dto.setId(entidad.getId());
+			dto.setCode(entidad.getCode());
+			dto.setDate(entidad.getDate());
+			dto.setDistribuidora(lookupValueDtoConverter.toDto(entidad.getDistribuidora()));
+			dto.setPrice(entidad.getPrice());
+			dto.setTitle(entidad.getTitle());
+		}
 		return dto;
 	}
 

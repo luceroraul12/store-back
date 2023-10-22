@@ -26,6 +26,9 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 	
 	@Autowired
 	LookupValueDtoConverter lookupValueDtoConverter;
+	
+	@Autowired
+	ExternalProductDtoConverter externalProductDtoConverter;
 
 	@Override
 	public ProductoInternoDto toDto(ProductoInterno entidad) {
@@ -33,7 +36,7 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 				.id(entidad.getId())
 				.nombre(entidad.getNombre())
 				.descripcion(entidad.getDescripcion())
-				.codigoReferencia(entidad.getCodigoReferencia())
+				.externalProduct(externalProductDtoConverter.toDto(entidad.getExternalProduct()))
 				.fechaCreacion(entidad.getFechaCreacion())
 				.fechaActualizacion(entidad.getFechaActualizacion())
 				.precio(entidad.getPrecio())
@@ -48,10 +51,11 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 			dto.setCategory(lookupValueDtoConverter.toDto(lv));
 		}
 
-		if (entidad.getDistribuidoraReferencia() != null){
-			LookupValor distribuidora = entidad.getDistribuidoraReferencia();
-			dto.setDistribuidoraReferenciaCodigo(distribuidora.getCodigo());
-			dto.setDistribuidoraReferenciaNombre(distribuidora.getDescripcion());
+		if (entidad.getExternalProduct() != null){
+			dto.setExternalProduct(externalProductDtoConverter.toDto(entidad.getExternalProduct()));
+//			LookupValor distribuidora = entidad.getDistribuidoraReferencia();
+//			dto.setDistribuidoraReferenciaCodigo(distribuidora.getCodigo());
+//			dto.setDistribuidoraReferenciaNombre(distribuidora.getDescripcion());
 		}
 		dto.setPrecioTransporte(entidad.getPrecioTransporte());
 		dto.setPrecioEmpaquetado(entidad.getPrecioEmpaquetado());
@@ -72,21 +76,24 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 						? dto.getPrecio()
 						: 0.0)
 				.build();
+		
+		if(dto.getExternalProduct() != null)
+			entidad.setExternalProduct(externalProductDtoConverter.toEntidad(dto.getExternalProduct()));
 
 		// si se le pasa el codigo de la distribuidora
 		// deberias tener el codigo del producto al que queres hacer referencia
-		if (dto.getDistribuidoraReferenciaCodigo() != null){
-			String distribuidoraCodigo = dto.getDistribuidoraReferenciaCodigo();
-			entidad.setDistribuidoraReferencia(mapDistribuidoras.get(distribuidoraCodigo));
-			entidad.setCodigoReferencia(dto.getCodigoReferencia());
-		}
-		if(dto.getCategory() != null){
-			LookupValor lvCategoria = lookupService.getLookupValueByCode(dto.getCategory().getCode());
-			entidad.setLvCategoria(lvCategoria);
-		} else {
-			LookupValor lvCategoria = lookupService.getLookupValueByCode(Constantes.LV_CATEGORIAS_CEREALES);
-			entidad.setLvCategoria(lvCategoria);
-		}
+//		if (dto.getDistribuidoraReferenciaCodigo() != null){
+//			String distribuidoraCodigo = dto.getDistribuidoraReferenciaCodigo();
+//			entidad.setDistribuidoraReferencia(mapDistribuidoras.get(distribuidoraCodigo));
+//			entidad.setCodigoReferencia(dto.getCodigoReferencia());
+//		}
+//		if(dto.getCategory() != null){
+//			LookupValor lvCategoria = lookupService.getLookupValueByCode(dto.getCategory().getCode());
+//			entidad.setLvCategoria(lvCategoria);
+//		} else {
+//			LookupValor lvCategoria = lookupService.getLookupValueByCode(Constantes.LV_CATEGORIAS_CEREALES);
+//			entidad.setLvCategoria(lvCategoria);
+//		}
 		entidad.setPrecioTransporte(dto.getPrecioTransporte());
 		entidad.setPrecioEmpaquetado(dto.getPrecioEmpaquetado());
 		entidad.setPorcentajeGanancia(dto.getPorcentajeGanancia());
@@ -96,25 +103,25 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 	@Override
 	public List<ProductoInternoDto> toDtoList(List<ProductoInterno> productoInternos) {
 		List<ProductoInternoDto> list = super.toDtoList(productoInternos);
-		Map<String, Map<Integer, ExternalProduct>> mapProductFixed = productoRepository.findAll().stream()
-				.collect(Collectors.groupingBy(ep -> ep.getDistribuidora().getCodigo(),
-						Collectors.toMap(p -> p.getId(), Function.identity())));
-		list = list.stream()
-				.map(p -> {
-					if (p.getDistribuidoraReferenciaCodigo() != null){
-						if (mapProductFixed.containsKey(p.getDistribuidoraReferenciaCodigo())){
-							Map<Integer, ExternalProduct> mapDistro = mapProductFixed.get(p.getDistribuidoraReferenciaCodigo());
-							if (mapDistro.containsKey(p.getCodigoReferencia())){
-								ExternalProduct productDistro = mapDistro.get(p.getCodigoReferencia());
-								if (productDistro != null){
-									p.setReferenciaNombre(productDistro.getTitle());
-								}
-							}
-						}
-					}
-					return p;
-				})
-				.collect(Collectors.toList());
+//		Map<String, Map<Integer, ExternalProduct>> mapProductFixed = productoRepository.findAll().stream()
+//				.collect(Collectors.groupingBy(ep -> ep.getDistribuidora().getCodigo(),
+//						Collectors.toMap(p -> p.getId(), Function.identity())));
+//		list = list.stream()
+//				.map(p -> {
+//					if (p.getDistribuidoraReferenciaCodigo() != null){
+//						if (mapProductFixed.containsKey(p.getDistribuidoraReferenciaCodigo())){
+//							Map<Integer, ExternalProduct> mapDistro = mapProductFixed.get(p.getDistribuidoraReferenciaCodigo());
+//							if (mapDistro.containsKey(p.getCodigoReferencia())){
+//								ExternalProduct productDistro = mapDistro.get(p.getCodigoReferencia());
+//								if (productDistro != null){
+//									p.setReferenciaNombre(productDistro.getTitle());
+//								}
+//							}
+//						}
+//					}
+//					return p;
+//				})
+//				.collect(Collectors.toList());
 		return list;
 	}
 }

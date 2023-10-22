@@ -195,8 +195,8 @@ public class InventorySystemImpl implements InventorySystem {
 				.save(newEntidadInterno);
 
 		dto = productoInternoConverter.toDto(productoGuardado);
-		if (productoVinculado != null)
-			dto.setReferenciaNombre(productoVinculado.getTitle());
+//		if (productoVinculado != null)
+//			dto.setReferenciaNombre(productoVinculado.getTitle());
 
 		return dto;
 	}
