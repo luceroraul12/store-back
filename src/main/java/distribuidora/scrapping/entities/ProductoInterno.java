@@ -60,8 +60,11 @@ public class ProductoInterno {
 	private ExternalProduct externalProduct;
 	
 	@Builder
-	public ProductoInterno(Integer id, String nombre, String descripcion, Double precio, String codigoReferencia,
-			LookupValor distribuidoraReferencia, Date fechaCreacion, Date fechaActualizacion, Boolean isUnit) {
+	public ProductoInterno(Integer id, String nombre, String descripcion,
+			Double precio, String codigoReferencia,
+			LookupValor distribuidoraReferencia, Date fechaCreacion,
+			Date fechaActualizacion, Boolean isUnit,
+			ExternalProduct externalProduct) {
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -70,5 +73,6 @@ public class ProductoInterno {
 		this.distribuidoraReferencia = distribuidoraReferencia;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
+		this.externalProduct = externalProduct;
 	}
 }

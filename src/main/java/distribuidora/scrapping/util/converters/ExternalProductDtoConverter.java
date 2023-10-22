@@ -29,8 +29,10 @@ public class ExternalProductDtoConverter extends Converter<ExternalProduct, Exte
 
 	@Override
 	public ExternalProduct toEntidad(ExternalProductDto dto) {
-		// TODO Auto-generated method stub
-		return null;
+		ExternalProduct externalProduct = null;
+		if(dto != null)
+			externalProduct = ExternalProduct.builder().id(dto.getId()).build();
+			
+		return externalProduct;
 	}
-
 }

@@ -28,8 +28,11 @@ public interface InventorySystem {
 	 * @see #actualizarPreciosAutomatico()
 	 */
 	void actualizarPrecioConProductosEspecificos(List<ExternalProduct> especificos, List<ProductoInterno> internos);
+	
 	ProductoInternoDto crearProducto(ProductoInternoDto dto);
+	
 	ProductoInternoDto modificarProducto(ProductoInternoDto dto);
+	
 	List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds);
 
 	List<ProductoInternoDto> getProductos();

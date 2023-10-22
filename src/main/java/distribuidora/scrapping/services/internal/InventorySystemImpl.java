@@ -17,12 +17,11 @@ import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ExternalProduct;
-import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
-import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
+import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.ExternalProductService;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.converters.CategoryHasUnitDtoConverter;
@@ -164,27 +163,6 @@ public class InventorySystemImpl implements InventorySystem {
 
 		ProductoInterno newEntidadInterno = productoInternoConverter
 				.toEntidad(dto);
-		ExternalProduct productoVinculado = null;
-
-		// Actualizo el precio del oldEntidadInterno con el precio del
-		// oldEntidadInterno si es que existe
-		if (newEntidadInterno.getDistribuidoraReferencia() != null
-				&& newEntidadInterno.getCodigoReferencia() != null) {
-			String distribuidoraCodigo = newEntidadInterno
-					.getDistribuidoraReferencia().getCodigo();
-			String idReferencia = newEntidadInterno.getCodigoReferencia();
-			productoVinculado = productoServicio
-					.getByDistribuidoraCodeAndProductCode(distribuidoraCodigo,
-							idReferencia)
-					.stream().findFirst().orElse(null);
-			if (productoVinculado != null) {
-				newEntidadInterno
-						.setCodigoReferencia(productoVinculado.getCode());
-				LookupValor lv = lookupService
-						.getLookupValueByCode(distribuidoraCodigo);
-				newEntidadInterno.setDistribuidoraReferencia(lv);
-			}
-		}
 
 		newEntidadInterno
 				.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
@@ -195,8 +173,6 @@ public class InventorySystemImpl implements InventorySystem {
 				.save(newEntidadInterno);
 
 		dto = productoInternoConverter.toDto(productoGuardado);
-//		if (productoVinculado != null)
-//			dto.setReferenciaNombre(productoVinculado.getTitle());
 
 		return dto;
 	}
