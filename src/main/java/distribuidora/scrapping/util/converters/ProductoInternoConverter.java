@@ -64,6 +64,7 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 						? dto.getPrecio()
 						: 0.0)
 				.externalProduct(externalProductDtoConverter.toEntidad(dto.getExternalProduct()))
+				.category(lookupValueDtoConverter.toEntidad(dto.getCategory()))
 				.build();
 		
 		if(dto.getExternalProduct() != null)

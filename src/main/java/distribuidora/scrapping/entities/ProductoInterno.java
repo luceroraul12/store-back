@@ -64,7 +64,7 @@ public class ProductoInterno {
 			Double precio, String codigoReferencia,
 			LookupValor distribuidoraReferencia, Date fechaCreacion,
 			Date fechaActualizacion, Boolean isUnit,
-			ExternalProduct externalProduct) {
+			ExternalProduct externalProduct, LookupValor category) {
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -74,5 +74,6 @@ public class ProductoInterno {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.externalProduct = externalProduct;
+		this.lvCategoria = category;
 	}
 }
