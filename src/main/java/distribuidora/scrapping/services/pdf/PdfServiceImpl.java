@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services.pdf;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
@@ -262,9 +263,10 @@ public class PdfServiceImpl implements PdfService {
 	 */
 	private String generatePriceWithUnitLogic(
 			ProductoInternoStatus productoInternoStatus, LookupValor lvUnit) {
+		DecimalFormat df = new DecimalFormat("#.00");
 		double basePrice = generateBasePrice(
 				productoInternoStatus.getProductoInterno());
-		String result;
+		Double result;
 		boolean isCategoryUnit = lvUnit.getCodigo()
 				.equals(Constantes.LV_MEDIDAS_VENTAS_1U);
 		boolean isProductUnit = productoInternoStatus.getIsUnit();
@@ -278,14 +280,15 @@ public class PdfServiceImpl implements PdfService {
 
 		// si la categoria esta marcada como unidad solo retorno el precio
 		if (isCategoryUnit || isProductUnit) {
-			result = String.valueOf((int) basePrice);
+			result = basePrice;
 			// en caso contrario tengo que reducir el precio a la fraccion
 			// especificada por
 			// la unidad
 		} else {
-			result = String.valueOf((int) basePrice * Double.parseDouble(lvUnit.getValor()));
+			result = basePrice * Double.parseDouble(lvUnit.getValor());
 		}
-		return result;
+		
+		return df.format(result);
 	}
 
 	private static void addEmptyLine(Paragraph paragraph, int number) {

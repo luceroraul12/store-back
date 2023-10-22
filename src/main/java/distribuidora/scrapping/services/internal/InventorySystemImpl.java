@@ -1,11 +1,9 @@
 package distribuidora.scrapping.services.internal;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.DatosDistribuidora;
-import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
@@ -60,83 +57,24 @@ public class InventorySystemImpl implements InventorySystem {
 		// internos
 		List<ProductoInterno> productoInternos = productoInternoRepository
 				.getProductosReferenciados();
-		List<ExternalProduct> productoEspecificos = productoRepository.findAll();
-		// tengo en cuenta la fecha al comenzar el proceso
 		Date now = new Date();
 
-		actualizarPrecioConProductosEspecificos(productoEspecificos,
-				productoInternos);
-
-		// solo tengo en cuenta los productos que tienen fecha de modificacion
-		// por delante que la fecha en la que se
-		// inicia el actualizado
-		Map<Boolean, List<ProductoInterno>> mapEsActualizadoProductosInternos = productoInternos
-				.stream().collect(Collectors
-						.partitioningBy(p -> fechaComparator(p, now)));
-
-		// actualizo los productos internos en la base de datos
-		productoInternoRepository
-				.saveAll(mapEsActualizadoProductosInternos.get(true));
-
-		return mapEsActualizadoProductosInternos.get(true).size();
-	}
-
-	private boolean fechaComparator(ProductoInterno t, Date fechaComparable) {
-		Date fecha = Objects.nonNull(t.getFechaActualizacion())
-				? t.getFechaActualizacion()
-				: t.getFechaCreacion();
-		return fechaComparable.before(fecha);
-	}
-
-	@Override
-	public void actualizarPrecioConProductosEspecificos(
-			List<ExternalProduct> especificos, List<ProductoInterno> internos) {
-		// agrupo por distribuidora / codigo de referencia tanto interno como
-		// especifico
-		Map<String, Map<Integer, ExternalProduct>> mapEspecifico = especificos.stream()
-				.collect(Collectors.groupingBy(e -> e.getDistribuidora().getCodigo(),
-						Collectors.toMap(e -> e.getId(), Function.identity())));
-
-		// Agrupo por distribuidora de referencia
-		Map<String, List<ProductoInterno>> mapDistribuidoraReferencia = internos
-				.stream().collect(Collectors.groupingBy(
-						e -> e.getDistribuidoraReferencia().getCodigo()));
-		// Recorro la agrupacion por distribuidora de referencia
-		for (Map.Entry<String, List<ProductoInterno>> entry : mapDistribuidoraReferencia
-				.entrySet()) {
-			String codigoDistribuidoraReferencia = entry.getKey();
-			List<ProductoInterno> pDistribuidoraReferencia = entry.getValue();
-
-			// Agrupo nuevamente los productos pero por codigo del producto de
-			// referencia
-			Map<String, List<ProductoInterno>> mapCodigoReferencia = pDistribuidoraReferencia
-					.stream().collect(Collectors
-							.groupingBy(p -> p.getCodigoReferencia()));
-
-			// Recorro cada uno de estos productos
-			for (Map.Entry<String, List<ProductoInterno>> e : mapCodigoReferencia
-					.entrySet()) {
-				String codigoReferencia = e.getKey();
-				List<ProductoInterno> productosCompartidos = e.getValue();
-				Map<Integer, ExternalProduct> first = mapEspecifico
-						.get(codigoDistribuidoraReferencia);
-				if (first != null && first.containsKey(codigoReferencia)) {
-					ExternalProduct matchProducto = first.get(codigoReferencia);
-					if (matchProducto != null) {
-						Double precio = matchProducto
-								.getPrecioPorCantidadEspecifica();
-						for (ProductoInterno pi : productosCompartidos) {
-							if (precio != null && precio > 0.0) {
-								pi.setPrecio(precio);
-								pi.setFechaActualizacion(new Date());
-							}
-						}
-					}
-				}
+		// Recorro cada producto y le agrego el precio external si corresponde
+		DecimalFormat df = new DecimalFormat("#.00");
+		for (ProductoInterno p : productoInternos) {
+			Double externalPrice = p.getExternalProduct().getPrice();
+			if (externalPrice != null && externalPrice > 0.0) {
+				p.setPrecio(Double.valueOf(df.format(externalPrice)));
+				p.setFechaActualizacion(new Date());
 			}
 		}
 
+		// Persisto los cambios
+		productoInternos = productoInternoRepository.saveAll(productoInternos);
+
+		return productoInternos.size();
 	}
+
 	@Override
 	public ProductoInternoDto crearProducto(ProductoInternoDto dto) {
 		if (dto.getId() != null)
@@ -149,8 +87,6 @@ public class InventorySystemImpl implements InventorySystem {
 		return productoInternoConverter.toDto(productoGuardado);
 	}
 
-	// TODO: Ordenar este metodo, que si bien funciona parece que se esta
-	// empezando a complicar la lectura
 	@Override
 	public ProductoInternoDto modificarProducto(ProductoInternoDto dto) {
 		if (dto.getId() == null)
@@ -274,5 +210,6 @@ public class InventorySystemImpl implements InventorySystem {
 	@Override
 	public void eliminarIndices() {
 		productoRepository.deleteAll();
-	};
+	}
+
 }

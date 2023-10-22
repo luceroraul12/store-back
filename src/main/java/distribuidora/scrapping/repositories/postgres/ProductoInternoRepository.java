@@ -11,9 +11,7 @@ import distribuidora.scrapping.entities.ProductoInterno;
 public interface ProductoInternoRepository extends JpaRepository<ProductoInterno, Integer> {
 
     @Query("SELECT pi FROM ProductoInterno pi " +
-            "   INNER JOIN pi.distribuidoraReferencia d " +
-            "WHERE pi.codigoReferencia IS NOT NULL " +
-            "   AND d IS NOT NULL ")
+            "WHERE pi.externalProduct IS NOT NULL")
     List<ProductoInterno> getProductosReferenciados();
 
     @Query("SELECT pi FROM ProductoInterno pi " +
