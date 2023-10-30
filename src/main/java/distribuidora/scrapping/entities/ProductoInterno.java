@@ -58,13 +58,15 @@ public class ProductoInterno {
 	@ManyToOne
 	@JoinColumn(name = "external_product_id")
 	private ExternalProduct externalProduct;
+	@Column(name="porcentaje_impuesto")
+	private Double porcentajeImpuesto;
 	
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion,
 			Double precio, String codigoReferencia,
 			LookupValor distribuidoraReferencia, Date fechaCreacion,
 			Date fechaActualizacion, Boolean isUnit,
-			ExternalProduct externalProduct, LookupValor category) {
+			ExternalProduct externalProduct, LookupValor category, Double porcentajeImpuesto) {
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -75,5 +77,6 @@ public class ProductoInterno {
 		this.fechaActualizacion = fechaActualizacion;
 		this.externalProduct = externalProduct;
 		this.lvCategoria = category;
+		this.porcentajeImpuesto = porcentajeImpuesto;
 	}
 }
