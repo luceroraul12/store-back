@@ -2,6 +2,7 @@ package distribuidora.scrapping.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class DieteticaController {
      * @throws IOException
      */
 	@GetMapping("productos")
-	public List<ExternalProductDto> obtenerTodosLosProductos(
+	public Set<ExternalProductDto> obtenerTodosLosProductos(
 			@RequestParam(name = "busqueda") String busqueda)
 			throws IOException {
 		return productoService.getBySearch(busqueda);

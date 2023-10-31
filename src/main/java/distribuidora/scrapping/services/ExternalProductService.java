@@ -3,9 +3,12 @@ package distribuidora.scrapping.services;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,9 +79,16 @@ public class ExternalProductService {
 		productoRepository.saveAll(productToNew);
 	}
 
-	public List<ExternalProductDto> getBySearch(String search) {
-		return externalProductDtoConverter.toDtoList(this.productoRepository
-				.findBySearch(search.toUpperCase())); 
+	public Set<ExternalProductDto> getBySearch(String search) {
+		List<String> values = Stream.of(search.split(" ")).toList();
+		Set<ExternalProductDto> result = new HashSet<>();
+		for (String v : values) {
+			List<ExternalProductDto> innerResult = externalProductDtoConverter.toDtoList(this.productoRepository
+					.findBySearch(v.toUpperCase()));
+			if(CollectionUtils.isNotEmpty(innerResult))
+				result.addAll(innerResult);
+		}
+		return result; 
 	}
 
 	public List<ExternalProduct> getByDistribuidoraCodeAndProductCode(
