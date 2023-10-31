@@ -26,4 +26,5 @@ public class ProductoInternoDto {
 	private Double precioEmpaquetado;
 	private Double porcentajeGanancia;
 	private Double porcentajeImpuesto;
+	private Double regulador;
 }

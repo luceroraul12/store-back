@@ -35,6 +35,7 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 				.fechaActualizacion(entidad.getFechaActualizacion())
 				.precio(entidad.getPrecio())
 				.porcentajeImpuesto(entidad.getPorcentajeImpuesto())
+				.regulador(entidad.getRegulador())
 				.build();
 
 		if (entidad.getLvCategoria() != null){
@@ -66,7 +67,10 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 						: 0.0)
 				.externalProduct(externalProductDtoConverter.toEntidad(dto.getExternalProduct()))
 				.category(lookupValueDtoConverter.toEntidad(dto.getCategory()))
+
 				.build();
+		if(dto.getRegulador() != null)
+			entidad.setRegulador(dto.getRegulador());
 		
 		if(dto.getExternalProduct() != null)
 			entidad.setExternalProduct(externalProductDtoConverter.toEntidad(dto.getExternalProduct()));

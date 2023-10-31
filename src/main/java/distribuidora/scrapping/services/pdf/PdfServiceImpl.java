@@ -250,7 +250,8 @@ public class PdfServiceImpl implements PdfService {
 		double impuesto = (100 + (p.getPorcentajeImpuesto() != null
 				? p.getPorcentajeImpuesto()
 				: 0)) / 100;
-		double precioPorcentual = precio * ganancia * impuesto;
+		double regulador = p.getRegulador() != null && p.getRegulador() != 0.0 ? p.getRegulador() : 1;
+		double precioPorcentual = (precio * ganancia * impuesto) / regulador;
 		result = (int) (precioPorcentual + transporte + empaquetado + ganancia);
 		return result;
 	}

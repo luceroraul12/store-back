@@ -60,13 +60,15 @@ public class ProductoInterno {
 	private ExternalProduct externalProduct;
 	@Column(name="porcentaje_impuesto")
 	private Double porcentajeImpuesto;
+	@Column(name="regulador")
+	private Double regulador;
 	
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion,
 			Double precio, String codigoReferencia,
 			LookupValor distribuidoraReferencia, Date fechaCreacion,
 			Date fechaActualizacion, Boolean isUnit,
-			ExternalProduct externalProduct, LookupValor category, Double porcentajeImpuesto) {
+			ExternalProduct externalProduct, LookupValor category, Double porcentajeImpuesto, Double regulador) {
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -78,5 +80,6 @@ public class ProductoInterno {
 		this.externalProduct = externalProduct;
 		this.lvCategoria = category;
 		this.porcentajeImpuesto = porcentajeImpuesto;
+		this.regulador = regulador;
 	}
 }
