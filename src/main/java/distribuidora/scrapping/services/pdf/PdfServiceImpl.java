@@ -271,7 +271,7 @@ public class PdfServiceImpl implements PdfService {
 		DecimalFormat df = new DecimalFormat("#.00");
 		double basePrice = generateBasePrice(
 				productoInternoStatus.getProductoInterno());
-		Double result;
+		double result;
 		boolean isCategoryUnit = lvUnit.getCodigo()
 				.equals(Constantes.LV_MEDIDAS_VENTAS_1U);
 		boolean isProductUnit = productoInternoStatus.getIsUnit();
@@ -293,7 +293,7 @@ public class PdfServiceImpl implements PdfService {
 			result = basePrice * Double.parseDouble(lvUnit.getValor());
 		}
 
-		return df.format(result);
+		return String.valueOf((int) result);
 	}
 
 	private static void addEmptyLine(Paragraph paragraph, int number) {
