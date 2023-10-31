@@ -1,7 +1,6 @@
 package distribuidora.scrapping.services;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -13,13 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.ExternalProductDto;
-import distribuidora.scrapping.dto.LookupValueDto;
 import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.converters.ExternalProductDtoConverter;
-import io.jsonwebtoken.lang.Collections;
 
 /**
  * Encargada de la collecion de productos finales.
