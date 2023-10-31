@@ -234,19 +234,24 @@ public class PdfServiceImpl implements PdfService {
 	 * @param p
 	 * @return
 	 */
-	private Double generateBasePrice(ProductoInterno p) {
-		double result = 0.0;
-		double precio = p.getPrecio() != null ? p.getPrecio() : 0.0;
+	@Override
+	public Integer generateBasePrice(ProductoInterno p) {
+		int result;
+		double precio = p.getPrecio() != null ? p.getPrecio() : 0;
 		double transporte = p.getPrecioTransporte() != null
 				? p.getPrecioTransporte()
 				: 0.0;
 		double empaquetado = p.getPrecioEmpaquetado() != null
 				? p.getPrecioEmpaquetado()
 				: 0.0;
-		double ganancia = ((p.getPorcentajeGanancia() != null
+		double ganancia = (100 + (p.getPorcentajeGanancia() != null
 				? p.getPorcentajeGanancia()
-				: 0.0) / 100) * precio;
-		result = precio + transporte + empaquetado + ganancia;
+				: 0)) / 100;
+		double impuesto = (100 + (p.getPorcentajeImpuesto() != null
+				? p.getPorcentajeImpuesto()
+				: 0)) / 100;
+		double precioPorcentual = precio * ganancia * impuesto;
+		result = (int) (precioPorcentual + transporte + empaquetado + ganancia);
 		return result;
 	}
 
@@ -287,7 +292,7 @@ public class PdfServiceImpl implements PdfService {
 		} else {
 			result = basePrice * Double.parseDouble(lvUnit.getValor());
 		}
-		
+
 		return df.format(result);
 	}
 

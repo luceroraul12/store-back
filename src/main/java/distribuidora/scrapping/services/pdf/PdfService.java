@@ -9,6 +9,8 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 
+import distribuidora.scrapping.entities.ProductoInterno;
+
 public interface PdfService {
     static String FILE = "src/main/resources/static/ejemplo.pdf";
     static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
@@ -23,4 +25,6 @@ public interface PdfService {
             throws DocumentException, IOException;
 
     void addContent(Document document) throws DocumentException;
+    
+    Integer generateBasePrice(ProductoInterno p);
 }
