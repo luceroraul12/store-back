@@ -34,8 +34,6 @@ public interface InventorySystem {
 	CategoryHasUnitDto updateCategoryHasUnit(CategoryHasUnitDto dto);
 
 	List<DatosDistribuidora> getDistribuidoraStatus();
-
+	
 	void eliminarIndices();
-	
-	
 }

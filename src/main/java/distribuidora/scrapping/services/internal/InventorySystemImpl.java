@@ -44,10 +44,10 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Autowired
 	private CategoryHasUnitDtoConverter categoryHasUnitDtoConverter;
-	
+
 	@Autowired
 	private LookupService lookupService;
-	
+
 	@Autowired
 	private DatosDistribuidoraRepository datosDistribuidoraRepository;
 
@@ -102,8 +102,7 @@ public class InventorySystemImpl implements InventorySystem {
 
 		newEntidadInterno
 				.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
-		verifyAndUpdateDateModified(oldEntidadInterno,
-				newEntidadInterno);
+		verifyAndUpdateDateModified(oldEntidadInterno, newEntidadInterno);
 
 		ProductoInterno productoGuardado = productoInternoRepository
 				.save(newEntidadInterno);
@@ -152,8 +151,7 @@ public class InventorySystemImpl implements InventorySystem {
 	 * @param oldEntidadInterno
 	 * @param newEntidadInterno
 	 */
-	private void verifyAndUpdateDateModified(
-			ProductoInterno oldEntidadInterno,
+	private void verifyAndUpdateDateModified(ProductoInterno oldEntidadInterno,
 			ProductoInterno newEntidadInterno) {
 		boolean priceUpdated = false;
 		boolean priceTransportUpdated = false;
@@ -199,12 +197,12 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Override
 	public List<DatosDistribuidora> getDistribuidoraStatus() {
-		return this.datosDistribuidoraRepository
-                .findAll()
-                .stream()
-                .filter(a -> !Constantes.DISTRIBUIDORAS_SIN_USO.contains(a.getDistribuidoraCodigo()))
-                .sorted((a,b) -> b.getDistribuidoraCodigo().compareTo(a.getDistribuidoraCodigo()))
-                .collect(Collectors.toList());
+		return this.datosDistribuidoraRepository.findAll().stream()
+				.filter(a -> !Constantes.DISTRIBUIDORAS_SIN_USO
+						.contains(a.getDistribuidoraCodigo()))
+				.sorted((a, b) -> b.getDistribuidoraCodigo()
+						.compareTo(a.getDistribuidoraCodigo()))
+				.collect(Collectors.toList());
 	}
 
 	@Override

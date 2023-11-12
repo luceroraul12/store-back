@@ -14,6 +14,7 @@ public class LookupValueDtoConverter extends Converter<LookupValor, LookupValueD
 		dto.setId(entidad.getId());
 		dto.setDescription(entidad.getDescripcion());
 		dto.setCode(entidad.getCodigo());
+		dto.setValue(entidad.getValor());
 		return dto;
 	}
 

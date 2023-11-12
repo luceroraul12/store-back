@@ -7,19 +7,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import distribuidora.scrapping.dto.ProductoInternoDto;
-import distribuidora.scrapping.services.internal.InventorySystem;
+import distribuidora.scrapping.dto.ProductCustomerDto;
+import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
 
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
 	
 	@Autowired
-	InventorySystem service;
+	ProductoInternoStatusService service;
 	
 	@GetMapping("/products")
-	public List<ProductoInternoDto> getProducts(){
-		return service.getProductos(); 
+	public List<ProductCustomerDto> getProducts(){
+		return service.getProductsForCustomer(); 
 	}
 
 }

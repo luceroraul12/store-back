@@ -2,6 +2,7 @@ package distribuidora.scrapping.services.internal;
 
 import java.util.List;
 
+import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 
 public interface ProductoInternoStatusService {
@@ -9,4 +10,6 @@ public interface ProductoInternoStatusService {
     List<ProductoInternoStatusDto> getAll();
 
     ProductoInternoStatusDto update(ProductoInternoStatusDto dto);
+
+	List<ProductCustomerDto> getProductsForCustomer();
 }
