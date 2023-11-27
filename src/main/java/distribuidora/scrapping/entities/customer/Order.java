@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import distribuidora.scrapping.entities.Client;
 import lombok.Data;
 
 @Entity
@@ -25,5 +26,8 @@ public class Order {
 	@ManyToOne
     @JoinColumn(name = "customer_id")
 	private Customer customer;
+	@ManyToOne
+    @JoinColumn(name = "client_id")
+	private Client client;
 	private Date date;
 }
