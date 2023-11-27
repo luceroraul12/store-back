@@ -5,8 +5,9 @@ import lombok.Data;
 @Data
 public class ProductOrderDto {
 	private Integer id;
+	private Integer productId;
 	private String unitName;
-	private String unitValue;
+	private Double unitValue;
 	private Integer unitPrice;
 	private Double amount;
 }

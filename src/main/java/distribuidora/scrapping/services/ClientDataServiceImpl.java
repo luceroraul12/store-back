@@ -17,4 +17,9 @@ public class ClientDataServiceImpl implements ClientDataService {
 		return repository.findById(id).orElse(null);
 	}
 
+	@Override
+	public Client getByCode(String code) {
+		return repository.findByCode(code);
+	}
+
 }
