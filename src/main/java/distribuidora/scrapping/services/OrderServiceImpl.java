@@ -1,14 +1,16 @@
 package distribuidora.scrapping.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.OrderDto;
-import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.dto.ProductOrderDto;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.customer.Customer;
@@ -24,19 +26,19 @@ import distribuidora.scrapping.util.converters.OrderHasProductConverter;
 public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private CustomerRepository customerRepository;
-	
+
 	@Autowired
 	private ClientDataService clientDataService;
-	
+
 	@Autowired
 	private InventorySystem inventorySystem;
-	
+
 	@Autowired
 	private OrderHasProductConverter orderHasProductConverter;
-	
+
 	@Autowired
 	private OrderRepository orderRepository;
-	
+
 	@Autowired
 	private OrderHasProductRepository orderHasProductRepository;
 
@@ -47,8 +49,9 @@ public class OrderServiceImpl implements OrderService {
 		Client client = validateClient(order);
 		List<ProductOrderDto> result = null;
 		// Busco los productos solicitados
-		if(CollectionUtils.isNotEmpty(order.getProducts())) {
-			List<OrderHasProduct> orderHasProducts = orderHasProductConverter.toEntidadList(order.getProducts());
+		if (CollectionUtils.isNotEmpty(order.getProducts())) {
+			List<OrderHasProduct> orderHasProducts = orderHasProductConverter
+					.toEntidadList(order.getProducts());
 			// Creo la orden
 			Order o = new Order();
 			o.setClient(client);
@@ -60,8 +63,9 @@ public class OrderServiceImpl implements OrderService {
 				orderHasProduct.setOrder(o);
 			}
 			// Guardo todos los order product
-			orderHasProducts = orderHasProductRepository.saveAll(orderHasProducts);
-			result =  orderHasProductConverter.toDtoList(orderHasProducts);
+			orderHasProducts = orderHasProductRepository
+					.saveAll(orderHasProducts);
+			result = orderHasProductConverter.toDtoList(orderHasProducts);
 		}
 		return result;
 	}
@@ -70,21 +74,47 @@ public class OrderServiceImpl implements OrderService {
 		// Verifico si el usuario ya existe
 		Client client = clientDataService.getByCode(order.getStoreCode());
 		// En caso de que no exista lo voy a registrar
-		if(client == null)
+		if (client == null)
 			throw new Exception("No existe la tienda solicitada");
 		return client;
 	}
 
 	private Customer validateCustomer(OrderDto order) {
 		// Verifico si el usuario ya existe
-		Customer customer = customerRepository.findByUsername(order.getUsername());
+		Customer customer = customerRepository
+				.findByUsername(order.getUsername());
 		// En caso de que no exista lo voy a registrar
-		if(customer == null) {
+		if (customer == null) {
 			customer = new Customer();
 			customer.setUsername(order.getUsername());
 			customer = customerRepository.save(customer);
 		}
 		return customer;
+	}
+
+	@Override
+	public List<OrderDto> getMyOrders(String storeCode, String username) {
+		List<OrderHasProduct> relations = orderHasProductRepository
+				.findByStoreCodeAndUsername(storeCode, username);
+		// Agrupo por orden y las ordeno por fecha
+		TreeMap<Order, List<OrderHasProduct>> treeProductByOrder = new TreeMap<>(
+				(a, b) -> b.getDate().compareTo(a.getDate()));
+		treeProductByOrder.putAll(relations.stream()
+				.collect(Collectors.groupingBy(r -> r.getOrder())));
+		List<OrderDto> result = new ArrayList();
+		if (!treeProductByOrder.isEmpty()) {
+			treeProductByOrder.forEach((o, p) -> {
+				OrderDto dto = new OrderDto();
+				dto.setId(o.getId());
+				dto.setUsername(o.getCustomer().getUsername());
+				dto.setStoreCode(o.getClient().getName());
+				dto.setDate(o.getDate());
+				dto.setProducts(orderHasProductConverter.toDtoList(p));
+				result.add(dto);
+			});
+
+		}
+		return result;
 	}
 
 }
