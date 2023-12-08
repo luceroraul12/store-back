@@ -37,7 +37,7 @@ public class CustomerController {
 		return orderService.createOrder(order); 
 	}
 	
-	@GetMapping("/store/{storeCode}/username/{username}")
+	@GetMapping("/store/{storeCode}/username/{username}/orders")
 	public List<OrderDto> getMyOrders(@PathVariable String storeCode, @PathVariable String username){
 		return orderService.getMyOrders(storeCode, username);
 	}
