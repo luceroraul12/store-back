@@ -130,6 +130,32 @@ class PdfServiceImplTest {
     	assertEquals(1109, result);
     }
 
+    @Test
+    void precioMultiplo() {
+    	int valor = 25;
+    	int multiplo = 5;
+    	int result = service.round(valor, multiplo);
+    	assertEquals(25, result);
+    }
+    
+    @Test
+    void precioRedondeadoArriba() {
+    	int valor = 26;
+    	int multiplo = 5;
+    	int result = service.round(valor, multiplo);
+    	assertEquals(30, result);
+    	valor = 1536;
+    	result = service.round(valor, multiplo);
+    	assertEquals(1540, result);
+    }
+    
+    @Test
+    void precioRedondeadoAbajo() {
+    	int valor = 24;
+    	int multiplo = 5;
+    	int result = service.round(valor, multiplo);
+    	assertEquals(25, result);
+    }
 
 
 }

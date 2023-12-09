@@ -304,6 +304,18 @@ public class PdfServiceImpl implements PdfService {
 		return result;
 	}
 
+	@Override
+	public int round(int result, int multiple) {
+		// Recupero la cantidad multiplo
+		int eachMultiple = Math.floorDiv(result, multiple);
+		// Recupero el resto 
+		int mod = Math.floorMod(result, multiple);
+		if(mod != 0) {
+			return (eachMultiple + 1) * multiple;
+		} else {
+			return result;
+		}
+	}
 	/**
 	 * Toma el resultado de {@link #generateBasePrice(ProductoInterno)} y le
 	 * aplica la logica de las unidades. Existen los siguientes casos -
@@ -342,7 +354,7 @@ public class PdfServiceImpl implements PdfService {
 			result = basePrice * Double.parseDouble(lvUnit.getValor());
 		}
 
-		return String.valueOf((int) result);
+		return String.valueOf(round((int) result, 5));
 	}
 
 	private static void addEmptyLine(Paragraph paragraph, int number) {

@@ -28,4 +28,6 @@ public interface PdfService {
     void addContent(Document document, PdfWriter writer, String dateConverted) throws DocumentException;
     
     Integer generateBasePrice(ProductoInterno p);
+
+	int round(int result, int multiple);
 }
