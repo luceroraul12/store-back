@@ -18,12 +18,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.ListItem;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
@@ -72,22 +75,33 @@ public class PdfServiceImpl implements PdfService {
 	@Override
 	public void addTitlePage(Document document)
 			throws DocumentException, IOException {
-
 		Client data = clientDataService.getById(1);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy",
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy",
 				new Locale("es", "ES"));
 		String dateConverted = sdf.format(new Date());
 
 		Paragraph preface = new Paragraph();
 		// We add one empty line
 		addEmptyLine(preface, 1);
-		// Lets write a big header
-		Paragraph p = new Paragraph(data.getName().toUpperCase(), catFont);
-		p.setAlignment(Element.ALIGN_CENTER);
-		preface.add(p);
-		p = new Paragraph(dateConverted, smallBold);
-		p.setAlignment(Element.ALIGN_CENTER);
+		// Pruebas de logo del cliente
+		Paragraph p = null;
+		try {
+			Image imageLogo = Image.getInstance(
+					String.format("/resources/%s", data.getFilenameLogo()));
+			imageLogo.scaleAbsolute(new Rectangle(300, 300));
+			imageLogo.setAlignment(Element.ALIGN_CENTER);
+			imageLogo.setSpacingAfter(0);
+			imageLogo.setSpacingBefore(0);
+			document.add(imageLogo);
+		} catch (Exception e) {
+			// En caso de que falle le agrego el datos string del mismo
+			p = new Paragraph(data.getName().toUpperCase(), catFont);
+			p.setAlignment(Element.ALIGN_CENTER);
+			preface.add(p);
+		}
+	
+		p = new Paragraph(String.format("Fecha de emisión: %s", dateConverted), smallBold);
 		preface.add(p);
 		// addEmptyLine(preface, 1);
 
@@ -250,7 +264,9 @@ public class PdfServiceImpl implements PdfService {
 		double impuesto = (100 + (p.getPorcentajeImpuesto() != null
 				? p.getPorcentajeImpuesto()
 				: 0)) / 100;
-		double regulador = p.getRegulador() != null && p.getRegulador() != 0.0 ? p.getRegulador() : 1;
+		double regulador = p.getRegulador() != null && p.getRegulador() != 0.0
+				? p.getRegulador()
+				: 1;
 		double precioPorcentual = (precio * ganancia * impuesto) / regulador;
 		result = (int) (precioPorcentual + transporte + empaquetado + ganancia);
 		return result;

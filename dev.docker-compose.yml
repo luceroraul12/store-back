@@ -6,11 +6,6 @@ services:
     image: mongo
     ports:
       - 27017:27017
-#  buscador-selenium:
-#    container_name: "firefox"
-#    image: selenium/standalone-firefox
-#    ports:
-#      - 4444:4444
   pasionaria-db:
       container_name: "pasionaria-db"
       image: postgres:alpine3.17

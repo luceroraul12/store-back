@@ -60,6 +60,8 @@ services:
     image: back-parcial:1.2
     ports:
       - 8080:8080
+    volumes:
+    - resources:/resources
     environment:
 #      postgresql
       SPRING_DATASOURCE_URL: jdbc:postgresql://buscador-db/pasionaria
@@ -90,3 +92,10 @@ networks:
     driver: bridge
     ipam:
       driver: default
+      
+volumes:
+  resources:
+    driver_opts:
+      type: none
+      device: /home/homitowen/Downloads
+      o: bind

@@ -26,4 +26,5 @@ public class Client {
 	private String instagramLink;
 	private String facebook;
 	private String facebookLink;
+	private String filenameLogo;
 }
