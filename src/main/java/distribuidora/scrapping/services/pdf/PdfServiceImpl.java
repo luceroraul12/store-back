@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -26,7 +25,9 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.ListItem;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
@@ -56,15 +57,24 @@ public class PdfServiceImpl implements PdfService {
 			throws IOException, DocumentException {
 		// generacion del pdf
 		Document document = new Document();
-		PdfWriter.getInstance(document, response.getOutputStream());
+		PdfWriter writer = PdfWriter.getInstance(document,
+				response.getOutputStream());
+
+		// Variables sobre la fecha del PDF
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy",
+				new Locale("es", "ES"));
+		String dateConverted = sdf.format(new Date());
+		// p = new Paragraph(String.format("Fecha de emisión: %s",
+		// dateConverted),
+		// smallBold);
+
 		document.open();
 		addMetaData(document);
 		addTitlePage(document);
-		addContent(document);
+		addContent(document, writer, dateConverted);
 		document.close();
 	}
-
-	private static void addMetaData(Document document) {
+	private void addMetaData(Document document) {
 		document.addTitle("Catalogo Pasionaria");
 		document.addSubject("Mis productos");
 		document.addKeywords("Pasionaria, Dietetica, Negocio, Productos");
@@ -76,10 +86,6 @@ public class PdfServiceImpl implements PdfService {
 	public void addTitlePage(Document document)
 			throws DocumentException, IOException {
 		Client data = clientDataService.getById(1);
-
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy",
-				new Locale("es", "ES"));
-		String dateConverted = sdf.format(new Date());
 
 		Paragraph preface = new Paragraph();
 		// We add one empty line
@@ -100,8 +106,6 @@ public class PdfServiceImpl implements PdfService {
 			p.setAlignment(Element.ALIGN_CENTER);
 			preface.add(p);
 		}
-	
-		p = new Paragraph(String.format("Fecha de emisión: %s", dateConverted), smallBold);
 		preface.add(p);
 		// addEmptyLine(preface, 1);
 
@@ -130,13 +134,16 @@ public class PdfServiceImpl implements PdfService {
 	}
 
 	@Override
-	public void addContent(Document document) throws DocumentException {
+	public void addContent(Document document, PdfWriter writer,
+			String dateConverted) throws DocumentException {
 		List<CategoryHasUnit> categoryHasUnits = categoryHasUnitRepository
 				.findAll();
 
-		Paragraph title = new Paragraph("Categorias".toUpperCase(), catFont);
-		title.setAlignment(Element.ALIGN_CENTER);
-		document.add(title);
+		// TODO: Voy a comentarlo para ver que dice el cliente, en caso que lo
+		// quiera de nuevo lo vuelvo a colocar
+		// Paragraph title = new Paragraph("Categorias".toUpperCase(), catFont);
+		// title.setAlignment(Element.ALIGN_CENTER);
+		// document.add(title);
 
 		// agrupo por categoria
 		Map<LookupValor, List<CategoryHasUnit>> mapRelationsByLvCategory = new TreeMap<>(
@@ -184,8 +191,33 @@ public class PdfServiceImpl implements PdfService {
 					list.add(listItem);
 				}
 				document.add(list);
+				checkAndSetPageNumber(document, writer, dateConverted);
 			}
 		}
+	}
+
+	/**
+	 * Valida en que hoja se encuentra en funcion del maximo de hojas y en caso
+	 * de que aun no tenga paginado, lo agrega
+	 * 
+	 * @param document
+	 */
+	private void checkAndSetPageNumber(Document document, PdfWriter writer,
+			String dateConverted) {
+		float yNumberPage = 15f;
+		float xNumberPage = document.getPageSize().getWidth() / 2;
+		float yDateReference = document.getPageSize().getHeight() - 25;
+		float xDateReference = 25;
+		ColumnText.showTextAligned(writer.getDirectContent(),
+				Element.ALIGN_CENTER,
+				new Phrase(String.format("Pagina %d", writer.getPageNumber()),
+						smallBold),
+				xNumberPage, yNumberPage, 0);
+		ColumnText
+				.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT,
+						new Phrase(String.format("Fecha de emisión: %s",
+								dateConverted), smallBold),
+						xDateReference, yDateReference, 0);
 	}
 
 	/**

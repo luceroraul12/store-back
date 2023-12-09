@@ -8,6 +8,7 @@ import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import distribuidora.scrapping.entities.ProductoInterno;
 
@@ -24,7 +25,7 @@ public interface PdfService {
     void addTitlePage(Document document)
             throws DocumentException, IOException;
 
-    void addContent(Document document) throws DocumentException;
+    void addContent(Document document, PdfWriter writer, String dateConverted) throws DocumentException;
     
     Integer generateBasePrice(ProductoInterno p);
 }
