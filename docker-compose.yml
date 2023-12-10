@@ -55,6 +55,8 @@ services:
         reservations:
           cpus: 0.25
           memory: 50M
+    volumes:
+      - backup_db:/backup
 #  buscador-api: es el proyecto Java Spring Boot
   buscador-api:
     image: back-parcial:1.33t
@@ -99,3 +101,13 @@ volumes:
       type: none
       device: /resources
       o: bind
+  backup_db:
+     driver_opts:
+       type: none
+       device: /home/homitowen/backup/postgres/
+       o: bind
+  
+  
+  
+  
+  
