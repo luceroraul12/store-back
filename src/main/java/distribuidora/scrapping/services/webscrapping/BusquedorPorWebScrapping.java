@@ -62,8 +62,8 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
 		List<Document> documentos = new ArrayList<>();
 		if (esBuscadorConPaginador) {
 			int contador = 1;
-			String str = Jsoup.connect(generarNuevaURL(contador)).timeout(2*60*1000)
-					.maxBodySize(0).execute().body();
+			String str = Jsoup.connect(generarNuevaURL(contador))
+					.timeout(2 * 60 * 1000).maxBodySize(0).execute().body();
 			Document doc = Jsoup.parse(str);
 			while (esDocumentValido(doc)) {
 				documentos.add(doc);
@@ -83,8 +83,8 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
 	 */
 	private Document generarDocumento(String url) throws IOException {
 		Document documentoGenerado;
-		String str = Jsoup.connect(url).timeout(2*60*1000).maxBodySize(0).execute()
-				.body();
+		String str = Jsoup.connect(url).timeout(2 * 60 * 1000).maxBodySize(0)
+				.execute().body();
 		documentoGenerado = Jsoup.parse(str);
 		return documentoGenerado;
 	}

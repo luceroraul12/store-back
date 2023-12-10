@@ -2,7 +2,7 @@ version: "3.8"
 services:
 #  buscador-ui: es el proyecto de Angular
   buscador-ui:
-    image: front-parcial:1.2
+    image: front-parcial:1.33t
     ports:
       - 4200:80
     networks:
@@ -57,7 +57,7 @@ services:
           memory: 50M
 #  buscador-api: es el proyecto Java Spring Boot
   buscador-api:
-    image: back-parcial:1.2
+    image: back-parcial:1.33t
     ports:
       - 8080:8080
     volumes:
@@ -97,5 +97,5 @@ volumes:
   resources:
     driver_opts:
       type: none
-      device: /home/homitowen/Downloads
+      device: /resources
       o: bind

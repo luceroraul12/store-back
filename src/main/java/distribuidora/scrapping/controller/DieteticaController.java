@@ -30,7 +30,7 @@ public class DieteticaController {
      * @see ExternalProduct
      * @throws IOException
      */
-	@GetMapping("productos")
+	@GetMapping("/productos")
 	public Set<ExternalProductDto> obtenerTodosLosProductos(
 			@RequestParam(name = "busqueda") String busqueda)
 			throws IOException {
