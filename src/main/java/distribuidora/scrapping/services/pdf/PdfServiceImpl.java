@@ -206,18 +206,17 @@ public class PdfServiceImpl implements PdfService {
 			String dateConverted) {
 		float yNumberPage = 15f;
 		float xNumberPage = document.getPageSize().getWidth() / 2;
-		float yDateReference = document.getPageSize().getHeight() - 25;
+		float yDateReference = yNumberPage;
 		float xDateReference = 25;
 		ColumnText.showTextAligned(writer.getDirectContent(),
 				Element.ALIGN_CENTER,
-				new Phrase(String.format("Pagina %d", writer.getPageNumber()),
-						smallBold),
+				new Phrase(String.format("Pagina %d", writer.getPageNumber())),
 				xNumberPage, yNumberPage, 0);
-		ColumnText
-				.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT,
-						new Phrase(String.format("Fecha de emisión: %s",
-								dateConverted), smallBold),
-						xDateReference, yDateReference, 0);
+		ColumnText.showTextAligned(writer.getDirectContent(),
+				Element.ALIGN_LEFT,
+				new Phrase(
+						String.format("Fecha de emisión: %s", dateConverted)),
+				xDateReference, yDateReference, 0);
 	}
 
 	/**
@@ -308,9 +307,9 @@ public class PdfServiceImpl implements PdfService {
 	public int round(int result, int multiple) {
 		// Recupero la cantidad multiplo
 		int eachMultiple = Math.floorDiv(result, multiple);
-		// Recupero el resto 
+		// Recupero el resto
 		int mod = Math.floorMod(result, multiple);
-		if(mod != 0) {
+		if (mod != 0) {
 			return (eachMultiple + 1) * multiple;
 		} else {
 			return result;
