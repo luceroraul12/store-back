@@ -117,4 +117,20 @@ public class OrderServiceImpl implements OrderService {
 		return result;
 	}
 
+	@Override
+	public OrderDto authorizeOrder(OrderDto order) {
+		// Me fijo los productos y las cantidades respecto a anteriormente
+		// Persisto la orden en estado autorizado
+		return null;
+	}
+
+	@Override
+	public OrderDto finalizeOrder(OrderDto order) {
+		// Debo reducir la cantidad de stock de los productos de la orden
+		// Persisto la orden en estado finalizado
+		return null;
+	}
+	
+	
+
 }

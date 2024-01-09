@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.itextpdf.text.DocumentException;
 
 import distribuidora.scrapping.dto.CategoryHasUnitDto;
+import distribuidora.scrapping.dto.OrderDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
+import distribuidora.scrapping.services.OrderService;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
 import distribuidora.scrapping.services.pdf.PdfService;
@@ -42,6 +44,9 @@ public class InventorySystemController {
 
 	@Autowired
 	PdfService pdfService;
+	
+	@Autowired
+	OrderService orderService;
 
 	@PostMapping(value = "create")
 	ProductoInternoDto crearProducto(@RequestBody ProductoInternoDto dto){
@@ -106,5 +111,15 @@ public class InventorySystemController {
 	@PutMapping("categories")
 	CategoryHasUnitDto updateCategoryHasUnit(@RequestBody CategoryHasUnitDto dto){
 		return service.updateCategoryHasUnit(dto);
+	}
+	
+	@PostMapping("/order/authorize")
+	OrderDto authorizeOrder(@RequestBody OrderDto dto) {
+		return orderService.authorizeOrder(dto);
+	}
+	
+	@PostMapping("/order/finalize")
+	OrderDto finalizeOrder(@RequestBody OrderDto dto) {
+		return orderService.finalizeOrder(dto);
 	}
 }
