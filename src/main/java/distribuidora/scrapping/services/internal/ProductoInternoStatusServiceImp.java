@@ -39,8 +39,11 @@ public class ProductoInternoStatusServiceImp
 
 	@Override
 	public List<ProductoInternoStatusDto> getAll() {
-		return converter.toDtoList(repository.findAll());
+		List<ProductoInternoStatusDto> result =converter.toDtoList(repository.findAll()); 
+		configLowAmount(result);
+		return result;
 	}
+
 
 	@Override
 	public ProductoInternoStatusDto update(ProductoInternoStatusDto dto) {
@@ -76,5 +79,15 @@ public class ProductoInternoStatusServiceImp
 	@Override
 	public void saveAll(List<ProductoInternoStatus> productStatus) {
 		repository.saveAll(productStatus);
+	}
+	
+	/**
+	 * Me fijo segun una constante si la cantidad de stock es poca o no.
+	 * Es posible que esto cambie y base en otra cosa o utilice la base de datos
+	 * @param result
+	 */
+	private void configLowAmount(List<ProductoInternoStatusDto> result) {
+		int minAmount = 2;
+		result.forEach(pis -> pis.setLowAmount(pis.getAmount() < minAmount));
 	}
 }
