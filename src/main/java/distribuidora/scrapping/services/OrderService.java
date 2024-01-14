@@ -38,4 +38,6 @@ public interface OrderService {
 
 	OrderDto deleteOrder(Integer orderId) throws Exception;
 
+	OrderDto updateOrder(OrderDto dto) throws Exception;
+
 }

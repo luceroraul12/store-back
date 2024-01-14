@@ -23,6 +23,11 @@ public class OrderController {
 	OrderDto createOrder(@RequestBody OrderDto dto) throws Exception {
 		return orderService.createOrder(dto);
 	}
+	
+	@PostMapping("update")
+	OrderDto updateOrder(@RequestBody OrderDto dto) throws Exception {
+		return orderService.updateOrder(dto);
+	}
 
 	@PostMapping("authorize")
 	OrderDto authorizeOrder(@RequestBody OrderDto dto) {
