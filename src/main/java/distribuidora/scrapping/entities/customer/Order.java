@@ -30,4 +30,5 @@ public class Order {
     @JoinColumn(name = "client_id")
 	private Client client;
 	private Date date;
+	private String status;
 }

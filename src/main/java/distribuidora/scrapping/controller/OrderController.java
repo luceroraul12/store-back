@@ -1,6 +1,9 @@
 package distribuidora.scrapping.controller;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,4 +34,8 @@ public class OrderController {
 		return orderService.finalizeOrder(dto);
 	}
 
+	@PostMapping("delete/{orderId}")
+	OrderDto deleteOrder(@PathVariable Integer orderId) throws Exception {
+		return orderService.deleteOrder(orderId);
+	}
 }

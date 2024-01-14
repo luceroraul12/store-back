@@ -10,6 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.dto.OrderDto;
 import distribuidora.scrapping.dto.ProductOrderDto;
 import distribuidora.scrapping.entities.Client;
@@ -60,7 +61,8 @@ public class OrderServiceImpl implements OrderService {
 			// Valido que existan los productos
 			List<Integer> productIds = order.getProducts().stream()
 					.map(p -> p.getProductId()).toList();
-			List<ProductoInterno> products = inventorySystem.getProductByIds(productIds);
+			List<ProductoInterno> products = inventorySystem
+					.getProductByIds(productIds);
 			if (products.size() != order.getProducts().size())
 				throw new Exception(
 						"Alguno de los productos no existen en el sistema");
@@ -76,14 +78,17 @@ public class OrderServiceImpl implements OrderService {
 			for (ProductOrderDto ohpDto : order.getProducts()) {
 				OrderHasProduct ohp = orderHasProductConverter
 						.toEntidad(ohpDto);
-				ProductoInterno product = products.stream().findFirst().orElse(null);
+				ProductoInterno product = products.stream().findFirst()
+						.orElse(null);
 				ohp.setOrder(o);
-				// Le agrego producto para que no tenga conflictos al momento de hacer desconversion
+				// Le agrego producto para que no tenga conflictos al momento de
+				// hacer desconversion
 				ohp.setProduct(product);;
 				orderHasProducts.add(ohp);
 			}
 			// Guardo todos los order product
-			orderHasProducts = orderHasProductRepository.saveAll(orderHasProducts);
+			orderHasProducts = orderHasProductRepository
+					.saveAll(orderHasProducts);
 			resultOrderProducts = orderHasProductConverter
 					.toDtoList(orderHasProducts);
 		} else {
@@ -155,6 +160,26 @@ public class OrderServiceImpl implements OrderService {
 		// Debo reducir la cantidad de stock de los productos de la orden
 		// Persisto la orden en estado finalizado
 		return null;
+	}
+
+	@Override
+	public OrderDto deleteOrder(Integer orderId) throws Exception {
+		// Busco el pedido
+		Order order = orderRepository.findById(orderId).orElse(null);
+		// Me fijo que exista
+		if(order == null)
+			throw new Exception("La orden no existe");
+		// Me fijo que no se encuentre eliminada previamente
+		if (order.getStatus().equals(Constantes.ORDER_STATUS_INACTIVE))
+			throw new Exception("El pedido ya se encuentra eliminado");
+		// Cambio el estado y persisto
+		order.setStatus(Constantes.ORDER_STATUS_INACTIVE);
+		order = orderRepository.save(order);
+		// Busco los productos para poder mostrarlos
+		OrderDto orderDto = orderConverter.toDto(order);
+		List<OrderHasProduct> ohp = orderHasProductRepository.findAllByOrderId(orderId);
+		orderDto.setProducts(orderHasProductConverter.toDtoList(ohp));
+		return orderDto;
 	}
 
 }

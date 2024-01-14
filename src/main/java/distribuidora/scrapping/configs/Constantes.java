@@ -24,4 +24,11 @@ public class Constantes {
 	public static final String LV_CATEGORIAS_CEREALES_DESCRIPTION = "CEREALES";
 	public static final String LV_MEDIDAS_VENTAS_1U = "MEDIDAS_VENTAS_1U";
 	public static final String LV_MEDIDAS_VENTAS_1U_DESCRIPTION = "UNIDAD";
+	
+	
+	// Estados de Ordenes
+	public static final String ORDER_STATUS_PENDING = "PENDING";
+	public static final String ORDER_STATUS_CONFIRMED = "CONFIRMED";
+	public static final String ORDER_STATUS_FINALIZED = "FINALIZED";
+	public static final String ORDER_STATUS_INACTIVE = "INACTIVE";
 }

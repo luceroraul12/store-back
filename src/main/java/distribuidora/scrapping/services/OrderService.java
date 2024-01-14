@@ -36,4 +36,6 @@ public interface OrderService {
 	 */
 	OrderDto finalizeOrder(OrderDto order);
 
+	OrderDto deleteOrder(Integer orderId) throws Exception;
+
 }
