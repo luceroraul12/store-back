@@ -8,6 +8,5 @@ public class ProductoInternoStatusDto {
     private ProductoInternoDto productoInterno;
     private Boolean isUnit;
     private Boolean hasStock;
-
-
+    private Double amount;
 }

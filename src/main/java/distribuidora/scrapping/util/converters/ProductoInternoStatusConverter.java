@@ -13,22 +13,24 @@ public class ProductoInternoStatusConverter extends Converter<ProductoInternoSta
     private ProductoInternoConverter productoInternoConverter;
 
     @Override
-    public ProductoInternoStatusDto toDto(ProductoInternoStatus productoInternoStatus) {
-        ProductoInternoStatusDto productoInternoStatusDto = new ProductoInternoStatusDto();
-        productoInternoStatusDto.setId(productoInternoStatus.getId());
-        productoInternoStatusDto.setProductoInterno(productoInternoConverter.toDto(productoInternoStatus.getProductoInterno()));
-        productoInternoStatusDto.setHasStock(productoInternoStatus.getHasStock());
-        productoInternoStatusDto.setIsUnit(productoInternoStatus.getIsUnit());
-        return productoInternoStatusDto;
+    public ProductoInternoStatusDto toDto(ProductoInternoStatus e) {
+        ProductoInternoStatusDto dto = new ProductoInternoStatusDto();
+        dto.setId(e.getId());
+        dto.setProductoInterno(productoInternoConverter.toDto(e.getProductoInterno()));
+        dto.setHasStock(e.getHasStock());
+        dto.setIsUnit(e.getIsUnit());
+        dto.setAmount(e.getAmount());
+        return dto;
     }
 
     @Override
-    public ProductoInternoStatus toEntidad(ProductoInternoStatusDto productoInternoStatusDto) {
-        ProductoInternoStatus productoInternoStatus = new ProductoInternoStatus();
-        productoInternoStatus.setId(productoInternoStatusDto.getId());
-        productoInternoStatus.setProductoInterno(productoInternoConverter.toEntidad(productoInternoStatusDto.getProductoInterno()));
-        productoInternoStatus.setIsUnit(productoInternoStatusDto.getIsUnit());
-        productoInternoStatus.setHasStock(productoInternoStatusDto.getHasStock());
-        return productoInternoStatus;
+    public ProductoInternoStatus toEntidad(ProductoInternoStatusDto dto) {
+        ProductoInternoStatus e = new ProductoInternoStatus();
+        e.setId(dto.getId());
+        e.setProductoInterno(productoInternoConverter.toEntidad(dto.getProductoInterno()));
+        e.setIsUnit(dto.getIsUnit());
+        e.setHasStock(dto.getHasStock());
+        e.setAmount(dto.getAmount());
+        return e;
     }
 }
