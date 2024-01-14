@@ -24,13 +24,14 @@ public interface OrderService {
 	
 	/**
 	 * Es para que luego de {@link #createOrder(OrderDto)} la tienda pueda validar el pedido en precios, productos y cantidades
-	 * @param order
+	 * @param orderId
 	 * @return
+	 * @throws Exception 
 	 */
-	OrderDto authorizeOrder(OrderDto order);
+	OrderDto confirmOrder(Integer orderId) throws Exception;
 	
 	/**
-	 * Es para que luego de {@link #authorizeOrder(OrderDto)} el cliene abone el dinero y se descuente las cantidades del producto
+	 * Es para que luego de {@link #confirmOrder(OrderDto)} el cliene abone el dinero y se descuente las cantidades del producto
 	 * @param order
 	 * @return
 	 */

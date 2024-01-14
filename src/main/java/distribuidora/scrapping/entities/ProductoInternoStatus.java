@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,15 +15,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProductoInternoStatus {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "producto_interno_id")
-    private ProductoInterno productoInterno;
-    private Boolean isUnit;
-    private Boolean hasStock;
-    private Double amount;
+	@ManyToOne
+	@JoinColumn(name = "producto_interno_id")
+	private ProductoInterno productoInterno;
+	private Boolean isUnit;
+	private Boolean hasStock;
+	private Double amount;
 }

@@ -134,10 +134,11 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public OrderDto authorizeOrder(OrderDto order) {
-		// Me fijo los productos y las cantidades respecto a anteriormente
-		// Persisto la orden en estado autorizado
-		return null;
+	public OrderDto confirmOrder(Integer orderId) throws Exception {
+		Order order = validateOrderExistAndActive(orderId);
+		order.setStatus(Constantes.ORDER_STATUS_CONFIRMED);
+		orderRepository.save(order);
+		return orderConverter.toDto(order);
 	}
 
 	@Override

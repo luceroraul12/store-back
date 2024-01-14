@@ -1,7 +1,5 @@
 package distribuidora.scrapping.controller;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,15 +21,15 @@ public class OrderController {
 	OrderDto createOrder(@RequestBody OrderDto dto) throws Exception {
 		return orderService.createOrder(dto);
 	}
-	
+
 	@PostMapping("update")
 	OrderDto updateOrder(@RequestBody OrderDto dto) throws Exception {
 		return orderService.updateOrder(dto);
 	}
 
-	@PostMapping("authorize")
-	OrderDto authorizeOrder(@RequestBody OrderDto dto) {
-		return orderService.authorizeOrder(dto);
+	@PostMapping("confirm/{orderId}")
+	OrderDto confirmOrder(@PathVariable Integer orderId) throws Exception {
+		return orderService.confirmOrder(orderId);
 	}
 
 	@PostMapping("finalize")
