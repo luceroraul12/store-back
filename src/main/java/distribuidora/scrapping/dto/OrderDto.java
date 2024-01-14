@@ -15,4 +15,5 @@ public class OrderDto {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date date;
 	private List<ProductOrderDto> products;
+	private String status;
 }

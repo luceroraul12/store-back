@@ -1,6 +1,9 @@
 package distribuidora.scrapping.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +19,11 @@ public class OrderController {
 
 	@Autowired
 	OrderService orderService;
+	
+	@GetMapping("")
+	List<OrderDto> getOrders(){
+		return orderService.getAllOrders();
+	};
 
 	@PostMapping("create")
 	OrderDto createOrder(@RequestBody OrderDto dto) throws Exception {

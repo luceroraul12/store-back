@@ -42,4 +42,5 @@ public interface OrderService {
 
 	OrderDto updateOrder(OrderDto dto) throws Exception;
 
+	List<OrderDto> getAllOrders();
 }

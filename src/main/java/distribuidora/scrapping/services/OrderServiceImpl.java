@@ -170,7 +170,8 @@ public class OrderServiceImpl implements OrderService {
 							.equals(pis.getProductoInterno().getId()))
 					.findFirst().orElse(null);
 			Double newAmount = pis.getAmount() - ohpSelected.getAmount();
-			// Hago que el stock sea positivo o 0 cuando quiso ser stock negativo
+			// Hago que el stock sea positivo o 0 cuando quiso ser stock
+			// negativo
 			newAmount = newAmount < 0 ? 0.0 : newAmount;
 			pis.setAmount(newAmount);
 		}
@@ -249,5 +250,23 @@ public class OrderServiceImpl implements OrderService {
 		if (order.getStatus().equals(Constantes.ORDER_STATUS_INACTIVE))
 			throw new Exception("El pedido ya se encuentra eliminado");
 		return order;
+	}
+
+	@Override
+	public List<OrderDto> getAllOrders() {
+		List<Order> orders = orderRepository.findAll();
+		orders.sort((a,b) -> b.getDate().compareTo(a.getDate()));
+		List<Integer> orderIds = orders.stream().map(o -> o.getId()).toList();
+		List<OrderDto> result = orderConverter.toDtoList(orders);
+		// Busco todos los productos de cada orden
+		List<OrderHasProduct> ohp = orderHasProductRepository.findAllByOrderId(orderIds.toArray(Integer[]::new));
+		// Recorro cada uno de los pedidos y le agrego sus productos
+		for (OrderDto o : result) {
+			// Filtro sus productos
+			List<OrderHasProduct> ohpSelected = ohp.stream().filter(p -> p.getOrder().getId().equals(o.getId())).toList();
+			// Convierto y agrego
+			o.setProducts(orderHasProductConverter.toDtoList(ohpSelected));
+		}
+		return result;
 	}
 }

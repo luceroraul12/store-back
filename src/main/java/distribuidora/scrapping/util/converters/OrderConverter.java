@@ -15,6 +15,7 @@ public class OrderConverter extends Converter<Order, OrderDto>{
 		dto.setId(entidad.getId());
 		dto.setStoreCode(entidad.getClient().getName());
 		dto.setUsername(entidad.getCustomer().getUsername());
+		dto.setStatus(entidad.getStatus());
 		return dto;
 	}
 

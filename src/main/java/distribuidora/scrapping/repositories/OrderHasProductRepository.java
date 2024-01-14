@@ -26,8 +26,8 @@ public interface OrderHasProductRepository extends JpaRepository<OrderHasProduct
 			FROM OrderHasProduct ohp
 				INNER JOIN ohp.order o
 				INNER JOIN ohp.product
-			WHERE o.id = :orderId
+			WHERE o.id in :orderIds
 			""")
-	List<OrderHasProduct> findAllByOrderId(Integer orderId);
+	List<OrderHasProduct> findAllByOrderId(Integer... orderIds);
 
 }
