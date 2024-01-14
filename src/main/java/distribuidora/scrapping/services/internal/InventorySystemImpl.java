@@ -210,4 +210,11 @@ public class InventorySystemImpl implements InventorySystem {
 		productoRepository.deleteAll();
 	}
 
+	@Override
+	public boolean existsProducts(List<Integer> productIds) {
+		int databaseProductSize = productoInternoRepository
+				.countProductsByIds(productIds);
+		return productIds.size() == databaseProductSize;
+	}
+
 }

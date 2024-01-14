@@ -36,4 +36,6 @@ public interface InventorySystem {
 	List<DatosDistribuidora> getDistribuidoraStatus();
 	
 	void eliminarIndices();
+
+	boolean existsProducts(List<Integer> productIds);
 }

@@ -20,6 +20,7 @@ import distribuidora.scrapping.repositories.CustomerRepository;
 import distribuidora.scrapping.repositories.OrderHasProductRepository;
 import distribuidora.scrapping.repositories.OrderRepository;
 import distribuidora.scrapping.services.internal.InventorySystem;
+import distribuidora.scrapping.util.converters.OrderConverter;
 import distribuidora.scrapping.util.converters.OrderHasProductConverter;
 
 @Service
@@ -42,18 +43,31 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private OrderHasProductRepository orderHasProductRepository;
 
+	@Autowired
+	private OrderConverter orderConverter;
+
 	@Override
-	public List<ProductOrderDto> createOrder(OrderDto order) throws Exception {
+	public OrderDto createOrder(OrderDto order) throws Exception {
 		Customer customer = validateCustomer(order);
 		// Verifico que codigo de cliente exista
 		Client client = validateClient(order);
-		List<ProductOrderDto> result = null;
+		List<ProductOrderDto> resultOrderProducts = null;
+		Order o = null;
+		OrderDto result = null;
 		// Busco los productos solicitados
 		if (CollectionUtils.isNotEmpty(order.getProducts())) {
+			// Valido que existan los productos
+			List<Integer> productIds = order.getProducts().stream()
+					.map(p -> p.getProductId()).toList();
+			boolean existProducts = inventorySystem.existsProducts(productIds);
+			if (!existProducts)
+				throw new Exception(
+						"Alguno de los productos no existen en el sistema");
+
 			List<OrderHasProduct> orderHasProducts = orderHasProductConverter
 					.toEntidadList(order.getProducts());
 			// Creo la orden
-			Order o = new Order();
+			o = new Order();
 			o.setClient(client);
 			o.setCustomer(customer);
 			o.setDate(new Date());
@@ -65,8 +79,15 @@ public class OrderServiceImpl implements OrderService {
 			// Guardo todos los order product
 			orderHasProducts = orderHasProductRepository
 					.saveAll(orderHasProducts);
-			result = orderHasProductConverter.toDtoList(orderHasProducts);
+			resultOrderProducts = orderHasProductConverter
+					.toDtoList(orderHasProducts);
+		} else {
+			throw new Exception(
+					"No esta permitido crear ordenes sin productos asociados");
 		}
+		result = orderConverter.toDto(o);
+		result.setProducts(resultOrderProducts);
+
 		return result;
 	}
 
@@ -130,7 +151,5 @@ public class OrderServiceImpl implements OrderService {
 		// Persisto la orden en estado finalizado
 		return null;
 	}
-	
-	
 
 }

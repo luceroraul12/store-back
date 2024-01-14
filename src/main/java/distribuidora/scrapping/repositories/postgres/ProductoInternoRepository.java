@@ -22,4 +22,11 @@ public interface ProductoInternoRepository extends JpaRepository<ProductoInterno
             "   LEFT JOIN pi.lvCategoria c " +
             "ORDER BY c.descripcion, pi.nombre, pi.descripcion")
     List<ProductoInterno> getAllProductos();
+
+    @Query("""
+    		SELECT COUNT(*) 
+    		FROM ProductoInterno pi
+    		WHERE pi.id IN (:productIds)
+    		""")
+	int countProductsByIds(@Param("productIds") List<Integer> productIds);
 }

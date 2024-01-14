@@ -43,6 +43,7 @@ public class SpringSecurityConfig {
                 		.antMatchers("/customer/**").permitAll()
                         .antMatchers("/login/**").permitAll()
                         .antMatchers("/inventory-system/**").hasAuthority("ALL")
+                        .antMatchers("/order/**").hasAuthority("ALL")
                         .antMatchers("/lookup/**").hasAuthority("ALL")
                         .anyRequest().authenticated()
                 )

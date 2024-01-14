@@ -16,12 +16,17 @@ public class OrderController {
 	@Autowired
 	OrderService orderService;
 
-	@PostMapping("/order/authorize")
+	@PostMapping("create")
+	OrderDto createOrder(@RequestBody OrderDto dto) throws Exception {
+		return orderService.createOrder(dto);
+	}
+
+	@PostMapping("authorize")
 	OrderDto authorizeOrder(@RequestBody OrderDto dto) {
 		return orderService.authorizeOrder(dto);
 	}
 
-	@PostMapping("/order/finalize")
+	@PostMapping("finalize")
 	OrderDto finalizeOrder(@RequestBody OrderDto dto) {
 		return orderService.finalizeOrder(dto);
 	}

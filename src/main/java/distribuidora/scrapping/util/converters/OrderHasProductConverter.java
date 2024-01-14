@@ -14,6 +14,8 @@ public class OrderHasProductConverter extends Converter<OrderHasProduct, Product
 		ProductOrderDto d = new ProductOrderDto();
 		d.setId(e.getId());
 		d.setProductId(e.getProduct().getId());
+		d.setProductName(e.getProduct().getNombre());
+		d.setProductDescription(e.getProduct().getDescripcion());
 		d.setAmount(e.getAmount());
 		d.setUnitName(e.getUnitName());
 		d.setUnitPrice(e.getUnitPrice());

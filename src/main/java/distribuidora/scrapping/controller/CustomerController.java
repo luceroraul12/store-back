@@ -12,33 +12,32 @@ import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.dto.OrderDto;
 import distribuidora.scrapping.dto.ProductCustomerDto;
-import distribuidora.scrapping.dto.ProductOrderDto;
 import distribuidora.scrapping.services.OrderService;
 import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
 
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
-	
+
 	@Autowired
 	ProductoInternoStatusService service;
-	
+
 	@Autowired
 	OrderService orderService;
-	
-	
+
 	@GetMapping("/products")
-	public List<ProductCustomerDto> getProducts(){
-		return service.getProductsForCustomer(); 
+	public List<ProductCustomerDto> getProducts() {
+		return service.getProductsForCustomer();
 	}
-	
+
 	@PostMapping("/order")
-	public List<ProductOrderDto> createOrder(@RequestBody OrderDto order) throws Exception{
-		return orderService.createOrder(order); 
+	public OrderDto createOrder(@RequestBody OrderDto order) throws Exception {
+		return orderService.createOrder(order);
 	}
-	
+
 	@GetMapping("/store/{storeCode}/username/{username}/orders")
-	public List<OrderDto> getMyOrders(@PathVariable String storeCode, @PathVariable String username){
+	public List<OrderDto> getMyOrders(@PathVariable String storeCode,
+			@PathVariable String username) {
 		return orderService.getMyOrders(storeCode, username);
 	}
 

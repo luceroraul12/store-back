@@ -3,7 +3,6 @@ package distribuidora.scrapping.services;
 import java.util.List;
 
 import distribuidora.scrapping.dto.OrderDto;
-import distribuidora.scrapping.dto.ProductOrderDto;
 
 public interface OrderService {
 
@@ -13,7 +12,7 @@ public interface OrderService {
 	 * @return
 	 * @throws Exception
 	 */
-	List<ProductOrderDto> createOrder(OrderDto order) throws Exception;
+	OrderDto createOrder(OrderDto order) throws Exception;
 
 	/**
 	 * Es para obtener el historial de ordenes realizadas en cierta tienda
