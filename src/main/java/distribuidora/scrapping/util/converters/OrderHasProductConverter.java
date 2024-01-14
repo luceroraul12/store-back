@@ -33,6 +33,8 @@ public class OrderHasProductConverter extends Converter<OrderHasProduct, Product
 		e.setAmount(dto.getAmount());
 		ProductoInterno p = new ProductoInterno();
 		p.setId(dto.getProductId());
+		p.setNombre(dto.getProductName());
+		p.setDescripcion(dto.getProductDescription());
 		e.setProduct(p);
 		return e;
 	}

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.DatosDistribuidora;
+import distribuidora.scrapping.entities.ProductoInterno;
 
 @Service
 public interface InventorySystem {
@@ -38,4 +39,6 @@ public interface InventorySystem {
 	void eliminarIndices();
 
 	boolean existsProducts(List<Integer> productIds);
+
+	List<ProductoInterno> getProductByIds(List<Integer> productIds);
 }

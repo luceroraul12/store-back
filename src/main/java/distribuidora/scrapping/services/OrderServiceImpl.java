@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.OrderDto;
 import distribuidora.scrapping.dto.ProductOrderDto;
 import distribuidora.scrapping.entities.Client;
+import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.customer.Customer;
 import distribuidora.scrapping.entities.customer.Order;
 import distribuidora.scrapping.entities.customer.OrderHasProduct;
@@ -59,8 +60,8 @@ public class OrderServiceImpl implements OrderService {
 			// Valido que existan los productos
 			List<Integer> productIds = order.getProducts().stream()
 					.map(p -> p.getProductId()).toList();
-			boolean existProducts = inventorySystem.existsProducts(productIds);
-			if (!existProducts)
+			List<ProductoInterno> products = inventorySystem.getProductByIds(productIds);
+			if (products.size() != order.getProducts().size())
 				throw new Exception(
 						"Alguno de los productos no existen en el sistema");
 
@@ -75,14 +76,14 @@ public class OrderServiceImpl implements OrderService {
 			for (ProductOrderDto ohpDto : order.getProducts()) {
 				OrderHasProduct ohp = orderHasProductConverter
 						.toEntidad(ohpDto);
+				ProductoInterno product = products.stream().findFirst().orElse(null);
 				ohp.setOrder(o);
+				// Le agrego producto para que no tenga conflictos al momento de hacer desconversion
+				ohp.setProduct(product);;
 				orderHasProducts.add(ohp);
 			}
 			// Guardo todos los order product
-			orderHasProductRepository.saveAll(orderHasProducts);
-			// Busco todos los productos de la orden persistidos
-			orderHasProducts = orderHasProductRepository
-					.findAllByOrderId(o.getId());
+			orderHasProducts = orderHasProductRepository.saveAll(orderHasProducts);
 			resultOrderProducts = orderHasProductConverter
 					.toDtoList(orderHasProducts);
 		} else {

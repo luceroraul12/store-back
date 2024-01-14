@@ -217,4 +217,9 @@ public class InventorySystemImpl implements InventorySystem {
 		return productIds.size() == databaseProductSize;
 	}
 
+	@Override
+	public List<ProductoInterno> getProductByIds(List<Integer> productIds) {
+		return productoInternoRepository.findAllById(productIds);
+	}
+
 }
