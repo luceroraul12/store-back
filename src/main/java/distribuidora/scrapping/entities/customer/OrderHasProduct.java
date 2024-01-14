@@ -30,4 +30,5 @@ public class OrderHasProduct {
 	@ManyToOne
     @JoinColumn(name = "product_id")
 	private ProductoInterno product;
+	private Integer percentDiscount;
 }

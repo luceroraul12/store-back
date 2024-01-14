@@ -20,6 +20,7 @@ public class OrderHasProductConverter extends Converter<OrderHasProduct, Product
 		d.setUnitName(e.getUnitName());
 		d.setUnitPrice(e.getUnitPrice());
 		d.setUnitValue(e.getUnitValue());
+		d.setPercentDiscount(e.getPercentDiscount());
 		return d;
 	}
 
@@ -36,6 +37,7 @@ public class OrderHasProductConverter extends Converter<OrderHasProduct, Product
 		p.setNombre(dto.getProductName());
 		p.setDescripcion(dto.getProductDescription());
 		e.setProduct(p);
+		e.setPercentDiscount(dto.getPercentDiscount());
 		return e;
 	}
 

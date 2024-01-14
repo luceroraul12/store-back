@@ -12,4 +12,5 @@ public class ProductOrderDto {
 	private Double unitValue;
 	private Integer unitPrice;
 	private Double amount;
+	private Integer percentDiscount;
 }
