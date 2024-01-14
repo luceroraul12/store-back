@@ -7,13 +7,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "productos_internos_status")
-@Getter
-@Setter
+@Entity
+@Table(name = "productos_internos_status")
+@Data
 public class ProductoInternoStatus {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

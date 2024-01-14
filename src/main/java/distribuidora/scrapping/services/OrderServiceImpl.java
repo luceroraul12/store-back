@@ -15,6 +15,7 @@ import distribuidora.scrapping.dto.OrderDto;
 import distribuidora.scrapping.dto.ProductOrderDto;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.ProductoInterno;
+import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.entities.customer.Customer;
 import distribuidora.scrapping.entities.customer.Order;
 import distribuidora.scrapping.entities.customer.OrderHasProduct;
@@ -22,6 +23,7 @@ import distribuidora.scrapping.repositories.CustomerRepository;
 import distribuidora.scrapping.repositories.OrderHasProductRepository;
 import distribuidora.scrapping.repositories.OrderRepository;
 import distribuidora.scrapping.services.internal.InventorySystem;
+import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
 import distribuidora.scrapping.util.converters.OrderConverter;
 import distribuidora.scrapping.util.converters.OrderHasProductConverter;
 
@@ -47,6 +49,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private OrderConverter orderConverter;
+
+	@Autowired
+	private ProductoInternoStatusService productoInternoStatusService;
 
 	@Override
 	public OrderDto createOrder(OrderDto order) throws Exception {
@@ -142,10 +147,36 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public OrderDto finalizeOrder(OrderDto order) {
-		// Debo reducir la cantidad de stock de los productos de la orden
-		// Persisto la orden en estado finalizado
-		return null;
+	public OrderDto finalizeOrder(Integer orderId) throws Exception {
+		// Validar orden
+		Order order = validateOrderExistAndActive(orderId);
+		// Entrega de pedidos (simbolica de momento)
+		// Finalizar orden
+		order.setStatus(Constantes.ORDER_STATUS_FINALIZED);
+		orderRepository.save(order);
+		// Restar al stock actual de cada uno de los productos
+		List<OrderHasProduct> ohps = orderHasProductRepository
+				.findAllByOrderId(orderId);
+		List<Integer> productIds = ohps.stream()
+				.map(o -> o.getProduct().getId()).toList();
+		// Busco los estados de cada uno de los productos
+		List<ProductoInternoStatus> productStatus = productoInternoStatusService
+				.getAllByProductIds(productIds);
+		// Acceso rapido map de OrderHasProduct
+		// Redujo stock
+		for (ProductoInternoStatus pis : productStatus) {
+			OrderHasProduct ohpSelected = ohps.stream()
+					.filter(o -> o.getProduct().getId()
+							.equals(pis.getProductoInterno().getId()))
+					.findFirst().orElse(null);
+			Double newAmount = pis.getAmount() - ohpSelected.getAmount();
+			// Hago que el stock sea positivo o 0 cuando quiso ser stock negativo
+			newAmount = newAmount < 0 ? 0.0 : newAmount;
+			pis.setAmount(newAmount);
+		}
+		// Persisto el nuevo Stock
+		productoInternoStatusService.saveAll(productStatus);
+		return orderConverter.toDto(order);
 	}
 
 	@Override

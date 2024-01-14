@@ -32,9 +32,9 @@ public class OrderController {
 		return orderService.confirmOrder(orderId);
 	}
 
-	@PostMapping("finalize")
-	OrderDto finalizeOrder(@RequestBody OrderDto dto) {
-		return orderService.finalizeOrder(dto);
+	@PostMapping("finalize/{orderId}")
+	OrderDto finalizeOrder(@PathVariable Integer orderId) throws Exception {
+		return orderService.finalizeOrder(orderId);
 	}
 
 	@PostMapping("delete/{orderId}")

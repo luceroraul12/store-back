@@ -32,10 +32,11 @@ public interface OrderService {
 	
 	/**
 	 * Es para que luego de {@link #confirmOrder(OrderDto)} el cliene abone el dinero y se descuente las cantidades del producto
-	 * @param order
+	 * @param orderId
 	 * @return
+	 * @throws Exception 
 	 */
-	OrderDto finalizeOrder(OrderDto order);
+	OrderDto finalizeOrder(Integer orderId) throws Exception;
 
 	OrderDto deleteOrder(Integer orderId) throws Exception;
 
