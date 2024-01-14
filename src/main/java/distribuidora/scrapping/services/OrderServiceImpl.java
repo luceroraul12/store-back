@@ -64,8 +64,7 @@ public class OrderServiceImpl implements OrderService {
 				throw new Exception(
 						"Alguno de los productos no existen en el sistema");
 
-			List<OrderHasProduct> orderHasProducts = orderHasProductConverter
-					.toEntidadList(order.getProducts());
+			List<OrderHasProduct> orderHasProducts = new ArrayList<>();
 			// Creo la orden
 			o = new Order();
 			o.setClient(client);
@@ -73,12 +72,17 @@ public class OrderServiceImpl implements OrderService {
 			o.setDate(new Date());
 			o = orderRepository.save(o);
 			// Seteo la orden a todos los productos
-			for (OrderHasProduct orderHasProduct : orderHasProducts) {
-				orderHasProduct.setOrder(o);
+			for (ProductOrderDto ohpDto : order.getProducts()) {
+				OrderHasProduct ohp = orderHasProductConverter
+						.toEntidad(ohpDto);
+				ohp.setOrder(o);
+				orderHasProducts.add(ohp);
 			}
 			// Guardo todos los order product
+			orderHasProductRepository.saveAll(orderHasProducts);
+			// Busco todos los productos de la orden persistidos
 			orderHasProducts = orderHasProductRepository
-					.saveAll(orderHasProducts);
+					.findAllByOrderId(o.getId());
 			resultOrderProducts = orderHasProductConverter
 					.toDtoList(orderHasProducts);
 		} else {

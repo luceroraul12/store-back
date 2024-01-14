@@ -21,4 +21,13 @@ public interface OrderHasProductRepository extends JpaRepository<OrderHasProduct
 	List<OrderHasProduct> findByStoreCodeAndUsername(String storeCode,
 			String username);
 
+	@Query("""
+			SELECT ohp 
+			FROM OrderHasProduct ohp
+				INNER JOIN ohp.order o
+				INNER JOIN ohp.product
+			WHERE o.id = :orderId
+			""")
+	List<OrderHasProduct> findAllByOrderId(Integer orderId);
+
 }
