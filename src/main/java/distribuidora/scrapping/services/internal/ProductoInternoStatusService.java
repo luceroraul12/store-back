@@ -8,9 +8,11 @@ import distribuidora.scrapping.entities.ProductoInternoStatus;
 
 public interface ProductoInternoStatusService {
 
-    List<ProductoInternoStatusDto> getAll();
+	List<ProductoInternoStatusDto> getAll();
 
-    ProductoInternoStatusDto update(ProductoInternoStatusDto dto);
+	List<ProductoInternoStatus> getAllEntities();
+	
+	ProductoInternoStatusDto update(ProductoInternoStatusDto dto);
 
 	List<ProductCustomerDto> getProductsForCustomer();
 

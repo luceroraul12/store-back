@@ -39,7 +39,7 @@ public class ProductoInternoStatusServiceImp
 
 	@Override
 	public List<ProductoInternoStatusDto> getAll() {
-		List<ProductoInternoStatusDto> result =converter.toDtoList(repository.findAll()); 
+		List<ProductoInternoStatusDto> result = converter.toDtoList(repository.findAll()); 
 		configLowAmount(result);
 		return result;
 	}
@@ -89,5 +89,11 @@ public class ProductoInternoStatusServiceImp
 	private void configLowAmount(List<ProductoInternoStatusDto> result) {
 		int minAmount = 2;
 		result.forEach(pis -> pis.setLowAmount(pis.getAmount() < minAmount));
+	}
+
+
+	@Override
+	public List<ProductoInternoStatus> getAllEntities() {
+		return repository.findAll();
 	}
 }

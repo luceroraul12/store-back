@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.dto.OrderDto;
 import distribuidora.scrapping.dto.ProductOrderDto;
+import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.Client;
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.entities.customer.Customer;
@@ -22,10 +24,13 @@ import distribuidora.scrapping.entities.customer.OrderHasProduct;
 import distribuidora.scrapping.repositories.CustomerRepository;
 import distribuidora.scrapping.repositories.OrderHasProductRepository;
 import distribuidora.scrapping.repositories.OrderRepository;
+import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
+import distribuidora.scrapping.util.CalculatorUtil;
 import distribuidora.scrapping.util.converters.OrderConverter;
 import distribuidora.scrapping.util.converters.OrderHasProductConverter;
+import distribuidora.scrapping.util.converters.ProductHasStatusToProductOrderConverter;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -52,6 +57,15 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private ProductoInternoStatusService productoInternoStatusService;
+
+	@Autowired
+	private ProductHasStatusToProductOrderConverter productHasStatusToProductOrderConverter;
+
+	@Autowired
+	private CategoryHasUnitRepository categoryHasUnitRepository;
+
+	@Autowired
+	private CalculatorUtil calculatorUtil;
 
 	@Override
 	public OrderDto createOrder(OrderDto order) throws Exception {
@@ -255,18 +269,51 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<OrderDto> getAllOrders() {
 		List<Order> orders = orderRepository.findAll();
-		orders.sort((a,b) -> b.getDate().compareTo(a.getDate()));
+		orders.sort((a, b) -> b.getDate().compareTo(a.getDate()));
 		List<Integer> orderIds = orders.stream().map(o -> o.getId()).toList();
 		List<OrderDto> result = orderConverter.toDtoList(orders);
 		// Busco todos los productos de cada orden
-		List<OrderHasProduct> ohp = orderHasProductRepository.findAllByOrderId(orderIds.toArray(Integer[]::new));
+		List<OrderHasProduct> ohp = orderHasProductRepository
+				.findAllByOrderId(orderIds.toArray(Integer[]::new));
 		// Recorro cada uno de los pedidos y le agrego sus productos
 		for (OrderDto o : result) {
 			// Filtro sus productos
-			List<OrderHasProduct> ohpSelected = ohp.stream().filter(p -> p.getOrder().getId().equals(o.getId())).toList();
+			List<OrderHasProduct> ohpSelected = ohp.stream()
+					.filter(p -> p.getOrder().getId().equals(o.getId()))
+					.toList();
 			// Convierto y agrego
 			o.setProducts(orderHasProductConverter.toDtoList(ohpSelected));
 		}
+		return result;
+	}
+
+	@Override
+	public List<ProductOrderDto> getProductOrders() {
+		// Busco los productos
+		List<ProductoInternoStatus> products = productoInternoStatusService
+				.getAllEntities();
+		// Busco los Lookup de las unidades
+		List<CategoryHasUnit> categoryHasUnits = categoryHasUnitRepository
+				.findAll();
+		List<ProductOrderDto> result = new ArrayList<>();
+		// Debo vincular las unidades al producto y colocarle el precio
+		products.forEach(pis -> {
+			// Identifico la categoria del producto
+			LookupValor lvUnit = categoryHasUnits.stream()
+					.filter(chu -> chu.getCategory().getId().equals(
+							pis.getProductoInterno().getLvCategoria().getId()))
+					.findFirst().orElse(null).getUnit();
+			// Comienzo a convertir el dto
+			ProductOrderDto dto = productHasStatusToProductOrderConverter
+					.toDto(pis);
+			// agrego los datos de la unidad de la categoria
+			dto.setUnitName(lvUnit.getDescripcion());
+			dto.setUnitValue(Double.parseDouble(lvUnit.getValor()));
+			int unitPrice = (int) (calculatorUtil.calculateCustomerPrice(
+					pis.getProductoInterno()) * dto.getUnitValue());
+			dto.setUnitPrice(unitPrice);
+			result.add(dto);
+		});
 		return result;
 	}
 }

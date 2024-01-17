@@ -24,6 +24,7 @@ public class Constantes {
 	public static final String LV_CATEGORIAS_CEREALES_DESCRIPTION = "CEREALES";
 	public static final String LV_MEDIDAS_VENTAS_1U = "MEDIDAS_VENTAS_1U";
 	public static final String LV_MEDIDAS_VENTAS_1U_DESCRIPTION = "UNIDAD";
+	public static final String LT_MEDIDAS_VENTAS = "MEDIDAS_VENTAS";
 	
 	
 	// Estados de Ordenes

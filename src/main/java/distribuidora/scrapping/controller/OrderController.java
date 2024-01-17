@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.dto.OrderDto;
+import distribuidora.scrapping.dto.ProductOrderDto;
 import distribuidora.scrapping.services.OrderService;
 
 @RestController
@@ -23,6 +24,11 @@ public class OrderController {
 	@GetMapping("")
 	List<OrderDto> getOrders(){
 		return orderService.getAllOrders();
+	};
+	
+	@GetMapping("productOrders")
+	List<ProductOrderDto> getProductOrders(){
+		return orderService.getProductOrders();
 	};
 
 	@PostMapping("create")
