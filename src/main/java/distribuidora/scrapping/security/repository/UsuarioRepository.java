@@ -6,5 +6,4 @@ import distribuidora.scrapping.security.entity.UsuarioEntity;
 
 public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer> {
     UsuarioEntity findByUsuario(String username);
-
 }

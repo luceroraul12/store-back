@@ -21,10 +21,12 @@ import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.entities.customer.Customer;
 import distribuidora.scrapping.entities.customer.Order;
 import distribuidora.scrapping.entities.customer.OrderHasProduct;
+import distribuidora.scrapping.repositories.ClientHasUsersRepository;
 import distribuidora.scrapping.repositories.CustomerRepository;
 import distribuidora.scrapping.repositories.OrderHasProductRepository;
 import distribuidora.scrapping.repositories.OrderRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
+import distribuidora.scrapping.security.entity.UsuarioEntity;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
 import distribuidora.scrapping.util.CalculatorUtil;
@@ -67,6 +69,12 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private CalculatorUtil calculatorUtil;
 
+	@Autowired
+	private ClientHasUsersRepository clientHasUsersRepository;
+
+	@Autowired
+	private UsuarioService userService;
+
 	@Override
 	public OrderDto createOrder(OrderDto order) throws Exception {
 		Customer customer = validateCustomer(order);
@@ -107,7 +115,10 @@ public class OrderServiceImpl implements OrderService {
 
 	private Client validateClient(OrderDto order) throws Exception {
 		// Verifico si el usuario ya existe
-		Client client = clientDataService.getByCode(order.getStoreCode());
+		UsuarioEntity user = userService.getCurrentUser();
+		Client client = clientHasUsersRepository.findByUserId(user.getId())
+				.getClient();
+
 		// En caso de que no exista lo voy a registrar
 		if (client == null)
 			throw new Exception("No existe la tienda solicitada");
