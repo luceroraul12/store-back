@@ -254,8 +254,7 @@ public class OrderServiceImpl implements OrderService {
 		List<OrderHasProduct> orderHasProducts = new ArrayList<>();
 		for (ProductOrderDto ohpDto : productsDto) {
 			OrderHasProduct ohp = orderHasProductConverter.toEntidad(ohpDto);
-			ProductoInterno product = products.stream().findFirst()
-					.orElse(null);
+			ProductoInterno product = ohp.getProduct();
 			ohp.setOrder(order);
 			// Le agrego producto para que no tenga conflictos al momento de
 			// hacer desconversion
