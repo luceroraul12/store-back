@@ -48,8 +48,11 @@ public class ProductoInternoStatusServiceImp
 	@Override
 	public ProductoInternoStatusDto update(ProductoInternoStatusDto dto) {
 		ProductoInternoStatus entity = converter.toEntidad(dto);
-		return converter.toDto(repository.save(entity));
+		dto = converter.toDto(repository.save(entity));
+		configLowAmount(dto);
+		return dto;
 	}
+
 
 	@Override
 	public List<ProductCustomerDto> getProductsForCustomer() {
@@ -87,8 +90,17 @@ public class ProductoInternoStatusServiceImp
 	 * @param result
 	 */
 	private void configLowAmount(List<ProductoInternoStatusDto> result) {
+		result.forEach(pis -> configLowAmount(pis));
+	}
+	
+	/**
+	 * Me fijo segun una constante si la cantidad de stock es poca o no.
+	 * Es posible que esto cambie y base en otra cosa o utilice la base de datos
+	 * @param result
+	 */
+	private void configLowAmount(ProductoInternoStatusDto dto) {
 		int minAmount = 2;
-		result.forEach(pis -> pis.setLowAmount(pis.getAmount() < minAmount));
+		dto.setLowAmount(dto.getAmount() < minAmount);
 	}
 
 
