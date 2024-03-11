@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomException extends Throwable {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> handleSecurityException(Exception ex) {
+		ex.printStackTrace();
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(ex.getMessage());
 	}
