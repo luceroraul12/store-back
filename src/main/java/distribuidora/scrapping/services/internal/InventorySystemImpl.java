@@ -19,6 +19,7 @@ import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
+import distribuidora.scrapping.security.handler.CustomException;
 import distribuidora.scrapping.services.ExternalProductService;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.converters.CategoryHasUnitDtoConverter;
@@ -124,7 +125,7 @@ public class InventorySystemImpl implements InventorySystem {
 	}
 
 	@Override
-	public List<ProductoInternoDto> getProductos() {
+	public List<ProductoInternoDto> getProductos() throws Exception {
 		List<ProductoInterno> productos = productoInternoRepository
 				.getAllProductos();
 		return productoInternoConverter.toDtoList(productos);

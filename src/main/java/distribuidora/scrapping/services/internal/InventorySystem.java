@@ -13,20 +13,22 @@ import distribuidora.scrapping.entities.ProductoInterno;
 public interface InventorySystem {
 
 	/**
-	 * pide a la base la lista de productos especificos y la interna para luego realizar la actualizacion de precios y
-	 * actualizar la base de datos
+	 * pide a la base la lista de productos especificos y la interna para luego
+	 * realizar la actualizacion de precios y actualizar la base de datos
+	 * 
 	 * @return numero de productos que fueron actualizado sus precios
 	 * @see #actualizarPrecioConProductosEspecificos(List, List)
 	 */
 	int actualizarPreciosAutomatico();
 
 	ProductoInternoDto crearProducto(ProductoInternoDto dto);
-	
-	ProductoInternoDto modificarProducto(ProductoInternoDto dto);
-	
-	List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds);
 
-	List<ProductoInternoDto> getProductos();
+	ProductoInternoDto modificarProducto(ProductoInternoDto dto);
+
+	List<ProductoInternoDto> eliminarProductos(
+			List<Integer> productoInternoIds);
+
+	List<ProductoInternoDto> getProductos() throws Exception;
 
 	List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos);
 
@@ -35,7 +37,7 @@ public interface InventorySystem {
 	CategoryHasUnitDto updateCategoryHasUnit(CategoryHasUnitDto dto);
 
 	List<DatosDistribuidora> getDistribuidoraStatus();
-	
+
 	void eliminarIndices();
 
 	boolean existsProducts(List<Integer> productIds);

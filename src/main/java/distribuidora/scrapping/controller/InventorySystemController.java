@@ -60,7 +60,7 @@ public class InventorySystemController {
 	}
 
 	@GetMapping
-	List<ProductoInternoDto> getProductos() {
+	List<ProductoInternoDto> getProductos() throws Exception {
 		return service.getProductos();
 	}
 
@@ -71,7 +71,7 @@ public class InventorySystemController {
 	}
 
 	@GetMapping("updateAll")
-	List<ProductoInternoDto> actualizarAllProductos() {
+	List<ProductoInternoDto> actualizarAllProductos() throws Exception {
 		service.actualizarPreciosAutomatico();
 		return getProductos();
 	}
