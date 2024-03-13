@@ -116,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
 	private Client validateClient(OrderDto order) throws Exception {
 		// Verifico si el usuario ya existe
 		UsuarioEntity user = userService.getCurrentUser();
-		Client client = clientHasUsersRepository.findByUserId(user.getId())
+		Client client = clientHasUsersRepository.findByClientId(user.getId())
 				.getClient();
 
 		// En caso de que no exista lo voy a registrar

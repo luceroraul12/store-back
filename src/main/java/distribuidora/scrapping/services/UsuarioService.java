@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import distribuidora.scrapping.repositories.ClientHasUsersRepository;
 import distribuidora.scrapping.security.entity.UsuarioEntity;
 import distribuidora.scrapping.security.repository.UsuarioRepository;
 
@@ -13,8 +14,16 @@ public class UsuarioService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
-	UsuarioEntity getCurrentUser() {
+	@Autowired
+	private ClientHasUsersRepository clientHasUsersRepository;
+	
+	public UsuarioEntity getCurrentUser() {
 		String auth = SecurityContextHolder.getContext().getAuthentication().getName();
 		return usuarioRepository.findByUsuario(auth);
+	}
+	
+	public Integer  getCurrentClientId() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		return clientHasUsersRepository.getClientIdByUsername(username);
 	}
 }

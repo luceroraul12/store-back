@@ -18,10 +18,15 @@ public interface ProductoInternoRepository extends JpaRepository<ProductoInterno
             "WHERE pi.id IN (:productoInternoIds)")
     List<ProductoInterno> getProductosPorIds(@Param("productoInternoIds") List<Integer> productoInternoIds);
 
-    @Query("SELECT pi FROM ProductoInterno pi " +
-            "   LEFT JOIN pi.lvCategoria c " +
-            "ORDER BY c.descripcion, pi.nombre, pi.descripcion")
-    List<ProductoInterno> getAllProductos();
+    @Query("""
+    		SELECT pi 
+    		FROM ProductoInterno pi
+    			LEFT JOIN pi.lvCategoria cat
+    			INNER JOIN pi.client c
+    		WHERE c.id = :clientId
+    		ORDER BY cat.descripcion, pi.nombre, pi.descripcion	
+    		""")
+    List<ProductoInterno> getAllProductosByUserId(Integer clientId);
 
     @Query("""
     		SELECT COUNT(*) 

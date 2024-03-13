@@ -19,8 +19,8 @@ import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
-import distribuidora.scrapping.security.handler.CustomException;
 import distribuidora.scrapping.services.ExternalProductService;
+import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.converters.CategoryHasUnitDtoConverter;
 import distribuidora.scrapping.util.converters.ProductoInternoConverter;
@@ -51,6 +51,9 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Autowired
 	private DatosDistribuidoraRepository datosDistribuidoraRepository;
+
+	@Autowired
+	private UsuarioService usuarioService;
 
 	@Override
 	public int actualizarPreciosAutomatico() {
@@ -126,8 +129,10 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Override
 	public List<ProductoInternoDto> getProductos() throws Exception {
+		Integer clientId = usuarioService.getCurrentClientId();
+
 		List<ProductoInterno> productos = productoInternoRepository
-				.getAllProductos();
+				.getAllProductosByUserId(clientId);
 		return productoInternoConverter.toDtoList(productos);
 	}
 
