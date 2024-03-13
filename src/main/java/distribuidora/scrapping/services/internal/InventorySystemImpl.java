@@ -13,6 +13,7 @@ import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.CategoryHasUnit;
+import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
@@ -86,23 +87,35 @@ public class InventorySystemImpl implements InventorySystem {
 
 		ProductoInterno producto = productoInternoConverter.toEntidad(dto);
 		producto.setFechaCreacion(new Date());
+		Client client = usuarioService.getCurrentClient();
+		producto.setClient(client);
 		ProductoInterno productoGuardado = productoInternoRepository
 				.save(producto);
 		return productoInternoConverter.toDto(productoGuardado);
 	}
 
 	@Override
-	public ProductoInternoDto modificarProducto(ProductoInternoDto dto) {
+	public ProductoInternoDto modificarProducto(ProductoInternoDto dto)
+			throws Exception {
 		if (dto.getId() == null)
 			return null;
 
 		ProductoInterno oldEntidadInterno = productoInternoRepository
 				.getReferenceById(dto.getId());
+
 		if (oldEntidadInterno == null)
-			return null;
+			throw new Exception("No existe producto a actualizar");
+		
+		Client currentClient = usuarioService.getCurrentClient();
+
+		if (!oldEntidadInterno.getClient().getId()
+				.equals(currentClient.getId()))
+			throw new Exception(
+					"El producto que quiere modificar pertenece a otra tienda.");
 
 		ProductoInterno newEntidadInterno = productoInternoConverter
 				.toEntidad(dto);
+		newEntidadInterno.setClient(currentClient);
 
 		newEntidadInterno
 				.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
@@ -129,7 +142,7 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Override
 	public List<ProductoInternoDto> getProductos() throws Exception {
-		Integer clientId = usuarioService.getCurrentClientId();
+		Integer clientId = usuarioService.getCurrentClient().getId();
 
 		List<ProductoInterno> productos = productoInternoRepository
 				.getAllProductosByUserId(clientId);
@@ -138,7 +151,7 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Override
 	public List<ProductoInternoDto> updateManyProducto(
-			List<ProductoInternoDto> dtos) {
+			List<ProductoInternoDto> dtos) throws Exception {
 		List<ProductoInternoDto> resultado = new ArrayList<>();
 		for (ProductoInternoDto dto : dtos) {
 			resultado.add(modificarProducto(dto));

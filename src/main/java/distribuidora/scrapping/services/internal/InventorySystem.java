@@ -23,14 +23,16 @@ public interface InventorySystem {
 
 	ProductoInternoDto crearProducto(ProductoInternoDto dto);
 
-	ProductoInternoDto modificarProducto(ProductoInternoDto dto);
+	ProductoInternoDto modificarProducto(ProductoInternoDto dto)
+			throws Exception;
 
 	List<ProductoInternoDto> eliminarProductos(
 			List<Integer> productoInternoIds);
 
 	List<ProductoInternoDto> getProductos() throws Exception;
 
-	List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos);
+	List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos)
+			throws Exception;
 
 	List<CategoryHasUnitDto> getCategoryDtoList();
 

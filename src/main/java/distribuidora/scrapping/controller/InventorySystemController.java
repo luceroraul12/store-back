@@ -49,13 +49,14 @@ public class InventorySystemController {
 	}
 
 	@PutMapping(value = "update")
-	ProductoInternoDto modificarProducto(@RequestBody ProductoInternoDto dto) {
+	ProductoInternoDto modificarProducto(@RequestBody ProductoInternoDto dto)
+			throws Exception {
 		return service.modificarProducto(dto);
 	}
 
 	@PutMapping(value = "updates")
 	List<ProductoInternoDto> updateManyProducto(
-			@RequestBody List<ProductoInternoDto> dtos) {
+			@RequestBody List<ProductoInternoDto> dtos) throws Exception {
 		return service.updateManyProducto(dtos);
 	}
 
