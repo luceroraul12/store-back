@@ -8,7 +8,7 @@ import distribuidora.scrapping.entities.ProductoInternoStatus;
 
 public interface ProductoInternoStatusService {
 
-	List<ProductoInternoStatusDto> getAll();
+	List<ProductoInternoStatusDto> getByClientId(Integer clientId) throws Exception;
 
 	List<ProductoInternoStatus> getAllEntities();
 	

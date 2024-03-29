@@ -17,4 +17,13 @@ public interface ProductoInternoStatusRepository extends JpaRepository<ProductoI
 			""")
 	List<ProductoInternoStatus> findAllByProductIds(List<Integer> productIds);
 
+	@Query("""
+			SELECT pis 
+			FROM ProductoInternoStatus pis
+				INNER JOIN pis.productoInterno p
+				INNER JOIN p.client c
+			WHERE c.id = :clientId
+			""")
+	List<ProductoInternoStatus> findByClientId(Integer clientId);
+
 }

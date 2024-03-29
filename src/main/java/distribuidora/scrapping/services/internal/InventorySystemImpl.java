@@ -105,7 +105,7 @@ public class InventorySystemImpl implements InventorySystem {
 
 		if (oldEntidadInterno == null)
 			throw new Exception("No existe producto a actualizar");
-		
+
 		Client currentClient = usuarioService.getCurrentClient();
 
 		if (!oldEntidadInterno.getClient().getId()

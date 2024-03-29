@@ -13,6 +13,7 @@ import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
+import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.util.converters.LookupValueDtoConverter;
 import distribuidora.scrapping.util.converters.ProductCustomerDtoConverter;
 import distribuidora.scrapping.util.converters.ProductoInternoStatusConverter;
@@ -36,10 +37,16 @@ public class ProductoInternoStatusServiceImp
 
 	@Autowired
 	LookupValueDtoConverter lookupValueDtoConverter;
+	
+	@Autowired
+	UsuarioService userService;
 
 	@Override
-	public List<ProductoInternoStatusDto> getAll() {
-		List<ProductoInternoStatusDto> result = converter.toDtoList(repository.findAll()); 
+	public List<ProductoInternoStatusDto> getByClientId(Integer clientId) throws Exception {
+		if (clientId == null) {
+			throw new Exception("La tienda no existe");
+		}
+		List<ProductoInternoStatusDto> result = converter.toDtoList(repository.findByClientId(clientId)); 
 		configLowAmount(result);
 		return result;
 	}
@@ -106,6 +113,6 @@ public class ProductoInternoStatusServiceImp
 
 	@Override
 	public List<ProductoInternoStatus> getAllEntities() {
-		return repository.findAll();
+		return repository.findByClientId(userService.getCurrentClient().getId());
 	}
 }

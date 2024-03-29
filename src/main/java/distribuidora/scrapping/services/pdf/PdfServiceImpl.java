@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services.pdf;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
@@ -52,9 +53,7 @@ public class PdfServiceImpl implements PdfService {
 	@Autowired
 	private ClientDataService clientDataService;
 
-	@Override
-	public void generatePdf(HttpServletResponse response)
-			throws IOException, DocumentException {
+	private void generatePdf(HttpServletResponse response, Integer clientId) throws DocumentException, IOException {
 		// generacion del pdf
 		Document document = new Document();
 		PdfWriter writer = PdfWriter.getInstance(document,
@@ -71,9 +70,10 @@ public class PdfServiceImpl implements PdfService {
 		document.open();
 		addMetaData(document);
 		addTitlePage(document);
-		addContent(document, writer, dateConverted);
+		addContent(document, writer, dateConverted, clientId);
 		document.close();
 	}
+
 	private void addMetaData(Document document) {
 		document.addTitle("Catalogo Pasionaria");
 		document.addSubject("Mis productos");
@@ -135,7 +135,7 @@ public class PdfServiceImpl implements PdfService {
 
 	@Override
 	public void addContent(Document document, PdfWriter writer,
-			String dateConverted) throws DocumentException {
+			String dateConverted, Integer clientId) throws DocumentException {
 		List<CategoryHasUnit> categoryHasUnits = categoryHasUnitRepository
 				.findAll();
 
@@ -153,7 +153,7 @@ public class PdfServiceImpl implements PdfService {
 
 		// busco los prodcutos
 		List<ProductoInternoStatus> productoInternosStatus = productoInternoStatusRepository
-				.findAll();
+				.findByClientId(clientId);
 
 		for (Map.Entry<LookupValor, List<CategoryHasUnit>> entry : mapRelationsByLvCategory
 				.entrySet()) {
@@ -360,5 +360,19 @@ public class PdfServiceImpl implements PdfService {
 		for (int i = 0; i < number; i++) {
 			paragraph.add(new Paragraph(" "));
 		}
+	}
+	@Override
+	public void getPdfByClientId(HttpServletResponse response, Integer clientId)
+			throws IOException, DocumentException {
+		response.setContentType("application/pdf");
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=pasionaria-catalogo"
+				+ currentDateTime + ".pdf";
+		response.setHeader(headerKey, headerValue);
+
+		generatePdf(response, clientId);
 	}
 }

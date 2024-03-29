@@ -23,6 +23,7 @@ import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
+import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
 import distribuidora.scrapping.services.pdf.PdfService;
@@ -42,6 +43,9 @@ public class InventorySystemController {
 
 	@Autowired
 	PdfService pdfService;
+
+	@Autowired
+	UsuarioService userService;
 
 	@PostMapping(value = "create")
 	ProductoInternoDto crearProducto(@RequestBody ProductoInternoDto dto) {
@@ -80,22 +84,13 @@ public class InventorySystemController {
 	@GetMapping("pdf")
 	void getPDF(HttpServletResponse response)
 			throws DocumentException, IOException {
-
-		response.setContentType("application/pdf");
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		String currentDateTime = dateFormatter.format(new Date());
-
-		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=pasionaria-catalogo"
-				+ currentDateTime + ".pdf";
-		response.setHeader(headerKey, headerValue);
-
-		pdfService.generatePdf(response);
+		pdfService.getPdfByClientId(response, userService.getCurrentClient().getId());
 	}
 
 	@GetMapping("status")
-	List<ProductoInternoStatusDto> getStatus() {
-		return productoInternoStatusService.getAll();
+	List<ProductoInternoStatusDto> getStatus() throws Exception {
+		return productoInternoStatusService
+				.getByClientId(userService.getCurrentClient().getId());
 	}
 
 	@PutMapping("status")
