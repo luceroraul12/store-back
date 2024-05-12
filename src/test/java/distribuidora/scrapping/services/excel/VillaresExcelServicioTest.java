@@ -36,7 +36,6 @@ class VillaresExcelServicioTest {
     List<VillaresEntidad> productos;
     @BeforeEach
     void setings() throws IOException {
-        servicio.initImplementacion();
 
         File file = new File("src/main/resources/static/villares.xls");
         MultipartFile[] multipartFile = new MultipartFile[1];
