@@ -14,7 +14,7 @@ import distribuidora.scrapping.util.DonGasparUtil;
 @Service
 public class DonGasparWebScrappingServicio
 		extends
-			BusquedorPorWebScrapping<DonGasparEntidad> {
+			ProductSearcherWeb<DonGasparEntidad> {
 	@Autowired
 	DonGasparUtil donGasparUtil;
 

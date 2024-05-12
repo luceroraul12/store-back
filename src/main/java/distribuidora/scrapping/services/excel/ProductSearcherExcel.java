@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.entities.UpdateRequestExcel;
-import distribuidora.scrapping.services.BuscadorDeProductos;
+import distribuidora.scrapping.services.ProductSearcher;
 import distribuidora.scrapping.util.ProductoExcelUtil;
 
 /**
@@ -30,9 +30,9 @@ import distribuidora.scrapping.util.ProductoExcelUtil;
  * @param <Entidad>
  * @see UpdateRequestExcel
  */
-public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico>
+public abstract class ProductSearcherExcel<Entidad extends ProductoEspecifico>
 		extends
-			BuscadorDeProductos<Entidad> {
+			ProductSearcher<Entidad> {
 
 	@Autowired
 	ProductoExcelUtil<Entidad> util;
@@ -152,7 +152,7 @@ public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico>
 	 * @param row
 	 *            del sheet
 	 * @return lista de productos
-	 * @see BusquedorPorExcel#esRowValido(Row row)
+	 * @see ProductSearcherExcel#esRowValido(Row row)
 	 */
 	private Collection<Entidad> trabajarConRowyObtenerProducto(Row row) {
 		Collection<Entidad> productosPorRows = new ArrayList<>();

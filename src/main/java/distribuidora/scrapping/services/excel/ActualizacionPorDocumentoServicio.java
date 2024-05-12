@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.entities.UpdateRequestExcel;
 
 /**
@@ -22,8 +23,8 @@ public class ActualizacionPorDocumentoServicio {
 	@Autowired
 	private IndiasExcelService indiasService;
 
-	public void update(UpdateRequestExcel peticion) throws IOException {
-		List<BusquedorPorExcel> services = Arrays.asList(villaresService,
+	public void update(UpdateRequest peticion) throws IOException {
+		List<ProductSearcherExcel> services = Arrays.asList(villaresService,
 				indiasService);
 		switch (peticion.getDistribuidoraCodigo()) {
 			case Constantes.LV_DISTRIBUIDORA_VILLARES : {

@@ -13,15 +13,15 @@ import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
+import distribuidora.scrapping.services.webscrapping.ProductSearcherWeb;
 import distribuidora.scrapping.services.webscrappingconcurrent.util.GeneradorDeDocumentosConcurrente;
 
 /**
- * Clase heredada de {@link BusquedorPorWebScrapping} que implementa concurrencia.
+ * Clase heredada de {@link ProductSearcherWeb} que implementa concurrencia.
  * De esta forma, se reducen los tiempos de espera cuando se trabje con ella.
  * @param <Entidad>
  */
-public abstract class WebScrappingConcurrent<Entidad extends ProductoEspecifico> extends BusquedorPorWebScrapping<Entidad> {
+public abstract class WebScrappingConcurrent<Entidad extends ProductoEspecifico> extends ProductSearcherWeb<Entidad> {
 
     /**
      * Metodo que usa concurrencia para generar los documentos.

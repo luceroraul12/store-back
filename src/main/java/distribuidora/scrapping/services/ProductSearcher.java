@@ -11,10 +11,8 @@ import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UpdateRequest;
-import distribuidora.scrapping.services.excel.BusquedorPorExcel;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.services.internal.InventorySystem;
-import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
 import distribuidora.scrapping.util.ProductoUtil;
 import lombok.Data;
 
@@ -28,7 +26,7 @@ import lombok.Data;
  *            clase con los datos necesarios para poder comenzar busqueda
  */
 @Data
-public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico> {
+public abstract class ProductSearcher<Entidad extends ProductoEspecifico> {
 
 	/**
 	 * Es la enumercacion que identifica a cada implementacion de este servicio.
@@ -82,9 +80,8 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico> {
 	 * @throws IOException
 	 * @see BusquedorPorExcel
 	 * @see BusquedorPorWebScrapping
-	 * @see BuscadorDeProductos#adquirirProductosEntidad(Auxiliar
-	 *      elementoAuxiliar)
-	 * @see BuscadorDeProductos#actualizarProductosEnTodasLasColecciones(List
+	 * @see ProductSearcher#adquirirProductosEntidad(Auxiliar elementoAuxiliar)
+	 * @see ProductSearcher#actualizarProductosEnTodasLasColecciones(List
 	 *      productos)
 	 */
 	public void generarProductosEntidadYActualizarCollecciones(

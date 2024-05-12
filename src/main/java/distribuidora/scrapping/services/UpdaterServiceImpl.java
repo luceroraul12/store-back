@@ -49,12 +49,12 @@ public class UpdaterServiceImpl implements UpdaterService {
 	@Override
 	public DatosDistribuidora update(UpdateRequest request) throws Exception {
 		// Genero un arreglo de los servicios actuales
-		List<BuscadorDeProductos> services = Arrays.asList(villaresService,
+		List<ProductSearcher> services = Arrays.asList(villaresService,
 				indiasService, laGranjaDelCentroService, facundoService,
 				donGasparService);
 
 		// Busco el servicio por codigo que me estan pasando
-		BuscadorDeProductos service = services.stream()
+		ProductSearcher service = services.stream()
 				.filter(s -> s.getDistribuidoraCodigo()
 						.equals(request.getDistribuidoraCodigo()))
 				.findFirst().orElse(null);

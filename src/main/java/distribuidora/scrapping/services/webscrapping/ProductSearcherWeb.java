@@ -13,7 +13,7 @@ import org.jsoup.select.Elements;
 
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UpdateRequest;
-import distribuidora.scrapping.services.BuscadorDeProductos;
+import distribuidora.scrapping.services.ProductSearcher;
 import lombok.Data;
 
 /**
@@ -22,9 +22,9 @@ import lombok.Data;
  * @param <Entidad>
  */
 @Data
-public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecifico>
+public abstract class ProductSearcherWeb<Entidad extends ProductoEspecifico>
 		extends
-			BuscadorDeProductos<Entidad> {
+			ProductSearcher<Entidad> {
 
 	/**
 	 * Obligatorio para poder comenzar a utilizar el servicio
@@ -36,7 +36,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
 	 * especifico para la generacion de las nuevas URL. Valor por defecto:
 	 * false.
 	 * 
-	 * @see BusquedorPorWebScrapping#generarNuevaURL(int)
+	 * @see ProductSearcherWeb#generarNuevaURL(int)
 	 */
 	private Boolean esBuscadorConPaginador = false;
 
@@ -56,7 +56,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
 	 * 
 	 * @return lista de documentos asociados a la pagina.
 	 * @throws IOException
-	 * @see BusquedorPorWebScrapping#generarNuevaURL(int)
+	 * @see ProductSearcherWeb#generarNuevaURL(int)
 	 */
 	protected List<Document> generarDocumentos() throws IOException {
 		List<Document> documentos = new ArrayList<>();
@@ -109,8 +109,8 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
 	 * @param document
 	 *            template de la pagina Web
 	 * @return true en caso de que sea valido
-	 * @see BusquedorPorWebScrapping#esBuscadorConPaginador
-	 * @see BusquedorPorWebScrapping#generarNuevaURL(int contador)
+	 * @see ProductSearcherWeb#esBuscadorConPaginador
+	 * @see ProductSearcherWeb#generarNuevaURL(int contador)
 	 */
 	protected abstract boolean esDocumentValido(Document document);
 

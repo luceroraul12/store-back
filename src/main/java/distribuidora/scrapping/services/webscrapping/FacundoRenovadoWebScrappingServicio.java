@@ -11,7 +11,7 @@ import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
 @Service
 public class FacundoRenovadoWebScrappingServicio
 		extends
-			BusquedorPorWebScrapping<FacundoEntidad> {
+			ProductSearcherWeb<FacundoEntidad> {
 	@Override
 	protected boolean esDocumentValido(Document document) {
 		return false;
