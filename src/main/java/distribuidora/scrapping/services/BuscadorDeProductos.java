@@ -17,7 +17,6 @@ import distribuidora.scrapping.services.excel.BusquedorPorExcel;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
 import distribuidora.scrapping.util.ProductoUtil;
-import lombok.Data;
 
 /**
  * Clase padre de todos los servicios de tipos de busqueda. Contiene metodos
@@ -28,7 +27,6 @@ import lombok.Data;
  * @param <Auxiliar>
  *            clase con los datos necesarios para poder comenzar busqueda
  */
-@Data
 public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Auxiliar> {
 
 	/**
@@ -85,7 +83,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 	 * @param elementoAuxiliar
 	 *            Clase del elemento que tiene los elementos especificos
 	 *            necesarios
-	 * @throws IOException 
+	 * @throws IOException
 	 * @see BusquedorPorExcel
 	 * @see BusquedorPorWebScrapping
 	 * @see BuscadorDeProductos#adquirirProductosEntidad(Auxiliar
@@ -107,7 +105,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 	 * 
 	 * @param elementoAuxiliar
 	 * @return lista de productos
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	protected abstract List<Entidad> adquirirProductosEntidad(
 			Auxiliar elementoAuxiliar) throws IOException;
@@ -129,17 +127,17 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 				this.distribuidoraCodigo);
 		// Intento actualizar los productos internos a los productos de la
 		inventorySystemService.actualizarPreciosAutomatico();
-		
+
 		// Valido cuantos productos existen luego de agregar nuevos
-		Integer size = productoServicio.countProductosByDistribuidoraCode(distribuidoraCodigo);
+		Integer size = productoServicio
+				.countProductosByDistribuidoraCode(distribuidoraCodigo);
 
 		this.datoDistribuidoraServicio
 				.actualizarDatos(Collections.singletonList(DatosDistribuidora
 						.builder().distribuidoraCodigo(getDistribuidoraCodigo())
 						.fechaActualizacion(new Date())
 						.tipo(getTipoDistribuidora())
-						.cantidadDeProductosAlmacenados(size)
-						.build()));
+						.cantidadDeProductosAlmacenados(size).build()));
 
 		this.productoEspecificoServicio.actualizarDatos(productos);
 	}
