@@ -22,7 +22,7 @@ public class ActualizacionPorDocumentoServicio {
 	@Autowired
 	private IndiasExcelService indiasService;
 
-	public void recibirDocumento(PeticionExcel peticion) throws IOException {
+	public void update(PeticionExcel peticion) throws IOException {
 		List<BusquedorPorExcel> services = Arrays.asList(villaresService,
 				indiasService);
 		switch (peticion.getDistribuidoraCodigo()) {

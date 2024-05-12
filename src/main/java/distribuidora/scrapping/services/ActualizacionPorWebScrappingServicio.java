@@ -33,7 +33,7 @@ public class ActualizacionPorWebScrappingServicio {
 	 * @param distribuidoraCodigo
 	 * @throws IOException
 	 */
-	public void actualizarPorDistribuidora(String distribuidoraCodigo)
+	public void update(String distribuidoraCodigo)
 			throws IOException {
 		switch (distribuidoraCodigo) {
 			case Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO : {

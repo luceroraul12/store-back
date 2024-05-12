@@ -20,8 +20,8 @@ class ActualizacionPorWebScrappingServicioTest {
 
     @Test
     void actualizarIndividual() throws IOException{
-        actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(Constantes.LV_DISTRIBUIDORA_DON_GASPAR);
-        actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(Constantes.LV_DISTRIBUIDORA_FACUNDO);
-        actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
+        actualizacionPorWebScrappingServicio.update(Constantes.LV_DISTRIBUIDORA_DON_GASPAR);
+        actualizacionPorWebScrappingServicio.update(Constantes.LV_DISTRIBUIDORA_FACUNDO);
+        actualizacionPorWebScrappingServicio.update(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
     }
 }
