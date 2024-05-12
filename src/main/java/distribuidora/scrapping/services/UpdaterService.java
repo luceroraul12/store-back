@@ -6,11 +6,11 @@ import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.PeticionExcel;
 import distribuidora.scrapping.entities.PeticionWebScrapping;
 
-public interface MongoService {
+public interface UpdaterService {
 	
-	DatosDistribuidora updatedistribuidoraExcel(PeticionExcel request) throws IOException;
+	DatosDistribuidora updateByExcel(PeticionExcel request) throws IOException;
 	
-	DatosDistribuidora updateDistribuidoraWebScrapping(PeticionWebScrapping request) throws IOException;
+	DatosDistribuidora updateByWeb(PeticionWebScrapping request) throws IOException;
 
 }
 

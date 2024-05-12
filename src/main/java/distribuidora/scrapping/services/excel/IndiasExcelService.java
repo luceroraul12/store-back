@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
 
 @Service
-public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
+public class IndiasExcelService extends BusquedorPorExcel<IndiasEntidad> {
 
 	@Override
 	boolean esRowValido(Row row) {

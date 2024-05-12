@@ -12,7 +12,7 @@ import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
 
 @Service
-public class MongoServiceImpl implements MongoService {
+public class MongoServiceImpl implements UpdaterService {
 	
 	@Autowired
     ActualizacionPorDocumentoServicio actualizacionPorDocumentoServicio;
@@ -25,7 +25,7 @@ public class MongoServiceImpl implements MongoService {
 	
 
 	@Override
-	public DatosDistribuidora updatedistribuidoraExcel(PeticionExcel request) throws IOException {
+	public DatosDistribuidora updateByExcel(PeticionExcel request) throws IOException {
 		actualizacionPorDocumentoServicio.recibirDocumento(request);
         DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidoraCodigo(request.getDistribuidoraCodigo());
 		return resultado;
@@ -33,7 +33,7 @@ public class MongoServiceImpl implements MongoService {
 
 
 	@Override
-	public DatosDistribuidora updateDistribuidoraWebScrapping(
+	public DatosDistribuidora updateByWeb(
 			PeticionWebScrapping request) throws IOException {
 		actualizacionPorWebScrappingServicio.actualizarPorDistribuidora(request.getDistribuidoraCodigo());
         DatosDistribuidora resultado = this.datosDistribuidoraRepository.findByDistribuidoraCodigo(request.getDistribuidoraCodigo());

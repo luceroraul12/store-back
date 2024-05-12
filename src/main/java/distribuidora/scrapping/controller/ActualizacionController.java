@@ -15,7 +15,7 @@ import distribuidora.scrapping.entities.PeticionExcel;
 import distribuidora.scrapping.entities.PeticionWebScrapping;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.ActualizacionPorWebScrappingServicio;
-import distribuidora.scrapping.services.MongoService;
+import distribuidora.scrapping.services.UpdaterService;
 import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
 import distribuidora.scrapping.services.internal.InventorySystem;
 
@@ -42,7 +42,7 @@ public class ActualizacionController {
 	InventorySystem inventorySystem;
 
 	@Autowired
-	MongoService mongoService;
+	UpdaterService updaterService;
 
 	/**
 	 * Permite actualizar los productos de las distribuidoras que dependan de
@@ -54,15 +54,15 @@ public class ActualizacionController {
 	 * @throws IOException
 	 */
 	@PostMapping("excel")
-	public DatosDistribuidora actualizacionPorExcel(
-			PeticionExcel documento) throws IOException {
-		return mongoService.updatedistribuidoraExcel(documento);
+	public DatosDistribuidora updateByExcel(PeticionExcel documento)
+			throws IOException {
+		return updaterService.updateByExcel(documento);
 	}
 
 	@PostMapping("web-scrapping/individual")
-	public DatosDistribuidora actualizacionPorWebScrappingIndividual(
+	public DatosDistribuidora updateByWeb(
 			@RequestParam String distribuidoraCodigo) throws IOException {
-		return mongoService.updateDistribuidoraWebScrapping(
+		return updaterService.updateByWeb(
 				new PeticionWebScrapping(distribuidoraCodigo));
 	}
 
@@ -77,7 +77,7 @@ public class ActualizacionController {
 	public List<DatosDistribuidora> obtenerTipoyEstadoDeDistribuidora() {
 		return inventorySystem.getDistribuidoraStatus();
 	}
-	
+
 	@GetMapping("/eliminarIndices")
 	public void eliminarIndices() {
 		inventorySystem.eliminarIndices();

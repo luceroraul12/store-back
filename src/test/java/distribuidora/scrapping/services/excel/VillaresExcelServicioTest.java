@@ -28,7 +28,7 @@ import distribuidora.scrapping.util.VillaresUtil;
 class VillaresExcelServicioTest {
 
     @InjectMocks
-    VillaresExcelServicio servicio;
+    VillaresExcelService servicio;
 
     @Spy
     VillaresUtil villaresUtil;

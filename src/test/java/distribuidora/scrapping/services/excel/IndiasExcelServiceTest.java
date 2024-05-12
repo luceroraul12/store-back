@@ -24,9 +24,9 @@ import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
 import distribuidora.scrapping.util.IndiasUtil;
 
 @ExtendWith(MockitoExtension.class)
-class IndiasExcelServicioTest {
+class IndiasExcelServiceTest {
     @InjectMocks
-    IndiasExcelServicio servicio;
+    IndiasExcelService servicio;
 
     @Spy
     IndiasUtil indiasUtil;
