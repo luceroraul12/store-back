@@ -1,15 +1,20 @@
 package distribuidora.scrapping.services;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
-import distribuidora.scrapping.entities.UpdateRequestExcel;
-import distribuidora.scrapping.entities.UpdateRequestWeb;
+import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
+import distribuidora.scrapping.services.excel.IndiasExcelService;
+import distribuidora.scrapping.services.excel.VillaresExcelService;
+import distribuidora.scrapping.services.webscrapping.DonGasparWebScrappingServicio;
+import distribuidora.scrapping.services.webscrapping.FacundoRenovadoWebScrappingServicio;
+import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroWebScrappingServicio;
 
 @Service
 public class UpdaterServiceImpl implements UpdaterService {
@@ -23,23 +28,45 @@ public class UpdaterServiceImpl implements UpdaterService {
 	@Autowired
 	ActualizacionPorWebScrappingServicio actualizacionPorWebScrappingServicio;
 
-	@Override
-	public DatosDistribuidora updateByExcel(UpdateRequestExcel request)
-			throws IOException {
-		actualizacionPorDocumentoServicio.update(request);
-		DatosDistribuidora resultado = this.datosDistribuidoraRepository
-				.findByDistribuidoraCodigo(request.getDistribuidoraCodigo());
-		return resultado;
-	}
+	// Listado de servicios de implementaciones
+	// EXCEL
+	@Autowired
+	private VillaresExcelService villaresService;
+
+	@Autowired
+	private IndiasExcelService indiasService;
+
+	// WEB
+	@Autowired
+	private LaGranjaDelCentroWebScrappingServicio laGranjaDelCentroService;
+
+	@Autowired
+	private FacundoRenovadoWebScrappingServicio facundoService;
+
+	@Autowired
+	private DonGasparWebScrappingServicio donGasparService;
 
 	@Override
-	public DatosDistribuidora updateByWeb(UpdateRequestWeb request)
-			throws IOException {
-		actualizacionPorWebScrappingServicio
-				.update(request.getDistribuidoraCodigo());
-		DatosDistribuidora resultado = this.datosDistribuidoraRepository
+	public DatosDistribuidora update(UpdateRequest request) throws Exception {
+		// Genero un arreglo de los servicios actuales
+		List<BuscadorDeProductos> services = Arrays.asList(villaresService,
+				indiasService, laGranjaDelCentroService, facundoService,
+				donGasparService);
+
+		// Busco el servicio por codigo que me estan pasando
+		BuscadorDeProductos service = services.stream()
+				.filter(s -> s.getDistribuidoraCodigo()
+						.equals(request.getDistribuidoraCodigo()))
+				.findFirst().orElse(null);
+
+		if (service == null) {
+			throw new Exception("No existe dicha implementacion");
+		}
+
+		service.update(request);
+
+		return datosDistribuidoraRepository
 				.findByDistribuidoraCodigo(request.getDistribuidoraCodigo());
-		return resultado;
 	}
 
 }

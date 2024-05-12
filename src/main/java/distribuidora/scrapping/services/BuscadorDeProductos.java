@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.services.excel.BusquedorPorExcel;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
 import distribuidora.scrapping.util.ProductoUtil;
+import lombok.Data;
 
 /**
  * Clase padre de todos los servicios de tipos de busqueda. Contiene metodos
@@ -25,7 +27,8 @@ import distribuidora.scrapping.util.ProductoUtil;
  * @param <Auxiliar>
  *            clase con los datos necesarios para poder comenzar busqueda
  */
-public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Auxiliar> {
+@Data
+public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico> {
 
 	/**
 	 * Es la enumercacion que identifica a cada implementacion de este servicio.
@@ -61,6 +64,13 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 	@Autowired
 	private LookupService lookupService;
 
+	public void update(UpdateRequest request) {
+		// Busco los datos de la distribuidora
+		DatosDistribuidora data = datoDistribuidoraServicio
+				.getByCode(distribuidoraCodigo);
+
+	};
+
 	/**
 	 * Metodo por el cual se inicia el proceso de busqueda de datos en el
 	 * proceso especifico. Luego de la adquisicion de datos, la misma se guarda
@@ -78,9 +88,8 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 	 *      productos)
 	 */
 	public void generarProductosEntidadYActualizarCollecciones(
-			Auxiliar elementoAuxiliar) throws IOException {
-		List<Entidad> productosProcesados = adquirirProductosEntidad(
-				elementoAuxiliar);
+			UpdateRequest request) throws IOException {
+		List<Entidad> productosProcesados = adquirirProductosEntidad(request);
 		actualizarProductosEnTodasLasColecciones(productosProcesados);
 	}
 
@@ -94,7 +103,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 	 * @throws IOException
 	 */
 	protected abstract List<Entidad> adquirirProductosEntidad(
-			Auxiliar elementoAuxiliar) throws IOException;
+			UpdateRequest request) throws IOException;
 
 	/**
 	 * Elimina los datos almacenados de cierta distribuidora y vuelve a guardar

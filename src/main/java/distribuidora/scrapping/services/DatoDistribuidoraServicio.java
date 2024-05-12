@@ -16,6 +16,10 @@ public class DatoDistribuidoraServicio {
 	@Autowired
 	DatosDistribuidoraRepository repository;
 
+	public DatosDistribuidora getByCode(String code) {
+		return repository.getByCode(code);
+	};
+
 	public void actualizarDatos(DatosDistribuidora datos) {
 		eliminarDatos(datos.getDistribuidora().getCodigo());
 		repository.save(datos);

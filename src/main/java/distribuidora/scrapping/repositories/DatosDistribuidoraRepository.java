@@ -23,4 +23,13 @@ public interface DatosDistribuidoraRepository
 	boolean existsByDistribuidoraCodigo(String distribuidoraCodigo);
 	DatosDistribuidora findByDistribuidoraCodigo(String distribuidoraCodigo);
 	void deleteByDistribuidoraCodigo(String distribuidoraCodigo);
+
+	@Query("""
+			select dd
+			from DatosDistribuidora dd
+				inner join d.distribuidora d
+			where d.active = true
+				and d.code = :code
+			""")
+	DatosDistribuidora getByCode(String code);
 }

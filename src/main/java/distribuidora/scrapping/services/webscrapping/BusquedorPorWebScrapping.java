@@ -11,8 +11,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import distribuidora.scrapping.entities.UpdateRequestWeb;
 import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.services.BuscadorDeProductos;
 import lombok.Data;
 
@@ -24,7 +24,7 @@ import lombok.Data;
 @Data
 public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecifico>
 		extends
-			BuscadorDeProductos<Entidad, UpdateRequestWeb> {
+			BuscadorDeProductos<Entidad> {
 
 	/**
 	 * Obligatorio para poder comenzar a utilizar el servicio
@@ -42,7 +42,7 @@ public abstract class BusquedorPorWebScrapping<Entidad extends ProductoEspecific
 
 	@Override
 	public List<Entidad> adquirirProductosEntidad(
-			UpdateRequestWeb peticionWebScrapping) throws IOException {
+			UpdateRequest request) throws IOException {
 		List<Entidad> productostotales = new ArrayList<>();
 		productostotales = generarDocumentos().stream().parallel()
 				.map(this::obtenerProductosPorDocument)

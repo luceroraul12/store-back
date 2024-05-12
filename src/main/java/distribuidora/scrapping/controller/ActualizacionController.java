@@ -1,18 +1,16 @@
 package distribuidora.scrapping.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
+import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.entities.UpdateRequestExcel;
-import distribuidora.scrapping.entities.UpdateRequestWeb;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.ActualizacionPorWebScrappingServicio;
 import distribuidora.scrapping.services.UpdaterService;
@@ -50,20 +48,12 @@ public class ActualizacionController {
 	 * 
 	 * @param documento
 	 *            Debe contener todas sus partes.
+	 * @throws Exception
 	 * @see UpdateRequestExcel
-	 * @throws IOException
 	 */
-	@PostMapping("excel")
-	public DatosDistribuidora updateByExcel(UpdateRequestExcel documento)
-			throws IOException {
-		return updaterService.updateByExcel(documento);
-	}
-
-	@PostMapping("web-scrapping/individual")
-	public DatosDistribuidora updateByWeb(
-			@RequestParam String distribuidoraCodigo) throws IOException {
-		return updaterService.updateByWeb(
-				new UpdateRequestWeb(distribuidoraCodigo));
+	@PostMapping("update")
+	public DatosDistribuidora update(UpdateRequest request) throws Exception {
+		return updaterService.update(request);
 	}
 
 	/**
