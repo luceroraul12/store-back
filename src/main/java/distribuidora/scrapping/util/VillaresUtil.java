@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.productos.especificos.VillaresEntidad;
@@ -17,7 +18,7 @@ public class VillaresUtil extends ProductoExcelUtil<VillaresEntidad> {
 
 	@Override
 	public VillaresEntidad convertirRowEnProductoEspecifico(Row row,
-			LookupValor distribuidoraCodigo) {
+			DatosDistribuidora data) {
 		Integer cantidadCeldas = row.getPhysicalNumberOfCells();
 		Integer celdasGranel = 12;
 		Integer celdasGourmetFraccionado = 11;

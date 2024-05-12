@@ -42,7 +42,7 @@ public abstract class ProductSearcherExcel<Entidad extends ProductoEspecifico>
 			DatosDistribuidora data) {
 		List<Entidad> productosrecolectados;
 		productosrecolectados = obtenerProductosApartirDeExcels(
-				request.getMultipartFiles());
+				request.getMultipartFiles(), data);
 		return productosrecolectados;
 	}
 
@@ -56,10 +56,11 @@ public abstract class ProductSearcherExcel<Entidad extends ProductoEspecifico>
 	 * @return Lista de productos en entidad especifica
 	 * @throws IOException
 	 */
-	public List<Entidad> obtenerProductosApartirDeExcels(
-			MultipartFile[] excels) {
+	public List<Entidad> obtenerProductosApartirDeExcels(MultipartFile[] excels,
+			DatosDistribuidora data) {
 		return Arrays.stream(excels).map(this::obtenerSheets)
-				.flatMap(Collection::stream).map(this::obtenerProductosPorSheet)
+				.flatMap(Collection::stream)
+				.map(s -> obtenerProductosPorSheet(s, data))
 				.flatMap(Collection::stream).filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
@@ -95,14 +96,15 @@ public abstract class ProductSearcherExcel<Entidad extends ProductoEspecifico>
 	 *            es uno solo
 	 * @return lsita de productos
 	 */
-	private Collection<Entidad> obtenerProductosPorSheet(Sheet sheet) {
+	private Collection<Entidad> obtenerProductosPorSheet(Sheet sheet,
+			DatosDistribuidora data) {
 		Collection<Entidad> productosFinales = new ArrayList<>();
 		sheet.rowIterator().forEachRemaining(row -> {
 			row.cellIterator().forEachRemaining(cell -> {
 				expandirValorDeCeldasFusionadas(sheet, cell);
 				aplicarFormular(cell);
 			});
-			productosFinales.addAll(trabajarConRowyObtenerProducto(row));
+			productosFinales.addAll(trabajarConRowyObtenerProducto(row, data));
 		});
 		return productosFinales;
 	}
@@ -152,14 +154,15 @@ public abstract class ProductSearcherExcel<Entidad extends ProductoEspecifico>
 	 * 
 	 * @param row
 	 *            del sheet
+	 * @param data
 	 * @return lista de productos
 	 * @see ProductSearcherExcel#esRowValido(Row row)
 	 */
-	private Collection<Entidad> trabajarConRowyObtenerProducto(Row row) {
+	private Collection<Entidad> trabajarConRowyObtenerProducto(Row row,
+			DatosDistribuidora data) {
 		Collection<Entidad> productosPorRows = new ArrayList<>();
 		if (esRowValido(row)) {
-			Entidad producto = util.convertirRowEnProductoEspecifico(row,
-					getDistribuidoraCodigo());
+			Entidad producto = util.convertirRowEnProductoEspecifico(row, data);
 			productosPorRows.add(producto);
 		}
 		return productosPorRows;

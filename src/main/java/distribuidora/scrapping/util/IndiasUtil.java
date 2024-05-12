@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
@@ -21,16 +22,16 @@ public class IndiasUtil extends ProductoExcelUtil<IndiasEntidad> {
 		String descripcion = String.format("%s",
 				productoEntidad.getDescripcion());
 		return Collections.singletonList(ExternalProduct.builder()
-				.code(productoEntidad.getCodigo().toString())
-				.title(descripcion)
+				.code(productoEntidad.getCodigo().toString()).title(descripcion)
 				.price(productoEntidad.getPrecio())
-				.distribuidora(new LookupValor(Constantes.LV_DISTRIBUIDORA_INDIAS))
+				.distribuidora(
+						new LookupValor(Constantes.LV_DISTRIBUIDORA_INDIAS))
 				.build());
 	}
 
 	@Override
 	public IndiasEntidad convertirRowEnProductoEspecifico(Row row,
-			LookupValor distribuidoraCodigo) {
+			DatosDistribuidora data) {
 		boolean rowGeneral = false;
 		boolean rowEspecifico = false;
 		try {
@@ -59,7 +60,7 @@ public class IndiasUtil extends ProductoExcelUtil<IndiasEntidad> {
 			precio = validarPrecio(row.getCell(6));
 			codigo = validarCodigo(row.getCell(3));
 			return IndiasEntidad.builder()
-					.distribuidoraCodigo(distribuidoraCodigo)
+					.distribuidoraCodigo(data.getDistribuidora().getCodigo())
 					.rubro(row.getCell(1).toString()).codigo(codigo)
 					.descripcion(row.getCell(4).toString()).precio(precio)
 					.build();
@@ -67,7 +68,7 @@ public class IndiasUtil extends ProductoExcelUtil<IndiasEntidad> {
 			precio = validarPrecio(row.getCell(4));
 			codigo = validarCodigo(row.getCell(2));
 			return IndiasEntidad.builder()
-					.distribuidoraCodigo(distribuidoraCodigo)
+					.distribuidoraCodigo(data.getDistribuidora().getCodigo())
 					.rubro(row.getCell(1).toString()).codigo(codigo)
 					.descripcion(row.getCell(3).toString()).precio(precio)
 					.build();
