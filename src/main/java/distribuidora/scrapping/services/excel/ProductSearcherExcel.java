@@ -18,9 +18,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
+import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UpdateRequest;
-import distribuidora.scrapping.entities.UpdateRequestExcel;
 import distribuidora.scrapping.services.ProductSearcher;
 import distribuidora.scrapping.util.ProductoExcelUtil;
 
@@ -38,7 +38,8 @@ public abstract class ProductSearcherExcel<Entidad extends ProductoEspecifico>
 	ProductoExcelUtil<Entidad> util;
 
 	@Override
-	protected List<Entidad> adquirirProductosEntidad(UpdateRequest request) {
+	protected List<Entidad> adquirirProductosEntidad(UpdateRequest request,
+			DatosDistribuidora data) {
 		List<Entidad> productosrecolectados;
 		productosrecolectados = obtenerProductosApartirDeExcels(
 				request.getMultipartFiles());

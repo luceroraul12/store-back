@@ -11,6 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.services.ProductSearcher;
@@ -41,8 +42,8 @@ public abstract class ProductSearcherWeb<Entidad extends ProductoEspecifico>
 	private Boolean esBuscadorConPaginador = false;
 
 	@Override
-	public List<Entidad> adquirirProductosEntidad(
-			UpdateRequest request) throws IOException {
+	public List<Entidad> adquirirProductosEntidad(UpdateRequest request,
+			DatosDistribuidora data) throws IOException {
 		List<Entidad> productostotales = new ArrayList<>();
 		productostotales = generarDocumentos().stream().parallel()
 				.map(this::obtenerProductosPorDocument)

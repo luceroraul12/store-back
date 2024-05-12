@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.UpdateRequest;
-import distribuidora.scrapping.entities.UpdateRequestExcel;
 
 /**
  * Servicio encargado de actualizaciones de base de dato del tipo excel.

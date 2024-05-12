@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.UpdateRequest;
-import distribuidora.scrapping.entities.UpdateRequestExcel;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.ActualizacionPorWebScrappingServicio;
 import distribuidora.scrapping.services.UpdaterService;
