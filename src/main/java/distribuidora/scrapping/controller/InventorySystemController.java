@@ -1,9 +1,6 @@
 package distribuidora.scrapping.controller;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -84,7 +81,8 @@ public class InventorySystemController {
 	@GetMapping("pdf")
 	void getPDF(HttpServletResponse response)
 			throws DocumentException, IOException {
-		pdfService.getPdfByClientId(response, userService.getCurrentClient().getId());
+		pdfService.getPdfByClientId(response,
+				userService.getCurrentClient().getId());
 	}
 
 	@GetMapping("status")
