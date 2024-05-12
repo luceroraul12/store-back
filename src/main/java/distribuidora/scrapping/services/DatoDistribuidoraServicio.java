@@ -12,24 +12,20 @@ import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
  * Servicio encargado de trabajar con base de datos y los datos de distribuidora.
  */
 @Service
-public class DatoDistribuidoraServicio implements AccionesBaseDeDatos<DatosDistribuidora> {
+public class DatoDistribuidoraServicio{
 
     @Autowired
     DatosDistribuidoraRepository repository;
 
-    @Override
-    public void actualizarDatos(List<DatosDistribuidora> datos) {
-        String distribuidoraCodigo = datos.get(0).getDistribuidoraCodigo();
+    public void actualizarDatos(List<DatosDistribuidora> datos, String distribuidoraCodigo) {
         eliminarDatos(distribuidoraCodigo);
         guardarDatos(datos);
     }
 
-    @Override
     public void guardarDatos(List<DatosDistribuidora> datos) {
         repository.saveAll(datos);
     }
 
-    @Override
     public void eliminarDatos(String distribuidoraCodigo) {
         repository.deleteByDistribuidoraCodigo(distribuidoraCodigo);
     }
