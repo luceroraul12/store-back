@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
-import distribuidora.scrapping.services.ActualizacionPorWebScrappingServicio;
 import distribuidora.scrapping.services.UpdaterService;
-import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
 import distribuidora.scrapping.services.internal.InventorySystem;
 
 /**
@@ -25,13 +23,6 @@ import distribuidora.scrapping.services.internal.InventorySystem;
 @RestController
 @RequestMapping(value = "/actualizar")
 public class ActualizacionController {
-
-	@Autowired
-	ActualizacionPorDocumentoServicio actualizacionPorDocumentoServicio;
-
-	@Autowired
-	ActualizacionPorWebScrappingServicio actualizacionPorWebScrappingServicio;
-
 	@Autowired
 	DatosDistribuidoraRepository datosDistribuidoraRepository;
 

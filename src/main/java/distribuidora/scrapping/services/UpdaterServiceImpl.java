@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
-import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
 import distribuidora.scrapping.services.excel.IndiasExcelService;
 import distribuidora.scrapping.services.excel.VillaresExcelService;
 import distribuidora.scrapping.services.webscrapping.DonGasparWebScrappingServicio;
@@ -18,15 +17,8 @@ import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroWebScrappi
 
 @Service
 public class UpdaterServiceImpl implements UpdaterService {
-
-	@Autowired
-	ActualizacionPorDocumentoServicio actualizacionPorDocumentoServicio;
-
 	@Autowired
 	DatosDistribuidoraRepository datosDistribuidoraRepository;
-
-	@Autowired
-	ActualizacionPorWebScrappingServicio actualizacionPorWebScrappingServicio;
 
 	// Listado de servicios de implementaciones
 	// EXCEL
