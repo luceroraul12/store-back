@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import distribuidora.scrapping.dto.DatosDistribuidoraDto;
-import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.UpdaterService;
@@ -42,9 +44,12 @@ public class ActualizacionController {
 	 * @throws Exception
 	 * @see UpdateRequestExcel
 	 */
-	@PostMapping("update")
-	public DatosDistribuidora update(UpdateRequest request) throws Exception {
-		return updaterService.update(request);
+	@PostMapping("/update")
+
+	public DatosDistribuidoraDto update(
+			@RequestPart(required = false) MultipartFile[] excels,
+			@RequestParam String code) throws Exception {
+		return updaterService.update(new UpdateRequest(code, excels));
 	}
 
 	/**

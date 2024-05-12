@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import distribuidora.scrapping.entities.DatosDistribuidora;
+import distribuidora.scrapping.dto.DatosDistribuidoraDto;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.excel.IndiasExcelService;
@@ -14,6 +14,7 @@ import distribuidora.scrapping.services.excel.VillaresExcelService;
 import distribuidora.scrapping.services.webscrapping.DonGasparWebScrappingServicio;
 import distribuidora.scrapping.services.webscrapping.FacundoRenovadoWebScrappingServicio;
 import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroWebScrappingServicio;
+import distribuidora.scrapping.util.converters.DatosDistribuidoraConverter;
 
 @Service
 public class UpdaterServiceImpl implements UpdaterService {
@@ -38,17 +39,20 @@ public class UpdaterServiceImpl implements UpdaterService {
 	@Autowired
 	private DonGasparWebScrappingServicio donGasparService;
 
+	@Autowired
+	private DatosDistribuidoraConverter datosDistribuidoraConverter;
+
 	@Override
-	public DatosDistribuidora update(UpdateRequest request) throws Exception {
+	public DatosDistribuidoraDto update(UpdateRequest request)
+			throws Exception {
 		// Genero un arreglo de los servicios actuales
 		List<ProductSearcher> services = Arrays.asList(villaresService,
 				indiasService, laGranjaDelCentroService, facundoService,
 				donGasparService);
 
 		// Busco el servicio por codigo que me estan pasando
-		ProductSearcher service = services.stream()
-				.filter(s -> s.getDistribuidoraCodigo()
-						.equals(request.getDistribuidoraCodigo()))
+		ProductSearcher service = services.stream().filter(
+				s -> s.getDistribuidoraCodigo().equals(request.getCode()))
 				.findFirst().orElse(null);
 
 		if (service == null) {
@@ -57,8 +61,8 @@ public class UpdaterServiceImpl implements UpdaterService {
 
 		service.update(request);
 
-		return datosDistribuidoraRepository
-				.findByDistribuidoraCodigo(request.getDistribuidoraCodigo());
+		return datosDistribuidoraConverter.toDto(datosDistribuidoraRepository
+				.findByDistribuidoraCodigo(request.getCode()));
 	}
 
 }
