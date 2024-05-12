@@ -2,18 +2,16 @@ package distribuidora.scrapping.services;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoEspecifico;
-import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.excel.BusquedorPorExcel;
+import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.services.webscrapping.BusquedorPorWebScrapping;
 import distribuidora.scrapping.util.ProductoUtil;
@@ -38,7 +36,7 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 	 * Es el identificador del tipo de busqueda. Toda implementacion utilizada
 	 * debe tenerlo seteado.
 	 */
-	private TipoDistribuidora tipoDistribuidora;
+	private LookupValor tipoDistribuidora;
 
 	private LocalDate fechaUltimaActualizacion;
 
@@ -54,26 +52,14 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 	@Autowired
 	private ExternalProductService productoServicio;
 
-	/**
-	 * Servicio que hace referencia a las diferentes implementaciones para
-	 * productos especificos.
-	 */
-	@Autowired
-	private ProductoEspecificoServicio<Entidad> productoEspecificoServicio;
-
 	@Autowired
 	private DatoDistribuidoraServicio datoDistribuidoraServicio;
 
 	@Autowired
 	private InventorySystem inventorySystemService;
 
-	/**
-	 * Metodo post constructor para poder setear atributos de cada clase.
-	 */
-	@PostConstruct
-	private void init() {
-		verificarExistenciaEnBaseDeDatosEspecifica();
-	}
+	@Autowired
+	private LookupService lookupService;
 
 	/**
 	 * Metodo por el cual se inicia el proceso de busqueda de datos en el
@@ -132,37 +118,14 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 		Integer size = productoServicio
 				.countProductosByDistribuidoraCode(distribuidoraCodigo);
 
-		this.datoDistribuidoraServicio
-				.actualizarDatos(Collections.singletonList(DatosDistribuidora
-						.builder().distribuidoraCodigo(getDistribuidoraCodigo())
-						.fechaActualizacion(new Date())
-						.tipo(getTipoDistribuidora())
-						.cantidadDeProductosAlmacenados(size).build()));
+		LookupValor lvDistribuidora = lookupService
+				.getLookupValueByCode(distribuidoraCodigo);
+		DatosDistribuidora data = datoDistribuidoraServicio
+				.getByCode(distribuidoraCodigo);
+		data.setFechaActualizacion(new Date());
+		data.setCantidadDeProductosAlmacenados(size);
 
-		this.productoEspecificoServicio.actualizarDatos(productos);
+		this.datoDistribuidoraServicio.actualizarDatos(data);
+
 	}
-
-	/**
-	 * Inicializacion encargada de verificar Base de datos.<br>
-	 * Verifica si existe la implementacion en la base de datos, en caso de no
-	 * existir, crea una con los datos de la misma.<br>
-	 * Toda implementacion debe tener seteado:
-	 * {@link BuscadorDeProductos#distribuidoraCodigo},{@link BuscadorDeProductos#tipoDistribuidora}
-	 * para poder realizar esta verificacion.
-	 */
-	private void verificarExistenciaEnBaseDeDatosEspecifica() {
-		if (!this.datoDistribuidoraServicio
-				.existsByDistribuidora(getDistribuidoraCodigo())) {
-			System.out.println(
-					this.distribuidoraCodigo + " no existe, creando ...");
-
-			this.datoDistribuidoraServicio.actualizarDatos(
-					Collections.singletonList(DatosDistribuidora.builder()
-							.distribuidoraCodigo(getDistribuidoraCodigo())
-							.tipo(getTipoDistribuidora())
-							.cantidadDeProductosAlmacenados(0)
-							.fechaActualizacion(new Date()).build()));
-		}
-	}
-
 }

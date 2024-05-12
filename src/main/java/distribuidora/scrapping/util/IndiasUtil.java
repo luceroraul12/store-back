@@ -30,7 +30,7 @@ public class IndiasUtil extends ProductoExcelUtil<IndiasEntidad> {
 
 	@Override
 	public IndiasEntidad convertirRowEnProductoEspecifico(Row row,
-			String distribuidoraCodigo) {
+			LookupValor distribuidoraCodigo) {
 		boolean rowGeneral = false;
 		boolean rowEspecifico = false;
 		try {
