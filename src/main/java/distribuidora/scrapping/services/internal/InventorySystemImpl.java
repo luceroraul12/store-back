@@ -216,12 +216,7 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Override
 	public List<DatosDistribuidora> getDistribuidoraStatus() {
-		return this.datosDistribuidoraRepository.findAll().stream()
-				.filter(a -> !Constantes.DISTRIBUIDORAS_SIN_USO
-						.contains(a.getDistribuidoraCodigo()))
-				.sorted((a, b) -> b.getDistribuidoraCodigo()
-						.compareTo(a.getDistribuidoraCodigo()))
-				.collect(Collectors.toList());
+		return datosDistribuidoraRepository.findActives();
 	}
 
 	@Override
