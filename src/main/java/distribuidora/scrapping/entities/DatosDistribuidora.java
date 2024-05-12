@@ -2,6 +2,7 @@ package distribuidora.scrapping.entities;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,10 +26,8 @@ public class DatosDistribuidora {
 	@ManyToOne
 	@JoinColumn(name = "lv_distribuidora_id")
 	private LookupValor distribuidora;
-	@ManyToOne
-	@JoinColumn(name = "lv_distribuidora_tipo_id")
-	private LookupValor tipo;
 	private Date fechaActualizacion;
+	@Column(name = "size")
 	private Integer cantidadDeProductosAlmacenados;
 	private boolean web;
 	private boolean excel;

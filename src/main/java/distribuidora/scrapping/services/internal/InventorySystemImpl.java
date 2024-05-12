@@ -9,12 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.dto.CategoryHasUnitDto;
+import distribuidora.scrapping.dto.DatosDistribuidoraDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.Client;
-import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
@@ -24,6 +23,7 @@ import distribuidora.scrapping.services.ExternalProductService;
 import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.converters.CategoryHasUnitDtoConverter;
+import distribuidora.scrapping.util.converters.DatosDistribuidoraConverter;
 import distribuidora.scrapping.util.converters.ProductoInternoConverter;
 
 @Service
@@ -55,6 +55,9 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Autowired
 	private UsuarioService usuarioService;
+
+	@Autowired
+	private DatosDistribuidoraConverter datosDistribuidorConverter;
 
 	@Override
 	public int actualizarPreciosAutomatico() {
@@ -215,8 +218,9 @@ public class InventorySystemImpl implements InventorySystem {
 	}
 
 	@Override
-	public List<DatosDistribuidora> getDistribuidoraStatus() {
-		return datosDistribuidoraRepository.findActives();
+	public List<DatosDistribuidoraDto> getDistribuidoraStatus() {
+		return datosDistribuidorConverter
+				.toDtoList(datosDistribuidoraRepository.findActives());
 	}
 
 	@Override

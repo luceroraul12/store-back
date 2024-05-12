@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import distribuidora.scrapping.dto.DatosDistribuidoraDto;
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
@@ -54,7 +55,7 @@ public class ActualizacionController {
 	 *         Distribuidora
 	 */
 	@GetMapping
-	public List<DatosDistribuidora> obtenerTipoyEstadoDeDistribuidora() {
+	public List<DatosDistribuidoraDto> obtenerTipoyEstadoDeDistribuidora() {
 		return inventorySystem.getDistribuidoraStatus();
 	}
 
