@@ -1,13 +1,26 @@
 package distribuidora.scrapping.repositories;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
 
-public interface DatosDistribuidoraRepository extends MongoRepository<DatosDistribuidora, String> {
+public interface DatosDistribuidoraRepository
+		extends
+			JpaRepository<DatosDistribuidora, Integer> {
 
-    boolean existsByDistribuidoraCodigo(String distribuidoraCodigo);
-    DatosDistribuidora findByDistribuidoraCodigo(String distribuidoraCodigo);
+	@Query("""
+			select dd
+			from DatosDistribuidora dd
+				inner join d.distribuidora d
+			where d.active = true
+			order by d.code
+			""")
+	List<DatosDistribuidora> findActives();
 
-    void deleteByDistribuidoraCodigo(String distribuidoraCodigo);
+	boolean existsByDistribuidoraCodigo(String distribuidoraCodigo);
+	DatosDistribuidora findByDistribuidoraCodigo(String distribuidoraCodigo);
+	void deleteByDistribuidoraCodigo(String distribuidoraCodigo);
 }
