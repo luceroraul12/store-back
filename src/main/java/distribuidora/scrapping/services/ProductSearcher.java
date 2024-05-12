@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
@@ -61,6 +63,9 @@ public abstract class ProductSearcher<Entidad extends ProductoEspecifico> {
 
 	@Autowired
 	private LookupService lookupService;
+	
+	@PostConstruct
+	public abstract void setCodes();
 
 	public void update(UpdateRequest request) throws IOException {
 		// Busco los datos de la distribuidora

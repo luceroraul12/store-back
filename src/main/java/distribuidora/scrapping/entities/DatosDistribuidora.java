@@ -32,4 +32,6 @@ public class DatosDistribuidora {
 	private boolean web;
 	private boolean excel;
 	private String webUrl;
+	@Column(name = "has_paginator")
+	private boolean paginator;
 }

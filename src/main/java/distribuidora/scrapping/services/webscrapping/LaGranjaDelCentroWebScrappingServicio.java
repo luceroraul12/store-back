@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
 import distribuidora.scrapping.services.webscrappingconcurrent.WebScrappingConcurrent;
 import distribuidora.scrapping.util.LaGranjaDelCentroUtil;
@@ -69,5 +70,10 @@ public class LaGranjaDelCentroWebScrappingServicio
 		Elements element = document.select(".paginador > .p");
 		String url = element.get(1).attr("href");
 		return Integer.parseInt(url.split("=")[1]);
+	}
+
+	@Override
+	public void setCodes() {
+		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
 	}
 }

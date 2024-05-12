@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
 import distribuidora.scrapping.util.DonGasparUtil;
 
@@ -45,5 +46,10 @@ public class DonGasparWebScrappingServicio
 	@Override
 	protected Elements filtrarElementos(Document documento) {
 		return documento.getElementsByClass("producto");
+	}
+
+	@Override
+	public void setCodes() {
+		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_DON_GASPAR);
 	}
 }

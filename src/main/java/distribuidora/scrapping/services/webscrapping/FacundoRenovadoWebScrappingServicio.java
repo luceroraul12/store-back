@@ -48,4 +48,9 @@ public class FacundoRenovadoWebScrappingServicio
 	protected Elements filtrarElementos(Document documento) {
 		return documento.getElementsByClass("item row pointer");
 	}
+
+	@Override
+	public void setCodes() {
+		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_FACUNDO);
+	}
 }

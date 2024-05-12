@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 
+import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
 
 @Service
@@ -36,5 +37,10 @@ public class IndiasExcelService extends ProductSearcherExcel<IndiasEntidad> {
 		} ;
 		resultado = rowGeneral || rowEspecifico;
 		return resultado;
+	}
+	
+	@Override
+	public void setCodes() {
+		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_INDIAS);
 	}
 }

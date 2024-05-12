@@ -17,7 +17,7 @@ import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroWebScrappi
 import distribuidora.scrapping.util.converters.DatosDistribuidoraConverter;
 
 @Service
-public class UpdaterServiceImpl implements UpdaterService {
+public class UpdaterServiceImpl implements UpdaterService {	
 	@Autowired
 	DatosDistribuidoraRepository datosDistribuidoraRepository;
 

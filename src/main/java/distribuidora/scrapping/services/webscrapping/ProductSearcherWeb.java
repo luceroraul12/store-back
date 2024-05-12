@@ -45,6 +45,9 @@ public abstract class ProductSearcherWeb<Entidad extends ProductoEspecifico>
 	public List<Entidad> adquirirProductosEntidad(UpdateRequest request,
 			DatosDistribuidora data) throws IOException {
 		List<Entidad> productostotales = new ArrayList<>();
+		setUrlBuscador(data.getWebUrl());
+		setEsBuscadorConPaginador(data.isPaginator());
+		
 		productostotales = generarDocumentos().stream().parallel()
 				.map(this::obtenerProductosPorDocument)
 				.flatMap(Collection::stream).collect(Collectors.toList());
