@@ -62,31 +62,20 @@ public abstract class ProductSearcher<Entidad extends ProductoEspecifico> {
 	@Autowired
 	private LookupService lookupService;
 
-	public void update(UpdateRequest request) {
+	public void update(UpdateRequest request) throws IOException {
 		// Busco los datos de la distribuidora
 		DatosDistribuidora data = datoDistribuidoraServicio
 				.getByCode(distribuidoraCodigo);
 
+		processRequest(request, data);
 	};
 
-	/**
-	 * Metodo por el cual se inicia el proceso de busqueda de datos en el
-	 * proceso especifico. Luego de la adquisicion de datos, la misma se guarda
-	 * en en las colecciones correspondientes.
-	 * 
-	 * @param elementoAuxiliar
-	 *            Clase del elemento que tiene los elementos especificos
-	 *            necesarios
-	 * @throws IOException
-	 * @see BusquedorPorExcel
-	 * @see BusquedorPorWebScrapping
-	 * @see ProductSearcher#adquirirProductosEntidad(Auxiliar elementoAuxiliar)
-	 * @see ProductSearcher#actualizarProductosEnTodasLasColecciones(List
-	 *      productos)
-	 */
-	public void generarProductosEntidadYActualizarCollecciones(
-			UpdateRequest request) throws IOException {
-		List<Entidad> productosProcesados = adquirirProductosEntidad(request);
+	public void processRequest(UpdateRequest request, DatosDistribuidora data)
+			throws IOException {
+		List<Entidad> productosProcesados = adquirirProductosEntidad(request,
+				data);
+
+		// TODO: ver como hace de aca hacia abajo
 		actualizarProductosEnTodasLasColecciones(productosProcesados);
 	}
 
@@ -100,7 +89,7 @@ public abstract class ProductSearcher<Entidad extends ProductoEspecifico> {
 	 * @throws IOException
 	 */
 	protected abstract List<Entidad> adquirirProductosEntidad(
-			UpdateRequest request) throws IOException;
+			UpdateRequest request, DatosDistribuidora data) throws IOException;
 
 	/**
 	 * Elimina los datos almacenados de cierta distribuidora y vuelve a guardar
