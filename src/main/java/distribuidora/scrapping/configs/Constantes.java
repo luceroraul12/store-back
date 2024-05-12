@@ -32,4 +32,9 @@ public class Constantes {
 	public static final String ORDER_STATUS_CONFIRMED = "CONFIRMED";
 	public static final String ORDER_STATUS_FINALIZED = "FINALIZED";
 	public static final String ORDER_STATUS_INACTIVE = "INACTIVE";
+	
+	// Tipos de Distribuidoras
+	public static final String LV_DISTRIBUIDORA_TYPE_EXCEL = "EXCEL";
+	public static final String LV_DISTRIBUIDORA_TYPE_SCRAPPING = "WEB_SCRAPPING";
+	
 }
