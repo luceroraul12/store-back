@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.PeticionWebScrapping;
+import distribuidora.scrapping.entities.UpdateRequestWeb;
 import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
 import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroWebScrappingServicio;
 
@@ -38,7 +38,7 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
     @Test
     void pruebaGenerarProductosConcurrent() throws IOException {
         List<LaGranjaDelCentroEntidad> productos = servicioConcurrent
-                .adquirirProductosEntidad(new PeticionWebScrapping(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO));
+                .adquirirProductosEntidad(new UpdateRequestWeb(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO));
 
         assertEquals(200, productos.size());
     }
@@ -46,7 +46,7 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
     @Test
     void pruebaGenerarProductos() throws IOException {
         List<LaGranjaDelCentroEntidad> productos = servicioConcurrent
-                .adquirirProductosEntidad(new PeticionWebScrapping(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO));
+                .adquirirProductosEntidad(new UpdateRequestWeb(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO));
 
         assertEquals(200, productos.size());
     }

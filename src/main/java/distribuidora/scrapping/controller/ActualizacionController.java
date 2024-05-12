@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
-import distribuidora.scrapping.entities.PeticionExcel;
-import distribuidora.scrapping.entities.PeticionWebScrapping;
+import distribuidora.scrapping.entities.UpdateRequestExcel;
+import distribuidora.scrapping.entities.UpdateRequestWeb;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.ActualizacionPorWebScrappingServicio;
 import distribuidora.scrapping.services.UpdaterService;
@@ -50,11 +50,11 @@ public class ActualizacionController {
 	 * 
 	 * @param documento
 	 *            Debe contener todas sus partes.
-	 * @see PeticionExcel
+	 * @see UpdateRequestExcel
 	 * @throws IOException
 	 */
 	@PostMapping("excel")
-	public DatosDistribuidora updateByExcel(PeticionExcel documento)
+	public DatosDistribuidora updateByExcel(UpdateRequestExcel documento)
 			throws IOException {
 		return updaterService.updateByExcel(documento);
 	}
@@ -63,7 +63,7 @@ public class ActualizacionController {
 	public DatosDistribuidora updateByWeb(
 			@RequestParam String distribuidoraCodigo) throws IOException {
 		return updaterService.updateByWeb(
-				new PeticionWebScrapping(distribuidoraCodigo));
+				new UpdateRequestWeb(distribuidoraCodigo));
 	}
 
 	/**

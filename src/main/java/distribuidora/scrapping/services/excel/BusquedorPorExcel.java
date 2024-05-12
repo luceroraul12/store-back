@@ -18,7 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
-import distribuidora.scrapping.entities.PeticionExcel;
+import distribuidora.scrapping.entities.UpdateRequestExcel;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.services.BuscadorDeProductos;
 import distribuidora.scrapping.util.ProductoExcelUtil;
@@ -26,15 +26,15 @@ import distribuidora.scrapping.util.ProductoExcelUtil;
 /**
  * Encargada de configurar la busqueda por medio de documentos excel.
  * @param <Entidad>
- * @see PeticionExcel
+ * @see UpdateRequestExcel
  */
-public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> extends BuscadorDeProductos<Entidad, PeticionExcel> {
+public abstract class BusquedorPorExcel<Entidad extends ProductoEspecifico> extends BuscadorDeProductos<Entidad, UpdateRequestExcel> {
 
     @Autowired
     ProductoExcelUtil<Entidad> util;
 
     @Override
-    protected List<Entidad> adquirirProductosEntidad(PeticionExcel elementoAuxiliar) {
+    protected List<Entidad> adquirirProductosEntidad(UpdateRequestExcel elementoAuxiliar) {
         List<Entidad> productosrecolectados;
         productosrecolectados = obtenerProductosApartirDeExcels(elementoAuxiliar.getExcels());
         return productosrecolectados;

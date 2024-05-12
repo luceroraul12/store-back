@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.PeticionExcel;
+import distribuidora.scrapping.entities.UpdateRequestExcel;
 
 /**
  * Servicio encargado de actualizaciones de base de dato del tipo excel.
@@ -22,7 +22,7 @@ public class ActualizacionPorDocumentoServicio {
 	@Autowired
 	private IndiasExcelService indiasService;
 
-	public void update(PeticionExcel peticion) throws IOException {
+	public void update(UpdateRequestExcel peticion) throws IOException {
 		List<BusquedorPorExcel> services = Arrays.asList(villaresService,
 				indiasService);
 		switch (peticion.getDistribuidoraCodigo()) {

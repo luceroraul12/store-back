@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
-import distribuidora.scrapping.entities.PeticionExcel;
-import distribuidora.scrapping.entities.PeticionWebScrapping;
+import distribuidora.scrapping.entities.UpdateRequestExcel;
+import distribuidora.scrapping.entities.UpdateRequestWeb;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.excel.ActualizacionPorDocumentoServicio;
 
@@ -24,7 +24,7 @@ public class UpdaterServiceImpl implements UpdaterService {
 	ActualizacionPorWebScrappingServicio actualizacionPorWebScrappingServicio;
 
 	@Override
-	public DatosDistribuidora updateByExcel(PeticionExcel request)
+	public DatosDistribuidora updateByExcel(UpdateRequestExcel request)
 			throws IOException {
 		actualizacionPorDocumentoServicio.update(request);
 		DatosDistribuidora resultado = this.datosDistribuidoraRepository
@@ -33,7 +33,7 @@ public class UpdaterServiceImpl implements UpdaterService {
 	}
 
 	@Override
-	public DatosDistribuidora updateByWeb(PeticionWebScrapping request)
+	public DatosDistribuidora updateByWeb(UpdateRequestWeb request)
 			throws IOException {
 		actualizacionPorWebScrappingServicio
 				.update(request.getDistribuidoraCodigo());

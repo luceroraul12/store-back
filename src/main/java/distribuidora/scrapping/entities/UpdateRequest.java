@@ -6,6 +6,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public abstract class Peticion {
+public abstract class UpdateRequest {
     private String distribuidoraCodigo;
 }
