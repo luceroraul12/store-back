@@ -11,12 +11,6 @@ import distribuidora.scrapping.enums.TipoDistribuidora;
 @Service
 public class VillaresExcelServicio extends BusquedorPorExcel<VillaresEntidad>{
     @Override
-    protected void initImplementacion() {
-        setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_VILLARES);
-        setTipoDistribuidora(TipoDistribuidora.EXCEL);
-    }
-
-    @Override
     boolean esRowValido(Row row) {
         return row != null && row.getCell(1) != null && row.getCell(1).getCellType().equals(CellType.NUMERIC);
     }

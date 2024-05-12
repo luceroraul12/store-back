@@ -35,12 +35,4 @@ public class IndiasExcelServicio extends BusquedorPorExcel<IndiasEntidad> {
         resultado = rowGeneral || rowEspecifico;
         return resultado;
     }
-
-    @Override
-    protected void initImplementacion() {
-        setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_INDIAS);
-        setTipoDistribuidora(TipoDistribuidora.EXCEL);
-    }
-    
-  
 }

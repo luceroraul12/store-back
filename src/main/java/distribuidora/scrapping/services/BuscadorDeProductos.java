@@ -74,14 +74,8 @@ public abstract class BuscadorDeProductos<Entidad extends ProductoEspecifico, Au
 	 */
 	@PostConstruct
 	private void init() {
-		initImplementacion();
 		verificarExistenciaEnBaseDeDatosEspecifica();
 	}
-
-	/**
-	 * Metodo iniciador para la implementacion.
-	 */
-	protected abstract void initImplementacion();
 
 	/**
 	 * Metodo por el cual se inicia el proceso de busqueda de datos en el

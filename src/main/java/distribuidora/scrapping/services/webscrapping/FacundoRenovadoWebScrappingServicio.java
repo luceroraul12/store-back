@@ -12,13 +12,6 @@ import distribuidora.scrapping.enums.TipoDistribuidora;
 @Service
 public class FacundoRenovadoWebScrappingServicio extends BusquedorPorWebScrapping<FacundoEntidad>{
     @Override
-    protected void initImplementacion() {
-        setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_FACUNDO);
-        setTipoDistribuidora(TipoDistribuidora.WEB_SCRAPPING);
-        setUrlBuscador("http://gglobal.net.ar/bernal/?cliente");
-    }
-
-    @Override
     protected boolean esDocumentValido(Document document) {
         return false;
     }

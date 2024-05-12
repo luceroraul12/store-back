@@ -49,12 +49,4 @@ public class DonGasparWebScrappingServicio extends BusquedorPorWebScrapping<DonG
     protected Elements filtrarElementos(Document documento) {
         return documento.getElementsByClass("producto");
     }
-
-
-    @Override
-    protected void initImplementacion() {
-        setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_DON_GASPAR);
-        setTipoDistribuidora(TipoDistribuidora.WEB_SCRAPPING);
-        setUrlBuscador("https://pidorapido.com/dongasparsj");
-    }   
 }

@@ -9,9 +9,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
-import distribuidora.scrapping.enums.TipoDistribuidora;
 import distribuidora.scrapping.services.webscrappingconcurrent.WebScrappingConcurrent;
 import distribuidora.scrapping.util.LaGranjaDelCentroUtil;
 
@@ -63,16 +61,6 @@ public class LaGranjaDelCentroWebScrappingServicio
 	@Override
 	protected Elements filtrarElementos(Document documento) {
 		return documento.select("div.box-content-1");
-	}
-
-	@Override
-	protected void initImplementacion() {
-		setDistribuidoraCodigo(
-				Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
-		setTipoDistribuidora(TipoDistribuidora.WEB_SCRAPPING);
-		setEsBuscadorConPaginador(true);
-		setUrlBuscador(
-				"https://lagranjadelcentro.com.ar/productos.php?pagina=");
 	}
 
 	@Override

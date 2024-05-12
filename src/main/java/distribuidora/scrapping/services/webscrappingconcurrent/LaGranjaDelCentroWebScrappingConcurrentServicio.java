@@ -12,11 +12,6 @@ import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroE
 //@Service
 public class LaGranjaDelCentroWebScrappingConcurrentServicio extends WebScrappingConcurrent<LaGranjaDelCentroEntidad>{
     @Override
-    protected void initImplementacion() {
-        setUrlBuscador("https://lagranjadelcentro.com.ar/productos.php?pagina=");
-    }
-
-    @Override
     protected boolean esDocumentValido(Document document) {
         boolean esValido = false;
         for (Element element : document.getElementsByTag("span")){
