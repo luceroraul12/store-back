@@ -34,7 +34,6 @@ class IndiasExcelServicioTest {
     List<IndiasEntidad> productos;
     @BeforeEach
     void setings() throws IOException {
-        servicio.initImplementacion();
 
         File file = new File("src/main/resources/static/INDIAS.xls");
         MultipartFile[] multipartFile = new MultipartFile[1];

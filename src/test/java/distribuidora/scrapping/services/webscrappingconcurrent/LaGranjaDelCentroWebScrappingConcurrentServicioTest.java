@@ -22,7 +22,6 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
 
     @Test
     void pruebaInicial() throws IOException {
-        servicioConcurrent.initImplementacion();
         int resultado = servicioConcurrent.generarUltimoIndicePaginador();
 
         assertEquals(123, resultado);
@@ -30,7 +29,6 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
 
     @Test
     void pruebaGenerarDocumentos() throws IOException {
-        servicioConcurrent.initImplementacion();
         int maxPaginador = servicioConcurrent.generarUltimoIndicePaginador();
         int resultado = servicioConcurrent.generarDocumentos().size();
 
@@ -39,7 +37,6 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
 
     @Test
     void pruebaGenerarProductosConcurrent() throws IOException {
-        servicioConcurrent.initImplementacion();
         List<LaGranjaDelCentroEntidad> productos = servicioConcurrent
                 .adquirirProductosEntidad(new PeticionWebScrapping(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO));
 
@@ -48,7 +45,6 @@ class LaGranjaDelCentroWebScrappingConcurrentServicioTest {
 
     @Test
     void pruebaGenerarProductos() throws IOException {
-        servicioConcurrent.initImplementacion();
         List<LaGranjaDelCentroEntidad> productos = servicioConcurrent
                 .adquirirProductosEntidad(new PeticionWebScrapping(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO));
 

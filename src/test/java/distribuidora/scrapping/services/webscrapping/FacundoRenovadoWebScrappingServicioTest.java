@@ -33,8 +33,6 @@ class FacundoRenovadoWebScrappingServicioTest {
 
     @BeforeEach
     void seting() throws IOException {
-        servicio.initImplementacion();
-
         File file = new File("src/main/resources/static/facundo.html");
         document = Jsoup.parse(file);
     }

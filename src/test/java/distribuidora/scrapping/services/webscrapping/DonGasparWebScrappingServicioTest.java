@@ -30,8 +30,6 @@ class DonGasparWebScrappingServicioTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        servicio.initImplementacion();
-
         int tries = 3;
         boolean existDocument = false;
         int index = 0;
