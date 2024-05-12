@@ -3,9 +3,12 @@ package distribuidora.scrapping.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.springframework.data.annotation.Id;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,9 +19,14 @@ import lombok.Setter;
 @Setter
 public class DatosDistribuidora {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private boolean active;
+	@ManyToOne
+	@JoinColumn(name = "lv_distribuidora_id")
 	private LookupValor distribuidora;
+	@ManyToOne
+	@JoinColumn(name = "lv_distribuidora_tipo_id")
 	private LookupValor tipo;
 	private Date fechaActualizacion;
 	private Integer cantidadDeProductosAlmacenados;

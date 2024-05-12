@@ -14,9 +14,9 @@ public interface DatosDistribuidoraRepository
 	@Query("""
 			select dd
 			from DatosDistribuidora dd
-				inner join d.distribuidora d
-			where d.active = true
-			order by d.code
+				inner join dd.distribuidora d
+			where dd.active = true
+			order by d.codigo
 			""")
 	List<DatosDistribuidora> findActives();
 
@@ -27,9 +27,8 @@ public interface DatosDistribuidoraRepository
 	@Query("""
 			select dd
 			from DatosDistribuidora dd
-				inner join d.distribuidora d
-			where d.active = true
-				and d.code = :code
+				inner join dd.distribuidora d
+			where dd.active = true
 			""")
 	DatosDistribuidora getByCode(String code);
 }
