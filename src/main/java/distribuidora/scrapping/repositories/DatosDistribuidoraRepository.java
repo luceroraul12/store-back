@@ -29,6 +29,7 @@ public interface DatosDistribuidoraRepository
 			from DatosDistribuidora dd
 				inner join dd.distribuidora d
 			where dd.active = true
+				and d.codigo = :code
 			""")
 	DatosDistribuidora getByCode(String code);
 }
