@@ -64,9 +64,9 @@ public abstract class ProductSearcher {
 		// Busco los datos de la distribuidora
 		DatosDistribuidora data = datoDistribuidoraServicio
 				.getByCode(distribuidoraCodigo);
-		
+
 		setTipoDistribuidora(data.getDistribuidora());
-		
+
 		processRequest(request, data);
 	};
 
@@ -75,8 +75,7 @@ public abstract class ProductSearcher {
 		List<ExternalProduct> productosProcesados = adquirirProductosEntidad(
 				request, data);
 
-		// TODO: ver como hace de aca hacia abajo
-		actualizarProductosEnTodasLasColecciones(productosProcesados);
+		actualizarProductosEnTodasLasColecciones(productosProcesados, data);
 	}
 
 	/**
@@ -101,20 +100,15 @@ public abstract class ProductSearcher {
 	 *            BuscadorDeProductos#almacenarProductosEspecificos(List)
 	 */
 	public void actualizarProductosEnTodasLasColecciones(
-			List<ExternalProduct> productos) {
+			List<ExternalProduct> productos, DatosDistribuidora data) {
 
-		this.productoServicio
-				.actualizarProductosPorDistribuidora(productos, this.distribuidoraCodigo);
+		this.productoServicio.actualizarProductosPorDistribuidora(productos,
+				this.distribuidoraCodigo);
 		// Intento actualizar los productos internos a los productos de la
 		inventorySystemService.actualizarPreciosAutomatico();
 		// Valido cuantos productos existen luego de agregar nuevos
 		Integer size = productoServicio
 				.countProductosByDistribuidoraCode(distribuidoraCodigo);
-
-		LookupValor lvDistribuidora = lookupService
-				.getLookupValueByCode(distribuidoraCodigo);
-		DatosDistribuidora data = datoDistribuidoraServicio
-				.getByCode(distribuidoraCodigo);
 		data.setFechaActualizacion(new Date());
 		data.setCantidadDeProductosAlmacenados(size);
 
