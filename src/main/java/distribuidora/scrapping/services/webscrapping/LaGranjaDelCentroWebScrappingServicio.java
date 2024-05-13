@@ -49,16 +49,15 @@ public class LaGranjaDelCentroWebScrappingServicio
 	@Override
 	protected ExternalProduct obtenerProductosAPartirDeElements(
 			Element elementProducto) {
-//		return LaGranjaDelCentroEntidad.builder()
-//				.distribuidoraCodigo(getDistribuidoraCodigo())
-//				.id(elementProducto.attr("data-product-id"))
-//				.nombreProducto(elementProducto
-//						.getElementsByClass("h3-content-1").text())
-//				.precio(Double.valueOf(elementProducto
-//						.getElementsByClass("p-precio-content-1").text()
-//						.replaceAll("[$.]", "").replaceAll(",", ".")))
-//				.build();
-		return null;
+		String code = elementProducto.attr("data-product-id");
+		String title = elementProducto.getElementsByClass("h3-content-1")
+				.text();
+		Double price = Double.valueOf(
+				elementProducto.getElementsByClass("p-precio-content-1").text()
+						.replaceAll("[$.]", "").replaceAll(",", "."));
+
+		return new ExternalProduct(null, title, price, null,
+				getTipoDistribuidora(), code);
 	}
 
 	@Override
@@ -76,6 +75,7 @@ public class LaGranjaDelCentroWebScrappingServicio
 
 	@Override
 	public void setCodes() {
-		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
+		setDistribuidoraCodigo(
+				Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
 	}
 }

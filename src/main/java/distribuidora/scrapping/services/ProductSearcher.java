@@ -107,7 +107,6 @@ public abstract class ProductSearcher {
 				.actualizarProductosPorDistribuidora(productos, this.distribuidoraCodigo);
 		// Intento actualizar los productos internos a los productos de la
 		inventorySystemService.actualizarPreciosAutomatico();
-
 		// Valido cuantos productos existen luego de agregar nuevos
 		Integer size = productoServicio
 				.countProductosByDistribuidoraCode(distribuidoraCodigo);
