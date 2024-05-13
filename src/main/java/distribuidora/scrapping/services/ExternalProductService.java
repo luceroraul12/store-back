@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.ExternalProductDto;
+import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ExternalProduct;
-import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.converters.ExternalProductDtoConverter;
@@ -26,10 +26,10 @@ public class ExternalProductService {
 
 	@Autowired
 	ExternalProductRepository productoRepository;
-	
+
 	@Autowired
 	LookupService lookupService;
-	
+
 	@Autowired
 	ExternalProductDtoConverter externalProductDtoConverter;
 
@@ -42,24 +42,24 @@ public class ExternalProductService {
 	 * @param distribuidora
 	 *            distribuidora con la que se quiere trabajar.
 	 */
-	public void actualizarProductosPorDistribuidora(List<ExternalProduct> productos,
-			String distribuidoraCodigo) {
-		//TODO: Adaptar a SQL
+	public void actualizarProductosPorDistribuidora(
+			List<ExternalProduct> productos, DatosDistribuidora data) {
 		Date date = new Date();
 		productos.forEach(p -> p.setDate(date));
 		// Hago la validacion de productos existentes
 		List<ExternalProduct> productExisted = getByDistribuidoraCodeAndProductCode(
-				distribuidoraCodigo, null);
+				data.getDistribuidora().getCodigo(), null);
 		List<ExternalProduct> productToUpdate = new ArrayList();
 		List<ExternalProduct> productToNew = new ArrayList<>();
-		LookupValor lvDistribuidora = lookupService.getLookupValueByCode(distribuidoraCodigo);
 		for (ExternalProduct p : productos) {
 			// Actualizo el lookup a cada producto
-			p.setDistribuidora(lvDistribuidora);
+			p.setDistribuidora(data.getDistribuidora());
 			boolean isRepeated = false;
 			for (ExternalProduct pE : productExisted) {
-				// Si tiene el mismo titulo o por contrario mismo id supondre que es lo mismo
-				if(p.getCode().equals(pE.getCode()) || p.getTitle().equals(pE.getTitle())) {
+				// Si tiene el mismo titulo o por contrario mismo id supondre
+				// que es lo mismo
+				if (p.getCode().equals(pE.getCode())
+						|| p.getTitle().equals(pE.getTitle())) {
 					// Actualizo al antiguo producto, los valores nuevos
 					pE.setDate(date);
 					pE.setPrice(p.getPrecioPorCantidadEspecifica());
@@ -69,7 +69,7 @@ public class ExternalProductService {
 					isRepeated = true;
 				}
 			}
-			if(!isRepeated)
+			if (!isRepeated)
 				productToNew.add(p);
 		}
 		// En una unica lista meto todos los productos y los persisto
@@ -81,12 +81,13 @@ public class ExternalProductService {
 		List<String> values = Stream.of(search.split(" ")).toList();
 		Set<ExternalProductDto> result = new HashSet<>();
 		for (String v : values) {
-			List<ExternalProductDto> innerResult = externalProductDtoConverter.toDtoList(this.productoRepository
-					.findBySearch(v.toUpperCase()));
-			if(CollectionUtils.isNotEmpty(innerResult))
+			List<ExternalProductDto> innerResult = externalProductDtoConverter
+					.toDtoList(this.productoRepository
+							.findBySearch(v.toUpperCase()));
+			if (CollectionUtils.isNotEmpty(innerResult))
 				result.addAll(innerResult);
 		}
-		return result; 
+		return result;
 	}
 
 	public List<ExternalProduct> getByDistribuidoraCodeAndProductCode(
@@ -95,8 +96,8 @@ public class ExternalProductService {
 				distribuidoraCodigo, idReferencia);
 	}
 
-	public Integer countProductosByDistribuidoraCode(
-			String distribuidoraCode) {
-		return productoRepository.countExternalProductsByDistribuidoraCode(distribuidoraCode);
+	public Integer countProductosByDistribuidoraCode(String distribuidoraCode) {
+		return productoRepository
+				.countExternalProductsByDistribuidoraCode(distribuidoraCode);
 	}
 }

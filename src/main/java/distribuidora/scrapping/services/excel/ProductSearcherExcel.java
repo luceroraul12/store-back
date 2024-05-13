@@ -15,14 +15,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.services.ProductSearcher;
-import distribuidora.scrapping.util.ProductoExcelUtil;
 
 /**
  * Encargada de configurar la busqueda por medio de documentos excel.
@@ -32,8 +30,8 @@ import distribuidora.scrapping.util.ProductoExcelUtil;
  */
 public abstract class ProductSearcherExcel extends ProductSearcher {
 	@Override
-	protected List<ExternalProduct> adquirirProductosEntidad(UpdateRequest request,
-			DatosDistribuidora data) {
+	protected List<ExternalProduct> adquirirProductosEntidad(
+			UpdateRequest request, DatosDistribuidora data) {
 		List<ExternalProduct> productosrecolectados;
 		productosrecolectados = obtenerProductosApartirDeExcels(
 				request.getMultipartFiles(), data);
@@ -50,8 +48,8 @@ public abstract class ProductSearcherExcel extends ProductSearcher {
 	 * @return Lista de productos en entidad especifica
 	 * @throws IOException
 	 */
-	public List<ExternalProduct> obtenerProductosApartirDeExcels(MultipartFile[] excels,
-			DatosDistribuidora data) {
+	public List<ExternalProduct> obtenerProductosApartirDeExcels(
+			MultipartFile[] excels, DatosDistribuidora data) {
 		return Arrays.stream(excels).map(this::obtenerSheets)
 				.flatMap(Collection::stream)
 				.map(s -> obtenerProductosPorSheet(s, data))
@@ -156,7 +154,8 @@ public abstract class ProductSearcherExcel extends ProductSearcher {
 			DatosDistribuidora data) {
 		Collection<ExternalProduct> productosPorRows = new ArrayList<>();
 		if (esRowValido(row)) {
-			ExternalProduct producto = convertirRowEnProductoEspecifico(row, data);
+			ExternalProduct producto = convertirRowEnProductoEspecifico(row,
+					data);
 			productosPorRows.add(producto);
 		}
 		return productosPorRows;

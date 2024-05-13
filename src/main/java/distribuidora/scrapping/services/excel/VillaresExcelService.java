@@ -24,7 +24,56 @@ public class VillaresExcelService extends ProductSearcherExcel {
 	@Override
 	protected ExternalProduct convertirRowEnProductoEspecifico(Row row,
 			DatosDistribuidora data) {
-		// TODO Auto-generated method stub
-		return null;
+		Integer cantidadCeldas = row.getPhysicalNumberOfCells();
+		Integer celdasGranel = 12;
+		Integer celdasGourmetFraccionado = 11;
+		Integer celdasDistribuido = 10;
+		Integer indiceInicioCeldaPrecio = 0;
+		// inicializo
+		String code = String
+				.valueOf(Math.round(row.getCell(1).getNumericCellValue()) + "R-"
+						+ row.getRowNum());
+		String cantidad = "";
+		String cantidadMinima = "";
+		String title = "";
+		String brand = "";
+		String unit = "";
+		Double price = 0.0;
+
+		// producto granel
+		if (cantidadCeldas.equals(celdasGranel)) {
+			indiceInicioCeldaPrecio = celdasGranel - 4;
+			title = row.getCell(2).toString();
+			cantidad = row.getCell(3).toString();
+			cantidadMinima = row.getCell(4).toString();
+			brand = row.getCell(6).toString();
+			unit = row.getCell(7).toString();
+		}
+		// producto gourmet o fraccionado
+		if (cantidadCeldas.equals(celdasGourmetFraccionado)) {
+			indiceInicioCeldaPrecio = celdasGourmetFraccionado - 4;
+			title = row.getCell(2).toString();
+			cantidad = row.getCell(3).toString();
+			brand = row.getCell(5).toString();
+			unit = row.getCell(6).toString();
+		}
+		// producto distribuidos
+		if (cantidadCeldas.equals(celdasDistribuido)) {
+			indiceInicioCeldaPrecio = celdasDistribuido - 4;
+			title = row.getCell(2).toString();
+			cantidad = row.getCell(3).toString();
+			unit = row.getCell(4).toString();
+			brand = row.getCell(5).toString();
+		}
+
+		Boolean estaDisponible = row.getCell(indiceInicioCeldaPrecio)
+				.getCellType().equals(CellType.NUMERIC);
+		if (estaDisponible) {
+			price = row.getCell(indiceInicioCeldaPrecio).getNumericCellValue();
+		}
+
+		title = String.format("%s %s %s", brand, unit, title);
+		return new ExternalProduct(null, title, price, null,
+				getTipoDistribuidora(), code);
 	}
 }

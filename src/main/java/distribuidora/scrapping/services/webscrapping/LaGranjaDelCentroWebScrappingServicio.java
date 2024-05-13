@@ -6,22 +6,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
 import distribuidora.scrapping.services.webscrappingconcurrent.WebScrappingConcurrent;
-import distribuidora.scrapping.util.LaGranjaDelCentroUtil;
 
 @Service
 public class LaGranjaDelCentroWebScrappingServicio
 		extends
 			WebScrappingConcurrent<LaGranjaDelCentroEntidad> {
-
-	@Autowired
-	LaGranjaDelCentroUtil laGranjaDelCentroUtil;
 
 	/**
 	 * Para este caso, contienen un apartado de paginador. En el template

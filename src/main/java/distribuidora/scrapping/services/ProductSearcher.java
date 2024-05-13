@@ -66,7 +66,6 @@ public abstract class ProductSearcher {
 				.getByCode(distribuidoraCodigo);
 
 		setTipoDistribuidora(data.getDistribuidora());
-
 		processRequest(request, data);
 	};
 
@@ -101,9 +100,8 @@ public abstract class ProductSearcher {
 	 */
 	public void actualizarProductosEnTodasLasColecciones(
 			List<ExternalProduct> productos, DatosDistribuidora data) {
-
 		this.productoServicio.actualizarProductosPorDistribuidora(productos,
-				this.distribuidoraCodigo);
+				data);
 		// Intento actualizar los productos internos a los productos de la
 		inventorySystemService.actualizarPreciosAutomatico();
 		// Valido cuantos productos existen luego de agregar nuevos
