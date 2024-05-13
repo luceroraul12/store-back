@@ -58,7 +58,8 @@ public class ExternalProductService {
 			p.setDistribuidora(lvDistribuidora);
 			boolean isRepeated = false;
 			for (ExternalProduct pE : productExisted) {
-				if(p.getTitle().equals(pE.getTitle())) {
+				// Si tiene el mismo titulo o por contrario mismo id supondre que es lo mismo
+				if(p.getCode().equals(pE.getCode()) || p.getTitle().equals(pE.getTitle())) {
 					// Actualizo al antiguo producto, los valores nuevos
 					pE.setDate(date);
 					pE.setPrice(p.getPrecioPorCantidadEspecifica());

@@ -10,12 +10,11 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.LookupValor;
-import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.services.internal.InventorySystem;
-import distribuidora.scrapping.util.ProductoUtil;
 import lombok.Data;
 
 /**
@@ -28,7 +27,7 @@ import lombok.Data;
  *            clase con los datos necesarios para poder comenzar busqueda
  */
 @Data
-public abstract class ProductSearcher<Entidad extends ProductoEspecifico> {
+public abstract class ProductSearcher {
 
 	/**
 	 * Es la enumercacion que identifica a cada implementacion de este servicio.
@@ -44,12 +43,6 @@ public abstract class ProductSearcher<Entidad extends ProductoEspecifico> {
 	private LocalDate fechaUltimaActualizacion;
 
 	/**
-	 * Componente utilitario para realizar conversiones.
-	 */
-	@Autowired
-	private ProductoUtil<Entidad> productoUtil;
-
-	/**
 	 * Servicio basado en Productos finales.
 	 */
 	@Autowired
@@ -63,7 +56,7 @@ public abstract class ProductSearcher<Entidad extends ProductoEspecifico> {
 
 	@Autowired
 	private LookupService lookupService;
-	
+
 	@PostConstruct
 	public abstract void setCodes();
 
@@ -71,14 +64,16 @@ public abstract class ProductSearcher<Entidad extends ProductoEspecifico> {
 		// Busco los datos de la distribuidora
 		DatosDistribuidora data = datoDistribuidoraServicio
 				.getByCode(distribuidoraCodigo);
-
+		
+		setTipoDistribuidora(data.getDistribuidora());
+		
 		processRequest(request, data);
 	};
 
 	public void processRequest(UpdateRequest request, DatosDistribuidora data)
 			throws IOException {
-		List<Entidad> productosProcesados = adquirirProductosEntidad(request,
-				data);
+		List<ExternalProduct> productosProcesados = adquirirProductosEntidad(
+				request, data);
 
 		// TODO: ver como hace de aca hacia abajo
 		actualizarProductosEnTodasLasColecciones(productosProcesados);
@@ -93,7 +88,7 @@ public abstract class ProductSearcher<Entidad extends ProductoEspecifico> {
 	 * @return lista de productos
 	 * @throws IOException
 	 */
-	protected abstract List<Entidad> adquirirProductosEntidad(
+	protected abstract List<ExternalProduct> adquirirProductosEntidad(
 			UpdateRequest request, DatosDistribuidora data) throws IOException;
 
 	/**
@@ -106,11 +101,10 @@ public abstract class ProductSearcher<Entidad extends ProductoEspecifico> {
 	 *            BuscadorDeProductos#almacenarProductosEspecificos(List)
 	 */
 	public void actualizarProductosEnTodasLasColecciones(
-			List<Entidad> productos) {
+			List<ExternalProduct> productos) {
 
-		this.productoServicio.actualizarProductosPorDistribuidora(
-				productoUtil.arregloToProducto(productos),
-				this.distribuidoraCodigo);
+		this.productoServicio
+				.actualizarProductosPorDistribuidora(productos, this.distribuidoraCodigo);
 		// Intento actualizar los productos internos a los productos de la
 		inventorySystemService.actualizarPreciosAutomatico();
 
@@ -125,7 +119,7 @@ public abstract class ProductSearcher<Entidad extends ProductoEspecifico> {
 		data.setFechaActualizacion(new Date());
 		data.setCantidadDeProductosAlmacenados(size);
 
-		this.datoDistribuidoraServicio.actualizarDatos(data);
+		this.datoDistribuidoraServicio.save(data);
 
 	}
 }

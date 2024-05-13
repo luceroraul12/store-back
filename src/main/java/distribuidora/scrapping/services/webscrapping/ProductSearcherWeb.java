@@ -12,6 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.services.ProductSearcher;
@@ -25,7 +26,7 @@ import lombok.Data;
 @Data
 public abstract class ProductSearcherWeb<Entidad extends ProductoEspecifico>
 		extends
-			ProductSearcher<Entidad> {
+			ProductSearcher {
 
 	/**
 	 * Obligatorio para poder comenzar a utilizar el servicio
@@ -42,12 +43,12 @@ public abstract class ProductSearcherWeb<Entidad extends ProductoEspecifico>
 	private Boolean esBuscadorConPaginador = false;
 
 	@Override
-	public List<Entidad> adquirirProductosEntidad(UpdateRequest request,
+	public List<ExternalProduct> adquirirProductosEntidad(UpdateRequest request,
 			DatosDistribuidora data) throws IOException {
-		List<Entidad> productostotales = new ArrayList<>();
+		List<ExternalProduct> productostotales = new ArrayList<>();
 		setUrlBuscador(data.getWebUrl());
 		setEsBuscadorConPaginador(data.isPaginator());
-		
+
 		productostotales = generarDocumentos().stream().parallel()
 				.map(this::obtenerProductosPorDocument)
 				.flatMap(Collection::stream).collect(Collectors.toList());
@@ -126,7 +127,7 @@ public abstract class ProductSearcherWeb<Entidad extends ProductoEspecifico>
 	 *            uno de los tanttos document que puede traer una pagina Web.
 	 * @return listado de productos especificos.
 	 */
-	protected List<Entidad> obtenerProductosPorDocument(Document documento) {
+	protected List<ExternalProduct> obtenerProductosPorDocument(Document documento) {
 		return filtrarElementos(documento).stream()
 				.map(this::obtenerProductosAPartirDeElements)
 				.collect(Collectors.toList());
@@ -139,7 +140,7 @@ public abstract class ProductSearcherWeb<Entidad extends ProductoEspecifico>
 	 *            elemento que contiene datos
 	 * @return un producto especifico
 	 */
-	protected abstract Entidad obtenerProductosAPartirDeElements(
+	protected abstract ExternalProduct obtenerProductosAPartirDeElements(
 			Element elementProducto);
 
 	/**

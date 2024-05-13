@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
 
 //@Service
@@ -27,16 +28,17 @@ public class LaGranjaDelCentroWebScrappingConcurrentServicio
 	}
 
 	@Override
-	protected LaGranjaDelCentroEntidad obtenerProductosAPartirDeElements(
+	protected ExternalProduct obtenerProductosAPartirDeElements(
 			Element elementProducto) {
-		return LaGranjaDelCentroEntidad.builder()
-				.distribuidoraCodigo(getDistribuidoraCodigo())
-				.nombreProducto(elementProducto
-						.getElementsByClass("h3-content-1").text())
-				.precio(Double.valueOf(elementProducto
-						.getElementsByClass("p-precio-content-1").text()
-						.replaceAll("[$.]", "").replaceAll(",", ".")))
-				.build();
+//		return LaGranjaDelCentroEntidad.builder()
+//				.distribuidoraCodigo(getDistribuidoraCodigo())
+//				.nombreProducto(elementProducto
+//						.getElementsByClass("h3-content-1").text())
+//				.precio(Double.valueOf(elementProducto
+//						.getElementsByClass("p-precio-content-1").text()
+//						.replaceAll("[$.]", "").replaceAll(",", ".")))
+//				.build();
+		return null;
 	}
 
 	@Override

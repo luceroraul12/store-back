@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
 import distribuidora.scrapping.util.DonGasparUtil;
 
@@ -25,7 +26,7 @@ public class DonGasparWebScrappingServicio
 	}
 
 	@Override
-	protected DonGasparEntidad obtenerProductosAPartirDeElements(
+	protected ExternalProduct obtenerProductosAPartirDeElements(
 			Element elementProducto) {
 		new ArrayList<>();
 		String id = elementProducto.attr("id").toString();
@@ -38,9 +39,10 @@ public class DonGasparWebScrappingServicio
 		}
 		String descripcion = elementProducto.select(".dfloat-left").text();
 
-		return DonGasparEntidad.builder().id(id)
-				.distribuidoraCodigo(getDistribuidoraCodigo())
-				.nombreProducto(descripcion).precio(precio).build();
+//		return DonGasparEntidad.builder().id(id)
+//				.distribuidoraCodigo(getDistribuidoraCodigo())
+//				.nombreProducto(descripcion).precio(precio).build();
+		return null;
 	}
 
 	@Override

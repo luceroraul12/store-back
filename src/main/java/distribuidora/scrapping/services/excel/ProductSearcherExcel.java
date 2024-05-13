@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -21,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
-import distribuidora.scrapping.entities.ProductoEspecifico;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.services.ProductSearcher;
 import distribuidora.scrapping.util.ProductoExcelUtil;
@@ -32,17 +30,11 @@ import distribuidora.scrapping.util.ProductoExcelUtil;
  * @param <Entidad>
  * @see UpdateRequestExcel
  */
-public abstract class ProductSearcherExcel<Entidad extends ProductoEspecifico>
-		extends
-			ProductSearcher<Entidad> {
-
-	@Autowired
-	ProductoExcelUtil<Entidad> util;
-
+public abstract class ProductSearcherExcel extends ProductSearcher {
 	@Override
-	protected List<Entidad> adquirirProductosEntidad(UpdateRequest request,
+	protected List<ExternalProduct> adquirirProductosEntidad(UpdateRequest request,
 			DatosDistribuidora data) {
-		List<Entidad> productosrecolectados;
+		List<ExternalProduct> productosrecolectados;
 		productosrecolectados = obtenerProductosApartirDeExcels(
 				request.getMultipartFiles(), data);
 		return productosrecolectados;
@@ -58,7 +50,7 @@ public abstract class ProductSearcherExcel<Entidad extends ProductoEspecifico>
 	 * @return Lista de productos en entidad especifica
 	 * @throws IOException
 	 */
-	public List<Entidad> obtenerProductosApartirDeExcels(MultipartFile[] excels,
+	public List<ExternalProduct> obtenerProductosApartirDeExcels(MultipartFile[] excels,
 			DatosDistribuidora data) {
 		return Arrays.stream(excels).map(this::obtenerSheets)
 				.flatMap(Collection::stream)
@@ -98,9 +90,9 @@ public abstract class ProductSearcherExcel<Entidad extends ProductoEspecifico>
 	 *            es uno solo
 	 * @return lsita de productos
 	 */
-	private Collection<Entidad> obtenerProductosPorSheet(Sheet sheet,
+	private Collection<ExternalProduct> obtenerProductosPorSheet(Sheet sheet,
 			DatosDistribuidora data) {
-		Collection<Entidad> productosFinales = new ArrayList<>();
+		Collection<ExternalProduct> productosFinales = new ArrayList<>();
 		sheet.rowIterator().forEachRemaining(row -> {
 			row.cellIterator().forEachRemaining(cell -> {
 				expandirValorDeCeldasFusionadas(sheet, cell);
@@ -160,15 +152,18 @@ public abstract class ProductSearcherExcel<Entidad extends ProductoEspecifico>
 	 * @return lista de productos
 	 * @see ProductSearcherExcel#esRowValido(Row row)
 	 */
-	private Collection<Entidad> trabajarConRowyObtenerProducto(Row row,
+	private Collection<ExternalProduct> trabajarConRowyObtenerProducto(Row row,
 			DatosDistribuidora data) {
-		Collection<Entidad> productosPorRows = new ArrayList<>();
+		Collection<ExternalProduct> productosPorRows = new ArrayList<>();
 		if (esRowValido(row)) {
-			Entidad producto = util.convertirRowEnProductoEspecifico(row, data);
+			ExternalProduct producto = convertirRowEnProductoEspecifico(row, data);
 			productosPorRows.add(producto);
 		}
 		return productosPorRows;
 	}
+
+	protected abstract ExternalProduct convertirRowEnProductoEspecifico(Row row,
+			DatosDistribuidora data);
 
 	/**
 	 * Encargado de verificar si es un renglon valido para mapear. Es necesario

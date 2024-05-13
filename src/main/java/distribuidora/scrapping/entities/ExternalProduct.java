@@ -21,8 +21,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "external_product")
 public class ExternalProduct {
@@ -48,4 +46,24 @@ public class ExternalProduct {
     public Double getPrecioPorCantidadEspecifica() {
         return price != null ? price : 0.0;
     }
+
+    
+    
+	public ExternalProduct(Integer id, String title, Double price, Date date,
+			LookupValor distribuidora, String code) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.price = price;
+		this.date = date;
+		this.distribuidora = distribuidora;
+		this.code = code;
+	}
+
+
+
+	public ExternalProduct() {
+		super();
+	}
+  
 }

@@ -5,10 +5,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.productos.especificos.IndiasEntidad;
+import distribuidora.scrapping.entities.DatosDistribuidora;
+import distribuidora.scrapping.entities.ExternalProduct;
 
 @Service
-public class IndiasExcelService extends ProductSearcherExcel<IndiasEntidad> {
+public class IndiasExcelService extends ProductSearcherExcel {
 
 	@Override
 	boolean esRowValido(Row row) {
@@ -38,9 +39,16 @@ public class IndiasExcelService extends ProductSearcherExcel<IndiasEntidad> {
 		resultado = rowGeneral || rowEspecifico;
 		return resultado;
 	}
-	
+
 	@Override
 	public void setCodes() {
 		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_INDIAS);
+	}
+
+	@Override
+	protected ExternalProduct convertirRowEnProductoEspecifico(Row row,
+			DatosDistribuidora data) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

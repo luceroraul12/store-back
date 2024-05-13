@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
 import distribuidora.scrapping.services.webscrappingconcurrent.WebScrappingConcurrent;
 import distribuidora.scrapping.util.LaGranjaDelCentroUtil;
@@ -46,17 +47,18 @@ public class LaGranjaDelCentroWebScrappingServicio
 	}
 
 	@Override
-	protected LaGranjaDelCentroEntidad obtenerProductosAPartirDeElements(
+	protected ExternalProduct obtenerProductosAPartirDeElements(
 			Element elementProducto) {
-		return LaGranjaDelCentroEntidad.builder()
-				.distribuidoraCodigo(getDistribuidoraCodigo())
-				.id(elementProducto.attr("data-product-id"))
-				.nombreProducto(elementProducto
-						.getElementsByClass("h3-content-1").text())
-				.precio(Double.valueOf(elementProducto
-						.getElementsByClass("p-precio-content-1").text()
-						.replaceAll("[$.]", "").replaceAll(",", ".")))
-				.build();
+//		return LaGranjaDelCentroEntidad.builder()
+//				.distribuidoraCodigo(getDistribuidoraCodigo())
+//				.id(elementProducto.attr("data-product-id"))
+//				.nombreProducto(elementProducto
+//						.getElementsByClass("h3-content-1").text())
+//				.precio(Double.valueOf(elementProducto
+//						.getElementsByClass("p-precio-content-1").text()
+//						.replaceAll("[$.]", "").replaceAll(",", ".")))
+//				.build();
+		return null;
 	}
 
 	@Override

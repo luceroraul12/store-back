@@ -32,4 +32,8 @@ public class DatoDistribuidoraServicio {
 	public boolean existsByDistribuidora(String distribuidoraCodigo) {
 		return repository.existsByDistribuidoraCodigo(distribuidoraCodigo);
 	}
+
+	public void save(DatosDistribuidora data) {
+		repository.save(data);
+	}
 }
