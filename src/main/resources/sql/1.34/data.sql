@@ -13,3 +13,11 @@ VALUES
     (true, 5, '2024-05-13 08:06:27.306', 0, true, false, 'https://lagranjadelcentro.com.ar/productos.php?', true),
     (true, 2, '2024-05-13 08:55:57.125', 0, false, true, '', false),
     (true, 6, NULL, 0, false, true, '', false);
+
+-- Elimino las vinculaciones existentes
+update productos_internos p
+set external_product_id = null
+
+-- Elimino todos los external_products para que los vuelva a buscar
+delete from external_product
+-- TODO: VER SI CONVIENE ESTO O SI SE PUEDEN UNIFICAR TODOS LOS EXISTENTES PARA QUE PUEDAN VOLVER A SALIR
