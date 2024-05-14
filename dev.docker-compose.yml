@@ -1,11 +1,6 @@
 version: "3.3"
 
 services:
-  buscador-mongo:
-    container_name: "mongodb"
-    image: mongo
-    ports:
-      - 27017:27017
   pasionaria-db:
       container_name: "pasionaria-db"
       image: postgres:alpine3.17

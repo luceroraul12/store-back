@@ -19,23 +19,6 @@ services:
         reservations:
           cpus: 0.25
           memory: 50M
-  # es una imagen base de mongo para almacenar algunos datos
-  buscador-mongo:
-    image: mongo
-    ports:
-      - 27017:27017
-    networks:
-      pasionaria_network:
-        aliases:
-          - buscador-mongo
-    deploy:
-      resources:
-        limits:
-          cpus: 1
-          memory: 50M
-        reservations:
-          cpus: 0.25
-          memory: 50M
   # es una imagen de postgresql para almacenar toda la data referida al proyecto y que sigue una estructura en concreto
   buscador-db:
     image: postgres:alpine3.17
@@ -69,16 +52,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://buscador-db/pasionaria
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: homito
-#      mongodb
-      SPRING_DATA_MONGODB_DATABASE: pasionaria
-      SPRING_DATA_MONGODB_PORT: 27017
-      SPRING_DATA_MONGODB_URI: mongodb://buscador-mongo/docker-db
     networks:
       pasionaria_network:
         aliases:
           - buscador-api
     depends_on:
-      - buscador-mongo
       - buscador-db
     deploy:
       resources:
