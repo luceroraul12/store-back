@@ -25,20 +25,18 @@ public class DonGasparWebScrappingServicio
 	protected ExternalProduct obtenerProductosAPartirDeElements(
 			Element elementProducto) {
 		new ArrayList<>();
-		String id = elementProducto.attr("id").toString();
-		double precio;
+		String code = elementProducto.attr("id").toString();
+		double price;
 		try {
-			precio = Double.parseDouble(elementProducto.select(".precio-box")
+			price = Double.parseDouble(elementProducto.select(".precio-box")
 					.text().replace("$", ""));
 		} catch (Exception e) {
-			precio = 0;
+			price = 0;
 		}
-		String descripcion = elementProducto.select(".dfloat-left").text();
+		String description = elementProducto.select(".dfloat-left").text();
 
-		// return DonGasparEntidad.builder().id(id)
-		// .distribuidoraCodigo(getDistribuidoraCodigo())
-		// .nombreProducto(descripcion).precio(precio).build();
-		return null;
+		return new ExternalProduct(null, description, price, null,
+				getTipoDistribuidora(), code);
 	}
 
 	@Override
