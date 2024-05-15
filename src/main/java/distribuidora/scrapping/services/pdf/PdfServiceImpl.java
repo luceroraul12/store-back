@@ -53,7 +53,8 @@ public class PdfServiceImpl implements PdfService {
 	@Autowired
 	private ClientDataService clientDataService;
 
-	private void generatePdf(HttpServletResponse response, Integer clientId) throws DocumentException, IOException {
+	private void generatePdf(HttpServletResponse response, Integer clientId)
+			throws DocumentException, IOException {
 		// generacion del pdf
 		Document document = new Document();
 		PdfWriter writer = PdfWriter.getInstance(document,

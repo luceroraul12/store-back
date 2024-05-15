@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.DatosDistribuidoraDto;
 import distribuidora.scrapping.entities.UpdateRequest;
-import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.services.excel.IndiasExcelService;
 import distribuidora.scrapping.services.excel.VillaresExcelService;
 import distribuidora.scrapping.services.webscrapping.DonGasparWebScrappingServicio;
@@ -17,9 +16,9 @@ import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroWebScrappi
 import distribuidora.scrapping.util.converters.DatosDistribuidoraConverter;
 
 @Service
-public class UpdaterServiceImpl implements UpdaterService {	
+public class UpdaterServiceImpl implements UpdaterService {
 	@Autowired
-	DatosDistribuidoraRepository datosDistribuidoraRepository;
+	DatoDistribuidoraServicio datoDistribuidoraServicio;
 
 	// Listado de servicios de implementaciones
 	// EXCEL
@@ -62,7 +61,7 @@ public class UpdaterServiceImpl implements UpdaterService {
 		service.update(request);
 
 		// TODO sacar el repository de aca
-		return datosDistribuidoraConverter.toDto(datosDistribuidoraRepository
+		return datosDistribuidoraConverter.toDto(datoDistribuidoraServicio
 				.findByDistribuidoraCodigo(request.getCode()));
 	}
 

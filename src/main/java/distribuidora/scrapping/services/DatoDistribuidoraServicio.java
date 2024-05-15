@@ -36,4 +36,8 @@ public class DatoDistribuidoraServicio {
 	public void save(DatosDistribuidora data) {
 		repository.save(data);
 	}
+
+	public DatosDistribuidora findByDistribuidoraCodigo(String code) {
+		return repository.findByDistribuidoraCodigo(code);
+	}
 }
