@@ -10,13 +10,15 @@ import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.ExternalProduct;
-import distribuidora.scrapping.entities.productos.especificos.LaGranjaDelCentroEntidad;
-import distribuidora.scrapping.services.webscrappingconcurrent.WebScrappingConcurrent;
 
 @Service
-public class LaGranjaDelCentroWebScrappingServicio
-		extends
-			WebScrappingConcurrent<LaGranjaDelCentroEntidad> {
+public class LaGranjaDelCentroWebScrappingService extends ProductSearcherWeb {
+
+	@Override
+	public void setCodes() {
+		setDistribuidoraCodigo(
+				Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
+	}
 
 	/**
 	 * Para este caso, contienen un apartado de paginador. En el template
@@ -66,11 +68,5 @@ public class LaGranjaDelCentroWebScrappingServicio
 		Elements element = document.select(".paginador > .p");
 		String url = element.get(1).attr("href");
 		return Integer.parseInt(url.split("=")[1]);
-	}
-
-	@Override
-	public void setCodes() {
-		setDistribuidoraCodigo(
-				Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
 	}
 }

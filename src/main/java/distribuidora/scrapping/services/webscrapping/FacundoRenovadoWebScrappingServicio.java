@@ -1,5 +1,6 @@
 package distribuidora.scrapping.services.webscrapping;
 
+import java.io.IOException;
 import java.util.Date;
 
 import org.jsoup.nodes.Document;
@@ -9,12 +10,9 @@ import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.ExternalProduct;
-import distribuidora.scrapping.entities.productos.especificos.FacundoEntidad;
 
 @Service
-public class FacundoRenovadoWebScrappingServicio
-		extends
-			ProductSearcherWeb<FacundoEntidad> {
+public class FacundoRenovadoWebScrappingServicio extends ProductSearcherWeb {
 	@Override
 	protected boolean esDocumentValido(Document document) {
 		return false;
@@ -60,5 +58,11 @@ public class FacundoRenovadoWebScrappingServicio
 	@Override
 	public void setCodes() {
 		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_FACUNDO);
+	}
+
+	@Override
+	protected int generarUltimoIndicePaginador() throws IOException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

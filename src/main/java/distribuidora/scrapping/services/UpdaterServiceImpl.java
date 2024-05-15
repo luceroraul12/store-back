@@ -12,7 +12,7 @@ import distribuidora.scrapping.services.excel.IndiasExcelService;
 import distribuidora.scrapping.services.excel.VillaresExcelService;
 import distribuidora.scrapping.services.webscrapping.DonGasparWebScrappingServicio;
 import distribuidora.scrapping.services.webscrapping.FacundoRenovadoWebScrappingServicio;
-import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroWebScrappingServicio;
+import distribuidora.scrapping.services.webscrapping.LaGranjaDelCentroWebScrappingService;
 import distribuidora.scrapping.util.converters.DatosDistribuidoraConverter;
 
 @Service
@@ -30,7 +30,7 @@ public class UpdaterServiceImpl implements UpdaterService {
 
 	// WEB
 	@Autowired
-	private LaGranjaDelCentroWebScrappingServicio laGranjaDelCentroService;
+	private LaGranjaDelCentroWebScrappingService laGranjaDelCentroService;
 
 	@Autowired
 	private FacundoRenovadoWebScrappingServicio facundoService;

@@ -14,7 +14,14 @@ VALUES
     (true, 2, '2024-05-13 08:55:57.125', 0, false, true, '', false),
     (true, 6, NULL, 0, false, true, '', false);
 
--- Elimino las vinculaciones existentes
+
+-- Le asigno todos los productos actuales a Pasionaria
+update productos_internos 
+	set client_id = 1
+
+
+
+-- Elimino las vinculaciones existentes VERRRRRRs
 update productos_internos p
 set external_product_id = null
 

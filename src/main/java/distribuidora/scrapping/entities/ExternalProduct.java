@@ -31,7 +31,7 @@ public class ExternalProduct {
     private String title;
     @Column
     private Double price;
-    @Column
+    @Column(columnDefinition = "DATE")
     private Date date;
     @ManyToOne
 	@JoinColumn(name = "lv_distribuidora_id")

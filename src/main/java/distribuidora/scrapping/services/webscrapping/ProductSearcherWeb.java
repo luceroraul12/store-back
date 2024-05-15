@@ -21,10 +21,9 @@ import lombok.Data;
 /**
  * Clase base para los servicios basados en Web Scrapping.
  * 
- * @param <Entidad>
  */
 @Data
-public abstract class ProductSearcherWeb<Entidad extends ProductoEspecifico>
+public abstract class ProductSearcherWeb
 		extends
 			ProductSearcher {
 
@@ -151,5 +150,12 @@ public abstract class ProductSearcherWeb<Entidad extends ProductoEspecifico>
 	 * @return elementos filtrados
 	 */
 	protected abstract Elements filtrarElementos(Document documento);
+	
+	/**
+     * Meotodo que obtiene el indice maximo del paginador.
+     * @return indice maximo de paginador.
+     * @throws IOException
+     */
+    protected abstract int generarUltimoIndicePaginador() throws IOException;
 
 }

@@ -12,3 +12,8 @@ create table datos_distribuidora (
 	has_paginator bool,
 	constraint datos_distribuidora_distribuidora_fk foreign key(lv_distribuidora_id) references lookup_valor(id)
 );
+
+-- Agrego la columna para saber a quien pertenece el producto
+alter table productos_internos 
+	add client_id int not null default 1
+	constraint productos_internos_client references client(id);

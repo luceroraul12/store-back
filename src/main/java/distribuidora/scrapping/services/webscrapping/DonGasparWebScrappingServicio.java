@@ -1,5 +1,6 @@
 package distribuidora.scrapping.services.webscrapping;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.jsoup.nodes.Document;
@@ -14,7 +15,7 @@ import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
 @Service
 public class DonGasparWebScrappingServicio
 		extends
-			ProductSearcherWeb<DonGasparEntidad> {
+			ProductSearcherWeb {
 
 	@Override
 	protected boolean esDocumentValido(Document document) {
@@ -47,5 +48,11 @@ public class DonGasparWebScrappingServicio
 	@Override
 	public void setCodes() {
 		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_DON_GASPAR);
+	}
+
+	@Override
+	protected int generarUltimoIndicePaginador() throws IOException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
