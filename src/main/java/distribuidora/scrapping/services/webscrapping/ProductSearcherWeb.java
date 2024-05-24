@@ -13,7 +13,6 @@ import org.jsoup.select.Elements;
 
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ExternalProduct;
-import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.UpdateRequest;
 import distribuidora.scrapping.services.ProductSearcher;
 import lombok.Data;
@@ -23,9 +22,7 @@ import lombok.Data;
  * 
  */
 @Data
-public abstract class ProductSearcherWeb
-		extends
-			ProductSearcher {
+public abstract class ProductSearcherWeb extends ProductSearcher {
 
 	/**
 	 * Obligatorio para poder comenzar a utilizar el servicio
@@ -126,10 +123,11 @@ public abstract class ProductSearcherWeb
 	 *            uno de los tanttos document que puede traer una pagina Web.
 	 * @return listado de productos especificos.
 	 */
-	protected List<ExternalProduct> obtenerProductosPorDocument(Document documento) {
+	protected List<ExternalProduct> obtenerProductosPorDocument(
+			Document documento) {
 		return filtrarElementos(documento).stream()
 				.map(this::obtenerProductosAPartirDeElements)
-				.collect(Collectors.toList());
+				.filter(ep -> ep != null).collect(Collectors.toList());
 	}
 
 	/**
@@ -150,12 +148,13 @@ public abstract class ProductSearcherWeb
 	 * @return elementos filtrados
 	 */
 	protected abstract Elements filtrarElementos(Document documento);
-	
+
 	/**
-     * Meotodo que obtiene el indice maximo del paginador.
-     * @return indice maximo de paginador.
-     * @throws IOException
-     */
-    protected abstract int generarUltimoIndicePaginador() throws IOException;
+	 * Meotodo que obtiene el indice maximo del paginador.
+	 * 
+	 * @return indice maximo de paginador.
+	 * @throws IOException
+	 */
+	protected abstract int generarUltimoIndicePaginador() throws IOException;
 
 }

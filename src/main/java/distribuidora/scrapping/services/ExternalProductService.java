@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,15 +43,25 @@ public class ExternalProductService {
 	 *            distribuidora con la que se quiere trabajar.
 	 */
 	public void actualizarProductosPorDistribuidora(
-			List<ExternalProduct> productos, DatosDistribuidora data) {
+			List<ExternalProduct> baseProducts, DatosDistribuidora data) {
 		Date date = new Date();
-		productos.forEach(p -> p.setDate(date));
+		baseProducts.forEach(p -> p.setDate(date));
+		// Me tengo que asegurar de que solo exista un producto por codigo de identificacion siempre
+		Map<String, List<ExternalProduct>> mapProducts = baseProducts.stream()
+				.collect(Collectors.groupingBy(p -> p.getCode()));
+		
+		List<ExternalProduct> filteredProducts = new ArrayList<>();
+		mapProducts.forEach((k,v) -> {
+			// Solo me voy a quedar con el primero de cada tipo asi no exite casos donde se repitan en base de datos
+			filteredProducts.add(v.get(0));
+		});
+		
 		// Hago la validacion de productos existentes
 		List<ExternalProduct> productExisted = getByDistribuidoraCodeAndProductCode(
 				data.getDistribuidora().getCodigo(), null);
 		List<ExternalProduct> productToUpdate = new ArrayList();
 		List<ExternalProduct> productToNew = new ArrayList<>();
-		for (ExternalProduct p : productos) {
+		for (ExternalProduct p : filteredProducts) {
 			// Actualizo el lookup a cada producto
 			p.setDistribuidora(data.getDistribuidora());
 			boolean isRepeated = false;
@@ -62,6 +74,8 @@ public class ExternalProductService {
 					pE.setDate(date);
 					pE.setPrice(p.getPrecioPorCantidadEspecifica());
 					pE.setTitle(p.getTitle());
+					if(p.getCode() != null)
+						pE.setCode(p.getCode());
 					// Agrego al listado
 					productToUpdate.add(pE);
 					isRepeated = true;

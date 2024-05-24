@@ -2,7 +2,10 @@ package distribuidora.scrapping.services.webscrapping;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -26,7 +29,6 @@ public class DonGasparWebScrappingServicio
 	protected ExternalProduct obtenerProductosAPartirDeElements(
 			Element elementProducto) {
 		new ArrayList<>();
-		String code = elementProducto.attr("id").toString();
 		double price;
 		try {
 			price = Double.parseDouble(elementProducto.select(".precio-box")
@@ -35,9 +37,22 @@ public class DonGasparWebScrappingServicio
 			price = 0;
 		}
 		String description = elementProducto.select(".dfloat-left").text();
-
-		return new ExternalProduct(null, description, price, null,
-				getTipoDistribuidora(), code);
+		String code = null;
+		Pattern MY_PATTERN = Pattern.compile("\\(([0-9]*)\\)");
+		Matcher m = MY_PATTERN.matcher(description);
+		while (m.find()) {
+		    code = m.group(1);
+		}
+		if(code == null)
+			return null;
+		
+		ExternalProduct product = null;
+		// Si el nombre contiene la palabra oferta, no lo guardo ya que estara repetido
+		if(!description.contains("(OFERTA)"))
+			product = new ExternalProduct(null, description, price, null,
+					getTipoDistribuidora(), code);
+		
+		return product;
 	}
 
 	@Override
