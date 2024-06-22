@@ -11,14 +11,6 @@ services:
           - buscador-ui
     depends_on:
       - buscador-api
-    deploy:
-      resources:
-        limits:
-          cpus: 1
-          memory: 50M
-        reservations:
-          cpus: 0.25
-          memory: 50M
   # es una imagen de postgresql para almacenar toda la data referida al proyecto y que sigue una estructura en concreto
   buscador-db:
     image: postgres:alpine3.17
@@ -30,19 +22,11 @@ services:
       pasionaria_network:
         aliases:
           - buscador-db
-    deploy:
-      resources:
-        limits:
-          cpus: 1
-          memory: 50M
-        reservations:
-          cpus: 0.25
-          memory: 50M
     volumes:
       - backup_db:/backup
 #  buscador-api: es el proyecto Java Spring Boot
   buscador-api:
-    image: back-parcial:1.34
+    image: back-parcial:1.34f1
     ports:
       - 8080:8080
     volumes:
@@ -58,14 +42,6 @@ services:
           - buscador-api
     depends_on:
       - buscador-db
-    deploy:
-      resources:
-        limits:
-          cpus: 1
-          memory: 250M
-        reservations:
-          cpus: 0.25
-          memory: 80M
 networks:
   pasionaria_network:
     name: pasionaria_net
