@@ -32,11 +32,14 @@ public class FacundoRenovadoWebScrappingServicio extends ProductSearcherWeb {
 
 		String category = elementProducto.parent().parent().parent().parent()
 				.getElementsByTag("h2").text();
-
-		Double price = Double.valueOf(elementProducto.getElementsByTag("strong")
-				.text().replaceAll(" ", "").subSequence(1, elementProducto
+		String innerPrice = elementProducto.getElementsByTag("strong")
+				.text()
+				.replaceAll(" ", "")
+				.subSequence(1, elementProducto
 						.getElementsByTag("strong").text().length() - 1)
-				.toString());
+				.toString();
+		innerPrice = innerPrice.replace(",", "");
+		Double price = Double.valueOf(innerPrice);
 
 		// Genero el externalProduct
 		String observation = String.format("%s - %s", category, name);
