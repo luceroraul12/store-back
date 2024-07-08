@@ -71,9 +71,17 @@ public class InventorySystemImpl implements InventorySystem {
 		DecimalFormat df = new DecimalFormat("#.00");
 		for (ProductoInterno p : productoInternos) {
 			Double externalPrice = p.getExternalProduct().getPrice();
+			Double originalPrice = Double.valueOf(df.format(p.getPrecio()));
 			if (externalPrice != null && externalPrice > 0.0) {
-				p.setPrecio(Double.valueOf(df.format(externalPrice)));
-				p.setFechaActualizacion(new Date());
+				Double externalPriceFormated = Double
+						.valueOf(df.format(externalPrice));
+				// Solo voy a actualizar los precios de los productos cuando el
+				// precio de la vinculacion sea diferente ya que significaria
+				// que actualizo el excel o la pagina
+				if (!originalPrice.equals(externalPriceFormated)) {
+					p.setPrecio(Double.valueOf(df.format(externalPrice)));
+					p.setFechaActualizacion(new Date());
+				}
 			}
 		}
 
