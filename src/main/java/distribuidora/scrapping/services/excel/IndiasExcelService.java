@@ -53,6 +53,8 @@ public class IndiasExcelService extends ProductSearcherExcel {
 			codigo = String.valueOf(cell.getNumericCellValue());
 		} catch (Exception e) {
 		}
+		// Me fijo que el codigo al final no tenga .0
+		codigo = codigo.replace(".0", "");
 		return codigo;
 	}
 
