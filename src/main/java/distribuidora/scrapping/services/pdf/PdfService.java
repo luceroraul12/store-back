@@ -25,12 +25,26 @@ public interface PdfService {
 
 	void addTitlePage(Document document) throws DocumentException, IOException;
 
-	void addContent(Document document, PdfWriter writer, String dateConverted, Integer clientId)
-			throws DocumentException;
+	void addContent(Document document, PdfWriter writer, String dateConverted,
+			Integer clientId) throws DocumentException;
 
 	Integer generateBasePrice(ProductoInterno p);
 
-	int round(int result, int multiple);
+	/**
+	 * Forma de redondear numeros <br>
+	 * <strong>Ejemplos</strong>
+	 * <ul>
+	 * <li>510...520 es <strong>500</strong></li>
+	 * <li>530...570 es <strong>550</strong></li>
+	 * <li>580...590 es <strong>600</strong></li>
+	 * </ul>
+	 * 
+	 * 
+	 * 
+	 * @param result
+	 * @return
+	 */
+	int round(int result);
 
 	void getPdfByClientId(HttpServletResponse response, Integer clientId)
 			throws IOException, DocumentException;

@@ -2,7 +2,6 @@ package distribuidora.scrapping.services.pdf;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
@@ -15,6 +14,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -305,16 +305,32 @@ public class PdfServiceImpl implements PdfService {
 	}
 
 	@Override
-	public int round(int result, int multiple) {
+	public int round(int value) {
+		int multiple = 50;
 		// Recupero la cantidad multiplo
-		int eachMultiple = Math.floorDiv(result, multiple);
-		// Recupero el resto
-		int mod = Math.floorMod(result, multiple);
-		if (mod != 0) {
-			return (eachMultiple + 1) * multiple;
-		} else {
+		int eachMultiple = Math.floorDiv(value, multiple);
+
+		int resultBase = eachMultiple * multiple;
+		int resultBaseNext = (eachMultiple + 1) * multiple;
+		// Rangos
+		Range<Integer> rangeOne = Range.between(resultBase, resultBase + 30);
+		Range<Integer> rangeTwo = Range.between(resultBase + 31,
+				resultBase + 70);
+		Range<Integer> rangeThree = Range.between(resultBase + 71,
+				resultBase + 99);
+		// Si el valor es menor de 50, retorno 50
+		int result = 50;
+		if (value < result)
 			return result;
+
+		// Devuelve base
+		if (rangeOne.contains(value) || rangeThree.contains(value)) {
+			result = resultBase;
+			// Devuelve el base intermedio
+		} else if (rangeTwo.contains(value)) {
+			result = resultBaseNext;
 		}
+		return result;
 	}
 	/**
 	 * Toma el resultado de {@link #generateBasePrice(ProductoInterno)} y le
@@ -329,7 +345,6 @@ public class PdfServiceImpl implements PdfService {
 	 */
 	private String generatePriceWithUnitLogic(
 			ProductoInternoStatus productoInternoStatus, LookupValor lvUnit) {
-		DecimalFormat df = new DecimalFormat("#.00");
 		double basePrice = generateBasePrice(
 				productoInternoStatus.getProductoInterno());
 		double result;
@@ -354,7 +369,7 @@ public class PdfServiceImpl implements PdfService {
 			result = basePrice * Double.parseDouble(lvUnit.getValor());
 		}
 
-		return String.valueOf(round((int) result, 5));
+		return String.valueOf(round((int) result));
 	}
 
 	private static void addEmptyLine(Paragraph paragraph, int number) {
