@@ -28,6 +28,7 @@ public class ProductCustomerDtoConverter extends Converter<ProductoInternoStatus
 		dto.setOnlyUnit(entidad.getIsUnit());
 		dto.setPrice(calculatorUtil.calculateCustomerPrice(p));
 		dto.setCategory(lookupValueDtoConverter.toDto(p.getLvCategoria()));
+		dto.setLastUpdate(entidad.getProductoInterno().getFechaActualizacion());
 		return dto;
 	}
 

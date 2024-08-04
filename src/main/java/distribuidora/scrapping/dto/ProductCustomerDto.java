@@ -1,5 +1,7 @@
 package distribuidora.scrapping.dto;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
@@ -12,4 +14,5 @@ public class ProductCustomerDto {
 	private Integer price;
 	private LookupValueDto category;
 	private LookupValueDto unitType;
+	private Date lastUpdate;
 }
