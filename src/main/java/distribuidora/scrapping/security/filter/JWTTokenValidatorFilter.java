@@ -1,6 +1,7 @@
 package distribuidora.scrapping.security.filter;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,50 +16,71 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import distribuidora.scrapping.security.handler.ErrorResponse;
 import distribuidora.scrapping.security.service.JwtUtilService;
 import distribuidora.scrapping.security.service.ScrappingUserDetails;
+import io.jsonwebtoken.JwtException;
 
 @Component
 public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private ScrappingUserDetails userDetailsService;
+	@Autowired
+	private ScrappingUserDetails userDetailsService;
 
-    @Autowired
-    private JwtUtilService jwtUtilService;
+	@Autowired
+	private JwtUtilService jwtUtilService;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException {
+	@Override
+	protected void doFilterInternal(HttpServletRequest request,
+			HttpServletResponse response, FilterChain chain)
+			throws ServletException, IOException {
 
-        final String authorizationHeader = request.getHeader("Authorization");
+		try {
+			final String authorizationHeader = request
+					.getHeader("Authorization");
 
-        String username = null;
-        String jwt = null;
+			String username = null;
+			String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            username = jwtUtilService.extractUsername(jwt);
-        }
+			if (authorizationHeader != null
+					&& authorizationHeader.startsWith("Bearer ")) {
+				jwt = authorizationHeader.substring(7);
+				username = jwtUtilService.extractUsername(jwt);
+			}
 
+			if (username != null && SecurityContextHolder.getContext()
+					.getAuthentication() == null) {
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+				UserDetails userDetails = this.userDetailsService
+						.loadUserByUsername(username);
 
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+				if (jwtUtilService.validateToken(jwt, userDetails)) {
 
-            if (jwtUtilService.validateToken(jwt, userDetails)) {
+					UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+							userDetails, null, userDetails.getAuthorities());
+					authenticationToken
+							.setDetails(new WebAuthenticationDetailsSource()
+									.buildDetails(request));
+					SecurityContextHolder.getContext()
+							.setAuthentication(authenticationToken);
+				}
+			}
 
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-        }
-        chain.doFilter(request, response);
-    }
+		} catch (JwtException ex) {
+			ex.printStackTrace();
+		    // Maneja la excepción JwtException
+		    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		    ErrorResponse error = new ErrorResponse(ex.getMessage().toString());
+		    response.getWriter().write(error.toString());
+		    return; // Detiene la ejecución del filtro
+		}
+		chain.doFilter(request, response);
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getRequestURI().equals("/login");
-    }
+	}
+
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request)
+			throws ServletException {
+		return request.getRequestURI().equals("/login");
+	}
 }
