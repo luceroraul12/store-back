@@ -2,6 +2,7 @@ package distribuidora.scrapping.security.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -11,9 +12,9 @@ public class CustomException extends Throwable {
 
 	private static final long serialVersionUID = 1L;
 
-	@ExceptionHandler(UsernameNotFoundException.class) // Manejador específico												// primero
+	@ExceptionHandler(AuthenticationException.class) // Manejador específico												// primero
 	public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(
-			UsernameNotFoundException ex) {
+			AuthenticationException ex) {
 		ex.printStackTrace();
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
