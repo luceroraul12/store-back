@@ -9,26 +9,39 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
 import lombok.Data;
 
 @Entity
 @Table
 @Data
-public class OrderHasProduct {
+public class CartProduct {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
 	private Integer id;
-	private String unitName;
-	private Double unitValue;
-	private Integer unitPrice;
-	private Double amount;
 	@ManyToOne
-    @JoinColumn(name = "order_id")
-	private Order order;
+	@JoinColumn(name = "lv_unit_id")
+	private LookupValor lvUnit;
+	@ManyToOne
+    @JoinColumn(name = "cart_id")
+	private Cart cart;
 	@ManyToOne
     @JoinColumn(name = "product_id")
 	private ProductoInterno product;
-	private Integer percentDiscount;
+	private Integer price;
+	private Double quantity;
+	
+	public CartProduct(LookupValor lvUnit, Cart cart,
+			ProductoInterno product, Integer price, Double quantity) {
+		super();
+		this.lvUnit = lvUnit;
+		this.cart = cart;
+		this.product = product;
+		this.price = price;
+		this.quantity = quantity;
+	}
+	
+	
 }

@@ -13,22 +13,28 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import distribuidora.scrapping.entities.Client;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Entity
-@Table(name = "order_customer")
+@Table
 @Data
-public class Order {
+public class Cart {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
 	private Integer id;
 	@ManyToOne
-    @JoinColumn(name = "customer_id")
-	private Customer customer;
-	@ManyToOne
     @JoinColumn(name = "client_id")
 	private Client client;
-	private Date date;
+	private Date dateCreated;
 	private String status;
+	
+	public Cart(Client client, Date dateCreated, String status) {
+		super();
+		this.client = client;
+		this.dateCreated = dateCreated;
+		this.status = status;
+	}
+	
 }
