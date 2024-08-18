@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.dto.ProductoInternoStatusDto;
+import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
+import distribuidora.scrapping.security.entity.UsuarioEntity;
 import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.util.converters.LookupValueDtoConverter;
 import distribuidora.scrapping.util.converters.ProductCustomerDtoConverter;
@@ -63,7 +65,8 @@ public class ProductoInternoStatusServiceImp
 
 	@Override
 	public List<ProductCustomerDto> getProductsForCustomer() {
-		List<ProductoInternoStatus> entities = repository.findAll();
+		Client client = userService.getCurrentClient();
+		List<ProductoInternoStatus> entities = repository.findByClientId(client.getId());
 		List<ProductCustomerDto> dtos = productCustomerDtoConverter
 				.toDtoList(entities);
 		// Busco las relaciones de las categorias con las unidades
