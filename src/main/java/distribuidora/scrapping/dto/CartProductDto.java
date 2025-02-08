@@ -8,5 +8,5 @@ public class CartProductDto {
 	private Integer backendCartProductId;
 	private Integer productId;
 	private Double quantity;
-	private Integer price;
+	private Double price;
 }

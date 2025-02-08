@@ -12,10 +12,12 @@ import javax.persistence.Table;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table
 @Data
+@NoArgsConstructor
 public class CartProduct {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +32,11 @@ public class CartProduct {
 	@ManyToOne
     @JoinColumn(name = "product_id")
 	private ProductoInterno product;
-	private Integer price;
+	private Double price;
 	private Double quantity;
 	
 	public CartProduct(LookupValor lvUnit, Cart cart,
-			ProductoInterno product, Integer price, Double quantity) {
+			ProductoInterno product, Double price, Double quantity) {
 		super();
 		this.lvUnit = lvUnit;
 		this.cart = cart;

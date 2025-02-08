@@ -12,4 +12,5 @@ public class CartDto {
 	private List<CartProductDto> products;
 	private Date dateCreated;
 	private String status;
+	private Double totalPrice;
 }

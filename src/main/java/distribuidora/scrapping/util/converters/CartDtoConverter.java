@@ -1,8 +1,11 @@
 package distribuidora.scrapping.util.converters;
 
+import org.springframework.stereotype.Component;
+
 import distribuidora.scrapping.dto.CartDto;
 import distribuidora.scrapping.entities.customer.Cart;
 
+@Component
 public class CartDtoConverter extends Converter<Cart, CartDto> {
 
 	@Override
@@ -12,6 +15,7 @@ public class CartDtoConverter extends Converter<Cart, CartDto> {
 		dto.setBackendCartId(entidad.getId());
 		dto.setDateCreated(entidad.getDateCreated());
 		dto.setStatus(entidad.getStatus());
+		dto.setTotalPrice(entidad.getTotalPrice());
 		return dto;
 	}
 

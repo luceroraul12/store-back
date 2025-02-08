@@ -15,10 +15,12 @@ import javax.persistence.Table;
 import distribuidora.scrapping.entities.Client;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table
 @Data
+@NoArgsConstructor
 public class Cart {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,12 +31,14 @@ public class Cart {
 	private Client client;
 	private Date dateCreated;
 	private String status;
+	private Double totalPrice;
 	
-	public Cart(Client client, Date dateCreated, String status) {
+	public Cart(Client client, Date dateCreated, String status, Double totalPrice) {
 		super();
 		this.client = client;
 		this.dateCreated = dateCreated;
 		this.status = status;
+		this.totalPrice = totalPrice;
 	}
 	
 }

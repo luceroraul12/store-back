@@ -45,10 +45,10 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	OrderRepository orderRepository;
-	
+
 	@Autowired
 	CartDtoConverter cartDtoConverter;
-	
+
 	@Autowired
 	CartProductDtoConverter cartProductDtoConverter;
 
@@ -68,7 +68,7 @@ public class CartServiceImpl implements CartService {
 		// Creo las ordenes
 		for (CartDto cartDto : data) {
 			Cart cart = new Cart(client, cartDto.getDateCreated(),
-					"SYNCHRONIZED");
+					"SYNCHRONIZED", cartDto.getTotalPrice());
 			cart = orderRepository.save(cart);
 			// Seteo id de cart
 			cartDto.setBackendCartId(cart.getId());

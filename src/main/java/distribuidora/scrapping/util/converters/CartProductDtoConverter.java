@@ -1,8 +1,11 @@
 package distribuidora.scrapping.util.converters;
 
+import org.springframework.stereotype.Component;
+
 import distribuidora.scrapping.dto.CartProductDto;
 import distribuidora.scrapping.entities.customer.CartProduct;
 
+@Component
 public class CartProductDtoConverter extends Converter<CartProduct, CartProductDto> {
 
 	@Override
