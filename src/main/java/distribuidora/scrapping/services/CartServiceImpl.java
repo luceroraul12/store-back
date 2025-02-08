@@ -2,7 +2,10 @@ package distribuidora.scrapping.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +16,14 @@ import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.entities.customer.Cart;
 import distribuidora.scrapping.entities.customer.CartProduct;
-import distribuidora.scrapping.repositories.ClientHasUsersRepository;
 import distribuidora.scrapping.repositories.CartProductRepository;
+import distribuidora.scrapping.repositories.ClientHasUsersRepository;
 import distribuidora.scrapping.repositories.OrderRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.security.entity.UsuarioEntity;
 import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
+import distribuidora.scrapping.util.converters.CartDtoConverter;
+import distribuidora.scrapping.util.converters.CartProductDtoConverter;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -37,9 +42,15 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	CategoryHasUnitRepository categoryHasUnitRepository;
-	
+
 	@Autowired
 	OrderRepository orderRepository;
+	
+	@Autowired
+	CartDtoConverter cartDtoConverter;
+	
+	@Autowired
+	CartProductDtoConverter cartProductDtoConverter;
 
 	@Override
 	public List<CartDto> createFinalizedCart(List<CartDto> data)
@@ -53,7 +64,7 @@ public class CartServiceImpl implements CartService {
 				.toList();
 		List<ProductoInternoStatus> products = productoInternoStatusService
 				.getAllByProductIds(productIds);
-		
+
 		// Creo las ordenes
 		for (CartDto cartDto : data) {
 			Cart cart = new Cart(client, cartDto.getDateCreated(),
@@ -83,7 +94,7 @@ public class CartServiceImpl implements CartService {
 				cp.setBackendCartProductId(cartProduct.getId());
 			}
 		}
-		
+
 		return data;
 	}
 
@@ -97,6 +108,29 @@ public class CartServiceImpl implements CartService {
 		if (client == null)
 			throw new Exception("No existe la tienda solicitada");
 		return client;
+	}
+
+	@Override
+	public List<CartDto> getCarts() {
+		UsuarioEntity user = userService.getCurrentUser();
+		Client client = clientHasUsersRepository.findByClientId(user.getId())
+				.getClient();
+
+		List<CartProduct> data = orderHasProductRepository
+				.findByClientId(client.getId());
+		List<CartDto> result = new ArrayList<>();
+		if (CollectionUtils.isNotEmpty(data)) {
+			// Agrupo por cart
+			Map<Cart, List<CartProduct>> mapDataByCart = data.stream()
+					.collect(Collectors.groupingBy(d -> d.getCart()));
+			// Itero cara key
+			mapDataByCart.forEach((cart, products) -> {
+				CartDto dto = cartDtoConverter.toDto(cart);
+				dto.setProducts(cartProductDtoConverter.toDtoList(products));
+				result.add(dto);
+			});
+		}
+		return result;
 	}
 
 }

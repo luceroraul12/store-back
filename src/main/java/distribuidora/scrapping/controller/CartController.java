@@ -3,6 +3,7 @@ package distribuidora.scrapping.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +19,13 @@ public class CartController {
 	@Autowired
 	CartService cartService;
 	
-	@PostMapping("")
+	@PostMapping()
 	List<CartDto> createFinalizedCarts(@RequestBody List<CartDto> data) throws Exception{
 		return cartService.createFinalizedCart(data);
+	}
+	
+	@GetMapping()
+	List<CartDto> getCarts() throws Exception{
+		return cartService.getCarts();
 	}
 }
