@@ -3,6 +3,7 @@ package distribuidora.scrapping.services;
 import java.util.List;
 
 import distribuidora.scrapping.dto.PersonDto;
+import distribuidora.scrapping.entities.Person;
 
 public interface PersonService {
 
@@ -11,5 +12,7 @@ public interface PersonService {
 	List<PersonDto>  getPersons();
 
 	Integer deletePerson(Integer id);
+
+	Person getById(Integer id);
 
 }

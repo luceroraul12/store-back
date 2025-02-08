@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,9 +38,12 @@ public class PersonServiceImpl implements PersonService{
 		personRepository.deleteById(id);
 		return id;
 	}
-	
-	
-	
+
+	@Override
+	public Person getById(Integer id) {
+		Optional<Person> result = personRepository.findById(id);
+		return result.isEmpty() ? null : result.get();
+	}
 	
 
 }

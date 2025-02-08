@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import distribuidora.scrapping.entities.Client;
+import distribuidora.scrapping.entities.Person;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,13 +30,17 @@ public class Cart {
 	@ManyToOne
     @JoinColumn(name = "client_id")
 	private Client client;
+	@ManyToOne
+    @JoinColumn(name = "customer_id")
+	private Person customer;
 	private Date dateCreated;
 	private String status;
 	private Double totalPrice;
 	
-	public Cart(Client client, Date dateCreated, String status, Double totalPrice) {
+	public Cart(Client client, Person customer, Date dateCreated, String status, Double totalPrice) {
 		super();
 		this.client = client;
+		this.customer = customer;
 		this.dateCreated = dateCreated;
 		this.status = status;
 		this.totalPrice = totalPrice;

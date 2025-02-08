@@ -13,6 +13,7 @@ import distribuidora.scrapping.dto.CartDto;
 import distribuidora.scrapping.dto.CartProductDto;
 import distribuidora.scrapping.entities.CategoryHasUnit;
 import distribuidora.scrapping.entities.Client;
+import distribuidora.scrapping.entities.Person;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.entities.customer.Cart;
 import distribuidora.scrapping.entities.customer.CartProduct;
@@ -51,6 +52,9 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	CartProductDtoConverter cartProductDtoConverter;
+	
+	@Autowired
+	PersonService personService;
 
 	@Override
 	public List<CartDto> createFinalizedCart(List<CartDto> data)
@@ -67,7 +71,8 @@ public class CartServiceImpl implements CartService {
 
 		// Creo las ordenes
 		for (CartDto cartDto : data) {
-			Cart cart = new Cart(client, cartDto.getDateCreated(),
+			Person person = personService.getById(cartDto.getCustomer().getId());
+			Cart cart = new Cart(client, person, cartDto.getDateCreated(),
 					"SYNCHRONIZED", cartDto.getTotalPrice());
 			cart = orderRepository.save(cart);
 			// Seteo id de cart
