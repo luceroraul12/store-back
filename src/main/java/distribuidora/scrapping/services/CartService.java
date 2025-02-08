@@ -9,4 +9,6 @@ public interface CartService {
 	List<CartDto> createFinalizedCart(List<CartDto> data) throws Exception;
 
 	List<CartDto> getCarts();
+
+	void deleteById(Integer id);
 }

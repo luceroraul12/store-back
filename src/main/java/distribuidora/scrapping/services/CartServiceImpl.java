@@ -138,4 +138,12 @@ public class CartServiceImpl implements CartService {
 		return result;
 	}
 
+	@Override
+	public void deleteById(Integer cartId) {
+		// Elimino productos
+		List<CartProduct> products = orderHasProductRepository.findByCartId(cartId);
+		orderHasProductRepository.deleteAll(products);
+		// Elimino pedido
+		orderRepository.deleteById(cartId);
+	}
 }

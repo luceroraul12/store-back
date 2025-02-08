@@ -19,4 +19,11 @@ public interface CartProductRepository
 			""")
 	List<CartProduct> findByClientId(Integer clientId);
 
+	@Query("""
+			SELECT cp
+			FROM CartProduct cp
+			WHERE cp.cart.id = :cartId
+			""")
+	List<CartProduct> findByCartId(Integer cartId);
+
 }
