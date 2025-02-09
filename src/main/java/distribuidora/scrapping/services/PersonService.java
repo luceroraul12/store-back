@@ -11,7 +11,7 @@ public interface PersonService {
 
 	List<PersonDto>  getPersons();
 
-	Integer deletePerson(Integer id);
+	Integer deletePerson(Integer id) throws Exception;
 
 	Person getById(Integer id);
 

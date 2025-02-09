@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.PersonDto;
 import distribuidora.scrapping.entities.Person;
 import distribuidora.scrapping.repositories.postgres.PersonRepository;
+import distribuidora.scrapping.security.handler.CustomException;
 import distribuidora.scrapping.util.converters.PersonDtoConverter;
 
 @Service
@@ -19,6 +20,9 @@ public class PersonServiceImpl implements PersonService{
 	
 	@Autowired
 	PersonRepository personRepository;
+	
+	@Autowired
+	CartService cartService;
 
 	@Override
 	public Integer createUpdatePerson(PersonDto dto) {
@@ -34,7 +38,11 @@ public class PersonServiceImpl implements PersonService{
 	}
 
 	@Override
-	public Integer deletePerson(Integer id) {
+	public Integer deletePerson(Integer id) throws Exception {
+		// Si la persona tiene pedidos no puedo eliminarlo
+		if(cartService.hasCartByCustomerId(id)) {
+			throw new Exception("La persona cuenta con pedidos asociados.");
+		}
 		personRepository.deleteById(id);
 		return id;
 	}

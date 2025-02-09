@@ -11,4 +11,6 @@ public interface CartService {
 	List<CartDto> getCarts();
 
 	void deleteById(Integer id);
+
+	boolean hasCartByCustomerId(Integer id);
 }

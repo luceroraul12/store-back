@@ -32,7 +32,7 @@ public class PersonController {
 	}
 	
 	@DeleteMapping("{id}")
-	Integer deletePerson(@PathVariable Integer id){
+	Integer deletePerson(@PathVariable Integer id) throws Exception{
 		return personService.deletePerson(id);
 	}
 }
