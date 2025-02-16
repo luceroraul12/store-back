@@ -1,5 +1,5 @@
 # Para Java Spring Boot, utilizo maven para generarme el package en java
-FROM maven AS build
+FROM maven:3.9.9-eclipse-temurin-17-alpine AS build
 COPY src /home/app/src
 # paso el archivo que contiene las dependencias del proyecto
 COPY pom.xml /home/app
