@@ -4,7 +4,7 @@ create table person(
 	name varchar not null,
 	phone varchar not null,
 	email varchar,
-	CONSTRAINT person_uq_1 UNIQUE (name, phone)
+	CONSTRAINT person_uq UNIQUE (name, phone)
 );
 
 alter table cart add total_price float8 not null;
