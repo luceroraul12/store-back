@@ -72,7 +72,7 @@ public class ProductoInternoStatusServiceImp
 		// Busco las relaciones de las categorias con las unidades
 		Map<Integer, LookupValor> mapUnitByCategoryId = categoryHasUnitRepository
 				.findAll().stream().collect(Collectors
-						.toMap(r -> r.getCategory().getId(), r -> r.getUnit()));
+						.toMap(r -> r.getId(), r -> r.getUnit()));
 		// Recorro cada dto para asignarle su unidad
 		for (ProductCustomerDto d : dtos) {
 			LookupValor unit = mapUnitByCategoryId

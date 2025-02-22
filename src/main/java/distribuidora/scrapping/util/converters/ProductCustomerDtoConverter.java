@@ -16,6 +16,9 @@ public class ProductCustomerDtoConverter extends Converter<ProductoInternoStatus
 	
 	@Autowired
 	LookupValueDtoConverter lookupValueDtoConverter;
+	
+	@Autowired
+	CategoryDtoConverter categoryDtoConverter;
 
 	@Override
 	public ProductCustomerDto toDto(ProductoInternoStatus entidad) {
@@ -27,7 +30,7 @@ public class ProductCustomerDtoConverter extends Converter<ProductoInternoStatus
 		dto.setStock(entidad.getHasStock());
 		dto.setOnlyUnit(entidad.getIsUnit());
 		dto.setPrice(calculatorUtil.calculateCustomerPrice(p));
-		dto.setCategory(lookupValueDtoConverter.toDto(p.getLvCategoria()));
+		dto.setCategory(categoryDtoConverter.toDto(p.getCategory()));
 		dto.setLastUpdate(entidad.getProductoInterno().getFechaActualizacion());
 		return dto;
 	}

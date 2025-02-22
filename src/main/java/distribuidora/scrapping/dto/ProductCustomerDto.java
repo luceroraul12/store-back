@@ -12,7 +12,7 @@ public class ProductCustomerDto {
 	private String name;
 	private String description;
 	private Integer price;
-	private LookupValueDto category;
+	private CategoryDto category;
 	private LookupValueDto unitType;
 	private Date lastUpdate;
 }

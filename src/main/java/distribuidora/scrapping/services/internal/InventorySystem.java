@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.DatosDistribuidoraDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
@@ -34,9 +35,9 @@ public interface InventorySystem {
 	List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos)
 			throws Exception;
 
-	List<CategoryHasUnitDto> getCategoryDtoList();
+	List<CategoryDto> getCategoryDtoList();
 
-	CategoryHasUnitDto updateCategoryHasUnit(CategoryHasUnitDto dto);
+	CategoryDto updateCategoryHasUnit(CategoryDto dto);
 
 	List<DatosDistribuidoraDto> getDistribuidoraStatus();
 

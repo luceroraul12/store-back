@@ -47,8 +47,8 @@ public class ProductoInterno {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaActualizacion;
 	@ManyToOne
-	@JoinColumn(name = "lv_categoria_id")
-	private LookupValor lvCategoria;
+	@JoinColumn(name = "category_id")
+	private Category category;
 	@Column(name = "precio_transporte")
 	private Double precioTransporte;
 	@Column(name = "precio_empaquetado")
@@ -71,7 +71,7 @@ public class ProductoInterno {
 			Double precio, String codigoReferencia,
 			LookupValor distribuidoraReferencia, Date fechaCreacion,
 			Date fechaActualizacion, Boolean isUnit,
-			ExternalProduct externalProduct, LookupValor category,
+			ExternalProduct externalProduct, Category category,
 			Double porcentajeImpuesto, Double regulador) {
 		this.id = id;
 		this.nombre = nombre;
@@ -82,7 +82,7 @@ public class ProductoInterno {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.externalProduct = externalProduct;
-		this.lvCategoria = category;
+		this.category = category;
 		this.porcentajeImpuesto = porcentajeImpuesto;
 		this.regulador = regulador;
 	}

@@ -23,17 +23,21 @@ public class PersonServiceImpl implements PersonService{
 	
 	@Autowired
 	CartService cartService;
+	
+	@Autowired
+	UsuarioService userService;
 
 	@Override
 	public Integer createUpdatePerson(PersonDto dto) {
 		Person person = personDtoConverter.toEntidad(dto);
+		person.setClient(userService.getCurrentClient());
 		person = personRepository.save(person);
 		return person.getId();
 	}
 
 	@Override
 	public List<PersonDto> getPersons() {
-		List<Person> persons = personRepository.findAll();
+		List<Person> persons = personRepository.findByClientId(userService.getCurrentClient().getId());
 		return personDtoConverter.toDtoList(persons);
 	}
 

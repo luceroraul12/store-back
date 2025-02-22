@@ -33,7 +33,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
 import distribuidora.scrapping.configs.Constantes;
-import distribuidora.scrapping.entities.CategoryHasUnit;
+import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
@@ -53,16 +53,13 @@ public class PdfServiceImpl implements PdfService {
 	@Autowired
 	private ClientDataService clientDataService;
 
-	private void generatePdf(HttpServletResponse response, Integer clientId)
-			throws DocumentException, IOException {
+	private void generatePdf(HttpServletResponse response, Integer clientId) throws DocumentException, IOException {
 		// generacion del pdf
 		Document document = new Document();
-		PdfWriter writer = PdfWriter.getInstance(document,
-				response.getOutputStream());
+		PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
 
 		// Variables sobre la fecha del PDF
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy",
-				new Locale("es", "ES"));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", new Locale("es", "ES"));
 		String dateConverted = sdf.format(new Date());
 		// p = new Paragraph(String.format("Fecha de emisión: %s",
 		// dateConverted),
@@ -84,8 +81,7 @@ public class PdfServiceImpl implements PdfService {
 	}
 
 	@Override
-	public void addTitlePage(Document document)
-			throws DocumentException, IOException {
+	public void addTitlePage(Document document) throws DocumentException, IOException {
 		Client data = clientDataService.getById(1);
 
 		Paragraph preface = new Paragraph();
@@ -94,8 +90,7 @@ public class PdfServiceImpl implements PdfService {
 		// Pruebas de logo del cliente
 		Paragraph p = null;
 		try {
-			Image imageLogo = Image.getInstance(
-					String.format("/resources/%s", data.getFilenameLogo()));
+			Image imageLogo = Image.getInstance(String.format("/resources/%s", data.getFilenameLogo()));
 			imageLogo.scaleAbsolute(new Rectangle(300, 300));
 			imageLogo.setAlignment(Element.ALIGN_CENTER);
 			imageLogo.setSpacingAfter(0);
@@ -114,31 +109,24 @@ public class PdfServiceImpl implements PdfService {
 
 		preface.add(new Paragraph("Datos de contacto".toUpperCase(), subFont));
 
-		preface.add(generateParagraphLink("Direccion", data.getAddress(),
-				data.getAddressLink()));
-		preface.add(generateParagraphLink("Telefono", data.getPhone(),
-				data.getPhoneLink()));
-		preface.add(generateParagraphLink("Instagram", data.getInstagram(),
-				data.getInstagramLink()));
-		preface.add(generateParagraphLink("Facebook", data.getFacebook(),
-				data.getFacebookLink()));
+		preface.add(generateParagraphLink("Direccion", data.getAddress(), data.getAddressLink()));
+		preface.add(generateParagraphLink("Telefono", data.getPhone(), data.getPhoneLink()));
+		preface.add(generateParagraphLink("Instagram", data.getInstagram(), data.getInstagramLink()));
+		preface.add(generateParagraphLink("Facebook", data.getFacebook(), data.getFacebookLink()));
 
 		document.add(preface);
 	}
 
-	private Paragraph generateParagraphLink(String label, String name,
-			String link) {
-		Chunk result = new Chunk(String.format("%s - %s", label, name),
-				smallFont);
+	private Paragraph generateParagraphLink(String label, String name, String link) {
+		Chunk result = new Chunk(String.format("%s - %s", label, name), smallFont);
 		result.setAnchor(link);
 		return new Paragraph(result);
 	}
 
 	@Override
-	public void addContent(Document document, PdfWriter writer,
-			String dateConverted, Integer clientId) throws DocumentException {
-		List<CategoryHasUnit> categoryHasUnits = categoryHasUnitRepository
-				.findAll();
+	public void addContent(Document document, PdfWriter writer, String dateConverted, Integer clientId)
+			throws DocumentException {
+		List<Category> categories = categoryHasUnitRepository.findAll();
 
 		// TODO: Voy a comentarlo para ver que dice el cliente, en caso que lo
 		// quiera de nuevo lo vuelvo a colocar
@@ -146,26 +134,13 @@ public class PdfServiceImpl implements PdfService {
 		// title.setAlignment(Element.ALIGN_CENTER);
 		// document.add(title);
 
-		// agrupo por categoria
-		Map<LookupValor, List<CategoryHasUnit>> mapRelationsByLvCategory = new TreeMap<>(
-				(a, b) -> a.getDescripcion().compareTo(b.getDescripcion()));
-		mapRelationsByLvCategory.putAll(categoryHasUnits.stream()
-				.collect(Collectors.groupingBy(r -> r.getCategory())));
-
 		// busco los prodcutos
-		List<ProductoInternoStatus> productoInternosStatus = productoInternoStatusRepository
-				.findByClientId(clientId);
+		List<ProductoInternoStatus> productoInternosStatus = productoInternoStatusRepository.findByClientId(clientId);
 
-		for (Map.Entry<LookupValor, List<CategoryHasUnit>> entry : mapRelationsByLvCategory
-				.entrySet()) {
-			LookupValor lvCategory = entry.getKey();
-			LookupValor lvUnit = entry.getValue().stream()
-					.map(CategoryHasUnit::getUnit).findFirst().orElse(null);
+		for (Category category : categories) {
 			// me fijo si la categoria tiene productos asociados
-			List<ProductoInternoStatus> productsByActualCategory = productoInternosStatus
-					.stream()
-					.filter(p -> p.getProductoInterno().getLvCategoria()
-							.equals(lvCategory))
+			List<ProductoInternoStatus> productsByActualCategory = productoInternosStatus.stream()
+					.filter(p -> p.getProductoInterno().getCategory().equals(category))
 					// ordeno productos por nombre y si hay unidades los dejo al
 					// final
 					.sorted(orderProductoInternoStatusList()).toList();
@@ -173,22 +148,19 @@ public class PdfServiceImpl implements PdfService {
 			if (CollectionUtils.isNotEmpty(productsByActualCategory)) {
 
 				// agrego datos de la categoria
-				String categoryDescription = String.format("%s - %s",
-						lvCategory.getDescripcion(), lvUnit.getDescripcion());
-				Paragraph category = new Paragraph(categoryDescription,
-						subFont);
-				document.add(category);
+				String categoryDescription = String.format("%s - %s", category.getName(),
+						category.getUnit().getDescripcion());
+				Paragraph categoryParag = new Paragraph(categoryDescription, subFont);
+				document.add(categoryParag);
 
 				// agrego datos de los productos de la categoria
 				Chunk leader = new Chunk(new DottedLineSeparator());
 				com.itextpdf.text.List list = new com.itextpdf.text.List();
 				for (ProductoInternoStatus productoInternoStatus : productsByActualCategory) {
 					ListItem listItem = new ListItem();
-					listItem.add(
-							generateProductName(productoInternoStatus, lvUnit));
+					listItem.add(generateProductName(productoInternoStatus, category.getUnit()));
 					listItem.add(leader);
-					listItem.add(generatePriceWithUnitLogic(
-							productoInternoStatus, lvUnit));
+					listItem.add(generatePriceWithUnitLogic(productoInternoStatus, category.getUnit()));
 					list.add(listItem);
 				}
 				document.add(list);
@@ -198,64 +170,51 @@ public class PdfServiceImpl implements PdfService {
 	}
 
 	/**
-	 * Valida en que hoja se encuentra en funcion del maximo de hojas y en caso
-	 * de que aun no tenga paginado, lo agrega
+	 * Valida en que hoja se encuentra en funcion del maximo de hojas y en caso de
+	 * que aun no tenga paginado, lo agrega
 	 * 
 	 * @param document
 	 */
-	private void checkAndSetPageNumber(Document document, PdfWriter writer,
-			String dateConverted) {
+	private void checkAndSetPageNumber(Document document, PdfWriter writer, String dateConverted) {
 		float yNumberPage = 15f;
 		float xNumberPage = document.getPageSize().getWidth() / 2;
 		float yDateReference = yNumberPage;
 		float xDateReference = 25;
-		ColumnText.showTextAligned(writer.getDirectContent(),
-				Element.ALIGN_CENTER,
-				new Phrase(String.format("Pagina %d", writer.getPageNumber())),
-				xNumberPage, yNumberPage, 0);
-		ColumnText.showTextAligned(writer.getDirectContent(),
-				Element.ALIGN_LEFT,
-				new Phrase(
-						String.format("Fecha de emisión: %s", dateConverted)),
-				xDateReference, yDateReference, 0);
+		ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER,
+				new Phrase(String.format("Pagina %d", writer.getPageNumber())), xNumberPage, yNumberPage, 0);
+		ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT,
+				new Phrase(String.format("Fecha de emisión: %s", dateConverted)), xDateReference, yDateReference, 0);
 	}
 
 	/**
-	 * Encargado de generar el comparator final. El orden propuesto fue hay
-	 * stock, no es unidad, nombre ascendente
+	 * Encargado de generar el comparator final. El orden propuesto fue hay stock,
+	 * no es unidad, nombre ascendente
 	 * 
 	 * @return
 	 */
 	private Comparator<ProductoInternoStatus> orderProductoInternoStatusList() {
 		// Comparator auxiliar por check stock
-		Comparator<ProductoInternoStatus> compartorByHasStock = (a, b) -> b
-				.getHasStock().compareTo(a.getHasStock());
+		Comparator<ProductoInternoStatus> compartorByHasStock = (a, b) -> b.getHasStock().compareTo(a.getHasStock());
 		// Comparator auxiliar por nombre de productos
-		Comparator<ProductoInternoStatus> comparatorByProductName = (a, b) -> a
-				.getProductoInterno().getNombre()
+		Comparator<ProductoInternoStatus> comparatorByProductName = (a, b) -> a.getProductoInterno().getNombre()
 				.compareToIgnoreCase(b.getProductoInterno().getNombre());
 		// Comparator auxiliar por flag de unidad
-		Comparator<ProductoInternoStatus> comparatorByIsUnit = (a, b) -> a
-				.getIsUnit().compareTo(b.getIsUnit());
+		Comparator<ProductoInternoStatus> comparatorByIsUnit = (a, b) -> a.getIsUnit().compareTo(b.getIsUnit());
 
 		// Hago que primero haga por nombre, luego por flag y por ultimo de
 		// nuevo nombre
-		Comparator<ProductoInternoStatus> resultComparator = compartorByHasStock
-				.thenComparing(comparatorByIsUnit)
+		Comparator<ProductoInternoStatus> resultComparator = compartorByHasStock.thenComparing(comparatorByIsUnit)
 				.thenComparing(comparatorByProductName);
 
 		return resultComparator;
 	}
 
-	private String generateProductName(ProductoInternoStatus productStatus,
-			LookupValor lvUnit) {
+	private String generateProductName(ProductoInternoStatus productStatus, LookupValor lvUnit) {
 		String result;
 		String productName = org.springframework.util.StringUtils
 				.capitalize(productStatus.getProductoInterno().getNombre());
-		String description = productStatus.getProductoInterno()
-				.getDescripcion();
-		boolean isCategoryUnit = lvUnit.getCodigo()
-				.equals(Constantes.LV_MEDIDAS_VENTAS_1U);
+		String description = productStatus.getProductoInterno().getDescripcion();
+		boolean isCategoryUnit = lvUnit.getCodigo().equals(Constantes.LV_MEDIDAS_VENTAS_1U);
 		boolean isProductUnit = productStatus.getIsUnit();
 
 		// seteo los datos del producto
@@ -268,8 +227,7 @@ public class PdfServiceImpl implements PdfService {
 		// seteo los datos de la categoria en caso de que sea diferente de la
 		// unidad
 		if (!isCategoryUnit && isProductUnit)
-			result = String.format("%s - %s", result,
-					Constantes.LV_MEDIDAS_VENTAS_1U_DESCRIPTION);
+			result = String.format("%s - %s", result, Constantes.LV_MEDIDAS_VENTAS_1U_DESCRIPTION);
 		return result;
 	}
 
@@ -284,21 +242,11 @@ public class PdfServiceImpl implements PdfService {
 	public Integer generateBasePrice(ProductoInterno p) {
 		int result;
 		double precio = p.getPrecio() != null ? p.getPrecio() : 0;
-		double transporte = p.getPrecioTransporte() != null
-				? p.getPrecioTransporte()
-				: 0.0;
-		double empaquetado = p.getPrecioEmpaquetado() != null
-				? p.getPrecioEmpaquetado()
-				: 0.0;
-		double ganancia = (100 + (p.getPorcentajeGanancia() != null
-				? p.getPorcentajeGanancia()
-				: 0)) / 100;
-		double impuesto = (100 + (p.getPorcentajeImpuesto() != null
-				? p.getPorcentajeImpuesto()
-				: 0)) / 100;
-		double regulador = p.getRegulador() != null && p.getRegulador() != 0.0
-				? p.getRegulador()
-				: 1;
+		double transporte = p.getPrecioTransporte() != null ? p.getPrecioTransporte() : 0.0;
+		double empaquetado = p.getPrecioEmpaquetado() != null ? p.getPrecioEmpaquetado() : 0.0;
+		double ganancia = (100 + (p.getPorcentajeGanancia() != null ? p.getPorcentajeGanancia() : 0)) / 100;
+		double impuesto = (100 + (p.getPorcentajeImpuesto() != null ? p.getPorcentajeImpuesto() : 0)) / 100;
+		double regulador = p.getRegulador() != null && p.getRegulador() != 0.0 ? p.getRegulador() : 1;
 		double precioPorcentual = (precio * ganancia * impuesto) / regulador;
 		result = (int) (precioPorcentual + transporte + empaquetado + ganancia);
 		return result;
@@ -314,10 +262,8 @@ public class PdfServiceImpl implements PdfService {
 		int resultBaseNext = (eachMultiple + 1) * multiple;
 		// Rangos
 		Range<Integer> rangeOne = Range.between(resultBase, resultBase + 30);
-		Range<Integer> rangeTwo = Range.between(resultBase + 31,
-				resultBase + 70);
-		Range<Integer> rangeThree = Range.between(resultBase + 71,
-				resultBase + 99);
+		Range<Integer> rangeTwo = Range.between(resultBase + 31, resultBase + 70);
+		Range<Integer> rangeThree = Range.between(resultBase + 71, resultBase + 99);
 		// Si el valor es menor de 50, retorno 50
 		int result = 50;
 		if (value < result)
@@ -332,24 +278,22 @@ public class PdfServiceImpl implements PdfService {
 		}
 		return result;
 	}
+
 	/**
-	 * Toma el resultado de {@link #generateBasePrice(ProductoInterno)} y le
-	 * aplica la logica de las unidades. Existen los siguientes casos -
-	 * Categoria unidad (no importa unidad del producto): devuelve el precio
-	 * base - Categoria fraccionada y producto unidad: devuelve precio base -
-	 * Categoria fraccionada y producto fraccionado: devuelve precio fraccionado
+	 * Toma el resultado de {@link #generateBasePrice(ProductoInterno)} y le aplica
+	 * la logica de las unidades. Existen los siguientes casos - Categoria unidad
+	 * (no importa unidad del producto): devuelve el precio base - Categoria
+	 * fraccionada y producto unidad: devuelve precio base - Categoria fraccionada y
+	 * producto fraccionado: devuelve precio fraccionado
 	 * 
 	 * @param productoInternoStatus
 	 * @param lvUnit
 	 * @return
 	 */
-	private String generatePriceWithUnitLogic(
-			ProductoInternoStatus productoInternoStatus, LookupValor lvUnit) {
-		double basePrice = generateBasePrice(
-				productoInternoStatus.getProductoInterno());
+	private String generatePriceWithUnitLogic(ProductoInternoStatus productoInternoStatus, LookupValor lvUnit) {
+		double basePrice = generateBasePrice(productoInternoStatus.getProductoInterno());
 		double result;
-		boolean isCategoryUnit = lvUnit.getCodigo()
-				.equals(Constantes.LV_MEDIDAS_VENTAS_1U);
+		boolean isCategoryUnit = lvUnit.getCodigo().equals(Constantes.LV_MEDIDAS_VENTAS_1U);
 		boolean isProductUnit = productoInternoStatus.getIsUnit();
 		boolean hasStock = productoInternoStatus.getHasStock();
 
@@ -377,16 +321,15 @@ public class PdfServiceImpl implements PdfService {
 			paragraph.add(new Paragraph(" "));
 		}
 	}
+
 	@Override
-	public void getPdfByClientId(HttpServletResponse response, Integer clientId)
-			throws IOException, DocumentException {
+	public void getPdfByClientId(HttpServletResponse response, Integer clientId) throws IOException, DocumentException {
 		response.setContentType("application/pdf");
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());
 
 		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=pasionaria-catalogo"
-				+ currentDateTime + ".pdf";
+		String headerValue = "attachment; filename=pasionaria-catalogo" + currentDateTime + ".pdf";
 		response.setHeader(headerKey, headerValue);
 
 		generatePdf(response, clientId);

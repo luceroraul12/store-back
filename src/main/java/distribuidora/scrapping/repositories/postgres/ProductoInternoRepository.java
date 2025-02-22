@@ -21,10 +21,10 @@ public interface ProductoInternoRepository extends JpaRepository<ProductoInterno
     @Query("""
     		SELECT pi 
     		FROM ProductoInterno pi
-    			LEFT JOIN pi.lvCategoria cat
+    			INNER JOIN pi.category cat
     			INNER JOIN pi.client c
     		WHERE c.id = :clientId
-    		ORDER BY cat.descripcion, pi.nombre, pi.descripcion	
+    		ORDER BY cat.name, pi.nombre, pi.descripcion	
     		""")
     List<ProductoInterno> getAllProductosByUserId(Integer clientId);
 

@@ -14,16 +14,17 @@ import lombok.Data;
 @Entity
 @Table
 @Data
-public class Person {
+public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer id;
 	@Column
 	String name;
 	@Column
-	String phone;
-	@Column
-	String email;
+	String description;
+	@ManyToOne
+	@JoinColumn(name = "lv_unit_id")
+	LookupValor unit;
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	Client client;

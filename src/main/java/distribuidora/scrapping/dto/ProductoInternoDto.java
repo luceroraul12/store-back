@@ -19,7 +19,7 @@ public class ProductoInternoDto {
 	private String descripcion;
 	private Double precio;
 	private ExternalProductDto externalProduct;
-	private LookupValueDto category;
+	private CategoryDto category;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Double precioTransporte;
