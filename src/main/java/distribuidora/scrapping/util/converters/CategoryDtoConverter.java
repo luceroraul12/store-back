@@ -24,8 +24,11 @@ public class CategoryDtoConverter extends Converter<Category, CategoryDto>{
 
 	@Override
 	public Category toEntidad(CategoryDto dto) {
-		// TODO Auto-generated method stub
-		return null;
+		Category e = new Category();
+		e.setId(dto.getId());
+		e.setName(dto.getName());
+		e.setDescription(dto.getDescription());
+		return e;
 	}
 
 }

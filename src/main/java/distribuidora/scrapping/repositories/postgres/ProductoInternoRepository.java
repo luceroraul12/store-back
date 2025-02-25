@@ -34,4 +34,11 @@ public interface ProductoInternoRepository extends JpaRepository<ProductoInterno
     		WHERE pi.id IN (:productIds)
     		""")
 	int countProductsByIds(@Param("productIds") List<Integer> productIds);
+
+    @Query("""
+			SELECT count(p) > 0
+    		FROM ProductoInterno p
+    		WHERE p.category.id = :categoryId
+    		""")
+	boolean hasProductWithCategoryId(Integer categoryId);
 }
