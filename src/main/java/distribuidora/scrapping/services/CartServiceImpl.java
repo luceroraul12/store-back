@@ -2,7 +2,7 @@ package distribuidora.scrapping.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -53,49 +53,39 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	CartProductDtoConverter cartProductDtoConverter;
-	
+
 	@Autowired
 	@Lazy
 	PersonService personService;
 
 	@Override
-	public List<CartDto> createFinalizedCart(List<CartDto> data)
-			throws Exception {
+	public List<CartDto> createFinalizedCart(List<CartDto> data) throws Exception {
 		// TODO: Separar entre converters y service
 		// Obtengo el cliente
 		Client client = validateClient();
 		List<CategoryHasUnit> categories = categoryHasUnitRepository.findAll();
-		List<Integer> productIds = data.stream().map(d -> d.getProducts())
-				.flatMap(List::stream).map(d -> d.getProductId()).distinct()
-				.toList();
-		List<ProductoInternoStatus> products = productoInternoStatusService
-				.getAllByProductIds(productIds);
+		List<Integer> productIds = data.stream().map(d -> d.getProducts()).flatMap(List::stream)
+				.map(d -> d.getProductId()).distinct().toList();
+		List<ProductoInternoStatus> products = productoInternoStatusService.getAllByProductIds(productIds);
 
 		// Creo las ordenes
 		for (CartDto cartDto : data) {
 			Person person = personService.getById(cartDto.getCustomer().getId());
-			Cart cart = new Cart(client, person, cartDto.getDateCreated(),
-					"SYNCHRONIZED", cartDto.getTotalPrice());
+			Cart cart = new Cart(client, person, cartDto.getDateCreated(), "SYNCHRONIZED", cartDto.getTotalPrice());
 			cart = orderRepository.save(cart);
 			// Seteo id de cart
 			cartDto.setBackendCartId(cart.getId());
 			cartDto.setStatus("SYNCHRONIZED");
 			for (CartProductDto cp : cartDto.getProducts()) {
 				ProductoInternoStatus currentProductRelation = products.stream()
-						.filter(r -> r.getProductoInterno().getId()
-								.equals(cp.getProductId()))
-						.findFirst().orElse(null);
+						.filter(r -> r.getProductoInterno().getId().equals(cp.getProductId())).findFirst().orElse(null);
 				CategoryHasUnit currentCategory = categories.stream()
 						.filter(c -> c.getCategory().getId()
-								.equals(currentProductRelation
-										.getProductoInterno().getLvCategoria()
-										.getId()))
+								.equals(currentProductRelation.getProductoInterno().getLvCategoria().getId()))
 						.findFirst().orElse(null);
 
-				CartProduct cartProduct = new CartProduct(
-						currentCategory.getUnit(), cart,
-						currentProductRelation.getProductoInterno(),
-						cp.getPrice(), cp.getQuantity());
+				CartProduct cartProduct = new CartProduct(currentCategory.getUnit(), cart,
+						currentProductRelation.getProductoInterno(), cp.getPrice(), cp.getQuantity());
 				cartProduct = orderHasProductRepository.save(cartProduct);
 				// Seteo ids
 				cp.setBackendCartProductId(cartProduct.getId());
@@ -108,8 +98,7 @@ public class CartServiceImpl implements CartService {
 	private Client validateClient() throws Exception {
 		// Verifico si el usuario ya existe
 		UsuarioEntity user = userService.getCurrentUser();
-		Client client = clientHasUsersRepository.findByClientId(user.getId())
-				.getClient();
+		Client client = clientHasUsersRepository.findByClientId(user.getId()).getClient();
 
 		// En caso de que no exista lo voy a registrar
 		if (client == null)
@@ -120,16 +109,15 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public List<CartDto> getCarts() {
 		UsuarioEntity user = userService.getCurrentUser();
-		Client client = clientHasUsersRepository.findByClientId(user.getId())
-				.getClient();
+		Client client = clientHasUsersRepository.findByClientId(user.getId()).getClient();
 
-		List<CartProduct> data = orderHasProductRepository
-				.findByClientId(client.getId());
+		List<CartProduct> data = orderHasProductRepository.findByClientId(client.getId());
 		List<CartDto> result = new ArrayList<>();
 		if (CollectionUtils.isNotEmpty(data)) {
 			// Agrupo por cart
-			Map<Cart, List<CartProduct>> mapDataByCart = data.stream()
-					.collect(Collectors.groupingBy(d -> d.getCart()));
+			TreeMap<Cart, List<CartProduct>> mapDataByCart = new TreeMap<Cart, List<CartProduct>>(
+					(a, b) -> b.getDateCreated().compareTo(a.getDateCreated()));
+			mapDataByCart.putAll(data.stream().collect(Collectors.groupingBy(d -> d.getCart())));
 			// Itero cara key
 			mapDataByCart.forEach((cart, products) -> {
 				CartDto dto = cartDtoConverter.toDto(cart);
@@ -153,6 +141,5 @@ public class CartServiceImpl implements CartService {
 	public boolean hasCartByCustomerId(Integer id) {
 		return orderRepository.hasCartByCustomerId(id);
 	}
-	
-	
+
 }
