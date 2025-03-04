@@ -60,7 +60,17 @@ insert into client_module (client_id, lv_module_id) values
 ((select id from client where name = 'PASIONARIA'),(select id from lookup_valor where codigo = 'MODULE_TYPE_CATEGORY')),
 ((select id from client where name = 'PASIONARIA'),(select id from lookup_valor where codigo = 'MODULE_TYPE_PERSON')),
 ((select id from client where name = 'PASIONARIA'),(select id from lookup_valor where codigo = 'MODULE_TYPE_CART'));
-	
+
+-- Creo nuevas unidades de medidas específicas para Metro cúbico y bolsa
+INSERT INTO lookup_valor (lookup_tipo_id, codigo, descripcion, valor) values
+((select id from lookup_tipo where codigo = 'MEDIDAS_VENTAS'),'MEDIDAS_VENTAS_M3', 'm³', '1'),
+((select id from lookup_tipo where codigo = 'MEDIDAS_VENTAS'),'MEDIDAS_VENTAS_M3_BOLSA', 'Bolsa m³', '0.012');
+
+-- Agrego relaciones de m3 con bolsa m3
+insert into 
+	lookup_parent_child(parent_id, child_id) 
+values
+	((select id from lookup_valor where codigo = 'MEDIDAS_VENTAS_M3'), (SELECT id FROM lookup_valor WHERE codigo = 'MEDIDAS_VENTAS_M3_BOLSA'));
 	
 	
 	

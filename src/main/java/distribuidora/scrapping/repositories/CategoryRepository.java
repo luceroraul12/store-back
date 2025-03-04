@@ -13,6 +13,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 			SELECT c
 			FROM Category c
 			WHERE c.client.id = :clientId
+			ORDER BY c.name 
 			""")
 	List<Category> findCategoriesByClientId(Integer clientId);
 
