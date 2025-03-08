@@ -22,7 +22,7 @@ public interface InventorySystem {
 	 */
 	int actualizarPreciosAutomatico();
 
-	ProductoInternoDto crearProducto(ProductoInternoDto dto);
+	ProductoInternoDto crearProducto(ProductoInternoDto dto) throws Exception;
 
 	ProductoInternoDto modificarProducto(ProductoInternoDto dto)
 			throws Exception;

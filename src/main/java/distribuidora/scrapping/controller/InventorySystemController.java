@@ -45,7 +45,7 @@ public class InventorySystemController {
 	UsuarioService userService;
 
 	@PostMapping(value = "create")
-	ProductoInternoDto crearProducto(@RequestBody ProductoInternoDto dto) {
+	ProductoInternoDto crearProducto(@RequestBody ProductoInternoDto dto) throws Exception {
 		return service.crearProducto(dto);
 	}
 

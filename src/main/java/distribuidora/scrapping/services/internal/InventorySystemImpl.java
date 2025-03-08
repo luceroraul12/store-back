@@ -19,6 +19,7 @@ import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
+import distribuidora.scrapping.services.CategoryService;
 import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.util.converters.CategoryDtoConverter;
 import distribuidora.scrapping.util.converters.DatosDistribuidoraConverter;
@@ -53,6 +54,9 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Autowired
 	private CategoryDtoConverter categoryDtoConverter;
+	
+	@Autowired
+	private CategoryService categoryService;
 
 	@Override
 	public int actualizarPreciosAutomatico() {
@@ -85,11 +89,18 @@ public class InventorySystemImpl implements InventorySystem {
 	}
 
 	@Override
-	public ProductoInternoDto crearProducto(ProductoInternoDto dto) {
+	public ProductoInternoDto crearProducto(ProductoInternoDto dto) throws Exception {
 		if (dto.getId() != null)
 			return null;
+		
+		if(dto.getCategory() == null)
+			throw new Exception("Es necesario enviar los datos de la categoría");
+		
+		Category category = categoryService.getById(dto.getCategory().getId());
 
 		ProductoInterno producto = productoInternoConverter.toEntidad(dto);
+		producto.setCategory(category);
+		
 		producto.setFechaCreacion(new Date());
 		Client client = usuarioService.getCurrentClient();
 		producto.setClient(client);

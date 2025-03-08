@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	LookupService lookupService;
-	
+
 	@Autowired
 	ProductoInternoRepository productoInternoRepository;
 
@@ -53,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
 		Category categoryExisted = categoryRepository.findCategoryByNameAndClientId(dto.getName(),
 				currentClient.getId());
 		if (categoryExisted != null && !categoryExisted.getId().equals(dto.getId())
-				&& categoryExisted.getName().equalsIgnoreCase(dto.getName()) )
+				&& categoryExisted.getName().equalsIgnoreCase(dto.getName()))
 			throw new Exception("Ya existe una categoría con el nombre enviado");
 		Category category = categoryDtoConverter.toEntidad(dto);
 		category.setUnit(unit);
@@ -64,10 +65,18 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Integer deleteCategoryById(Integer id) throws Exception {
-		if(productoInternoRepository.hasProductWithCategoryId(id))
+		if (productoInternoRepository.hasProductWithCategoryId(id))
 			throw new Exception("La categoría que intenta eliminar cuenta con productos asociados");
 		categoryRepository.deleteById(id);
 		return id;
+	}
+
+	@Override
+	public Category getById(Integer id) throws Exception {
+		Optional<Category> result = categoryRepository.findById(id);
+		if(result.isEmpty())
+			throw new Exception("No existe la categoría");
+		return result.get();
 	}
 
 }

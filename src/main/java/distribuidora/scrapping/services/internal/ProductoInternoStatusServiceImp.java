@@ -1,7 +1,9 @@
 package distribuidora.scrapping.services.internal;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,20 +12,21 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 import distribuidora.scrapping.entities.Client;
+import distribuidora.scrapping.entities.LookupParentChild;
 import distribuidora.scrapping.entities.LookupValor;
+import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
-import distribuidora.scrapping.security.entity.UsuarioEntity;
 import distribuidora.scrapping.services.UsuarioService;
+import distribuidora.scrapping.services.general.LookupService;
+import distribuidora.scrapping.util.CalculatorUtil;
 import distribuidora.scrapping.util.converters.LookupValueDtoConverter;
 import distribuidora.scrapping.util.converters.ProductCustomerDtoConverter;
 import distribuidora.scrapping.util.converters.ProductoInternoStatusConverter;
 
 @Service
-public class ProductoInternoStatusServiceImp
-		implements
-			ProductoInternoStatusService {
+public class ProductoInternoStatusServiceImp implements ProductoInternoStatusService {
 
 	@Autowired
 	ProductoInternoStatusRepository repository;
@@ -39,20 +42,25 @@ public class ProductoInternoStatusServiceImp
 
 	@Autowired
 	LookupValueDtoConverter lookupValueDtoConverter;
-	
+
 	@Autowired
 	UsuarioService userService;
+
+	@Autowired
+	LookupService lookupService;
+
+	@Autowired
+	CalculatorUtil calculatorUtil;
 
 	@Override
 	public List<ProductoInternoStatusDto> getByClientId(Integer clientId) throws Exception {
 		if (clientId == null) {
 			throw new Exception("La tienda no existe");
 		}
-		List<ProductoInternoStatusDto> result = converter.toDtoList(repository.findByClientId(clientId)); 
+		List<ProductoInternoStatusDto> result = converter.toDtoList(repository.findByClientId(clientId));
 		configLowAmount(result);
 		return result;
 	}
-
 
 	@Override
 	public ProductoInternoStatusDto update(ProductoInternoStatusDto dto) {
@@ -62,30 +70,44 @@ public class ProductoInternoStatusServiceImp
 		return dto;
 	}
 
-
 	@Override
 	public List<ProductCustomerDto> getProductsForCustomer() {
 		Client client = userService.getCurrentClient();
 		List<ProductoInternoStatus> entities = repository.findByClientId(client.getId());
-		List<ProductCustomerDto> dtos = productCustomerDtoConverter
-				.toDtoList(entities);
+		List<ProductCustomerDto> dtos = productCustomerDtoConverter.toDtoList(entities);
 		// Busco las relaciones de las categorias con las unidades
-		Map<Integer, LookupValor> mapUnitByCategoryId = categoryHasUnitRepository
-				.findAll().stream().collect(Collectors
-						.toMap(r -> r.getId(), r -> r.getUnit()));
+		Map<Integer, LookupValor> mapUnitByCategoryId = categoryHasUnitRepository.findAll().stream()
+				.collect(Collectors.toMap(r -> r.getId(), r -> r.getUnit()));
+		// Tengo que fijarme si alguna de las unidades de la categoria no cuenta con
+		// parent
+		List<Integer> lvUnitIds = entities.stream().map(e -> e.getProductoInterno().getCategory().getUnit().getId())
+				.distinct().toList();
+		List<LookupParentChild> parentChilds = lookupService.getLookupParentChildsByParentIds(lvUnitIds);
 		// Recorro cada dto para asignarle su unidad
 		for (ProductCustomerDto d : dtos) {
-			LookupValor unit = mapUnitByCategoryId
-					.getOrDefault(d.getCategory().getId(), null);
-			if (unit != null)
+			LookupValor unit = mapUnitByCategoryId.getOrDefault(d.getCategory().getId(), null);
+			if (unit != null) {
+				List<LookupValor> units = new ArrayList();
+				units.add(unit);
 				d.setUnitType(lookupValueDtoConverter.toDto(unit));
+				// me fijo si tiene unidades parent child
+				Optional<LookupParentChild> child = parentChilds.stream()
+						.filter(r -> r.getParent().getCodigo().equals(unit.getCodigo())).findFirst();
+				if (child.isPresent())
+					units.add(child.get().getChild());
+
+				// Genero los precios base
+				ProductoInterno e = entities.stream().filter(r -> r.getProductoInterno().getId() == d.getId())
+						.map(r -> r.getProductoInterno()).findFirst().orElse(null);
+				d.setBasePrices(calculatorUtil.getBasePriceList(e, units));
+			}
+
 		}
 		return dtos;
 	}
 
 	@Override
-	public List<ProductoInternoStatus> getAllByProductIds(
-			List<Integer> productIds) {
+	public List<ProductoInternoStatus> getAllByProductIds(List<Integer> productIds) {
 		return repository.findAllByProductIds(productIds);
 	}
 
@@ -93,26 +115,27 @@ public class ProductoInternoStatusServiceImp
 	public void saveAll(List<ProductoInternoStatus> productStatus) {
 		repository.saveAll(productStatus);
 	}
-	
+
 	/**
-	 * Me fijo segun una constante si la cantidad de stock es poca o no.
-	 * Es posible que esto cambie y base en otra cosa o utilice la base de datos
+	 * Me fijo segun una constante si la cantidad de stock es poca o no. Es posible
+	 * que esto cambie y base en otra cosa o utilice la base de datos
+	 * 
 	 * @param result
 	 */
 	private void configLowAmount(List<ProductoInternoStatusDto> result) {
 		result.forEach(pis -> configLowAmount(pis));
 	}
-	
+
 	/**
-	 * Me fijo segun una constante si la cantidad de stock es poca o no.
-	 * Es posible que esto cambie y base en otra cosa o utilice la base de datos
+	 * Me fijo segun una constante si la cantidad de stock es poca o no. Es posible
+	 * que esto cambie y base en otra cosa o utilice la base de datos
+	 * 
 	 * @param result
 	 */
 	private void configLowAmount(ProductoInternoStatusDto dto) {
 		int minAmount = 2;
 		dto.setLowAmount(dto.getAmount() < minAmount);
 	}
-
 
 	@Override
 	public List<ProductoInternoStatus> getAllEntities() {
