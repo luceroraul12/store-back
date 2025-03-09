@@ -7,4 +7,5 @@ public class BasePriceDto {
 	private String label;
 	private Double labelPrice;
 	private Double relation;
+	private LookupValueDto lvUnit;
 }

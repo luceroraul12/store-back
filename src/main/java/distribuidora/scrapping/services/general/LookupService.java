@@ -15,4 +15,6 @@ public interface LookupService {
 	List<LookupValueDto> getLookupValueDtoListByLookupTypeCode(String code);
 	
 	List<LookupParentChild> getLookupParentChildsByParentIds(List<Integer> parentIds);
+
+	List<LookupValor> getLookupValuesByIds(List<Integer> lvUnitIds);
 }

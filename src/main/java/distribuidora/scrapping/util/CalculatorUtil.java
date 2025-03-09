@@ -4,14 +4,19 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.dto.BasePriceDto;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
+import distribuidora.scrapping.util.converters.LookupValueDtoConverter;
 
 @Component
 public class CalculatorUtil {
+	
+	@Autowired
+	private LookupValueDtoConverter lookupValueDtoConverter;
 
 	public Integer calculateCustomerPrice(ProductoInterno p) {
 		int result;
@@ -37,12 +42,14 @@ public class CalculatorUtil {
 	private BasePriceDto getBasePrice(ProductoInterno p, LookupValor unit) {
 		DecimalFormat df = new DecimalFormat("#.##"); // Define el formato con 2 decimales
 		BasePriceDto dto = new BasePriceDto();
-		Double relation = Double.parseDouble(calculateCustomerPrice(p).toString());
-		Double priceLabel = relation * Double.parseDouble(unit.getValor());
+		Double price = Double.parseDouble(calculateCustomerPrice(p).toString());
+		Double relation = price / (unit.getCodigo().contains("G") ? 1000 : 1);
+		Double priceLabel = price * Double.parseDouble(unit.getValor());
 		String label = String.format("[%s] %s", unit.getDescripcion(), df.format(priceLabel));
 		dto.setLabel(label);
 		dto.setLabelPrice(Double.valueOf(df.format(priceLabel)));
 		dto.setRelation(relation);
+		dto.setLvUnit(lookupValueDtoConverter.toDto(unit));
 		return dto;
 	}
 }

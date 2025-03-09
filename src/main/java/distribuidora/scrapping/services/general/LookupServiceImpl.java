@@ -44,4 +44,10 @@ public class LookupServiceImpl implements LookupService{
 	public List<LookupParentChild> getLookupParentChildsByParentIds(List<Integer> parentIds) {
 		return lookupParentChildRepository.findByParentIds(parentIds);
 	}
+
+	@Override
+	public List<LookupValor> getLookupValuesByIds(List<Integer> lvUnitIds) {
+		return repository.findAllById(lvUnitIds);
+	}
+	
 }

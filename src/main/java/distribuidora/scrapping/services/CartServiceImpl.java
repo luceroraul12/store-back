@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import distribuidora.scrapping.dto.CartDto;
 import distribuidora.scrapping.dto.CartProductDto;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Person;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.entities.customer.Cart;
@@ -23,6 +25,7 @@ import distribuidora.scrapping.repositories.ClientHasUsersRepository;
 import distribuidora.scrapping.repositories.OrderRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.security.entity.UsuarioEntity;
+import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
 import distribuidora.scrapping.util.converters.CartDtoConverter;
 import distribuidora.scrapping.util.converters.CartProductDtoConverter;
@@ -58,6 +61,9 @@ public class CartServiceImpl implements CartService {
 	@Lazy
 	PersonService personService;
 
+	@Autowired
+	LookupService lookupService;
+
 	@Override
 	public List<CartDto> createFinalizedCart(List<CartDto> data) throws Exception {
 		// TODO: Separar entre converters y service
@@ -76,15 +82,18 @@ public class CartServiceImpl implements CartService {
 			// Seteo id de cart
 			cartDto.setBackendCartId(cart.getId());
 			cartDto.setStatus("SYNCHRONIZED");
+			// Busco todos los lookups de unidades del producto para hacer la busqueda en db
+			// por unica vez
+			List<Integer> lvUnitIds = cartDto.getProducts().stream().map(p -> p.getLvUnit().getId()).toList();
+			Map<Integer, LookupValor> mapLvUnits = new HashMap<Integer, LookupValor>();
+			lookupService.getLookupValuesByIds(lvUnitIds).forEach(lv -> {
+				mapLvUnits.put(lv.getId(), lv);
+			});
 			for (CartProductDto cp : cartDto.getProducts()) {
 				ProductoInternoStatus currentProductRelation = products.stream()
 						.filter(r -> r.getProductoInterno().getId().equals(cp.getProductId())).findFirst().orElse(null);
-				Category currentCategory = categories.stream()
-						.filter(c -> c.getId()
-								.equals(currentProductRelation.getProductoInterno().getCategory().getId()))
-						.findFirst().orElse(null);
 
-				CartProduct cartProduct = new CartProduct(currentCategory.getUnit(), cart,
+				CartProduct cartProduct = new CartProduct(mapLvUnits.get(cp.getLvUnit().getId()), cart,
 						currentProductRelation.getProductoInterno(), cp.getPrice(), cp.getQuantity());
 				cartProduct = orderHasProductRepository.save(cartProduct);
 				// Seteo ids
@@ -122,7 +131,7 @@ public class CartServiceImpl implements CartService {
 				dto.setProducts(cartProductDtoConverter.toDtoList(products));
 				result.add(dto);
 			});
-			result.sort((a,b) -> b.getDateCreated().compareTo(a.getDateCreated()));
+			result.sort((a, b) -> b.getDateCreated().compareTo(a.getDateCreated()));
 		}
 		return result;
 	}

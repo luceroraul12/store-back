@@ -21,7 +21,7 @@ public class CartProductDtoConverter extends Converter<CartProduct, CartProductD
 		dto.setName(entidad.getProduct().getNombre());
 		dto.setDescription(entidad.getProduct().getDescripcion());
 		dto.setQuantity(entidad.getQuantity());
-		dto.setUnitType(lookupValueDtoConverter.toDto(entidad.getLvUnit()));
+		dto.setLvUnit(lookupValueDtoConverter.toDto(entidad.getLvUnit()));
 		return dto;
 	}
 
