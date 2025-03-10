@@ -1,12 +1,73 @@
+-- UNIDADES
+-- primero las independientes
+--pasionaria
+insert into unit(client_id,  selectable, pdf_show_child,  "name", description, relation) values
+	((select id from client where name = 'PASIONARIA'), true, true, 'x1kg', 'Kilogramo', 1),
+	((select id from client where name = 'PASIONARIA'), true, true, 'Unidad', 'Unidad de producto', 1);
+--prueba
+insert into unit(client_id,  selectable, pdf_show_child,  "name", description, relation) values
+	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'x1kg', 'Kilogramo', 1),
+	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'Unidad', 'Unidad de producto', 1),
+	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'M3', 'Metro cúbico', 1);
+-- luego las que dependen de algo mas
+--pasionaria
+insert into unit(client_id,  selectable, pdf_show_child,  "name", description, relation, unit_parent_id) values
+	((select id from client where name = 'PASIONARIA'), true, true, 'x500gr', 'Medio kilogramo', 0.5, 
+		(select id from unit 
+			where client_id = (select id from client where name = 'PASIONARIA') 
+			and name = 'x1kg')),
+	((select id from client where name = 'PASIONARIA'), true, true, 'x250gr', 'Cuarto kilogramo', 0.25, 
+		(select id from unit 
+			where client_id = (select id from client where name = 'PASIONARIA') 
+			and name = 'x1kg')),
+	((select id from client where name = 'PASIONARIA'), true, true, 'x100gr', '', 0.1, 
+		(select id from unit 
+			where client_id = (select id from client where name = 'PASIONARIA') 
+			and name = 'x1kg')),
+	((select id from client where name = 'PASIONARIA'), true, true, 'x50gr', 'Paquete', 0.05, 
+		(select id from unit 
+			where client_id = (select id from client where name = 'PASIONARIA') 
+			and name = 'x1kg'));
+--prueba
+insert into unit(client_id,  selectable, pdf_show_child,  "name", description, relation, unit_parent_id) values
+	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'x500gr', 'Medio kilogramo', 0.5, 
+		(select id from unit 
+			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
+			and name = 'x1kg')),
+	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'x250gr', 'Cuarto kilogramo', 0.25, 
+		(select id from unit 
+			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
+			and name = 'x1kg')),
+	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'x100gr', '', 0.1, 
+		(select id from unit 
+			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
+			and name = 'x1kg')),
+	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'x50gr', 'Paquete', 0.05, 
+		(select id from unit 
+			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
+			and name = 'x1kg')),
+	((select id from client where name = 'HOMITOWEN-TEST'), true, true, '1/2 M3', 'Medio Metro Cúbico', 0.5, 
+		(select id from unit 
+			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
+			and name = 'M3')),
+	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'Bolsita', 'Bolsita de albañil', 0.05, 
+		(select id from unit 
+			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
+			and name = 'M3'));
+
 -- Populo tabla category
-insert into category(client_id, name, lv_unit_id)
+insert into category(client_id, name, unit_id)
 select distinct
 	(select id from client where name = 'PASIONARIA') clientId,
 	c.descripcion categoryName,
-	r.lv_unit_id lvUnitId
+	(select u.id from unit u
+		inner join client c on c.id = u.client_id
+		where c.name = 'PASIONARIA'
+			and u.name = lu.descripcion)
 from productos_internos p
 	inner join lookup_valor c on c.id  = p.lv_categoria_id  
 	inner join lv_category_has_lv_unit r on r.lv_category_id = c.id 
+	inner join lookup_valor lu on lu.id = r.lv_unit_id 
 	
 -- Arreglo las categorias de los productos
 UPDATE 
@@ -16,26 +77,6 @@ SET
 from lookup_valor lv 
 	inner join category c on c.name = lv.descripcion
 where lv.id = p.lv_categoria_id
-
--- Agrego tipo de medidas (Unidad / Fraccionado)
-insert into lookup_tipo(codigo, descripcion) values
- 	('WEIGHT_TYPE', 'Tipo de peso');
-insert into lookup_valor (lookup_tipo_id, codigo, descripcion) values
-	((select id from lookup_tipo lt where codigo = 'WEIGHT_TYPE'), 'WHEIGHT_TYPE_UNIT', 'Unidad'),
-	((select id from lookup_tipo lt where codigo = 'WEIGHT_TYPE'), 'WHEIGHT_TYPE_GRAMS', 'Gramos'),
-	((select id from lookup_tipo lt where codigo = 'WEIGHT_TYPE'), 'WHEIGHT_TYPE_KILOGRAMS', 'Kilogramos'),
-	((select id from lookup_tipo lt where codigo = 'WEIGHT_TYPE'), 'WHEIGHT_TYPE_LITER', 'Litros');
--- Agrego los Lookup Parent Child para las unidades de medida
-insert into 
-	lookup_parent_child(parent_id, child_id) 
-values
-	((select id from lookup_valor where codigo = 'WHEIGHT_TYPE_UNIT'),	(SELECT id FROM lookup_valor WHERE codigo = 'MEDIDAS_VENTAS_1U')),
-	((select id from lookup_valor where codigo = 'WHEIGHT_TYPE_KILOGRAMS'),	(SELECT id FROM lookup_valor WHERE codigo = 'MEDIDAS_VENTAS_1000G')),
-	((select id from lookup_valor where codigo = 'WHEIGHT_TYPE_GRAMS'),	(SELECT id FROM lookup_valor WHERE codigo = 'MEDIDAS_VENTAS_100G')),
-	((select id from lookup_valor where codigo = 'WHEIGHT_TYPE_GRAMS'),	(SELECT id FROM lookup_valor WHERE codigo = 'MEDIDAS_VENTAS_250G')),
-	((select id from lookup_valor where codigo = 'WHEIGHT_TYPE_GRAMS'),	(SELECT id FROM lookup_valor WHERE codigo = 'MEDIDAS_VENTAS_500G')),
-	((select id from lookup_valor where codigo = 'WHEIGHT_TYPE_GRAMS'),	(SELECT id FROM lookup_valor WHERE codigo = 'MEDIDAS_VENTAS_50G'));
-
 
 -- Agrego modulos de la aplicación
 insert into lookup_tipo(codigo, descripcion) values
@@ -60,20 +101,18 @@ insert into client_module (client_id, lv_module_id) values
 ((select id from client where name = 'PASIONARIA'),(select id from lookup_valor where codigo = 'MODULE_TYPE_CATEGORY')),
 ((select id from client where name = 'PASIONARIA'),(select id from lookup_valor where codigo = 'MODULE_TYPE_PERSON')),
 ((select id from client where name = 'PASIONARIA'),(select id from lookup_valor where codigo = 'MODULE_TYPE_CART'));
+-- Agrego modulos para PRUEBA
+insert into client_module (client_id, lv_module_id) values 
+((select id from client where name = 'HOMITOWEN-TEST'),(select id from lookup_valor where codigo = 'MODULE_TYPE_SEARCH')),
+((select id from client where name = 'HOMITOWEN-TEST'),(select id from lookup_valor where codigo = 'MODULE_TYPE_SEARCH_CALCULATOR')),
+((select id from client where name = 'HOMITOWEN-TEST'),(select id from lookup_valor where codigo = 'MODULE_TYPE_SEARCH_UPDATER')),
+((select id from client where name = 'HOMITOWEN-TEST'),(select id from lookup_valor where codigo = 'MODULE_TYPE_INVENTORY')),
+((select id from client where name = 'HOMITOWEN-TEST'),(select id from lookup_valor where codigo = 'MODULE_TYPE_INVENTORY_STATUS')),
+((select id from client where name = 'HOMITOWEN-TEST'),(select id from lookup_valor where codigo = 'MODULE_TYPE_CATEGORY')),
+((select id from client where name = 'HOMITOWEN-TEST'),(select id from lookup_valor where codigo = 'MODULE_TYPE_PERSON')),
+((select id from client where name = 'HOMITOWEN-TEST'),(select id from lookup_valor where codigo = 'MODULE_TYPE_CART'));
 
--- Creo nuevas unidades de medidas específicas para Metro cúbico y bolsa
-INSERT INTO lookup_valor (lookup_tipo_id, codigo, descripcion, valor) values
-((select id from lookup_tipo where codigo = 'MEDIDAS_VENTAS'),'MEDIDAS_VENTAS_M3', 'm³', '1'),
-((select id from lookup_tipo where codigo = 'MEDIDAS_VENTAS'),'MEDIDAS_VENTAS_M3_BOLSA', 'Bolsa m³', '0.012');
 
--- Agrego relaciones de m3 con bolsa m3
-insert into 
-	lookup_parent_child(parent_id, child_id) 
-values
-	((select id from lookup_valor where codigo = 'MEDIDAS_VENTAS_M3'), (SELECT id FROM lookup_valor WHERE codigo = 'MEDIDAS_VENTAS_M3_BOLSA'));
-	
-	
-	
 	
 	
 	
