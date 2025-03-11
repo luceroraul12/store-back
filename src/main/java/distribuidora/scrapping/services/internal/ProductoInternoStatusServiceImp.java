@@ -2,9 +2,6 @@ package distribuidora.scrapping.services.internal;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,12 +9,12 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 import distribuidora.scrapping.entities.Client;
-import distribuidora.scrapping.entities.LookupParentChild;
-import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
+import distribuidora.scrapping.entities.Unit;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
+import distribuidora.scrapping.services.CategoryService;
 import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.util.CalculatorUtil;
@@ -52,6 +49,9 @@ public class ProductoInternoStatusServiceImp implements ProductoInternoStatusSer
 	@Autowired
 	CalculatorUtil calculatorUtil;
 
+	@Autowired
+	CategoryService categoryService;
+
 	@Override
 	public List<ProductoInternoStatusDto> getByClientId(Integer clientId) throws Exception {
 		if (clientId == null) {
@@ -74,34 +74,15 @@ public class ProductoInternoStatusServiceImp implements ProductoInternoStatusSer
 	public List<ProductCustomerDto> getProductsForCustomer() {
 		Client client = userService.getCurrentClient();
 		List<ProductoInternoStatus> entities = repository.findByClientId(client.getId());
-		List<ProductCustomerDto> dtos = productCustomerDtoConverter.toDtoList(entities);
-		// Busco las relaciones de las categorias con las unidades
-		Map<Integer, LookupValor> mapUnitByCategoryId = categoryHasUnitRepository.findAll().stream()
-				.collect(Collectors.toMap(r -> r.getId(), r -> r.getUnit()));
-		// Tengo que fijarme si alguna de las unidades de la categoria no cuenta con
-		// parent
-		List<Integer> lvUnitIds = entities.stream().map(e -> e.getProductoInterno().getCategory().getUnit().getId())
-				.distinct().toList();
-		List<LookupParentChild> parentChilds = lookupService.getLookupParentChildsByParentIds(lvUnitIds);
-		// Recorro cada dto para asignarle su unidad
-		for (ProductCustomerDto d : dtos) {
-			LookupValor unit = mapUnitByCategoryId.getOrDefault(d.getCategory().getId(), null);
+		List<ProductCustomerDto> dtos = new ArrayList<ProductCustomerDto>();
+		// Tengo que asignar el precio a cada producto en base a las unidades de la categoria
+		for (ProductoInternoStatus e : entities) {
+			Unit unit = e.getProductoInterno().getCategory().getUnit();
+			ProductCustomerDto dto = productCustomerDtoConverter.toDto(e);
 			if (unit != null) {
-				List<LookupValor> units = new ArrayList();
-				units.add(unit);
-				d.setUnitType(lookupValueDtoConverter.toDto(unit));
-				// me fijo si tiene unidades parent child
-				Optional<LookupParentChild> child = parentChilds.stream()
-						.filter(r -> r.getParent().getCodigo().equals(unit.getCodigo())).findFirst();
-				if (child.isPresent())
-					units.add(child.get().getChild());
-
-				// Genero los precios base
-				ProductoInterno e = entities.stream().filter(r -> r.getProductoInterno().getId() == d.getId())
-						.map(r -> r.getProductoInterno()).findFirst().orElse(null);
-				d.setBasePrices(calculatorUtil.getBasePriceList(e, units));
+				dto.setBasePrices(calculatorUtil.getBasePriceList(e.getProductoInterno()));
 			}
-
+			dtos.add(dto);
 		}
 		return dtos;
 	}

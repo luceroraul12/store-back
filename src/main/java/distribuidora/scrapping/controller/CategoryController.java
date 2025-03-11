@@ -23,7 +23,7 @@ public class CategoryController {
 
 	@GetMapping
 	List<CategoryDto> getCategories(){
-		return categoryService.getCategories();
+		return categoryService.getCategoryDtos();
 	}
 	
 	@PostMapping

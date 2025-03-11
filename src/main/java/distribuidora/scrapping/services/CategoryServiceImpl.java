@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
-import distribuidora.scrapping.entities.LookupValor;
+import distribuidora.scrapping.entities.Unit;
 import distribuidora.scrapping.repositories.CategoryRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.general.LookupService;
@@ -33,10 +33,17 @@ public class CategoryServiceImpl implements CategoryService {
 	@Autowired
 	ProductoInternoRepository productoInternoRepository;
 
+	@Autowired
+	UnitService unitService;
+
 	@Override
-	public List<CategoryDto> getCategories() {
-		return categoryDtoConverter
-				.toDtoList(categoryRepository.findCategoriesByClientId(userService.getCurrentClient().getId()));
+	public List<CategoryDto> getCategoryDtos() {
+		return categoryDtoConverter.toDtoList(getCategories());
+	}
+
+	@Override
+	public List<Category> getCategories() {
+		return categoryRepository.findCategoriesByClientId(userService.getCurrentClient().getId());
 	}
 
 	@Override
@@ -45,9 +52,9 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new Exception("Debe pasar la categoria");
 		if (dto.getName() == null)
 			throw new Exception("Debe pasar el nombre de la categoría");
-		if (dto.getLvUnit() == null)
+		if (dto.getUnit() == null)
 			throw new Exception("Debe pasar la unidad de la categoría");
-		LookupValor unit = lookupService.getLookupValueByCode(dto.getLvUnit().getCode());
+		Unit unit = unitService.getById(dto.getUnit().getId());
 		if (unit == null)
 			throw new Exception("La unidad enviada no es válida");
 		Client currentClient = userService.getCurrentClient();
@@ -74,7 +81,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Category getById(Integer id) throws Exception {
 		Optional<Category> result = categoryRepository.findById(id);
-		if(result.isEmpty())
+		if (result.isEmpty())
 			throw new Exception("No existe la categoría");
 		return result.get();
 	}

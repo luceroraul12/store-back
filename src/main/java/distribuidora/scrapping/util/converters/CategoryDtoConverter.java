@@ -5,12 +5,13 @@ import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.entities.Category;
+import distribuidora.scrapping.services.UnitDtoConverter;
 
 @Component
 public class CategoryDtoConverter extends Converter<Category, CategoryDto>{
 	
 	@Autowired
-	LookupValueDtoConverter lookupValueDtoConverter;
+	UnitDtoConverter unitDtoConverter;
 
 	@Override
 	public CategoryDto toDto(Category entidad) {
@@ -18,7 +19,7 @@ public class CategoryDtoConverter extends Converter<Category, CategoryDto>{
 		dto.setId(entidad.getId());
 		dto.setName(entidad.getName());
 		dto.setDescription(entidad.getDescription());
-		dto.setLvUnit(lookupValueDtoConverter.toDto(entidad.getUnit()));
+		dto.setUnit(unitDtoConverter.toDto(entidad.getUnit()));
 		return dto;
 	}
 

@@ -38,6 +38,7 @@ import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
+import distribuidora.scrapping.entities.Unit;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
 import distribuidora.scrapping.services.ClientDataService;
@@ -149,7 +150,7 @@ public class PdfServiceImpl implements PdfService {
 
 				// agrego datos de la categoria
 				String categoryDescription = String.format("%s - %s", category.getName(),
-						category.getUnit().getDescripcion());
+						category.getUnit().getDescription());
 				Paragraph categoryParag = new Paragraph(categoryDescription, subFont);
 				document.add(categoryParag);
 
@@ -209,12 +210,11 @@ public class PdfServiceImpl implements PdfService {
 		return resultComparator;
 	}
 
-	private String generateProductName(ProductoInternoStatus productStatus, LookupValor lvUnit) {
+	private String generateProductName(ProductoInternoStatus productStatus, Unit lvUnit) {
 		String result;
 		String productName = org.springframework.util.StringUtils
 				.capitalize(productStatus.getProductoInterno().getNombre());
 		String description = productStatus.getProductoInterno().getDescripcion();
-		boolean isCategoryUnit = lvUnit.getCodigo().equals(Constantes.LV_MEDIDAS_VENTAS_1U);
 		boolean isProductUnit = productStatus.getIsUnit();
 
 		// seteo los datos del producto
@@ -226,7 +226,7 @@ public class PdfServiceImpl implements PdfService {
 
 		// seteo los datos de la categoria en caso de que sea diferente de la
 		// unidad
-		if (!isCategoryUnit && isProductUnit)
+		if (isProductUnit)
 			result = String.format("%s - %s", result, Constantes.LV_MEDIDAS_VENTAS_1U_DESCRIPTION);
 		return result;
 	}
@@ -290,10 +290,9 @@ public class PdfServiceImpl implements PdfService {
 	 * @param lvUnit
 	 * @return
 	 */
-	private String generatePriceWithUnitLogic(ProductoInternoStatus productoInternoStatus, LookupValor lvUnit) {
+	private String generatePriceWithUnitLogic(ProductoInternoStatus productoInternoStatus, Unit lvUnit) {
 		double basePrice = generateBasePrice(productoInternoStatus.getProductoInterno());
 		double result;
-		boolean isCategoryUnit = lvUnit.getCodigo().equals(Constantes.LV_MEDIDAS_VENTAS_1U);
 		boolean isProductUnit = productoInternoStatus.getIsUnit();
 		boolean hasStock = productoInternoStatus.getHasStock();
 
@@ -304,13 +303,13 @@ public class PdfServiceImpl implements PdfService {
 		}
 
 		// si la categoria esta marcada como unidad solo retorno el precio
-		if (isCategoryUnit || isProductUnit) {
+		if (isProductUnit) {
 			result = basePrice;
 			// en caso contrario tengo que reducir el precio a la fraccion
 			// especificada por
 			// la unidad
 		} else {
-			result = basePrice * Double.parseDouble(lvUnit.getValor());
+			result = basePrice * lvUnit.getRelation();
 		}
 
 		return String.valueOf(round((int) result));

@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class BasePriceDto {
 	private String label;
-	private Double labelPrice;
 	private Double relation;
-	private LookupValueDto lvUnit;
+	private UnitDto unit;
 }
