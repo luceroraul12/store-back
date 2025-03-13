@@ -30,7 +30,7 @@ public interface InventorySystem {
 	List<ProductoInternoDto> eliminarProductos(
 			List<Integer> productoInternoIds);
 
-	List<ProductoInternoDto> getProductos() throws Exception;
+	List<ProductoInternoDto> getProductos(String search) throws Exception;
 
 	List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos)
 			throws Exception;

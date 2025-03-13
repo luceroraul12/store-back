@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itextpdf.text.DocumentException;
@@ -50,50 +51,43 @@ public class InventorySystemController {
 	}
 
 	@PutMapping(value = "update")
-	ProductoInternoDto modificarProducto(@RequestBody ProductoInternoDto dto)
-			throws Exception {
+	ProductoInternoDto modificarProducto(@RequestBody ProductoInternoDto dto) throws Exception {
 		return service.modificarProducto(dto);
 	}
 
 	@PutMapping(value = "updates")
-	List<ProductoInternoDto> updateManyProducto(
-			@RequestBody List<ProductoInternoDto> dtos) throws Exception {
+	List<ProductoInternoDto> updateManyProducto(@RequestBody List<ProductoInternoDto> dtos) throws Exception {
 		return service.updateManyProducto(dtos);
 	}
 
 	@GetMapping
-	List<ProductoInternoDto> getProductos() throws Exception {
-		return service.getProductos();
+	List<ProductoInternoDto> getProductos(@RequestParam(required = false) String search) throws Exception {
+		return service.getProductos(search);
 	}
 
 	@DeleteMapping(value = "delete")
-	List<ProductoInternoDto> eliminarProductos(
-			@RequestBody List<Integer> dtos) {
+	List<ProductoInternoDto> eliminarProductos(@RequestBody List<Integer> dtos) {
 		return service.eliminarProductos(dtos);
 	}
 
 	@GetMapping("updateAll")
 	List<ProductoInternoDto> actualizarAllProductos() throws Exception {
 		service.actualizarPreciosAutomatico();
-		return getProductos();
+		return getProductos(null);
 	}
 
 	@GetMapping("pdf")
-	void getPDF(HttpServletResponse response)
-			throws DocumentException, IOException {
-		pdfService.getPdfByClientId(response,
-				userService.getCurrentClient().getId());
+	void getPDF(HttpServletResponse response) throws DocumentException, IOException {
+		pdfService.getPdfByClientId(response, userService.getCurrentClient().getId());
 	}
 
 	@GetMapping("status")
 	List<ProductoInternoStatusDto> getStatus() throws Exception {
-		return productoInternoStatusService
-				.getByClientId(userService.getCurrentClient().getId());
+		return productoInternoStatusService.getByClientId(userService.getCurrentClient().getId());
 	}
 
 	@PutMapping("status")
-	ProductoInternoStatusDto updateStatus(
-			@RequestBody ProductoInternoStatusDto dto) {
+	ProductoInternoStatusDto updateStatus(@RequestBody ProductoInternoStatusDto dto) {
 		return productoInternoStatusService.update(dto);
 	}
 
@@ -103,8 +97,7 @@ public class InventorySystemController {
 	}
 
 	@PutMapping("categories")
-	CategoryDto updateCategoryHasUnit(
-			@RequestBody CategoryDto dto) {
+	CategoryDto updateCategoryHasUnit(@RequestBody CategoryDto dto) {
 		return service.updateCategoryHasUnit(dto);
 	}
 }

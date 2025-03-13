@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,7 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Autowired
 	private CategoryDtoConverter categoryDtoConverter;
-	
+
 	@Autowired
 	private CategoryService categoryService;
 
@@ -92,15 +93,15 @@ public class InventorySystemImpl implements InventorySystem {
 	public ProductoInternoDto crearProducto(ProductoInternoDto dto) throws Exception {
 		if (dto.getId() != null)
 			return null;
-		
-		if(dto.getCategory() == null)
+
+		if (dto.getCategory() == null)
 			throw new Exception("Es necesario enviar los datos de la categoría");
-		
+
 		Category category = categoryService.getById(dto.getCategory().getId());
 
 		ProductoInterno producto = productoInternoConverter.toEntidad(dto);
 		producto.setCategory(category);
-		
+
 		producto.setFechaCreacion(new Date());
 		Client client = usuarioService.getCurrentClient();
 		producto.setClient(client);
@@ -146,10 +147,14 @@ public class InventorySystemImpl implements InventorySystem {
 	}
 
 	@Override
-	public List<ProductoInternoDto> getProductos() throws Exception {
+	public List<ProductoInternoDto> getProductos(String search) throws Exception {
 		Integer clientId = usuarioService.getCurrentClient().getId();
-
-		List<ProductoInterno> productos = productoInternoRepository.getAllProductosByUserId(clientId);
+		// Convierto search en mayuscula
+		if (StringUtils.isNotEmpty(search))
+			search = search.toUpperCase();
+		else 
+			search = null;
+		List<ProductoInterno> productos = productoInternoRepository.getAllProductosByUserIdAndSearch(clientId, search);
 		return productoInternoConverter.toDtoList(productos);
 	}
 
