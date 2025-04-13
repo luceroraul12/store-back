@@ -33,7 +33,6 @@ import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
-import distribuidora.scrapping.entities.Unit;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
 import distribuidora.scrapping.services.ClientDataService;
@@ -142,10 +141,9 @@ public class PdfServiceImpl implements PdfService {
 					.sorted(orderProductoInternoStatusList()).toList();
 
 			if (CollectionUtils.isNotEmpty(productsByActualCategory)) {
-
-				// agrego datos de la categoria
-				String categoryDescription = String.format("%s - %s", category.getName(),
-						category.getDescription());
+				String categoryDescription = category.getName();
+				if (StringUtils.isNotEmpty(category.getDescription()))
+					categoryDescription = String.format("%s - %s", categoryDescription, category.getDescription());
 				Paragraph categoryParag = new Paragraph(categoryDescription, subFont);
 				document.add(categoryParag);
 
@@ -200,22 +198,19 @@ public class PdfServiceImpl implements PdfService {
 
 		// Hago que primero haga por nombre, luego por flag y por ultimo de
 		// nuevo nombre
-		Comparator<ProductoInternoStatus> resultComparator = compartorByHasStock
-				.thenComparing(comparatorByProductName);
+		Comparator<ProductoInternoStatus> resultComparator = compartorByHasStock.thenComparing(comparatorByProductName);
 
 		return resultComparator;
 	}
 
 	private String generateProductName(ProductoInterno p) {
 		String result;
-		String productName = org.springframework.util.StringUtils
-				.capitalize(p.getNombre());
+		String productName = StringUtils.capitalize(String.format("[%s] %s", p.getUnit().getName(),p.getNombre()));
 		String description = p.getDescripcion();
-		Unit unit = p.getUnit();
 
 		// seteo los datos del producto
 		if (StringUtils.isNotEmpty(description)) {
-			result = String.format("[%s] %s (%s)", unit.getName(), productName, description);
+			result = String.format("%s (%s)", productName, description);
 		} else {
 			result = productName;
 		}
