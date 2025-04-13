@@ -45,12 +45,12 @@ public class InventorySystemController {
 	@Autowired
 	UsuarioService userService;
 
-	@PostMapping(value = "create")
+	@PostMapping(value = "product")
 	ProductoInternoDto crearProducto(@RequestBody ProductoInternoDto dto) throws Exception {
 		return service.crearProducto(dto);
 	}
 
-	@PutMapping(value = "update")
+	@PutMapping(value = "product")
 	ProductoInternoDto modificarProducto(@RequestBody ProductoInternoDto dto) throws Exception {
 		return service.modificarProducto(dto);
 	}

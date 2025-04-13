@@ -16,11 +16,13 @@ import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.ProductoInterno;
+import distribuidora.scrapping.entities.Unit;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.CategoryService;
+import distribuidora.scrapping.services.UnitService;
 import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.util.converters.CategoryDtoConverter;
 import distribuidora.scrapping.util.converters.DatosDistribuidoraConverter;
@@ -58,6 +60,9 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private UnitService unitService;
 
 	@Override
 	public int actualizarPreciosAutomatico() {
@@ -105,6 +110,8 @@ public class InventorySystemImpl implements InventorySystem {
 		producto.setFechaCreacion(new Date());
 		Client client = usuarioService.getCurrentClient();
 		producto.setClient(client);
+		Unit unit = unitService.getById(dto.getUnit().getId());
+		producto.setUnit(unit);
 		ProductoInterno productoGuardado = productoInternoRepository.save(producto);
 		return productoInternoConverter.toDto(productoGuardado);
 	}
@@ -125,6 +132,8 @@ public class InventorySystemImpl implements InventorySystem {
 			throw new Exception("El producto que quiere modificar pertenece a otra tienda.");
 
 		ProductoInterno newEntidadInterno = productoInternoConverter.toEntidad(dto);
+		Unit unit = unitService.getById(dto.getUnit().getId());
+		newEntidadInterno.setUnit(unit);
 		newEntidadInterno.setClient(currentClient);
 
 		newEntidadInterno.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
