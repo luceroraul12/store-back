@@ -54,7 +54,7 @@ public class PdfServiceImpl implements PdfService {
 		PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
 
 		// Variables sobre la fecha del PDF
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", new Locale("es", "ES"));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", new Locale("es", "ES"));
 		String dateConverted = sdf.format(new Date());
 		// p = new Paragraph(String.format("Fecha de emisión: %s",
 		// dateConverted),
