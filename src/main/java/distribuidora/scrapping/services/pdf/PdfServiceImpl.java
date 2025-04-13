@@ -22,7 +22,6 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.ListItem;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
@@ -30,7 +29,6 @@ import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
@@ -149,42 +147,44 @@ public class PdfServiceImpl implements PdfService {
 					categoryDescription = String.format("%s - %s", categoryDescription, category.getDescription());
 				Paragraph categoryParag = new Paragraph(categoryDescription, subFont);
 				document.add(categoryParag);
-				
+
 				// Agregar un párrafo vacío para crear espacio
-			    Paragraph space = new Paragraph(" "); // Un párrafo con un espacio en blanco
-			    document.add(space);
+				Paragraph space = new Paragraph(" "); // Un párrafo con un espacio en blanco
+				document.add(space);
 
 				PdfPTable table = new PdfPTable(2); // 3 columnas: nombre, separador, precio
 				table.setWidthPercentage(100);
-				float[] widths = {0.85f, 0.15f};
+				float[] widths = { 0.85f, 0.15f };
 				table.setWidths(widths);
-				
+
 				boolean alterColor = false;
 				for (ProductoInternoStatus productoInternoStatus : productsByActualCategory) {
 					BaseColor color = alterColor ? BaseColor.WHITE : BaseColor.LIGHT_GRAY;
-		            // Nombre del producto
-		            PdfPCell nameCell = createCell(generateProductName(productoInternoStatus.getProductoInterno()), color, PdfPCell.ALIGN_LEFT);
-		            table.addCell(nameCell);
+					// Nombre del producto
+					PdfPCell nameCell = createCell(generateProductName(productoInternoStatus.getProductoInterno()),
+							color, PdfPCell.ALIGN_LEFT);
+					table.addCell(nameCell);
 
-		            // Separador de puntos
+					// Separador de puntos
 //		            PdfPCell separadorCell = new PdfPCell();
 //		            Chunk leader = new Chunk(new DottedLineSeparator());
 //		            Paragraph separadorParagraph = new Paragraph(leader);
 //		            separadorCell.addElement(separadorParagraph);
 //		            table.addCell(separadorCell);
 
-		            // Precio con unidad
-		            PdfPCell precioCell = createCell(generatePriceWithUnitLogic(productoInternoStatus), color, PdfPCell.ALIGN_RIGHT);
-		            table.addCell(precioCell);
-		            alterColor = !alterColor;
-		        }
-				
+					// Precio con unidad
+					PdfPCell precioCell = createCell(generatePriceWithUnitLogic(productoInternoStatus), color,
+							PdfPCell.ALIGN_RIGHT);
+					table.addCell(precioCell);
+					alterColor = !alterColor;
+				}
+
 				document.add(table);
 				checkAndSetPageNumber(document, writer, dateConverted);
 			}
 		}
 	}
-	
+
 	private PdfPCell createCell(String data, BaseColor backgroundColor, int align) {
 		PdfPCell cell = new PdfPCell(new Paragraph(data));
 		cell.setBackgroundColor(backgroundColor);

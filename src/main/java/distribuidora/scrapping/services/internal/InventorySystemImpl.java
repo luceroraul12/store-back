@@ -152,7 +152,7 @@ public class InventorySystemImpl implements InventorySystem {
 		// Convierto search en mayuscula
 		if (StringUtils.isNotEmpty(search))
 			search = search.toUpperCase();
-		else 
+		else
 			search = null;
 		List<ProductoInterno> productos = productoInternoRepository.getAllProductosByUserIdAndSearch(clientId, search);
 		return productoInternoConverter.toDtoList(productos);
