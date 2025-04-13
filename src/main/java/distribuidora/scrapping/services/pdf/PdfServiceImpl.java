@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -26,6 +27,8 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
@@ -54,7 +57,7 @@ public class PdfServiceImpl implements PdfService {
 		PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
 
 		// Variables sobre la fecha del PDF
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", new Locale("es", "ES"));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:s", new Locale("es", "ES"));
 		String dateConverted = sdf.format(new Date());
 		// p = new Paragraph(String.format("Fecha de emisión: %s",
 		// dateConverted),
@@ -146,21 +149,48 @@ public class PdfServiceImpl implements PdfService {
 					categoryDescription = String.format("%s - %s", categoryDescription, category.getDescription());
 				Paragraph categoryParag = new Paragraph(categoryDescription, subFont);
 				document.add(categoryParag);
+				
+				// Agregar un párrafo vacío para crear espacio
+			    Paragraph space = new Paragraph(" "); // Un párrafo con un espacio en blanco
+			    document.add(space);
 
-				// agrego datos de los productos de la categoria
-				Chunk leader = new Chunk(new DottedLineSeparator());
-				com.itextpdf.text.List list = new com.itextpdf.text.List();
+				PdfPTable table = new PdfPTable(2); // 3 columnas: nombre, separador, precio
+				table.setWidthPercentage(100);
+				float[] widths = {0.85f, 0.15f};
+				table.setWidths(widths);
+				
+				boolean alterColor = false;
 				for (ProductoInternoStatus productoInternoStatus : productsByActualCategory) {
-					ListItem listItem = new ListItem();
-					listItem.add(generateProductName(productoInternoStatus.getProductoInterno()));
-					listItem.add(leader);
-					listItem.add(generatePriceWithUnitLogic(productoInternoStatus));
-					list.add(listItem);
-				}
-				document.add(list);
+					BaseColor color = alterColor ? BaseColor.WHITE : BaseColor.LIGHT_GRAY;
+		            // Nombre del producto
+		            PdfPCell nameCell = createCell(generateProductName(productoInternoStatus.getProductoInterno()), color, PdfPCell.ALIGN_LEFT);
+		            table.addCell(nameCell);
+
+		            // Separador de puntos
+//		            PdfPCell separadorCell = new PdfPCell();
+//		            Chunk leader = new Chunk(new DottedLineSeparator());
+//		            Paragraph separadorParagraph = new Paragraph(leader);
+//		            separadorCell.addElement(separadorParagraph);
+//		            table.addCell(separadorCell);
+
+		            // Precio con unidad
+		            PdfPCell precioCell = createCell(generatePriceWithUnitLogic(productoInternoStatus), color, PdfPCell.ALIGN_RIGHT);
+		            table.addCell(precioCell);
+		            alterColor = !alterColor;
+		        }
+				
+				document.add(table);
 				checkAndSetPageNumber(document, writer, dateConverted);
 			}
 		}
+	}
+	
+	private PdfPCell createCell(String data, BaseColor backgroundColor, int align) {
+		PdfPCell cell = new PdfPCell(new Paragraph(data));
+		cell.setBackgroundColor(backgroundColor);
+		cell.setHorizontalAlignment(align);
+		cell.setBorder(PdfPCell.NO_BORDER);
+		return cell;
 	}
 
 	/**
@@ -205,7 +235,7 @@ public class PdfServiceImpl implements PdfService {
 
 	private String generateProductName(ProductoInterno p) {
 		String result;
-		String productName = StringUtils.capitalize(String.format("[%s] %s", p.getUnit().getName(),p.getNombre()));
+		String productName = StringUtils.capitalize(String.format("[%s] %s", p.getUnit().getName(), p.getNombre()));
 		String description = p.getDescripcion();
 
 		// seteo los datos del producto
