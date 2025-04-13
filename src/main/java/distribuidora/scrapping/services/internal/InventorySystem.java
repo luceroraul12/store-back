@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.CategoryDto;
-import distribuidora.scrapping.dto.CategoryHasUnitDto;
 import distribuidora.scrapping.dto.DatosDistribuidoraDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.ProductoInterno;

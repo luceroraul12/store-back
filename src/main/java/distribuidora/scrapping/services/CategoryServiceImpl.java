@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
-import distribuidora.scrapping.entities.Unit;
 import distribuidora.scrapping.repositories.CategoryRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.general.LookupService;
@@ -52,11 +51,6 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new Exception("Debe pasar la categoria");
 		if (dto.getName() == null)
 			throw new Exception("Debe pasar el nombre de la categoría");
-		if (dto.getUnit() == null)
-			throw new Exception("Debe pasar la unidad de la categoría");
-		Unit unit = unitService.getById(dto.getUnit().getId());
-		if (unit == null)
-			throw new Exception("La unidad enviada no es válida");
 		Client currentClient = userService.getCurrentClient();
 		Category categoryExisted = categoryRepository.findCategoryByNameAndClientId(dto.getName(),
 				currentClient.getId());
@@ -64,7 +58,6 @@ public class CategoryServiceImpl implements CategoryService {
 				&& categoryExisted.getName().equalsIgnoreCase(dto.getName()))
 			throw new Exception("Ya existe una categoría con el nombre enviado");
 		Category category = categoryDtoConverter.toEntidad(dto);
-		category.setUnit(unit);
 		category.setClient(currentClient);
 		category = categoryRepository.save(category);
 		return categoryDtoConverter.toDto(category);

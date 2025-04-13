@@ -1,0 +1,1 @@
+ALTER TABLE category drop column unit_id

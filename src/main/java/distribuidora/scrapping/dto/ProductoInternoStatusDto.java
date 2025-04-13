@@ -6,7 +6,6 @@ import lombok.Data;
 public class ProductoInternoStatusDto {
     private Integer id;
     private ProductoInternoDto productoInterno;
-    private Boolean isUnit;
     private Boolean hasStock;
     private Double amount;
     private Boolean lowAmount;

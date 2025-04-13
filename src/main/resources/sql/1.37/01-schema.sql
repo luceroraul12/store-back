@@ -39,6 +39,10 @@ create table category(
 alter table productos_internos add category_id int;
 alter table productos_internos add constraint product_category_fk foreign key (category_id) references category(id);
 
+-- Agrego columnas para unidad de producto
+alter table productos_internos add unit_id int;
+alter table productos_internos add constraint product_unit_fk foreign key (unit_id) references unit(id);
+
 create table client_module(
 	id serial primary key,
 	client_id int not null,

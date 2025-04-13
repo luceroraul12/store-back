@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
+import distribuidora.scrapping.services.UnitDtoConverter;
 import distribuidora.scrapping.util.CalculatorUtil;
 
 @Component
@@ -19,6 +20,9 @@ public class ProductCustomerDtoConverter extends Converter<ProductoInternoStatus
 	
 	@Autowired
 	CategoryDtoConverter categoryDtoConverter;
+	
+	@Autowired
+	UnitDtoConverter unitDtoConverter;
 
 	@Override
 	public ProductCustomerDto toDto(ProductoInternoStatus entidad) {
@@ -28,7 +32,7 @@ public class ProductCustomerDtoConverter extends Converter<ProductoInternoStatus
 		dto.setName(p.getNombre());
 		dto.setDescription(p.getDescripcion());
 		dto.setStock(entidad.getHasStock());
-		dto.setOnlyUnit(entidad.getIsUnit());
+		dto.setUnit(unitDtoConverter.toDto(entidad.getProductoInterno().getUnit()));
 		dto.setPrice(calculatorUtil.calculateCustomerPrice(p));
 		dto.setCategory(categoryDtoConverter.toDto(p.getCategory()));
 		dto.setLastUpdate(entidad.getProductoInterno().getFechaActualizacion());

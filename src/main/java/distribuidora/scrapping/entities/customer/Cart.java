@@ -14,7 +14,6 @@ import javax.persistence.Table;
 
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.Person;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

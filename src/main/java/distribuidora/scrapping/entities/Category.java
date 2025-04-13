@@ -23,18 +23,6 @@ public class Category {
 	@Column
 	String description;
 	@ManyToOne
-	@JoinColumn(name = "unit_id")
-	Unit unit;
-	@ManyToOne
 	@JoinColumn(name = "client_id")
 	Client client;
-	
-	
-	public boolean hasUnitParent() {
-		return unit.getUnitParent() != null;
-	}
-	
-	public Unit getUnitParent() {
-		return unit.getUnitParent();
-	}
 }

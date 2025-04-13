@@ -19,7 +19,6 @@ public class CategoryDtoConverter extends Converter<Category, CategoryDto>{
 		dto.setId(entidad.getId());
 		dto.setName(entidad.getName());
 		dto.setDescription(entidad.getDescription());
-		dto.setUnit(unitDtoConverter.toDto(entidad.getUnit()));
 		return dto;
 	}
 

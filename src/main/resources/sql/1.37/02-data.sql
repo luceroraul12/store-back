@@ -78,6 +78,22 @@ from lookup_valor lv
 	inner join category c on c.name = lv.descripcion
 where lv.id = p.lv_categoria_id
 
+-- Arreglo las unidades de los productos para que no dependan de la categoria
+update productos_internos p
+	set unit_id = (
+		select 
+			case 
+				when r.is_unit 
+				then (select id from unit where name = 'Unidad' and client_id = p.client_id)
+				else u.id
+			end
+		from productos_internos_status r where r.producto_interno_id = p.id
+	)
+from category c
+	inner join unit u on u.id = c.unit_id
+where c.id = p.category_id
+
+
 -- Agrego modulos de la aplicación
 insert into lookup_tipo(codigo, descripcion) values
  	('MODULE_TYPE', 'Tipo de modulos de aplicación');

@@ -34,31 +34,30 @@ public class ExternalProductService {
 	ExternalProductDtoConverter externalProductDtoConverter;
 
 	/**
-	 * Actualiza los productos de cierta distribuidora. Almacena productos, en
-	 * caso de que hayan existentes, los borra y guarda los nuevos
+	 * Actualiza los productos de cierta distribuidora. Almacena productos, en caso
+	 * de que hayan existentes, los borra y guarda los nuevos
 	 * 
-	 * @param productos
-	 *            productos que se quiere almacenar.
-	 * @param distribuidora
-	 *            distribuidora con la que se quiere trabajar.
+	 * @param productos     productos que se quiere almacenar.
+	 * @param distribuidora distribuidora con la que se quiere trabajar.
 	 */
-	public void actualizarProductosPorDistribuidora(
-			List<ExternalProduct> baseProducts, DatosDistribuidora data) {
+	public void actualizarProductosPorDistribuidora(List<ExternalProduct> baseProducts, DatosDistribuidora data) {
 		Date date = new Date();
 		baseProducts.forEach(p -> p.setDate(date));
-		// Me tengo que asegurar de que solo exista un producto por codigo de identificacion siempre
+		// Me tengo que asegurar de que solo exista un producto por codigo de
+		// identificacion siempre
 		Map<String, List<ExternalProduct>> mapProducts = baseProducts.stream()
 				.collect(Collectors.groupingBy(p -> p.getCode()));
-		
+
 		List<ExternalProduct> filteredProducts = new ArrayList<>();
-		mapProducts.forEach((k,v) -> {
-			// Solo me voy a quedar con el primero de cada tipo asi no exite casos donde se repitan en base de datos
+		mapProducts.forEach((k, v) -> {
+			// Solo me voy a quedar con el primero de cada tipo asi no exite casos donde se
+			// repitan en base de datos
 			filteredProducts.add(v.get(0));
 		});
-		
+
 		// Hago la validacion de productos existentes
-		List<ExternalProduct> productExisted = getByDistribuidoraCodeAndProductCode(
-				data.getDistribuidora().getCodigo(), null);
+		List<ExternalProduct> productExisted = getByDistribuidoraCodeAndProductCode(data.getDistribuidora().getCodigo(),
+				null);
 		List<ExternalProduct> productToUpdate = new ArrayList();
 		List<ExternalProduct> productToNew = new ArrayList<>();
 		for (ExternalProduct p : filteredProducts) {
@@ -68,13 +67,12 @@ public class ExternalProductService {
 			for (ExternalProduct pE : productExisted) {
 				// Si tiene el mismo titulo o por contrario mismo id supondre
 				// que es lo mismo
-				if (p.getCode().equals(pE.getCode())
-						|| p.getTitle().equals(pE.getTitle())) {
+				if (p.getCode().equals(pE.getCode()) || p.getTitle().equals(pE.getTitle())) {
 					// Actualizo al antiguo producto, los valores nuevos
 					pE.setDate(date);
 					pE.setPrice(p.getPrecioPorCantidadEspecifica());
 					pE.setTitle(p.getTitle());
-					if(p.getCode() != null)
+					if (p.getCode() != null)
 						pE.setCode(p.getCode());
 					// Agrego al listado
 					productToUpdate.add(pE);
@@ -94,20 +92,16 @@ public class ExternalProductService {
 		Set<ExternalProductDto> result = new HashSet<>();
 
 		List<ExternalProductDto> innerResult = externalProductDtoConverter
-				.toDtoList(this.productoRepository
-						.findBySearch(search.toUpperCase()));
+				.toDtoList(this.productoRepository.findBySearch(search.toUpperCase()));
 		result.addAll(innerResult);
 		return result;
 	}
 
-	public List<ExternalProduct> getByDistribuidoraCodeAndProductCode(
-			String distribuidoraCodigo, String idReferencia) {
-		return this.productoRepository.findByDistribuidoraCodeAndProductCode(
-				distribuidoraCodigo, idReferencia);
+	public List<ExternalProduct> getByDistribuidoraCodeAndProductCode(String distribuidoraCodigo, String idReferencia) {
+		return this.productoRepository.findByDistribuidoraCodeAndProductCode(distribuidoraCodigo, idReferencia);
 	}
 
 	public Integer countProductosByDistribuidoraCode(String distribuidoraCode) {
-		return productoRepository
-				.countExternalProductsByDistribuidoraCode(distribuidoraCode);
+		return productoRepository.countExternalProductsByDistribuidoraCode(distribuidoraCode);
 	}
 }

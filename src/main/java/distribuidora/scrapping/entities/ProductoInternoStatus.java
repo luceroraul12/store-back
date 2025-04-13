@@ -23,7 +23,6 @@ public class ProductoInternoStatus {
 	@ManyToOne
 	@JoinColumn(name = "producto_interno_id")
 	private ProductoInterno productoInterno;
-	private Boolean isUnit;
 	private Boolean hasStock;
 	private Double amount;
 }

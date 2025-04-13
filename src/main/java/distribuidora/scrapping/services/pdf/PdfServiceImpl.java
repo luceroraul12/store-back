@@ -7,9 +7,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,10 +29,8 @@ import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
-import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
-import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.entities.Unit;
@@ -150,7 +145,7 @@ public class PdfServiceImpl implements PdfService {
 
 				// agrego datos de la categoria
 				String categoryDescription = String.format("%s - %s", category.getName(),
-						category.getUnit().getDescription());
+						category.getDescription());
 				Paragraph categoryParag = new Paragraph(categoryDescription, subFont);
 				document.add(categoryParag);
 
@@ -159,9 +154,9 @@ public class PdfServiceImpl implements PdfService {
 				com.itextpdf.text.List list = new com.itextpdf.text.List();
 				for (ProductoInternoStatus productoInternoStatus : productsByActualCategory) {
 					ListItem listItem = new ListItem();
-					listItem.add(generateProductName(productoInternoStatus, category.getUnit()));
+					listItem.add(generateProductName(productoInternoStatus.getProductoInterno()));
 					listItem.add(leader);
-					listItem.add(generatePriceWithUnitLogic(productoInternoStatus, category.getUnit()));
+					listItem.add(generatePriceWithUnitLogic(productoInternoStatus));
 					list.add(listItem);
 				}
 				document.add(list);
@@ -199,35 +194,32 @@ public class PdfServiceImpl implements PdfService {
 		// Comparator auxiliar por nombre de productos
 		Comparator<ProductoInternoStatus> comparatorByProductName = (a, b) -> a.getProductoInterno().getNombre()
 				.compareToIgnoreCase(b.getProductoInterno().getNombre());
-		// Comparator auxiliar por flag de unidad
-		Comparator<ProductoInternoStatus> comparatorByIsUnit = (a, b) -> a.getIsUnit().compareTo(b.getIsUnit());
+		// TODO Ver si es necesario ordenar por productos de unidad
+//		// Comparator auxiliar por flag de unidad
+//		Comparator<ProductoInternoStatus> comparatorByIsUnit = (a, b) -> a.getIsUnit().compareTo(b.getIsUnit());
 
 		// Hago que primero haga por nombre, luego por flag y por ultimo de
 		// nuevo nombre
-		Comparator<ProductoInternoStatus> resultComparator = compartorByHasStock.thenComparing(comparatorByIsUnit)
+		Comparator<ProductoInternoStatus> resultComparator = compartorByHasStock
 				.thenComparing(comparatorByProductName);
 
 		return resultComparator;
 	}
 
-	private String generateProductName(ProductoInternoStatus productStatus, Unit lvUnit) {
+	private String generateProductName(ProductoInterno p) {
 		String result;
 		String productName = org.springframework.util.StringUtils
-				.capitalize(productStatus.getProductoInterno().getNombre());
-		String description = productStatus.getProductoInterno().getDescripcion();
-		boolean isProductUnit = productStatus.getIsUnit();
+				.capitalize(p.getNombre());
+		String description = p.getDescripcion();
+		Unit unit = p.getUnit();
 
 		// seteo los datos del producto
 		if (StringUtils.isNotEmpty(description)) {
-			result = String.format("%s (%s)", productName, description);
+			result = String.format("[%s] %s (%s)", unit.getName(), productName, description);
 		} else {
 			result = productName;
 		}
 
-		// seteo los datos de la categoria en caso de que sea diferente de la
-		// unidad
-		if (isProductUnit)
-			result = String.format("%s - %s", result, Constantes.LV_MEDIDAS_VENTAS_1U_DESCRIPTION);
 		return result;
 	}
 
@@ -241,7 +233,7 @@ public class PdfServiceImpl implements PdfService {
 	@Override
 	public Integer generateBasePrice(ProductoInterno p) {
 		int result;
-		double precio = p.getPrecio() != null ? p.getPrecio() : 0;
+		double precio = p.getPrecio() != null ? p.getPrecio() * p.getUnit().getRelation() : 0;
 		double transporte = p.getPrecioTransporte() != null ? p.getPrecioTransporte() : 0.0;
 		double empaquetado = p.getPrecioEmpaquetado() != null ? p.getPrecioEmpaquetado() : 0.0;
 		double ganancia = (100 + (p.getPorcentajeGanancia() != null ? p.getPorcentajeGanancia() : 0)) / 100;
@@ -290,10 +282,8 @@ public class PdfServiceImpl implements PdfService {
 	 * @param lvUnit
 	 * @return
 	 */
-	private String generatePriceWithUnitLogic(ProductoInternoStatus productoInternoStatus, Unit lvUnit) {
-		double basePrice = generateBasePrice(productoInternoStatus.getProductoInterno());
-		double result;
-		boolean isProductUnit = productoInternoStatus.getIsUnit();
+	private String generatePriceWithUnitLogic(ProductoInternoStatus productoInternoStatus) {
+		double price = generateBasePrice(productoInternoStatus.getProductoInterno());
 		boolean hasStock = productoInternoStatus.getHasStock();
 
 		// En caso de que el producto se encuentre marcado sin stock,
@@ -302,17 +292,7 @@ public class PdfServiceImpl implements PdfService {
 			return "SIN STOCK";
 		}
 
-		// si la categoria esta marcada como unidad solo retorno el precio
-		if (isProductUnit) {
-			result = basePrice;
-			// en caso contrario tengo que reducir el precio a la fraccion
-			// especificada por
-			// la unidad
-		} else {
-			result = basePrice * lvUnit.getRelation();
-		}
-
-		return String.valueOf(round((int) result));
+		return String.valueOf(round((int) price));
 	}
 
 	private static void addEmptyLine(Paragraph paragraph, int number) {

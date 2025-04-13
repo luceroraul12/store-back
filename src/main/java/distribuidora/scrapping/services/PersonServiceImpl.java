@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.PersonDto;
 import distribuidora.scrapping.entities.Person;
 import distribuidora.scrapping.repositories.postgres.PersonRepository;
-import distribuidora.scrapping.security.handler.CustomException;
 import distribuidora.scrapping.util.converters.PersonDtoConverter;
 
 @Service

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 import distribuidora.scrapping.entities.Client;
-import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.entities.Unit;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
@@ -75,9 +74,10 @@ public class ProductoInternoStatusServiceImp implements ProductoInternoStatusSer
 		Client client = userService.getCurrentClient();
 		List<ProductoInternoStatus> entities = repository.findByClientId(client.getId());
 		List<ProductCustomerDto> dtos = new ArrayList<ProductCustomerDto>();
-		// Tengo que asignar el precio a cada producto en base a las unidades de la categoria
+		// Tengo que asignar el precio a cada producto en base a las unidades de la
+		// categoria
 		for (ProductoInternoStatus e : entities) {
-			Unit unit = e.getProductoInterno().getCategory().getUnit();
+			Unit unit = e.getProductoInterno().getUnit();
 			ProductCustomerDto dto = productCustomerDtoConverter.toDto(e);
 			if (unit != null) {
 				dto.setBasePrices(calculatorUtil.getBasePriceList(e.getProductoInterno()));

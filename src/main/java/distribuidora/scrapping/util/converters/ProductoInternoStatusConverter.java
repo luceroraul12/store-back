@@ -18,7 +18,6 @@ public class ProductoInternoStatusConverter extends Converter<ProductoInternoSta
         dto.setId(e.getId());
         dto.setProductoInterno(productoInternoConverter.toDto(e.getProductoInterno()));
         dto.setHasStock(e.getHasStock());
-        dto.setIsUnit(e.getIsUnit());
         dto.setAmount(e.getAmount());
         return dto;
     }
@@ -28,7 +27,6 @@ public class ProductoInternoStatusConverter extends Converter<ProductoInternoSta
         ProductoInternoStatus e = new ProductoInternoStatus();
         e.setId(dto.getId());
         e.setProductoInterno(productoInternoConverter.toEntidad(dto.getProductoInterno()));
-        e.setIsUnit(dto.getIsUnit());
         e.setHasStock(dto.getHasStock());
         e.setAmount(dto.getAmount());
         return e;

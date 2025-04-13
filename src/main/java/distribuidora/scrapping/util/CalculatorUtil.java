@@ -9,11 +9,9 @@ import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.dto.BasePriceDto;
 import distribuidora.scrapping.entities.Category;
-import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.Unit;
 import distribuidora.scrapping.services.UnitDtoConverter;
-import distribuidora.scrapping.util.converters.LookupValueDtoConverter;
 
 @Component
 public class CalculatorUtil {
@@ -38,15 +36,16 @@ public class CalculatorUtil {
 		List<BasePriceDto> result = new ArrayList<BasePriceDto>();
 		Category category = p.getCategory();
 		// Calculo para unidad principal
-		result.add(getBasePrice(p, category.getUnit()));
+		result.add(getBasePrice(p));
 		// Calculo para unidad padre en caso de tenerlo
 		// TODO: Revisar flag pdf
-		if(category.hasUnitParent() && category.getUnit().getPdfShowChild())
-			result.add(getBasePrice(p, category.getUnitParent()));
+		if(p.hasUnitParent() && p.getUnit().getPdfShowChild())
+			result.add(getBasePrice(p));
 		return result;
 	}
 
-	private BasePriceDto getBasePrice(ProductoInterno p, Unit unit) {
+	private BasePriceDto getBasePrice(ProductoInterno p) {
+		Unit unit = p.getUnit();
 		DecimalFormat df = new DecimalFormat("#.##"); // Define el formato con 2 decimales
 		BasePriceDto dto = new BasePriceDto();
 		Double price = Double.parseDouble(calculateCustomerPrice(p).toString());
