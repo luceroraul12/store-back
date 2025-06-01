@@ -3,6 +3,7 @@ package distribuidora.scrapping.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +36,10 @@ public class PersonServiceImpl implements PersonService{
 	}
 
 	@Override
-	public List<PersonDto> getPersons() {
-		List<Person> persons = personRepository.findByClientId(userService.getCurrentClient().getId());
+	public List<PersonDto> getPersons(String search) {
+		if(StringUtils.isEmpty(search))
+			search = null;
+		List<Person> persons = personRepository.findByClientId(userService.getCurrentClient().getId(), search);
 		return personDtoConverter.toDtoList(persons);
 	}
 

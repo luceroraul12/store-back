@@ -9,7 +9,7 @@ public interface PersonService {
 
 	Integer createUpdatePerson(PersonDto dto);
 
-	List<PersonDto>  getPersons();
+	List<PersonDto>  getPersons(String search);
 
 	Integer deletePerson(Integer id) throws Exception;
 

@@ -13,7 +13,11 @@ public interface PersonRepository extends JpaRepository<Person, Integer>{
 		SELECT p
 		FROM Person p
 		WHERE p.client.id = :clientId
+			AND (:search IS NULL OR (
+					UPPER(p.name) like UPPER(CONCAT('%', :search, '%'))
+					OR p.phone like UPPER(CONCAT('%', :search, '%'))
+				))
 			""")
-	List<Person> findByClientId(Integer clientId);
+	List<Person> findByClientId(Integer clientId, String search);
 
 }
