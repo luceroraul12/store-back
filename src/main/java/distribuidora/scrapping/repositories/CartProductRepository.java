@@ -16,8 +16,9 @@ public interface CartProductRepository
 			FROM CartProduct cp
 				INNER JOIN cp.cart c
 			WHERE c.client.id = :clientId
+				AND :personId IS NULL OR cp.cart.customer.id = :personId
 			""")
-	List<CartProduct> findByClientId(Integer clientId);
+	List<CartProduct> findByClientIdAndPersonId(Integer clientId, Integer personId);
 
 	@Query("""
 			SELECT cp

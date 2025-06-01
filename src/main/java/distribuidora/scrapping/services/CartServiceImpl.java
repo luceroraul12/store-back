@@ -106,11 +106,11 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public List<CartDto> getCarts() {
+	public List<CartDto> getCarts(Integer personId) {
 		UsuarioEntity user = userService.getCurrentUser();
 		Client client = clientHasUsersRepository.findByClientId(user.getId()).getClient();
 
-		List<CartProduct> data = orderHasProductRepository.findByClientId(client.getId());
+		List<CartProduct> data = orderHasProductRepository.findByClientIdAndPersonId(client.getId(), personId);
 		List<CartDto> result = new ArrayList<>();
 		if (CollectionUtils.isNotEmpty(data)) {
 			// Agrupo por cart

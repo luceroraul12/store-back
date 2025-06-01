@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.dto.CartDto;
@@ -27,8 +28,8 @@ public class CartController {
 	}
 	
 	@GetMapping()
-	List<CartDto> getCarts() throws Exception{
-		return cartService.getCarts();
+	List<CartDto> getCarts(@RequestParam(required = false) Integer personId) throws Exception{
+		return cartService.getCarts(personId);
 	}
 	
 	@DeleteMapping("/{id}")
