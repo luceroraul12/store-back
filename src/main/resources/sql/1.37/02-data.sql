@@ -109,6 +109,20 @@ update cart_product cp
 update person set client_id = 1
 
 
+-- Actualización de datos de PASIONARIA -> NATIVO
+UPDATE public.client 
+	SET "name"='NATIVO', 
+address='Av. 25 de mayo 1006', 
+address_link='https://goo.gl/maps/4K6m4uivZY6CHYeH7',
+phone='+542664312837', 
+phone_link='https://api.whatsapp.com/send/?phone=542664312837&text&type=phone_number&app_absent=0',
+instagram='nativo.vm.sl',
+instagram_link='https://www.instagram.com/nativo.vm.sl', 
+facebook='Nativo Almacen Natural', 
+facebook_link='https://www.facebook.com/profile.php?id=100070005324554', 
+filename_logo='nativo-logo.jpg' 
+WHERE id=1;
+
 
 	
 	

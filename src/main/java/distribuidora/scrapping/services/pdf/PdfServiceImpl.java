@@ -37,6 +37,9 @@ import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
 import distribuidora.scrapping.services.ClientDataService;
+import distribuidora.scrapping.services.UsuarioService;
+import distribuidora.scrapping.services.general.LOOKUP_VALUES;
+import distribuidora.scrapping.services.general.LookupService;
 
 @Service
 public class PdfServiceImpl implements PdfService {
@@ -47,8 +50,11 @@ public class PdfServiceImpl implements PdfService {
 	private ProductoInternoStatusRepository productoInternoStatusRepository;
 
 	@Autowired
-	private ClientDataService clientDataService;
-
+	private LookupService lookupService;
+	
+	@Autowired
+	UsuarioService userService;
+	
 	private void generatePdf(HttpServletResponse response, Integer clientId) throws DocumentException, IOException {
 		// generacion del pdf
 		Document document = new Document();
@@ -57,44 +63,40 @@ public class PdfServiceImpl implements PdfService {
 		// Variables sobre la fecha del PDF
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:s", new Locale("es", "ES"));
 		String dateConverted = sdf.format(new Date());
-		// p = new Paragraph(String.format("Fecha de emisión: %s",
-		// dateConverted),
-		// smallBold);
+		
+		Client client = userService.getCurrentClient();
 
 		document.open();
-		addMetaData(document);
-		addTitlePage(document);
+		addMetaData(document, client);
+		addTitlePage(document, client);
 		addContent(document, writer, dateConverted, clientId);
 		document.close();
 	}
 
-	private void addMetaData(Document document) {
-		document.addTitle("Catalogo Pasionaria");
+	private void addMetaData(Document document, Client client) {
+		document.addTitle(String.format("Catalogo %s", client.getName()));
 		document.addSubject("Mis productos");
-		document.addKeywords("Pasionaria, Dietetica, Negocio, Productos");
-		document.addAuthor("Juan");
+		document.addKeywords(String.format("%s, Dietetica, Negocio, Productos", client.getName()));
+		document.addAuthor(client.getName());
 		document.addCreator("Lucero Raul");
 	}
 
-	@Override
-	public void addTitlePage(Document document) throws DocumentException, IOException {
-		Client data = clientDataService.getById(1);
-
+	public void addTitlePage(Document document, Client client) throws DocumentException, IOException {
 		Paragraph preface = new Paragraph();
 		// We add one empty line
 		addEmptyLine(preface, 1);
 		// Pruebas de logo del cliente
 		Paragraph p = null;
 		try {
-			Image imageLogo = Image.getInstance(String.format("/resources/%s", data.getFilenameLogo()));
-			imageLogo.scaleAbsolute(new Rectangle(300, 300));
+			String path = lookupService.getLookupValueByCode(LOOKUP_VALUES.FILE_PATH).getValor();
+			Image imageLogo = Image.getInstance(String.format("%s/%s", path, client.getFilenameLogo()));
 			imageLogo.setAlignment(Element.ALIGN_CENTER);
 			imageLogo.setSpacingAfter(0);
 			imageLogo.setSpacingBefore(0);
 			document.add(imageLogo);
 		} catch (Exception e) {
 			// En caso de que falle le agrego el datos string del mismo
-			p = new Paragraph(data.getName().toUpperCase(), catFont);
+			p = new Paragraph(client.getName().toUpperCase(), catFont);
 			p.setAlignment(Element.ALIGN_CENTER);
 			preface.add(p);
 		}
@@ -105,10 +107,10 @@ public class PdfServiceImpl implements PdfService {
 
 		preface.add(new Paragraph("Datos de contacto".toUpperCase(), subFont));
 
-		preface.add(generateParagraphLink("Direccion", data.getAddress(), data.getAddressLink()));
-		preface.add(generateParagraphLink("Telefono", data.getPhone(), data.getPhoneLink()));
-		preface.add(generateParagraphLink("Instagram", data.getInstagram(), data.getInstagramLink()));
-		preface.add(generateParagraphLink("Facebook", data.getFacebook(), data.getFacebookLink()));
+		preface.add(generateParagraphLink("Direccion", client.getAddress(), client.getAddressLink()));
+		preface.add(generateParagraphLink("Telefono", client.getPhone(), client.getPhoneLink()));
+		preface.add(generateParagraphLink("Instagram", client.getInstagram(), client.getInstagramLink()));
+		preface.add(generateParagraphLink("Facebook", client.getFacebook(), client.getFacebookLink()));
 
 		document.add(preface);
 	}
@@ -119,7 +121,6 @@ public class PdfServiceImpl implements PdfService {
 		return new Paragraph(result);
 	}
 
-	@Override
 	public void addContent(Document document, PdfWriter writer, String dateConverted, Integer clientId)
 			throws DocumentException {
 		List<Category> categories = categoryHasUnitRepository.findAll();
@@ -329,13 +330,6 @@ public class PdfServiceImpl implements PdfService {
 	@Override
 	public void getPdfByClientId(HttpServletResponse response, Integer clientId) throws IOException, DocumentException {
 		response.setContentType("application/pdf");
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		String currentDateTime = dateFormatter.format(new Date());
-
-		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=pasionaria-catalogo" + currentDateTime + ".pdf";
-		response.setHeader(headerKey, headerValue);
-
 		generatePdf(response, clientId);
 	}
 }

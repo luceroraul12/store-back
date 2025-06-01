@@ -23,11 +23,6 @@ public interface PdfService {
 	static Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 12,
 			Font.NORMAL, BaseColor.BLUE);
 
-	void addTitlePage(Document document) throws DocumentException, IOException;
-
-	void addContent(Document document, PdfWriter writer, String dateConverted,
-			Integer clientId) throws DocumentException;
-
 	Integer generateBasePrice(ProductoInterno p);
 
 	/**
