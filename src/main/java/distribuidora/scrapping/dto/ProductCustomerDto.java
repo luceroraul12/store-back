@@ -15,5 +15,5 @@ public class ProductCustomerDto {
 	private CategoryDto category;
 	private Date lastUpdate;
 	private List<BasePriceDto> basePrices;
-	private UnitDto unit;
+	private PresentationDto unit;
 }

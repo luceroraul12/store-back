@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 import distribuidora.scrapping.dto.BasePriceDto;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.entities.Unit;
-import distribuidora.scrapping.services.UnitDtoConverter;
+import distribuidora.scrapping.entities.Presentation;
+import distribuidora.scrapping.services.PresentationDtoConverter;
 
 @Component
 public class CalculatorUtil {
 	
 	@Autowired
-	private UnitDtoConverter unitDtoConverter;
+	private PresentationDtoConverter presentationDtoConverter;
 
 	public Integer calculateCustomerPrice(ProductoInterno p) {
 		int result;
@@ -34,26 +34,21 @@ public class CalculatorUtil {
 
 	public List<BasePriceDto> getBasePriceList(ProductoInterno p) {
 		List<BasePriceDto> result = new ArrayList<BasePriceDto>();
-		Category category = p.getCategory();
 		// Calculo para unidad principal
 		result.add(getBasePrice(p));
-		// Calculo para unidad padre en caso de tenerlo
-		// TODO: Revisar flag pdf
-		if(p.hasUnitParent() && p.getUnit().getPdfShowChild())
-			result.add(getBasePrice(p));
 		return result;
 	}
 
 	private BasePriceDto getBasePrice(ProductoInterno p) {
-		Unit unit = p.getUnit();
+		Presentation presentation = p.getPresentation();
 		DecimalFormat df = new DecimalFormat("#.##"); // Define el formato con 2 decimales
 		BasePriceDto dto = new BasePriceDto();
 		Double price = Double.parseDouble(calculateCustomerPrice(p).toString());
-		Double relation = price * unit.getRelation();
-		String label = String.format("[%s] %s", unit.getName(), df.format(relation));
+		Double relation = price * presentation.getRelation();
+		String label = String.format("[%s] %s", presentation.getName(), df.format(relation));
 		dto.setLabel(label);
-		dto.setRelation(relation);
-		dto.setUnit(unitDtoConverter.toDto(unit));
+		dto.setPrice(relation);
+		dto.setPresentation(presentationDtoConverter.toDto(presentation));
 		return dto;
 	}
 }

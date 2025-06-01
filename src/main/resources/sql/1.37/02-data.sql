@@ -1,73 +1,37 @@
 -- UNIDADES
+insert into unit(name, symbol, relation, unit_parent_id) values
+	('Unidad', 'U', 1, null),
+	('Kilogramos', 'KG', 1, null),
+	('Gramos', 'GR',0.001, null),
+	('Metro cubico', 'M3', 1, null)
 -- primero las independientes
---pasionaria
-insert into unit(client_id,  selectable, pdf_show_child,  "name", description, relation) values
-	((select id from client where name = 'PASIONARIA'), true, true, 'x1kg', 'Kilogramo', 1),
-	((select id from client where name = 'PASIONARIA'), true, true, 'Unidad', 'Unidad de producto', 1);
---prueba
-insert into unit(client_id,  selectable, pdf_show_child,  "name", description, relation) values
-	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'x1kg', 'Kilogramo', 1),
-	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'Unidad', 'Unidad de producto', 1),
-	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'M3', 'Metro cúbico', 1);
--- luego las que dependen de algo mas
---pasionaria
-insert into unit(client_id,  selectable, pdf_show_child,  "name", description, relation, unit_parent_id) values
-	((select id from client where name = 'PASIONARIA'), true, true, 'x500gr', 'Medio kilogramo', 0.5, 
-		(select id from unit 
-			where client_id = (select id from client where name = 'PASIONARIA') 
-			and name = 'x1kg')),
-	((select id from client where name = 'PASIONARIA'), true, true, 'x250gr', 'Cuarto kilogramo', 0.25, 
-		(select id from unit 
-			where client_id = (select id from client where name = 'PASIONARIA') 
-			and name = 'x1kg')),
-	((select id from client where name = 'PASIONARIA'), true, true, 'x100gr', '', 0.1, 
-		(select id from unit 
-			where client_id = (select id from client where name = 'PASIONARIA') 
-			and name = 'x1kg')),
-	((select id from client where name = 'PASIONARIA'), true, true, 'x50gr', 'Paquete', 0.05, 
-		(select id from unit 
-			where client_id = (select id from client where name = 'PASIONARIA') 
-			and name = 'x1kg'));
---prueba
-insert into unit(client_id,  selectable, pdf_show_child,  "name", description, relation, unit_parent_id) values
-	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'x500gr', 'Medio kilogramo', 0.5, 
-		(select id from unit 
-			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
-			and name = 'x1kg')),
-	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'x250gr', 'Cuarto kilogramo', 0.25, 
-		(select id from unit 
-			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
-			and name = 'x1kg')),
-	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'x100gr', '', 0.1, 
-		(select id from unit 
-			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
-			and name = 'x1kg')),
-	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'x50gr', 'Paquete', 0.05, 
-		(select id from unit 
-			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
-			and name = 'x1kg')),
-	((select id from client where name = 'HOMITOWEN-TEST'), true, true, '1/2 M3', 'Medio Metro Cúbico', 0.5, 
-		(select id from unit 
-			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
-			and name = 'M3')),
-	((select id from client where name = 'HOMITOWEN-TEST'), true, true, 'Bolsita', 'Bolsita de albañil', 0.05, 
-		(select id from unit 
-			where client_id = (select id from client where name = 'HOMITOWEN-TEST') 
-			and name = 'M3'));
+
+-- PRESENTACIONES
+insert into presentation(name, description, relation, unit_id) values
+	('Unidad', 'Unidad', 1, (select id from unit where symbol = 'U')),
+	('x1kg', 'Kilogramo', 1, (select id from unit where symbol = 'KG')),
+	('x500gr', 'Medio kilo', 0.5, (select id from unit where symbol = 'GR')),
+	('x250gr', 'Cuarto kilo', 0.25, (select id from unit where symbol = 'GR')),
+	('x100gr', '', 0.1, (select id from unit where symbol = 'GR')),
+	('x50gr', 'Paquete', 0.05, (select id from unit where symbol = 'GR')),
+	('1/2 M3', 'Medio Metro Cúbico', 0.5, (select id from unit where symbol = 'M3'));
+
+-- ASIGNACION DE PRESENTACIONES A CLIENTES
+insert into client_presentation(client_id, presentation_id) values 
+	(1, (select id from presentation where name = 'Unidad')),
+	(1, (select id from presentation where name = 'x1kg')),
+	(1, (select id from presentation where name = 'x500gr')),
+	(1, (select id from presentation where name = 'x250gr')),
+	(1, (select id from presentation where name = 'x100gr')),
+	(1, (select id from presentation where name = 'x50gr'))
 
 -- Populo tabla category
-insert into category(client_id, name, unit_id)
+insert into category(client_id, name)
 select distinct
 	(select id from client where name = 'PASIONARIA') clientId,
-	c.descripcion categoryName,
-	(select u.id from unit u
-		inner join client c on c.id = u.client_id
-		where c.name = 'PASIONARIA'
-			and u.name = lu.descripcion)
+	c.descripcion categoryName
 from productos_internos p
 	inner join lookup_valor c on c.id  = p.lv_categoria_id  
-	inner join lv_category_has_lv_unit r on r.lv_category_id = c.id 
-	inner join lookup_valor lu on lu.id = r.lv_unit_id 
 	
 -- Arreglo las categorias de los productos
 UPDATE 
@@ -78,20 +42,23 @@ from lookup_valor lv
 	inner join category c on c.name = lv.descripcion
 where lv.id = p.lv_categoria_id
 
--- Arreglo las unidades de los productos para que no dependan de la categoria
+-- Arreglo las presentaciones de los productos para que no dependan de la categoria
 update productos_internos p
-	set unit_id = (
+	set presentation_id = (
 		select 
 			case 
 				when r.is_unit 
-				then (select id from unit where name = 'Unidad' and client_id = p.client_id)
-				else u.id
+				then (select id from presentation where name = 'Unidad')
+				else pres.id
 			end
 		from productos_internos_status r where r.producto_interno_id = p.id
 	)
 from category c
-	inner join unit u on u.id = c.unit_id
-where c.id = p.category_id
+	inner join lookup_valor lc on lc.descripcion = c.name
+	inner join lv_category_has_lv_unit r on r.lv_category_id = lc.id
+	inner join lookup_valor lu on lu.id = r.lv_unit_id
+	inner join presentation pres on lu.descripcion = pres."name" 
+where c.id = p.category_id 
 
 
 -- Agrego modulos de la aplicación
@@ -127,6 +94,20 @@ insert into client_module (client_id, lv_module_id) values
 ((select id from client where name = 'HOMITOWEN-TEST'),(select id from lookup_valor where codigo = 'MODULE_TYPE_CATEGORY')),
 ((select id from client where name = 'HOMITOWEN-TEST'),(select id from lookup_valor where codigo = 'MODULE_TYPE_PERSON')),
 ((select id from client where name = 'HOMITOWEN-TEST'),(select id from lookup_valor where codigo = 'MODULE_TYPE_CART'));
+
+--Agrego las unidades a los cart_product de dicho momento en base a las unidades que tienen los productos actualmente
+-- Arreglo las unidades de los productos para que no dependan de la categoria
+update cart_product cp
+	set unit_id = (
+		select u.id from productos_internos p 
+			inner join presentation pre on pre.id = p.presentation_id 
+			inner join unit u on u.id = pre.unit_id 
+		where cp.product_id = p.id
+	)
+	
+-- tengo que asignar las personas al pasionaria
+update person set client_id = 1
+
 
 
 	

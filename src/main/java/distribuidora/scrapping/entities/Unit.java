@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,14 +16,14 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Presentation {
+public class Unit {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer id;
 	String name;
-	String description;
+	String symbol;
 	Double relation;
 	@ManyToOne
-	@JoinColumn(name = "unit_id")
-	Unit unit;
+	@JoinColumn(name = "unit_parent_id")
+	Unit unitParent;
 }

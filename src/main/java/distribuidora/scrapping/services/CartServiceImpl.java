@@ -1,7 +1,6 @@
 package distribuidora.scrapping.services;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,9 +12,7 @@ import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.CartDto;
 import distribuidora.scrapping.dto.CartProductDto;
-import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
-import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Person;
 import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.entities.customer.Cart;
@@ -69,7 +66,6 @@ public class CartServiceImpl implements CartService {
 		// TODO: Separar entre converters y service
 		// Obtengo el cliente
 		Client client = validateClient();
-		List<Category> categories = categoryHasUnitRepository.findCategoriesByClientId(client.getId());
 		List<Integer> productIds = data.stream().map(d -> d.getProducts()).flatMap(List::stream)
 				.map(d -> d.getProductId()).distinct().toList();
 		List<ProductoInternoStatus> products = productoInternoStatusService.getAllByProductIds(productIds);
@@ -82,18 +78,12 @@ public class CartServiceImpl implements CartService {
 			// Seteo id de cart
 			cartDto.setBackendCartId(cart.getId());
 			cartDto.setStatus("SYNCHRONIZED");
-			// Busco todos los lookups de unidades del producto para hacer la busqueda en db
-			// por unica vez
-			List<Integer> lvUnitIds = cartDto.getProducts().stream().map(p -> p.getLvUnit().getId()).toList();
-			Map<Integer, LookupValor> mapLvUnits = new HashMap<Integer, LookupValor>();
-			lookupService.getLookupValuesByIds(lvUnitIds).forEach(lv -> {
-				mapLvUnits.put(lv.getId(), lv);
-			});
 			for (CartProductDto cp : cartDto.getProducts()) {
 				ProductoInternoStatus currentProductRelation = products.stream()
 						.filter(r -> r.getProductoInterno().getId().equals(cp.getProductId())).findFirst().orElse(null);
-
-				CartProduct cartProduct = new CartProduct(mapLvUnits.get(cp.getLvUnit().getId()), cart,
+				
+				CartProduct cartProduct = new CartProduct(
+						currentProductRelation.getProductoInterno().getPresentation().getUnit(), cart,
 						currentProductRelation.getProductoInterno(), cp.getPrice(), cp.getQuantity());
 				cartProduct = orderHasProductRepository.save(cartProduct);
 				// Seteo ids

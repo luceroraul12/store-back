@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.entities.Category;
-import distribuidora.scrapping.services.UnitDtoConverter;
+import distribuidora.scrapping.services.PresentationDtoConverter;
 
 @Component
 public class CategoryDtoConverter extends Converter<Category, CategoryDto>{
 	
 	@Autowired
-	UnitDtoConverter unitDtoConverter;
+	PresentationDtoConverter unitDtoConverter;
 
 	@Override
 	public CategoryDto toDto(Category entidad) {

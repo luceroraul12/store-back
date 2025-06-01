@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.dto.LookupValueDto;
-import distribuidora.scrapping.dto.UnitDto;
-import distribuidora.scrapping.services.UnitService;
+import distribuidora.scrapping.dto.PresentationDto;
+import distribuidora.scrapping.services.PresentationService;
 import distribuidora.scrapping.services.UsuarioService;
 
 @RestController
@@ -20,16 +20,16 @@ public class ClientController {
 	UsuarioService userService;
 	
 	@Autowired
-	UnitService unitService;
+	PresentationService presentationService;
 	
 	@GetMapping("/modules")
 	List<LookupValueDto> getModules(){
 		return userService.getModules();
 	}
 	
-	@GetMapping("/units")
-	List<UnitDto> getUnits(){
-		return unitService.getUnits();
+	@GetMapping("/presentations")
+	List<PresentationDto> getUnits(){
+		return presentationService.getPresentations();
 	}
 
 

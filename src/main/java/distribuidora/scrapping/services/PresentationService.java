@@ -2,12 +2,12 @@ package distribuidora.scrapping.services;
 
 import java.util.List;
 
-import distribuidora.scrapping.dto.UnitDto;
-import distribuidora.scrapping.entities.Unit;
+import distribuidora.scrapping.dto.PresentationDto;
+import distribuidora.scrapping.entities.Presentation;
 
-public interface UnitService {
+public interface PresentationService {
 
-	Unit getById(Integer id) throws Exception;
+	Presentation getById(Integer id) throws Exception;
 
-	List<UnitDto> getUnits();
+	List<PresentationDto> getPresentations();
 }

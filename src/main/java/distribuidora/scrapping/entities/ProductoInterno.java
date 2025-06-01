@@ -67,8 +67,8 @@ public class ProductoInterno {
 	private Client client;
 	
 	@ManyToOne
-	@JoinColumn(name = "unit_id")
-	Unit unit;
+	@JoinColumn(name = "presentation_id")
+	Presentation presentation;
 
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion,
@@ -89,13 +89,5 @@ public class ProductoInterno {
 		this.category = category;
 		this.porcentajeImpuesto = porcentajeImpuesto;
 		this.regulador = regulador;
-	}
-	
-	public boolean hasUnitParent() {
-		return unit.getUnitParent() != null;
-	}
-	
-	public Unit getUnitParent() {
-		return unit.getUnitParent();
 	}
 }

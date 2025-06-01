@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
-import distribuidora.scrapping.services.UnitDtoConverter;
+import distribuidora.scrapping.services.PresentationDtoConverter;
 import distribuidora.scrapping.services.general.LookupService;
 
 @Component
@@ -24,7 +24,7 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 	CategoryDtoConverter categoryDtoConverter;
 	
 	@Autowired
-	UnitDtoConverter unitDtoConverter;
+	PresentationDtoConverter presentationDtoConverter;
 
 	@Override
 	public ProductoInternoDto toDto(ProductoInterno entidad) {
@@ -45,7 +45,7 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 		dto.setPrecioTransporte(entidad.getPrecioTransporte());
 		dto.setPrecioEmpaquetado(entidad.getPrecioEmpaquetado());
 		dto.setPorcentajeGanancia(entidad.getPorcentajeGanancia());
-		dto.setUnit(unitDtoConverter.toDto(entidad.getUnit()));
+		dto.setPresentation(presentationDtoConverter.toDto(entidad.getPresentation()));
 		return dto;
 	}
 

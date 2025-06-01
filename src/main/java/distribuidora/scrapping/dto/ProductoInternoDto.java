@@ -20,7 +20,7 @@ public class ProductoInternoDto {
 	private Double precio;
 	private ExternalProductDto externalProduct;
 	private CategoryDto category;
-	private UnitDto unit;
+	private PresentationDto presentation;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Double precioTransporte;

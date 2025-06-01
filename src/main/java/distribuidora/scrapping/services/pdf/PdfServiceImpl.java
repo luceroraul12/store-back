@@ -235,7 +235,7 @@ public class PdfServiceImpl implements PdfService {
 
 	private String generateProductName(ProductoInterno p) {
 		String result;
-		String productName = StringUtils.capitalize(String.format("[%s] %s", p.getUnit().getName(), p.getNombre()));
+		String productName = StringUtils.capitalize(String.format("[%s] %s", p.getPresentation().getName(), p.getNombre()));
 		String description = p.getDescripcion();
 
 		// seteo los datos del producto
@@ -258,7 +258,7 @@ public class PdfServiceImpl implements PdfService {
 	@Override
 	public Integer generateBasePrice(ProductoInterno p) {
 		int result;
-		double precio = p.getPrecio() != null ? p.getPrecio() * p.getUnit().getRelation() : 0;
+		double precio = p.getPrecio() != null ? p.getPrecio() * p.getPresentation().getRelation() : 0;
 		double transporte = p.getPrecioTransporte() != null ? p.getPrecioTransporte() : 0.0;
 		double empaquetado = p.getPrecioEmpaquetado() != null ? p.getPrecioEmpaquetado() : 0.0;
 		double ganancia = (100 + (p.getPorcentajeGanancia() != null ? p.getPorcentajeGanancia() : 0)) / 100;

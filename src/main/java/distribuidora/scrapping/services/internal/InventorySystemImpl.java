@@ -16,13 +16,13 @@ import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.entities.Unit;
+import distribuidora.scrapping.entities.Presentation;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.CategoryService;
-import distribuidora.scrapping.services.UnitService;
+import distribuidora.scrapping.services.PresentationService;
 import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.util.converters.CategoryDtoConverter;
 import distribuidora.scrapping.util.converters.DatosDistribuidoraConverter;
@@ -62,7 +62,7 @@ public class InventorySystemImpl implements InventorySystem {
 	private CategoryService categoryService;
 	
 	@Autowired
-	private UnitService unitService;
+	private PresentationService unitService;
 
 	@Override
 	public int actualizarPreciosAutomatico() {
@@ -110,8 +110,8 @@ public class InventorySystemImpl implements InventorySystem {
 		producto.setFechaCreacion(new Date());
 		Client client = usuarioService.getCurrentClient();
 		producto.setClient(client);
-		Unit unit = unitService.getById(dto.getUnit().getId());
-		producto.setUnit(unit);
+		Presentation presentation = unitService.getById(dto.getPresentation().getId());
+		producto.setPresentation(presentation);
 		ProductoInterno productoGuardado = productoInternoRepository.save(producto);
 		return productoInternoConverter.toDto(productoGuardado);
 	}
@@ -132,8 +132,8 @@ public class InventorySystemImpl implements InventorySystem {
 			throw new Exception("El producto que quiere modificar pertenece a otra tienda.");
 
 		ProductoInterno newEntidadInterno = productoInternoConverter.toEntidad(dto);
-		Unit unit = unitService.getById(dto.getUnit().getId());
-		newEntidadInterno.setUnit(unit);
+		Presentation presentation = unitService.getById(dto.getPresentation().getId());
+		newEntidadInterno.setPresentation(presentation);
 		newEntidadInterno.setClient(currentClient);
 
 		newEntidadInterno.setFechaCreacion(oldEntidadInterno.getFechaCreacion());

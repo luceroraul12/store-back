@@ -1,30 +1,32 @@
 package distribuidora.scrapping.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import distribuidora.scrapping.dto.UnitDto;
-import distribuidora.scrapping.entities.Unit;
+import distribuidora.scrapping.dto.PresentationDto;
+import distribuidora.scrapping.entities.Presentation;
 import distribuidora.scrapping.util.converters.Converter;
+import distribuidora.scrapping.util.converters.UnitDtoConverter;
 
 @Component
-public class UnitDtoConverter extends Converter<Unit, UnitDto>{
+public class PresentationDtoConverter extends Converter<Presentation, PresentationDto>{
+	
+	@Autowired
+	UnitDtoConverter unitDtoConverter;
 
 	@Override
-	public UnitDto toDto(Unit e) {
-		UnitDto d = new UnitDto();
+	public PresentationDto toDto(Presentation e) {
+		PresentationDto d = new PresentationDto();
 		d.setId(e.getId());
 		d.setName(e.getName());
 		d.setRelation(e.getRelation());
 		d.setDescription(e.getDescription());
-		d.setPdfShowChild(e.getPdfShowChild());
-		d.setSelectable(e.getSelectable());
-		if(e.getUnitParent() != null)
-			d.setUnitParent(toDto(e.getUnitParent()));
+		d.setUnit(unitDtoConverter.toDto(e.getUnit()));
 		return d;
 	}
 
 	@Override
-	public Unit toEntidad(UnitDto d) {
+	public Presentation toEntidad(PresentationDto d) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 	ProductoInternoRepository productoInternoRepository;
 
 	@Autowired
-	UnitService unitService;
+	PresentationService unitService;
 
 	@Override
 	public List<CategoryDto> getCategoryDtos() {
