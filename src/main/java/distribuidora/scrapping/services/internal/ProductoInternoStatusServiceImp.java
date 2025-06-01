@@ -77,9 +77,9 @@ public class ProductoInternoStatusServiceImp implements ProductoInternoStatusSer
 		// Tengo que asignar el precio a cada producto en base a las unidades de la
 		// categoria
 		for (ProductoInternoStatus e : entities) {
-			Presentation presentation = e.getProductoInterno().getPresentation();
+			Presentation unit = e.getProductoInterno().getPresentation();
 			ProductCustomerDto dto = productCustomerDtoConverter.toDto(e);
-			if (presentation != null) {
+			if (unit != null) {
 				dto.setBasePrices(calculatorUtil.getBasePriceList(e.getProductoInterno()));
 			}
 			dtos.add(dto);
