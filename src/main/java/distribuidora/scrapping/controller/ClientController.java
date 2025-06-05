@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import distribuidora.scrapping.dto.ClientDto;
 import distribuidora.scrapping.dto.LookupValueDto;
 import distribuidora.scrapping.dto.PresentationDto;
 import distribuidora.scrapping.services.PresentationService;
@@ -21,6 +22,11 @@ public class ClientController {
 	
 	@Autowired
 	PresentationService presentationService;
+	
+	@GetMapping("/current")
+	ClientDto getCurrentUser(){
+		return userService.getCurrentUserDto();
+	}
 	
 	@GetMapping("/modules")
 	List<LookupValueDto> getModules(){
