@@ -5,17 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.BasePriceDto;
-import distribuidora.scrapping.entities.Category;
-import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.Presentation;
+import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.services.PresentationDtoConverter;
 
-@Component
+@Service
 public class CalculatorUtil {
-	
+
 	@Autowired
 	private PresentationDtoConverter presentationDtoConverter;
 

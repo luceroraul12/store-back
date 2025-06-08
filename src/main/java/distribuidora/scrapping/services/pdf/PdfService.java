@@ -5,10 +5,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.pdf.PdfWriter;
 
 import distribuidora.scrapping.entities.ProductoInterno;
 
@@ -42,5 +40,5 @@ public interface PdfService {
 	int round(int result);
 
 	void getPdfByClientId(HttpServletResponse response, Integer clientId)
-			throws IOException, DocumentException;
+			throws IOException, DocumentException, Exception;
 }

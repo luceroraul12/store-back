@@ -81,5 +81,9 @@ create table config(
 );
 
 
+-- elimino tabla producto_interno_status
+DROP TABLE productos_internos_status CASCADE;
+
+
 
 

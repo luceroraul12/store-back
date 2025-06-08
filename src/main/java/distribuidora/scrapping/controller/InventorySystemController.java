@@ -1,6 +1,5 @@
 package distribuidora.scrapping.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,15 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itextpdf.text.DocumentException;
-
 import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
-import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.services.internal.InventorySystem;
-import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
 import distribuidora.scrapping.services.pdf.PdfService;
 
 @RestController()
@@ -35,9 +30,6 @@ public class InventorySystemController {
 
 	@Autowired
 	InventorySystem service;
-
-	@Autowired
-	ProductoInternoStatusService productoInternoStatusService;
 
 	@Autowired
 	PdfService pdfService;
@@ -62,7 +54,7 @@ public class InventorySystemController {
 
 	@GetMapping
 	List<ProductoInternoDto> getProductos(@RequestParam(required = false) String search) throws Exception {
-		return service.getProductos(search);
+		return service.getProductDtos(search);
 	}
 
 	@DeleteMapping(value = "delete")
@@ -83,18 +75,8 @@ public class InventorySystemController {
 	}
 
 	@GetMapping("pdf")
-	void getPDF(HttpServletResponse response) throws DocumentException, IOException {
+	void getPDF(HttpServletResponse response) throws Exception {
 		pdfService.getPdfByClientId(response, userService.getCurrentClient().getId());
-	}
-
-	@GetMapping("status")
-	List<ProductoInternoStatusDto> getStatus() throws Exception {
-		return productoInternoStatusService.getByClientId(userService.getCurrentClient().getId());
-	}
-
-	@PutMapping("status")
-	ProductoInternoStatusDto updateStatus(@RequestBody ProductoInternoStatusDto dto) {
-		return productoInternoStatusService.update(dto);
 	}
 
 	@GetMapping("categories")

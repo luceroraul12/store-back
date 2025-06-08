@@ -70,8 +70,7 @@ public class ProductoInterno {
 	@JoinColumn(name = "presentation_id")
 	private Presentation presentation;
 	
-	@Column(name = "available")
-	private Boolean available;
+	private Boolean available = true;
 
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion,

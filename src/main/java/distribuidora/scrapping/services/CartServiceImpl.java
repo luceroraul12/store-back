@@ -14,7 +14,7 @@ import distribuidora.scrapping.dto.CartDto;
 import distribuidora.scrapping.dto.CartProductDto;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.Person;
-import distribuidora.scrapping.entities.ProductoInternoStatus;
+import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.customer.Cart;
 import distribuidora.scrapping.entities.customer.CartProduct;
 import distribuidora.scrapping.repositories.CartProductRepository;
@@ -23,7 +23,7 @@ import distribuidora.scrapping.repositories.OrderRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.security.entity.UsuarioEntity;
 import distribuidora.scrapping.services.general.LookupService;
-import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
+import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.util.converters.CartDtoConverter;
 import distribuidora.scrapping.util.converters.CartProductDtoConverter;
 
@@ -38,9 +38,6 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	CartProductRepository orderHasProductRepository;
-
-	@Autowired
-	ProductoInternoStatusService productoInternoStatusService;
 
 	@Autowired
 	CategoryHasUnitRepository categoryHasUnitRepository;
@@ -61,6 +58,9 @@ public class CartServiceImpl implements CartService {
 	@Autowired
 	LookupService lookupService;
 
+	@Autowired
+	InventorySystem inventoryService;
+
 	@Override
 	public List<CartDto> createFinalizedCart(List<CartDto> data) throws Exception {
 		// TODO: Separar entre converters y service
@@ -68,7 +68,7 @@ public class CartServiceImpl implements CartService {
 		Client client = validateClient();
 		List<Integer> productIds = data.stream().map(d -> d.getProducts()).flatMap(List::stream)
 				.map(d -> d.getProductId()).distinct().toList();
-		List<ProductoInternoStatus> products = productoInternoStatusService.getAllByProductIds(productIds);
+		List<ProductoInterno> products = inventoryService.getProductByIds(productIds);
 
 		// Creo las ordenes
 		for (CartDto cartDto : data) {
@@ -78,17 +78,18 @@ public class CartServiceImpl implements CartService {
 			// Seteo id de cart
 			cartDto.setBackendCartId(cart.getId());
 			cartDto.setStatus("SYNCHRONIZED");
+			List<CartProduct> finalProducts = new ArrayList<CartProduct>();
 			for (CartProductDto cp : cartDto.getProducts()) {
-				ProductoInternoStatus currentProductRelation = products.stream()
-						.filter(r -> r.getProductoInterno().getId().equals(cp.getProductId())).findFirst().orElse(null);
-				
-				CartProduct cartProduct = new CartProduct(
-						currentProductRelation.getProductoInterno().getPresentation().getUnit(), cart,
-						currentProductRelation.getProductoInterno(), cp.getPrice(), cp.getQuantity());
+				Integer productId = cp.getProductId();
+				ProductoInterno currentProductRelation = products.stream()
+						.filter(p -> p.getId().equals(productId)).findFirst().orElse(null);
+
+				CartProduct cartProduct = new CartProduct(currentProductRelation.getPresentation().getUnit(), cart,
+						currentProductRelation, cp.getPrice(), cp.getQuantity());
 				cartProduct = orderHasProductRepository.save(cartProduct);
-				// Seteo ids
-				cp.setBackendCartProductId(cartProduct.getId());
+				finalProducts.add(cartProduct);
 			}
+			cartDto.setProducts(cartProductDtoConverter.toDtoList(finalProducts));
 		}
 
 		return data;

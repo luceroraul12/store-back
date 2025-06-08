@@ -5,42 +5,40 @@ import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.services.PresentationDtoConverter;
 import distribuidora.scrapping.util.CalculatorUtil;
 
 @Component
-public class ProductCustomerDtoConverter extends Converter<ProductoInternoStatus, ProductCustomerDto>{
-	
+public class ProductCustomerDtoConverter extends Converter<ProductoInterno, ProductCustomerDto> {
+
 	@Autowired
 	CalculatorUtil calculatorUtil;
-	
+
 	@Autowired
 	LookupValueDtoConverter lookupValueDtoConverter;
-	
+
 	@Autowired
 	CategoryDtoConverter categoryDtoConverter;
-	
+
 	@Autowired
 	PresentationDtoConverter presentationDtoConverter;
 
 	@Override
-	public ProductCustomerDto toDto(ProductoInternoStatus entidad) {
+	public ProductCustomerDto toDto(ProductoInterno p) {
 		ProductCustomerDto dto = new ProductCustomerDto();
-		ProductoInterno p = entidad.getProductoInterno();
 		dto.setId(p.getId());
 		dto.setName(p.getNombre());
 		dto.setDescription(p.getDescripcion());
-		dto.setStock(entidad.getHasStock());
-		dto.setUnit(presentationDtoConverter.toDto(entidad.getProductoInterno().getPresentation()));
+		dto.setStock(p.getAvailable());
+		dto.setUnit(presentationDtoConverter.toDto(p.getPresentation()));
 		dto.setPrice(calculatorUtil.calculateCustomerPrice(p));
 		dto.setCategory(categoryDtoConverter.toDto(p.getCategory()));
-		dto.setLastUpdate(entidad.getProductoInterno().getFechaActualizacion());
+		dto.setLastUpdate(p.getFechaActualizacion());
 		return dto;
 	}
 
 	@Override
-	public ProductoInternoStatus toEntidad(ProductCustomerDto dto) {
+	public ProductoInterno toEntidad(ProductCustomerDto dto) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.dto.DatosDistribuidoraDto;
+import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.ProductoInterno;
 
@@ -29,7 +30,7 @@ public interface InventorySystem {
 	List<ProductoInternoDto> eliminarProductos(
 			List<Integer> productoInternoIds);
 
-	List<ProductoInternoDto> getProductos(String search) throws Exception;
+	List<ProductoInternoDto> getProductDtos(String search) throws Exception;
 
 	List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos)
 			throws Exception;
@@ -47,4 +48,8 @@ public interface InventorySystem {
 	List<ProductoInterno> getProductByIds(List<Integer> productIds);
 
 	void changeAvailable(Integer productId, Boolean isAvailable);
+
+	List<ProductoInterno> getProducts(String search) throws Exception;
+
+	List<ProductCustomerDto> getProductsForCustomer() throws Exception;
 }

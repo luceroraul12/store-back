@@ -1,7 +1,6 @@
 package distribuidora.scrapping.services.pdf;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
@@ -24,7 +23,6 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -33,15 +31,11 @@ import com.itextpdf.text.pdf.PdfWriter;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
-import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
-import distribuidora.scrapping.services.ClientDataService;
 import distribuidora.scrapping.services.ConfigService;
 import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.services.general.CONFIG;
-import distribuidora.scrapping.services.general.LOOKUP_VALUES;
-import distribuidora.scrapping.services.general.LookupService;
+import distribuidora.scrapping.services.internal.InventorySystem;
 
 @Service
 public class PdfServiceImpl implements PdfService {
@@ -49,15 +43,15 @@ public class PdfServiceImpl implements PdfService {
 	@Autowired
 	private CategoryHasUnitRepository categoryHasUnitRepository;
 	@Autowired
-	private ProductoInternoStatusRepository productoInternoStatusRepository;
+	private InventorySystem inventoryService;
 
 	@Autowired
 	ConfigService configService;
-	
+
 	@Autowired
 	UsuarioService userService;
-	
-	private void generatePdf(HttpServletResponse response, Integer clientId) throws DocumentException, IOException {
+
+	private void generatePdf(HttpServletResponse response, Integer clientId) throws Exception {
 		// generacion del pdf
 		Document document = new Document();
 		PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
@@ -65,7 +59,7 @@ public class PdfServiceImpl implements PdfService {
 		// Variables sobre la fecha del PDF
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:s", new Locale("es", "ES"));
 		String dateConverted = sdf.format(new Date());
-		
+
 		Client client = userService.getCurrentClient();
 
 		document.open();
@@ -124,7 +118,7 @@ public class PdfServiceImpl implements PdfService {
 	}
 
 	public void addContent(Document document, PdfWriter writer, String dateConverted, Integer clientId)
-			throws DocumentException {
+			throws Exception {
 		List<Category> categories = categoryHasUnitRepository.findAll();
 
 		// TODO: Voy a comentarlo para ver que dice el cliente, en caso que lo
@@ -134,12 +128,12 @@ public class PdfServiceImpl implements PdfService {
 		// document.add(title);
 
 		// busco los prodcutos
-		List<ProductoInternoStatus> productoInternosStatus = productoInternoStatusRepository.findByClientId(clientId);
+		List<ProductoInterno> productoInternosStatus = inventoryService.getProducts(StringUtils.EMPTY);
 
 		for (Category category : categories) {
 			// me fijo si la categoria tiene productos asociados
-			List<ProductoInternoStatus> productsByActualCategory = productoInternosStatus.stream()
-					.filter(p -> p.getProductoInterno().getCategory().equals(category))
+			List<ProductoInterno> productsByActualCategory = productoInternosStatus.stream()
+					.filter(p -> p.getCategory().equals(category))
 					// ordeno productos por nombre y si hay unidades los dejo al
 					// final
 					.sorted(orderProductoInternoStatusList()).toList();
@@ -161,11 +155,10 @@ public class PdfServiceImpl implements PdfService {
 				table.setWidths(widths);
 
 				boolean alterColor = false;
-				for (ProductoInternoStatus productoInternoStatus : productsByActualCategory) {
+				for (ProductoInterno p : productsByActualCategory) {
 					BaseColor color = alterColor ? BaseColor.WHITE : BaseColor.LIGHT_GRAY;
 					// Nombre del producto
-					PdfPCell nameCell = createCell(generateProductName(productoInternoStatus.getProductoInterno()),
-							color, PdfPCell.ALIGN_LEFT);
+					PdfPCell nameCell = createCell(generateProductName(p), color, PdfPCell.ALIGN_LEFT);
 					table.addCell(nameCell);
 
 					// Separador de puntos
@@ -176,8 +169,7 @@ public class PdfServiceImpl implements PdfService {
 //		            table.addCell(separadorCell);
 
 					// Precio con unidad
-					PdfPCell precioCell = createCell(generatePriceWithUnitLogic(productoInternoStatus), color,
-							PdfPCell.ALIGN_RIGHT);
+					PdfPCell precioCell = createCell(generatePriceWithUnitLogic(p), color, PdfPCell.ALIGN_RIGHT);
 					table.addCell(precioCell);
 					alterColor = !alterColor;
 				}
@@ -219,26 +211,29 @@ public class PdfServiceImpl implements PdfService {
 	 * 
 	 * @return
 	 */
-	private Comparator<ProductoInternoStatus> orderProductoInternoStatusList() {
+	private Comparator<ProductoInterno> orderProductoInternoStatusList() {
 		// Comparator auxiliar por check stock
-		Comparator<ProductoInternoStatus> compartorByHasStock = (a, b) -> b.getHasStock().compareTo(a.getHasStock());
+		Comparator<ProductoInterno> compartorByHasStock = (a, b) -> b.getAvailable().compareTo(a.getAvailable());
+		// Comparator
+		Comparator<ProductoInterno> compartorByUnit = (a, b) -> b.getPresentation().getId()
+				.compareTo(a.getPresentation().getId());
 		// Comparator auxiliar por nombre de productos
-		Comparator<ProductoInternoStatus> comparatorByProductName = (a, b) -> a.getProductoInterno().getNombre()
-				.compareToIgnoreCase(b.getProductoInterno().getNombre());
+		Comparator<ProductoInterno> comparatorByProductName = (a, b) -> a.getNombre()
+				.compareToIgnoreCase(b.getNombre());
 		// TODO Ver si es necesario ordenar por productos de unidad
 //		// Comparator auxiliar por flag de unidad
 //		Comparator<ProductoInternoStatus> comparatorByIsUnit = (a, b) -> a.getIsUnit().compareTo(b.getIsUnit());
 
-		// Hago que primero haga por nombre, luego por flag y por ultimo de
-		// nuevo nombre
-		Comparator<ProductoInternoStatus> resultComparator = compartorByHasStock.thenComparing(comparatorByProductName);
+		Comparator<ProductoInterno> resultComparator = compartorByHasStock.thenComparing(compartorByUnit)
+				.thenComparing(comparatorByProductName);
 
 		return resultComparator;
 	}
 
 	private String generateProductName(ProductoInterno p) {
 		String result;
-		String productName = StringUtils.capitalize(String.format("[%s] %s", p.getPresentation().getName(), p.getNombre()));
+		String productName = StringUtils
+				.capitalize(String.format("[%s] %s", p.getPresentation().getName(), p.getNombre()));
 		String description = p.getDescripcion();
 
 		// seteo los datos del producto
@@ -310,13 +305,12 @@ public class PdfServiceImpl implements PdfService {
 	 * @param lvUnit
 	 * @return
 	 */
-	private String generatePriceWithUnitLogic(ProductoInternoStatus productoInternoStatus) {
-		double price = generateBasePrice(productoInternoStatus.getProductoInterno());
-		boolean hasStock = productoInternoStatus.getHasStock();
+	private String generatePriceWithUnitLogic(ProductoInterno productoInternoStatus) {
+		double price = generateBasePrice(productoInternoStatus);
 
 		// En caso de que el producto se encuentre marcado sin stock,
 		// directamente retorno eso
-		if (!hasStock) {
+		if (!productoInternoStatus.getAvailable()) {
 			return "SIN STOCK";
 		}
 
@@ -330,7 +324,7 @@ public class PdfServiceImpl implements PdfService {
 	}
 
 	@Override
-	public void getPdfByClientId(HttpServletResponse response, Integer clientId) throws IOException, DocumentException {
+	public void getPdfByClientId(HttpServletResponse response, Integer clientId) throws Exception {
 		response.setContentType("application/pdf");
 		generatePdf(response, clientId);
 	}

@@ -14,7 +14,7 @@ public interface ProductoInternoRepository extends JpaRepository<ProductoInterno
 	List<ProductoInterno> getProductosReferenciados();
 
 	@Query("SELECT pi FROM ProductoInterno pi " + "WHERE pi.id IN (:productoInternoIds)")
-	List<ProductoInterno> getProductosPorIds(@Param("productoInternoIds") List<Integer> productoInternoIds);
+	List<ProductoInterno> getProductsByIds(@Param("productoInternoIds") List<Integer> productoInternoIds);
 
 	@Query("""
 			    SELECT pi

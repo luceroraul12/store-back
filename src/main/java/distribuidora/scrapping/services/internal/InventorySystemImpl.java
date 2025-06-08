@@ -12,11 +12,12 @@ import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.dto.DatosDistribuidoraDto;
+import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
-import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.Presentation;
+import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
@@ -24,8 +25,10 @@ import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.CategoryService;
 import distribuidora.scrapping.services.PresentationService;
 import distribuidora.scrapping.services.UsuarioService;
+import distribuidora.scrapping.util.CalculatorUtil;
 import distribuidora.scrapping.util.converters.CategoryDtoConverter;
 import distribuidora.scrapping.util.converters.DatosDistribuidoraConverter;
+import distribuidora.scrapping.util.converters.ProductCustomerDtoConverter;
 import distribuidora.scrapping.util.converters.ProductoInternoConverter;
 
 @Service
@@ -60,9 +63,15 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Autowired
 	private CategoryService categoryService;
-	
+
 	@Autowired
 	private PresentationService unitService;
+
+	@Autowired
+	ProductCustomerDtoConverter productCustomerDtoConverter;
+
+	@Autowired
+	CalculatorUtil calculatorUtil;
 
 	@Override
 	public int actualizarPreciosAutomatico() {
@@ -148,7 +157,7 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Override
 	public List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds) {
-		List<ProductoInterno> productosEncontrados = productoInternoRepository.getProductosPorIds(productoInternoIds);
+		List<ProductoInterno> productosEncontrados = productoInternoRepository.getProductsByIds(productoInternoIds);
 		List<Integer> productoIdsEncontrados = productosEncontrados.stream().map(ProductoInterno::getId)
 				.collect(Collectors.toList());
 		productoInternoRepository.deleteAllById(productoIdsEncontrados);
@@ -156,7 +165,7 @@ public class InventorySystemImpl implements InventorySystem {
 	}
 
 	@Override
-	public List<ProductoInternoDto> getProductos(String search) throws Exception {
+	public List<ProductoInterno> getProducts(String search) throws Exception {
 		Integer clientId = usuarioService.getCurrentClient().getId();
 		// Convierto search en mayuscula
 		if (StringUtils.isNotEmpty(search))
@@ -164,7 +173,12 @@ public class InventorySystemImpl implements InventorySystem {
 		else
 			search = null;
 		List<ProductoInterno> productos = productoInternoRepository.getAllProductosByUserIdAndSearch(clientId, search);
-		return productoInternoConverter.toDtoList(productos);
+		return productos;
+	}
+
+	@Override
+	public List<ProductoInternoDto> getProductDtos(String search) throws Exception {
+		return productoInternoConverter.toDtoList(getProducts(search));
 	}
 
 	@Override
@@ -248,10 +262,27 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Override
 	public void changeAvailable(Integer productId, Boolean isAvailable) {
-		 productoInternoRepository.findById(productId).ifPresent(p -> {
-			 p.setAvailable(isAvailable);
-			 productoInternoRepository.save(p);
-		 });
+		productoInternoRepository.findById(productId).ifPresent(p -> {
+			p.setAvailable(isAvailable);
+			productoInternoRepository.save(p);
+		});
+	}
+
+	@Override
+	public List<ProductCustomerDto> getProductsForCustomer() throws Exception {
+		List<ProductoInterno> products = getProducts(StringUtils.EMPTY);
+		List<ProductCustomerDto> dtos = new ArrayList<ProductCustomerDto>();
+		// Tengo que asignar el precio a cada producto en base a las unidades de la
+		// categoria
+		for (ProductoInterno e : products) {
+			Presentation unit = e.getPresentation();
+			ProductCustomerDto dto = productCustomerDtoConverter.toDto(e);
+			if (unit != null) {
+				dto.setBasePrices(calculatorUtil.getBasePriceList(e));
+			}
+			dtos.add(dto);
+		}
+		return dtos;
 	}
 
 }
