@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -70,7 +71,7 @@ public class ProductoInterno {
 	@JoinColumn(name = "presentation_id")
 	private Presentation presentation;
 	
-	private Boolean available = true;
+	private Boolean available;
 
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion,
@@ -91,5 +92,11 @@ public class ProductoInterno {
 		this.category = category;
 		this.porcentajeImpuesto = porcentajeImpuesto;
 		this.regulador = regulador;
+	}
+	
+	@PrePersist
+	protected void onCreate() {
+		// Al crear, se tiene que marcar como disponible
+		this.available = true;
 	}
 }

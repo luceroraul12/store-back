@@ -69,6 +69,7 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 		entidad.setPrecioTransporte(dto.getPrecioTransporte());
 		entidad.setPrecioEmpaquetado(dto.getPrecioEmpaquetado());
 		entidad.setPorcentajeGanancia(dto.getPorcentajeGanancia());
+		entidad.setAvailable(dto.getAvailable());
 		return entidad;
 	}
 }
