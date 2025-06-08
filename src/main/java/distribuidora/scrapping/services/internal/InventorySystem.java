@@ -4,8 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import distribuidora.scrapping.dto.CategoryHasUnitDto;
+import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.dto.DatosDistribuidoraDto;
+import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
 import distribuidora.scrapping.entities.ProductoInterno;
 
@@ -21,7 +22,7 @@ public interface InventorySystem {
 	 */
 	int actualizarPreciosAutomatico();
 
-	ProductoInternoDto crearProducto(ProductoInternoDto dto);
+	ProductoInternoDto crearProducto(ProductoInternoDto dto) throws Exception;
 
 	ProductoInternoDto modificarProducto(ProductoInternoDto dto)
 			throws Exception;
@@ -29,14 +30,14 @@ public interface InventorySystem {
 	List<ProductoInternoDto> eliminarProductos(
 			List<Integer> productoInternoIds);
 
-	List<ProductoInternoDto> getProductos() throws Exception;
+	List<ProductoInternoDto> getProductDtos(String search) throws Exception;
 
 	List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos)
 			throws Exception;
 
-	List<CategoryHasUnitDto> getCategoryDtoList();
+	List<CategoryDto> getCategoryDtoList();
 
-	CategoryHasUnitDto updateCategoryHasUnit(CategoryHasUnitDto dto);
+	CategoryDto updateCategoryHasUnit(CategoryDto dto);
 
 	List<DatosDistribuidoraDto> getDistribuidoraStatus();
 
@@ -45,4 +46,10 @@ public interface InventorySystem {
 	boolean existsProducts(List<Integer> productIds);
 
 	List<ProductoInterno> getProductByIds(List<Integer> productIds);
+
+	void changeAvailable(Integer productId, Boolean isAvailable);
+
+	List<ProductoInterno> getProducts(String search) throws Exception;
+
+	List<ProductCustomerDto> getProductsForCustomer() throws Exception;
 }

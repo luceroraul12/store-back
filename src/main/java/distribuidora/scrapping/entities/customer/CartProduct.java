@@ -11,6 +11,8 @@ import javax.persistence.Table;
 
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
+import distribuidora.scrapping.entities.Unit;
+import distribuidora.scrapping.entities.Presentation;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,8 +26,8 @@ public class CartProduct {
     @Column(name = "id", nullable = false)
 	private Integer id;
 	@ManyToOne
-	@JoinColumn(name = "lv_unit_id")
-	private LookupValor lvUnit;
+	@JoinColumn(name = "unit_id")
+	private Unit unit;
 	@ManyToOne
     @JoinColumn(name = "cart_id")
 	private Cart cart;
@@ -35,10 +37,10 @@ public class CartProduct {
 	private Double price;
 	private Double quantity;
 	
-	public CartProduct(LookupValor lvUnit, Cart cart,
+	public CartProduct(Unit unit, Cart cart,
 			ProductoInterno product, Double price, Double quantity) {
 		super();
-		this.lvUnit = lvUnit;
+		this.unit = unit;
 		this.cart = cart;
 		this.product = product;
 		this.price = price;

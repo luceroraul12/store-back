@@ -1,6 +1,5 @@
 package distribuidora.scrapping.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -12,17 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itextpdf.text.DocumentException;
-
-import distribuidora.scrapping.dto.CategoryHasUnitDto;
+import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
-import distribuidora.scrapping.dto.ProductoInternoStatusDto;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.services.internal.InventorySystem;
-import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
 import distribuidora.scrapping.services.pdf.PdfService;
 
 @RestController()
@@ -36,75 +32,60 @@ public class InventorySystemController {
 	InventorySystem service;
 
 	@Autowired
-	ProductoInternoStatusService productoInternoStatusService;
-
-	@Autowired
 	PdfService pdfService;
 
 	@Autowired
 	UsuarioService userService;
 
-	@PostMapping(value = "create")
-	ProductoInternoDto crearProducto(@RequestBody ProductoInternoDto dto) {
+	@PostMapping(value = "product")
+	ProductoInternoDto crearProducto(@RequestBody ProductoInternoDto dto) throws Exception {
 		return service.crearProducto(dto);
 	}
 
-	@PutMapping(value = "update")
-	ProductoInternoDto modificarProducto(@RequestBody ProductoInternoDto dto)
-			throws Exception {
+	@PutMapping(value = "product")
+	ProductoInternoDto modificarProducto(@RequestBody ProductoInternoDto dto) throws Exception {
 		return service.modificarProducto(dto);
 	}
 
 	@PutMapping(value = "updates")
-	List<ProductoInternoDto> updateManyProducto(
-			@RequestBody List<ProductoInternoDto> dtos) throws Exception {
+	List<ProductoInternoDto> updateManyProducto(@RequestBody List<ProductoInternoDto> dtos) throws Exception {
 		return service.updateManyProducto(dtos);
 	}
 
 	@GetMapping
-	List<ProductoInternoDto> getProductos() throws Exception {
-		return service.getProductos();
+	List<ProductoInternoDto> getProductos(@RequestParam(required = false) String search) throws Exception {
+		return service.getProductDtos(search);
 	}
 
 	@DeleteMapping(value = "delete")
-	List<ProductoInternoDto> eliminarProductos(
-			@RequestBody List<Integer> dtos) {
+	List<ProductoInternoDto> eliminarProductos(@RequestBody List<Integer> dtos) {
 		return service.eliminarProductos(dtos);
+	}
+
+	@PutMapping("available")
+	void changeAvailable(@RequestParam(required = true) Integer productId,
+			@RequestParam(required = true) Boolean isAvailable) throws Exception {
+		service.changeAvailable(productId, isAvailable);
 	}
 
 	@GetMapping("updateAll")
 	List<ProductoInternoDto> actualizarAllProductos() throws Exception {
 		service.actualizarPreciosAutomatico();
-		return getProductos();
+		return getProductos(null);
 	}
 
 	@GetMapping("pdf")
-	void getPDF(HttpServletResponse response)
-			throws DocumentException, IOException {
-		pdfService.getPdfByClientId(response,
-				userService.getCurrentClient().getId());
-	}
-
-	@GetMapping("status")
-	List<ProductoInternoStatusDto> getStatus() throws Exception {
-		return productoInternoStatusService
-				.getByClientId(userService.getCurrentClient().getId());
-	}
-
-	@PutMapping("status")
-	ProductoInternoStatusDto updateStatus(
-			@RequestBody ProductoInternoStatusDto dto) {
-		return productoInternoStatusService.update(dto);
+	void getPDF(HttpServletResponse response) throws Exception {
+		pdfService.getPdfByClientId(response, userService.getCurrentClient().getId());
 	}
 
 	@GetMapping("categories")
-	List<CategoryHasUnitDto> getCategoryDtoList() {
+	List<CategoryDto> getCategoryDtoList() {
 		return service.getCategoryDtoList();
 	}
 
 	@PutMapping("categories")
-	CategoryHasUnitDto updateCategoryHasUnit(
-			@RequestBody CategoryHasUnitDto dto) {
+	CategoryDto updateCategoryHasUnit(@RequestBody CategoryDto dto) {
 		return service.updateCategoryHasUnit(dto);
 	}
 }

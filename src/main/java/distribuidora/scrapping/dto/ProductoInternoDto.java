@@ -19,7 +19,8 @@ public class ProductoInternoDto {
 	private String descripcion;
 	private Double precio;
 	private ExternalProductDto externalProduct;
-	private LookupValueDto category;
+	private CategoryDto category;
+	private PresentationDto presentation;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Double precioTransporte;
@@ -27,4 +28,5 @@ public class ProductoInternoDto {
 	private Double porcentajeGanancia;
 	private Double porcentajeImpuesto;
 	private Double regulador;
+	private Boolean available;
 }

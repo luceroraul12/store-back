@@ -5,12 +5,13 @@ import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.dto.CartProductDto;
 import distribuidora.scrapping.entities.customer.CartProduct;
+import distribuidora.scrapping.services.PresentationDtoConverter;
 
 @Component
 public class CartProductDtoConverter extends Converter<CartProduct, CartProductDto> {
 	
 	@Autowired
-	LookupValueDtoConverter lookupValueDtoConverter;
+	UnitDtoConverter unitDtoConverter;
 
 	@Override
 	public CartProductDto toDto(CartProduct entidad) {
@@ -21,7 +22,7 @@ public class CartProductDtoConverter extends Converter<CartProduct, CartProductD
 		dto.setName(entidad.getProduct().getNombre());
 		dto.setDescription(entidad.getProduct().getDescripcion());
 		dto.setQuantity(entidad.getQuantity());
-		dto.setUnitType(lookupValueDtoConverter.toDto(entidad.getLvUnit()));
+		dto.setUnit(unitDtoConverter.toDto(entidad.getUnit()));
 		return dto;
 	}
 

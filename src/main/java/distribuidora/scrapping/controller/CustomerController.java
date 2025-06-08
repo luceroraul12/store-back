@@ -8,18 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.dto.ProductCustomerDto;
-import distribuidora.scrapping.services.internal.ProductoInternoStatusService;
+import distribuidora.scrapping.services.internal.InventorySystem;
 
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
-
+	// TODO: Ver si hay que eliominar este controller de customers o si tiene que
+	// quedarse
 	@Autowired
-	ProductoInternoStatusService service;
+	InventorySystem inventorySystem;
 
 	@GetMapping("/products")
-	public List<ProductCustomerDto> getProducts() {
-		return service.getProductsForCustomer();
+	public List<ProductCustomerDto> getProducts() throws Exception {
+		return inventorySystem.getProductsForCustomer();
 	}
 
 }

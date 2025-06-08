@@ -10,6 +10,6 @@ public class CartProductDto {
 	private String name;
 	private String description;
 	private Double quantity;
-	private LookupValueDto unitType;
+	private UnitDto unit;
 	private Double price;
 }

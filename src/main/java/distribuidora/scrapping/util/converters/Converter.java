@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 public abstract class Converter<Entidad, Dto> {
 
-	public abstract Dto toDto(Entidad entidad);
-	public abstract Entidad toEntidad(Dto dto);
+	public abstract Dto toDto(Entidad e);
+	public abstract Entidad toEntidad(Dto d);
 
 
 

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.ExternalProduct;
-import distribuidora.scrapping.entities.productos.especificos.DonGasparEntidad;
 
 @Service
 public class DonGasparWebScrappingServicio

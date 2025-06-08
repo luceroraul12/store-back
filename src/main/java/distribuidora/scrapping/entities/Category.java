@@ -12,18 +12,17 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "productos_internos_status")
+@Table
 @Data
-public class ProductoInternoStatus {
+public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
-	private Integer id;
-
+	Integer id;
+	@Column
+	String name;
+	@Column
+	String description;
 	@ManyToOne
-	@JoinColumn(name = "producto_interno_id")
-	private ProductoInterno productoInterno;
-	private Boolean isUnit;
-	private Boolean hasStock;
-	private Double amount;
+	@JoinColumn(name = "client_id")
+	Client client;
 }

@@ -5,10 +5,13 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import distribuidora.scrapping.entities.CategoryHasUnit;
+import distribuidora.scrapping.entities.Category;
 
-public interface CategoryHasUnitRepository extends JpaRepository<CategoryHasUnit, Integer> {
-
-    @Query("SELECT chu FROM CategoryHasUnit chu ")
-    List<CategoryHasUnit> findAll();
+public interface CategoryHasUnitRepository extends JpaRepository<Category, Integer> {
+	@Query("""
+			SELECT c
+			FROM Category c
+			where c.client.id = :clientId
+			""")
+	List<Category> findCategoriesByClientId(Integer clientId);
 }

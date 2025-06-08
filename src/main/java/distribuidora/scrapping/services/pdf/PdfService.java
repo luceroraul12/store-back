@@ -5,10 +5,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.pdf.PdfWriter;
 
 import distribuidora.scrapping.entities.ProductoInterno;
 
@@ -22,11 +20,6 @@ public interface PdfService {
 			Font.BOLD);
 	static Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 12,
 			Font.NORMAL, BaseColor.BLUE);
-
-	void addTitlePage(Document document) throws DocumentException, IOException;
-
-	void addContent(Document document, PdfWriter writer, String dateConverted,
-			Integer clientId) throws DocumentException;
 
 	Integer generateBasePrice(ProductoInterno p);
 
@@ -47,5 +40,5 @@ public interface PdfService {
 	int round(int result);
 
 	void getPdfByClientId(HttpServletResponse response, Integer clientId)
-			throws IOException, DocumentException;
+			throws IOException, DocumentException, Exception;
 }

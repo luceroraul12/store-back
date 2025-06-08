@@ -11,11 +11,11 @@ import distribuidora.scrapping.repositories.postgres.LookupValorRepository;
 import distribuidora.scrapping.util.converters.LookupValueDtoConverter;
 
 @Service
-public class LookupServiceImpl implements LookupService{
+public class LookupServiceImpl implements LookupService {
 
 	@Autowired
 	private LookupValorRepository repository;
-	
+
 	@Autowired
 	private LookupValueDtoConverter converter;
 
@@ -24,14 +24,19 @@ public class LookupServiceImpl implements LookupService{
 		return repository.getLookupValoresPorLookupTipoCodigo(lookupTipoCodigo);
 	}
 
-    @Override
-    public LookupValor getLookupValueByCode(String categoriaCodigo) {
-        return repository.getlookupValorPorCodigo(categoriaCodigo);
-    }
+	@Override
+	public LookupValor getLookupValueByCode(String categoriaCodigo) {
+		return repository.getlookupValorPorCodigo(categoriaCodigo);
+	}
 
 	@Override
-	public List<LookupValueDto> getLookupValueDtoListByLookupTypeCode(
-			String code) {
+	public List<LookupValueDto> getLookupValueDtoListByLookupTypeCode(String code) {
 		return converter.toDtoList(getLookupValoresPorLookupTipoCodigo(code));
 	}
+
+	@Override
+	public List<LookupValor> getLookupValuesByIds(List<Integer> lvUnitIds) {
+		return repository.findAllById(lvUnitIds);
+	}
+
 }

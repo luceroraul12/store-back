@@ -6,24 +6,29 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import distribuidora.scrapping.dto.CategoryHasUnitDto;
+import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.dto.DatosDistribuidoraDto;
+import distribuidora.scrapping.dto.ProductCustomerDto;
 import distribuidora.scrapping.dto.ProductoInternoDto;
-import distribuidora.scrapping.entities.CategoryHasUnit;
+import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
+import distribuidora.scrapping.entities.Presentation;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.DatosDistribuidoraRepository;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ExternalProductRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
-import distribuidora.scrapping.services.ExternalProductService;
+import distribuidora.scrapping.services.CategoryService;
+import distribuidora.scrapping.services.PresentationService;
 import distribuidora.scrapping.services.UsuarioService;
-import distribuidora.scrapping.services.general.LookupService;
-import distribuidora.scrapping.util.converters.CategoryHasUnitDtoConverter;
+import distribuidora.scrapping.util.CalculatorUtil;
+import distribuidora.scrapping.util.converters.CategoryDtoConverter;
 import distribuidora.scrapping.util.converters.DatosDistribuidoraConverter;
+import distribuidora.scrapping.util.converters.ProductCustomerDtoConverter;
 import distribuidora.scrapping.util.converters.ProductoInternoConverter;
 
 @Service
@@ -42,15 +47,6 @@ public class InventorySystemImpl implements InventorySystem {
 	private ProductoInternoConverter productoInternoConverter;
 
 	@Autowired
-	private ExternalProductService productoServicio;
-
-	@Autowired
-	private CategoryHasUnitDtoConverter categoryHasUnitDtoConverter;
-
-	@Autowired
-	private LookupService lookupService;
-
-	@Autowired
 	private DatosDistribuidoraRepository datosDistribuidoraRepository;
 
 	@Autowired
@@ -59,12 +55,29 @@ public class InventorySystemImpl implements InventorySystem {
 	@Autowired
 	private DatosDistribuidoraConverter datosDistribuidorConverter;
 
+	@Autowired
+	private UsuarioService userService;
+
+	@Autowired
+	private CategoryDtoConverter categoryDtoConverter;
+
+	@Autowired
+	private CategoryService categoryService;
+
+	@Autowired
+	private PresentationService unitService;
+
+	@Autowired
+	ProductCustomerDtoConverter productCustomerDtoConverter;
+
+	@Autowired
+	CalculatorUtil calculatorUtil;
+
 	@Override
 	public int actualizarPreciosAutomatico() {
 		// llamado a las bases de datos para obtener los productos especificos e
 		// internos
-		List<ProductoInterno> productoInternos = productoInternoRepository
-				.getProductosReferenciados();
+		List<ProductoInterno> productoInternos = productoInternoRepository.getProductosReferenciados();
 		Date now = new Date();
 
 		// Recorro cada producto y le agrego el precio external si corresponde
@@ -73,8 +86,7 @@ public class InventorySystemImpl implements InventorySystem {
 			Double externalPrice = p.getExternalProduct().getPrice();
 			Double originalPrice = Double.valueOf(df.format(p.getPrecio()));
 			if (externalPrice != null && externalPrice > 0.0) {
-				Double externalPriceFormated = Double
-						.valueOf(df.format(externalPrice));
+				Double externalPriceFormated = Double.valueOf(df.format(externalPrice));
 				// Solo voy a actualizar los precios de los productos cuando el
 				// precio de la vinculacion sea diferente ya que significaria
 				// que actualizo el excel o la pagina
@@ -92,48 +104,51 @@ public class InventorySystemImpl implements InventorySystem {
 	}
 
 	@Override
-	public ProductoInternoDto crearProducto(ProductoInternoDto dto) {
+	public ProductoInternoDto crearProducto(ProductoInternoDto dto) throws Exception {
 		if (dto.getId() != null)
 			return null;
 
+		if (dto.getCategory() == null)
+			throw new Exception("Es necesario enviar los datos de la categoría");
+
+		Category category = categoryService.getById(dto.getCategory().getId());
+
 		ProductoInterno producto = productoInternoConverter.toEntidad(dto);
+		producto.setCategory(category);
+
 		producto.setFechaCreacion(new Date());
 		Client client = usuarioService.getCurrentClient();
 		producto.setClient(client);
-		ProductoInterno productoGuardado = productoInternoRepository
-				.save(producto);
+		Presentation presentation = unitService.getById(dto.getPresentation().getId());
+		producto.setPresentation(presentation);
+		ProductoInterno productoGuardado = productoInternoRepository.save(producto);
 		return productoInternoConverter.toDto(productoGuardado);
 	}
 
 	@Override
-	public ProductoInternoDto modificarProducto(ProductoInternoDto dto)
-			throws Exception {
+	public ProductoInternoDto modificarProducto(ProductoInternoDto dto) throws Exception {
 		if (dto.getId() == null)
 			return null;
 
-		ProductoInterno oldEntidadInterno = productoInternoRepository
-				.getReferenceById(dto.getId());
+		ProductoInterno oldEntidadInterno = productoInternoRepository.getReferenceById(dto.getId());
 
 		if (oldEntidadInterno == null)
 			throw new Exception("No existe producto a actualizar");
 
 		Client currentClient = usuarioService.getCurrentClient();
 
-		if (!oldEntidadInterno.getClient().getId()
-				.equals(currentClient.getId()))
-			throw new Exception(
-					"El producto que quiere modificar pertenece a otra tienda.");
+		if (!oldEntidadInterno.getClient().getId().equals(currentClient.getId()))
+			throw new Exception("El producto que quiere modificar pertenece a otra tienda.");
 
-		ProductoInterno newEntidadInterno = productoInternoConverter
-				.toEntidad(dto);
+		ProductoInterno newEntidadInterno = productoInternoConverter.toEntidad(dto);
+		Presentation presentation = unitService.getById(dto.getPresentation().getId());
+		newEntidadInterno.setPresentation(presentation);
 		newEntidadInterno.setClient(currentClient);
 
-		newEntidadInterno
-				.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
+		newEntidadInterno.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
 		verifyAndUpdateDateModified(oldEntidadInterno, newEntidadInterno);
 
-		ProductoInterno productoGuardado = productoInternoRepository
-				.save(newEntidadInterno);
+		ProductoInterno productoGuardado = productoInternoRepository.save(newEntidadInterno);
 
 		dto = productoInternoConverter.toDto(productoGuardado);
 
@@ -141,28 +156,33 @@ public class InventorySystemImpl implements InventorySystem {
 	}
 
 	@Override
-	public List<ProductoInternoDto> eliminarProductos(
-			List<Integer> productoInternoIds) {
-		List<ProductoInterno> productosEncontrados = productoInternoRepository
-				.getProductosPorIds(productoInternoIds);
-		List<Integer> productoIdsEncontrados = productosEncontrados.stream()
-				.map(ProductoInterno::getId).collect(Collectors.toList());
+	public List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds) {
+		List<ProductoInterno> productosEncontrados = productoInternoRepository.getProductsByIds(productoInternoIds);
+		List<Integer> productoIdsEncontrados = productosEncontrados.stream().map(ProductoInterno::getId)
+				.collect(Collectors.toList());
 		productoInternoRepository.deleteAllById(productoIdsEncontrados);
 		return productoInternoConverter.toDtoList(productosEncontrados);
 	}
 
 	@Override
-	public List<ProductoInternoDto> getProductos() throws Exception {
+	public List<ProductoInterno> getProducts(String search) throws Exception {
 		Integer clientId = usuarioService.getCurrentClient().getId();
-
-		List<ProductoInterno> productos = productoInternoRepository
-				.getAllProductosByUserId(clientId);
-		return productoInternoConverter.toDtoList(productos);
+		// Convierto search en mayuscula
+		if (StringUtils.isNotEmpty(search))
+			search = search.toUpperCase();
+		else
+			search = null;
+		List<ProductoInterno> productos = productoInternoRepository.getAllProductosByUserIdAndSearch(clientId, search);
+		return productos;
 	}
 
 	@Override
-	public List<ProductoInternoDto> updateManyProducto(
-			List<ProductoInternoDto> dtos) throws Exception {
+	public List<ProductoInternoDto> getProductDtos(String search) throws Exception {
+		return productoInternoConverter.toDtoList(getProducts(search));
+	}
+
+	@Override
+	public List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos) throws Exception {
 		List<ProductoInternoDto> resultado = new ArrayList<>();
 		for (ProductoInternoDto dto : dtos) {
 			resultado.add(modificarProducto(dto));
@@ -172,24 +192,21 @@ public class InventorySystemImpl implements InventorySystem {
 	}
 
 	/**
-	 * Encargado de verificar si hay cambios en alguno tipo de producto como:
-	 * precio base precio de transporte precio de empaquetado porcentaje de
-	 * ganancia
+	 * Encargado de verificar si hay cambios en alguno tipo de producto como: precio
+	 * base precio de transporte precio de empaquetado porcentaje de ganancia
 	 *
 	 * Para poder decidir cuando debe actualizar la fecha de actualizacion
 	 * 
 	 * @param oldEntidadInterno
 	 * @param newEntidadInterno
 	 */
-	private void verifyAndUpdateDateModified(ProductoInterno oldEntidadInterno,
-			ProductoInterno newEntidadInterno) {
+	private void verifyAndUpdateDateModified(ProductoInterno oldEntidadInterno, ProductoInterno newEntidadInterno) {
 		boolean priceUpdated = false;
 		boolean priceTransportUpdated = false;
 		boolean pricePackageUpdated = false;
 		boolean priceGainUpdated = false;
 		if (newEntidadInterno.getPrecio() != null) {
-			priceUpdated = !newEntidadInterno.getPrecio()
-					.equals(oldEntidadInterno.getPrecio());
+			priceUpdated = !newEntidadInterno.getPrecio().equals(oldEntidadInterno.getPrecio());
 		}
 		if (newEntidadInterno.getPrecioTransporte() != null) {
 			priceTransportUpdated = !newEntidadInterno.getPrecioTransporte()
@@ -203,32 +220,28 @@ public class InventorySystemImpl implements InventorySystem {
 			priceGainUpdated = !newEntidadInterno.getPorcentajeGanancia()
 					.equals(oldEntidadInterno.getPorcentajeGanancia());
 
-		if (priceUpdated || priceTransportUpdated || pricePackageUpdated
-				|| priceGainUpdated) {
+		if (priceUpdated || priceTransportUpdated || pricePackageUpdated || priceGainUpdated) {
 			newEntidadInterno.setFechaActualizacion(new Date());
 		} else {
-			newEntidadInterno.setFechaActualizacion(
-					oldEntidadInterno.getFechaActualizacion());
+			newEntidadInterno.setFechaActualizacion(oldEntidadInterno.getFechaActualizacion());
 		}
 	}
 
 	@Override
-	public List<CategoryHasUnitDto> getCategoryDtoList() {
-		return categoryHasUnitDtoConverter
-				.toDtoList(categoryHasUnitRepository.findAll());
+	public List<CategoryDto> getCategoryDtoList() {
+		Integer clientId = userService.getCurrentClient().getId();
+		return categoryDtoConverter.toDtoList(categoryHasUnitRepository.findCategoriesByClientId(clientId));
 	}
 
 	@Override
-	public CategoryHasUnitDto updateCategoryHasUnit(CategoryHasUnitDto dto) {
-		CategoryHasUnit entity = categoryHasUnitRepository
-				.save(categoryHasUnitDtoConverter.toEntidad(dto));
-		return categoryHasUnitDtoConverter.toDto(entity);
+	public CategoryDto updateCategoryHasUnit(CategoryDto dto) {
+		Category entity = categoryHasUnitRepository.save(categoryDtoConverter.toEntidad(dto));
+		return categoryDtoConverter.toDto(entity);
 	}
 
 	@Override
 	public List<DatosDistribuidoraDto> getDistribuidoraStatus() {
-		return datosDistribuidorConverter
-				.toDtoList(datosDistribuidoraRepository.findActives());
+		return datosDistribuidorConverter.toDtoList(datosDistribuidoraRepository.findActives());
 	}
 
 	@Override
@@ -238,14 +251,38 @@ public class InventorySystemImpl implements InventorySystem {
 
 	@Override
 	public boolean existsProducts(List<Integer> productIds) {
-		int databaseProductSize = productoInternoRepository
-				.countProductsByIds(productIds);
+		int databaseProductSize = productoInternoRepository.countProductsByIds(productIds);
 		return productIds.size() == databaseProductSize;
 	}
 
 	@Override
 	public List<ProductoInterno> getProductByIds(List<Integer> productIds) {
 		return productoInternoRepository.findAllById(productIds);
+	}
+
+	@Override
+	public void changeAvailable(Integer productId, Boolean isAvailable) {
+		productoInternoRepository.findById(productId).ifPresent(p -> {
+			p.setAvailable(isAvailable);
+			productoInternoRepository.save(p);
+		});
+	}
+
+	@Override
+	public List<ProductCustomerDto> getProductsForCustomer() throws Exception {
+		List<ProductoInterno> products = getProducts(StringUtils.EMPTY);
+		List<ProductCustomerDto> dtos = new ArrayList<ProductCustomerDto>();
+		// Tengo que asignar el precio a cada producto en base a las unidades de la
+		// categoria
+		for (ProductoInterno e : products) {
+			Presentation unit = e.getPresentation();
+			ProductCustomerDto dto = productCustomerDtoConverter.toDto(e);
+			if (unit != null) {
+				dto.setBasePrices(calculatorUtil.getBasePriceList(e));
+			}
+			dtos.add(dto);
+		}
+		return dtos;
 	}
 
 }

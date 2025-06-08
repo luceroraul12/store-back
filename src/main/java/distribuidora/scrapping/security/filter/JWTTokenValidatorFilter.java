@@ -1,7 +1,6 @@
 package distribuidora.scrapping.security.filter;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
