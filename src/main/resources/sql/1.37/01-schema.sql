@@ -15,7 +15,7 @@ create table unit(
 	unit_parent_id int,
 	constraint unit_parent_fk foreign key(unit_parent_id) references unit(id),
 	constraint presentation_unique unique (name)
-)
+);
 
 -- creo tabla de presentaciones
 create table presentation(
@@ -56,6 +56,9 @@ alter table productos_internos add constraint product_category_fk foreign key (c
 alter table productos_internos add presentation_id int;
 alter table productos_internos add constraint product_presentation_fk foreign key (presentation_id) references presentation(id);
 
+-- Agrego columna de disponibilidad a los productos
+alter table productos_internos add available boolean not null default true;
+
 create table client_module(
 	id serial primary key,
 	client_id int not null,
@@ -66,6 +69,17 @@ create table client_module(
 
 --agrego columna para presentacion en productCart
 alter table cart_product add unit_id int;
+alter table cart_product drop constraint cart_product_unit_fk;
 alter table cart_product add constraint cart_product_unit_fk foreign key (unit_id) references unit(id);
+
+-- Creo tabla para configuroaciones
+create table config(
+	id serial primary key,
+	code varchar not null unique,
+	value varchar not null,
+	description varchar
+);
+
+
 
 

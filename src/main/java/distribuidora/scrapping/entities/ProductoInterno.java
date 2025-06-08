@@ -68,7 +68,10 @@ public class ProductoInterno {
 	
 	@ManyToOne
 	@JoinColumn(name = "presentation_id")
-	Presentation presentation;
+	private Presentation presentation;
+	
+	@Column(name = "available")
+	private Boolean available;
 
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion,

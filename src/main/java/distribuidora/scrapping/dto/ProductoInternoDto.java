@@ -28,4 +28,5 @@ public class ProductoInternoDto {
 	private Double porcentajeGanancia;
 	private Double porcentajeImpuesto;
 	private Double regulador;
+	private Boolean available;
 }

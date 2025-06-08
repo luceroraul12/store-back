@@ -37,7 +37,9 @@ import distribuidora.scrapping.entities.ProductoInternoStatus;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoStatusRepository;
 import distribuidora.scrapping.services.ClientDataService;
+import distribuidora.scrapping.services.ConfigService;
 import distribuidora.scrapping.services.UsuarioService;
+import distribuidora.scrapping.services.general.CONFIG;
 import distribuidora.scrapping.services.general.LOOKUP_VALUES;
 import distribuidora.scrapping.services.general.LookupService;
 
@@ -50,7 +52,7 @@ public class PdfServiceImpl implements PdfService {
 	private ProductoInternoStatusRepository productoInternoStatusRepository;
 
 	@Autowired
-	private LookupService lookupService;
+	ConfigService configService;
 	
 	@Autowired
 	UsuarioService userService;
@@ -76,7 +78,7 @@ public class PdfServiceImpl implements PdfService {
 	private void addMetaData(Document document, Client client) {
 		document.addTitle(String.format("Catalogo %s", client.getName()));
 		document.addSubject("Mis productos");
-		document.addKeywords(String.format("%s, Dietetica, Negocio, Productos", client.getName()));
+		document.addKeywords(String.format("%s, Negocio, Productos", client.getName()));
 		document.addAuthor(client.getName());
 		document.addCreator("Lucero Raul");
 	}
@@ -88,7 +90,7 @@ public class PdfServiceImpl implements PdfService {
 		// Pruebas de logo del cliente
 		Paragraph p = null;
 		try {
-			String path = lookupService.getLookupValueByCode(LOOKUP_VALUES.FILE_PATH).getValor();
+			String path = configService.getByCode(CONFIG.IMAGE_FILE_PATH).getValue();
 			Image imageLogo = Image.getInstance(String.format("%s/%s", path, client.getFilenameLogo()));
 			imageLogo.setAlignment(Element.ALIGN_CENTER);
 			imageLogo.setSpacingAfter(0);

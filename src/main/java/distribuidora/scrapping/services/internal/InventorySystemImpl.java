@@ -246,4 +246,12 @@ public class InventorySystemImpl implements InventorySystem {
 		return productoInternoRepository.findAllById(productIds);
 	}
 
+	@Override
+	public void changeAvailable(Integer productId, Boolean isAvailable) {
+		 productoInternoRepository.findById(productId).ifPresent(p -> {
+			 p.setAvailable(isAvailable);
+			 productoInternoRepository.save(p);
+		 });
+	}
+
 }

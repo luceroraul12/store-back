@@ -70,6 +70,12 @@ public class InventorySystemController {
 		return service.eliminarProductos(dtos);
 	}
 
+	@PutMapping("available")
+	void changeAvailable(@RequestParam(required = true) Integer productId,
+			@RequestParam(required = true) Boolean isAvailable) throws Exception {
+		service.changeAvailable(productId, isAvailable);
+	}
+
 	@GetMapping("updateAll")
 	List<ProductoInternoDto> actualizarAllProductos() throws Exception {
 		service.actualizarPreciosAutomatico();

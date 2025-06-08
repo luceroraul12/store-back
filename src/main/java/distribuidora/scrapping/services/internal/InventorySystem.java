@@ -45,4 +45,6 @@ public interface InventorySystem {
 	boolean existsProducts(List<Integer> productIds);
 
 	List<ProductoInterno> getProductByIds(List<Integer> productIds);
+
+	void changeAvailable(Integer productId, Boolean isAvailable);
 }

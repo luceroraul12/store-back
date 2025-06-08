@@ -3,7 +3,7 @@ insert into unit(name, symbol, relation, unit_parent_id) values
 	('Unidad', 'U', 1, null),
 	('Kilogramos', 'KG', 1, null),
 	('Gramos', 'GR',0.001, null),
-	('Metro cubico', 'M3', 1, null)
+	('Metro cubico', 'M3', 1, null);
 -- primero las independientes
 
 -- PRESENTACIONES
@@ -23,7 +23,7 @@ insert into client_presentation(client_id, presentation_id) values
 	(1, (select id from presentation where name = 'x500gr')),
 	(1, (select id from presentation where name = 'x250gr')),
 	(1, (select id from presentation where name = 'x100gr')),
-	(1, (select id from presentation where name = 'x50gr'))
+	(1, (select id from presentation where name = 'x50gr'));
 
 -- Populo tabla category
 insert into category(client_id, name)
@@ -31,7 +31,7 @@ select distinct
 	(select id from client where name = 'PASIONARIA') clientId,
 	c.descripcion categoryName
 from productos_internos p
-	inner join lookup_valor c on c.id  = p.lv_categoria_id  
+	inner join lookup_valor c on c.id  = p.lv_categoria_id;
 	
 -- Arreglo las categorias de los productos
 UPDATE 
@@ -40,7 +40,7 @@ SET
 	category_id = c.id
 from lookup_valor lv 
 	inner join category c on c.name = lv.descripcion
-where lv.id = p.lv_categoria_id
+where lv.id = p.lv_categoria_id;
 
 -- Arreglo las presentaciones de los productos para que no dependan de la categoria
 update productos_internos p
@@ -58,7 +58,7 @@ from category c
 	inner join lv_category_has_lv_unit r on r.lv_category_id = lc.id
 	inner join lookup_valor lu on lu.id = r.lv_unit_id
 	inner join presentation pres on lu.descripcion = pres."name" 
-where c.id = p.category_id 
+where c.id = p.category_id;
 
 
 -- Agrego modulos de la aplicación
@@ -103,10 +103,10 @@ update cart_product cp
 			inner join presentation pre on pre.id = p.presentation_id 
 			inner join unit u on u.id = pre.unit_id 
 		where cp.product_id = p.id
-	)
+	);
 	
 -- tengo que asignar las personas al pasionaria
-update person set client_id = 1
+update person set client_id = 1;
 
 
 -- Actualización de datos de PASIONARIA -> NATIVO
@@ -122,6 +122,14 @@ facebook='Nativo Almacen Natural',
 facebook_link='https://www.facebook.com/profile.php?id=100070005324554', 
 filename_logo='nativo-logo.jpg' 
 WHERE id=1;
+
+
+-- Agrego config para la url de las 
+insert into config(code,value, description) values ('IMAGE_FILE_PATH','/home/homitowen/store/images', 'Ruta de la carpeta de imagenes');
+
+-- Actualizo el stock de los productos en base de la tabla auxiliar
+update productos_internos p
+	set available = (select has_stock from productos_internos_status r where r.producto_interno_id = p.id);
 
 
 	

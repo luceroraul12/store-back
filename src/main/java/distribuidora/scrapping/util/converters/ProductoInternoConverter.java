@@ -46,6 +46,7 @@ public class ProductoInternoConverter extends Converter<ProductoInterno, Product
 		dto.setPrecioEmpaquetado(entidad.getPrecioEmpaquetado());
 		dto.setPorcentajeGanancia(entidad.getPorcentajeGanancia());
 		dto.setPresentation(presentationDtoConverter.toDto(entidad.getPresentation()));
+		dto.setAvailable(entidad.getAvailable());
 		return dto;
 	}
 
