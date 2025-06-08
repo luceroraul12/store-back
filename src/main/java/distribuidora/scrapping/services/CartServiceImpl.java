@@ -2,7 +2,7 @@ package distribuidora.scrapping.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -81,8 +81,8 @@ public class CartServiceImpl implements CartService {
 			List<CartProduct> finalProducts = new ArrayList<CartProduct>();
 			for (CartProductDto cp : cartDto.getProducts()) {
 				Integer productId = cp.getProductId();
-				ProductoInterno currentProductRelation = products.stream()
-						.filter(p -> p.getId().equals(productId)).findFirst().orElse(null);
+				ProductoInterno currentProductRelation = products.stream().filter(p -> p.getId().equals(productId))
+						.findFirst().orElse(null);
 
 				CartProduct cartProduct = new CartProduct(currentProductRelation.getPresentation().getUnit(), cart,
 						currentProductRelation, cp.getPrice(), cp.getQuantity());
