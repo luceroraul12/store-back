@@ -28,6 +28,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import distribuidora.scrapping.dto.BasePriceDto;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.ProductoInterno;
@@ -36,6 +37,7 @@ import distribuidora.scrapping.services.ConfigService;
 import distribuidora.scrapping.services.UsuarioService;
 import distribuidora.scrapping.services.general.CONFIG;
 import distribuidora.scrapping.services.internal.InventorySystem;
+import distribuidora.scrapping.util.CalculatorUtil;
 
 @Service
 public class PdfServiceImpl implements PdfService {
@@ -50,6 +52,9 @@ public class PdfServiceImpl implements PdfService {
 
 	@Autowired
 	UsuarioService userService;
+	
+	@Autowired
+	CalculatorUtil calculatorUtil;
 
 	private void generatePdf(HttpServletResponse response, Integer clientId) throws Exception {
 		// generacion del pdf
@@ -255,16 +260,8 @@ public class PdfServiceImpl implements PdfService {
 	 */
 	@Override
 	public Integer generateBasePrice(ProductoInterno p) {
-		int result;
-		double precio = p.getPrecio() != null ? p.getPrecio() * p.getPresentation().getRelation() : 0;
-		double transporte = p.getPrecioTransporte() != null ? p.getPrecioTransporte() : 0.0;
-		double empaquetado = p.getPrecioEmpaquetado() != null ? p.getPrecioEmpaquetado() : 0.0;
-		double ganancia = (100 + (p.getPorcentajeGanancia() != null ? p.getPorcentajeGanancia() : 0)) / 100;
-		double impuesto = (100 + (p.getPorcentajeImpuesto() != null ? p.getPorcentajeImpuesto() : 0)) / 100;
-		double regulador = p.getRegulador() != null && p.getRegulador() != 0.0 ? p.getRegulador() : 1;
-		double precioPorcentual = (precio * ganancia * impuesto) / regulador;
-		result = (int) (precioPorcentual + transporte + empaquetado + ganancia);
-		return result;
+		BasePriceDto base = calculatorUtil.getBasePrice(p);
+		return base.getPrice().intValue();
 	}
 
 	@Override

@@ -38,7 +38,7 @@ public class CalculatorUtil {
 		return result;
 	}
 
-	private BasePriceDto getBasePrice(ProductoInterno p) {
+	public BasePriceDto getBasePrice(ProductoInterno p) {
 		Presentation presentation = p.getPresentation();
 		DecimalFormat df = new DecimalFormat("#.##"); // Define el formato con 2 decimales
 		BasePriceDto dto = new BasePriceDto();
