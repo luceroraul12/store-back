@@ -14,4 +14,6 @@ public class CartDto {
 	private String status;
 	private Double totalPrice;
 	private PersonDto customer;
+	private Double discount;
+	private Double totalPriceCustomer;
 }

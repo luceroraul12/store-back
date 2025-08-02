@@ -73,7 +73,8 @@ public class CartServiceImpl implements CartService {
 		// Creo las ordenes
 		for (CartDto cartDto : data) {
 			Person person = personService.getById(cartDto.getCustomer().getId());
-			Cart cart = new Cart(client, person, cartDto.getDateCreated(), "SYNCHRONIZED", cartDto.getTotalPrice());
+			Cart cart = new Cart(client, person, cartDto.getDateCreated(), "SYNCHRONIZED", cartDto.getTotalPrice(),
+					cartDto.getTotalPriceCustomer(), cartDto.getDiscount());
 			cart = orderRepository.save(cart);
 			// Seteo id de cart
 			cartDto.setBackendCartId(cart.getId());
