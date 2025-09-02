@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import distribuidora.scrapping.entities.Client;
+import distribuidora.scrapping.entities.Discount;
 import distribuidora.scrapping.entities.Person;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,22 +32,22 @@ public class Cart {
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
 	private Person customer;
+	@ManyToOne
+	private Discount discount;
 	private Date dateCreated;
 	private String status;
 	private Double totalPrice;
-	private Double discount;
-	private Double totalPriceCustomer;
+	private Double customerTotalPrice;
 
 	public Cart(Client client, Person customer, Date dateCreated, String status, Double totalPrice,
-			Double totalPriceCustomer, Double discount) {
-		super();
+			Double customerTotalPrice, Discount discount) {
 		this.client = client;
 		this.customer = customer;
 		this.dateCreated = dateCreated;
 		this.status = status;
 		this.totalPrice = totalPrice;
-		this.totalPriceCustomer = totalPriceCustomer;
 		this.discount = discount;
+		this.customerTotalPrice = customerTotalPrice;
 	}
 
 }

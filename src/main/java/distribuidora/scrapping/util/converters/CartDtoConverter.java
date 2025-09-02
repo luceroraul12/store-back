@@ -12,6 +12,9 @@ public class CartDtoConverter extends Converter<Cart, CartDto> {
 	@Autowired
 	PersonDtoConverter personDtoConverter;
 
+	@Autowired
+	DiscountDtoConverter discountDtoConverter;
+
 	@Override
 	public CartDto toDto(Cart entidad) {
 		CartDto dto = new CartDto();
@@ -20,9 +23,10 @@ public class CartDtoConverter extends Converter<Cart, CartDto> {
 		dto.setDateCreated(entidad.getDateCreated());
 		dto.setStatus(entidad.getStatus());
 		dto.setTotalPrice(entidad.getTotalPrice());
-		dto.setTotalPriceCustomer(entidad.getTotalPriceCustomer());
-		dto.setDiscount(entidad.getDiscount());
+		dto.setCustomerTotalPrice(entidad.getCustomerTotalPrice());
 		dto.setCustomer(personDtoConverter.toDto(entidad.getCustomer()));
+		if (entidad.getDiscount() != null)
+			dto.setDiscount(discountDtoConverter.toDto(entidad.getDiscount()));
 		return dto;
 	}
 

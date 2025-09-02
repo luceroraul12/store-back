@@ -14,4 +14,11 @@ public interface OrderRepository extends JpaRepository<Cart, Integer>{
 		""")
 	boolean hasCartByCustomerId(Integer id);
 
+	@Query("""
+			SELECT COUNT(c) > 0
+			FROM Cart c
+			WHERE c.discount.id = :id
+			""")
+	boolean hasCartsByDiscountId(Integer id);
+
 }

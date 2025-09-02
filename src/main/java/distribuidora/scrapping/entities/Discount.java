@@ -14,7 +14,7 @@ import lombok.Data;
 @Entity
 @Table
 @Data
-public class Category {
+public class Discount {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -25,4 +25,6 @@ public class Category {
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private Client client;
+	private Double percentageValue;
+	private Double plainValue;
 }

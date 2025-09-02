@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.CartDto;
 import distribuidora.scrapping.dto.CartProductDto;
 import distribuidora.scrapping.entities.Client;
+import distribuidora.scrapping.entities.Discount;
 import distribuidora.scrapping.entities.Person;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.entities.customer.Cart;
@@ -61,6 +62,10 @@ public class CartServiceImpl implements CartService {
 	@Autowired
 	InventorySystem inventoryService;
 
+	@Lazy
+	@Autowired
+	DiscountService discountService;
+
 	@Override
 	public List<CartDto> createFinalizedCart(List<CartDto> data) throws Exception {
 		// TODO: Separar entre converters y service
@@ -70,11 +75,21 @@ public class CartServiceImpl implements CartService {
 				.map(d -> d.getProductId()).distinct().toList();
 		List<ProductoInterno> products = inventoryService.getProductByIds(productIds);
 
+		List<Integer> discountIds = data.stream().filter(d -> d.getDiscount() != null).map(d -> d.getDiscount().getId())
+				.toList();
+		List<Discount> discounts = discountService.getDiscountsByIds(discountIds);
+
 		// Creo las ordenes
 		for (CartDto cartDto : data) {
 			Person person = personService.getById(cartDto.getCustomer().getId());
+			Discount discount = null;
+			if (cartDto.getDiscount() != null)
+				discount = discounts.stream().filter(d -> d.getId().equals(cartDto.getDiscount().getId())).findFirst()
+						.orElse(null);
+			// TODO: Revisar si está bien que el front calcule el precio del descuento o si
+			// el back tiene que volverlo a hacer por las dudas
 			Cart cart = new Cart(client, person, cartDto.getDateCreated(), "SYNCHRONIZED", cartDto.getTotalPrice(),
-					cartDto.getTotalPriceCustomer(), cartDto.getDiscount());
+					cartDto.getCustomerTotalPrice(), discount);
 			cart = orderRepository.save(cart);
 			// Seteo id de cart
 			cartDto.setBackendCartId(cart.getId());
@@ -141,5 +156,12 @@ public class CartServiceImpl implements CartService {
 	public boolean hasCartByCustomerId(Integer id) {
 		return orderRepository.hasCartByCustomerId(id);
 	}
+
+	@Override
+	public boolean hasCartsByDiscountId(Integer id) {
+		return orderRepository.hasCartsByDiscountId(id);
+	}
+
+
 
 }

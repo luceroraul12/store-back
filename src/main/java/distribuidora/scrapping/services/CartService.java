@@ -13,4 +13,6 @@ public interface CartService {
 	void deleteById(Integer id);
 
 	boolean hasCartByCustomerId(Integer id);
+
+	boolean hasCartsByDiscountId(Integer id);
 }
