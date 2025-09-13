@@ -33,6 +33,6 @@ public class DiscountController {
 
 	@GetMapping
 	public List<DiscountDto> getDiscounts() {
-		return service.getDiscounts();
+		return service.getClientDiscounts();
 	}
 }

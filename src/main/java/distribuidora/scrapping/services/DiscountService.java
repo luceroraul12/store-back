@@ -13,6 +13,6 @@ public interface DiscountService {
 
 	Integer deleteDiscountById(Integer id) throws Exception;
 
-	List<DiscountDto> getDiscounts();
+	List<DiscountDto> getClientDiscounts();
 
 }

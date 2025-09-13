@@ -61,7 +61,7 @@ public class DiscountServiceImpl implements DiscountService {
 	}
 
 	@Override
-	public List<DiscountDto> getDiscounts() {
+	public List<DiscountDto> getClientDiscounts() {
 		// TODO Auto-generated method stub
 		Integer clientId = userService.getCurrentClient().getId();
 		return discountDtoConverter.toDtoList(discountRepository.findByClientId(clientId));

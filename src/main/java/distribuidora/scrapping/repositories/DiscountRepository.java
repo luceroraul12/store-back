@@ -13,6 +13,7 @@ public interface DiscountRepository extends JpaRepository<Discount, Integer> {
 			select d
 			from Discount d 
 			where d.client.id = :clientId
+			ORDER BY d.name
 			""")
 	List<Discount> findByClientId(Integer clientId);
 
