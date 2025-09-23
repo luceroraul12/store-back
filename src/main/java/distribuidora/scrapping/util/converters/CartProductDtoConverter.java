@@ -5,11 +5,10 @@ import org.springframework.stereotype.Component;
 
 import distribuidora.scrapping.dto.CartProductDto;
 import distribuidora.scrapping.entities.customer.CartProduct;
-import distribuidora.scrapping.services.PresentationDtoConverter;
 
 @Component
 public class CartProductDtoConverter extends Converter<CartProduct, CartProductDto> {
-	
+
 	@Autowired
 	UnitDtoConverter unitDtoConverter;
 

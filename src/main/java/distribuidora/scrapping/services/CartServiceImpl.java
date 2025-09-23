@@ -1,13 +1,14 @@
 package distribuidora.scrapping.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.CartDto;
@@ -123,22 +124,28 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public List<CartDto> getCarts(Integer personId) {
+	public Page<CartDto> getCartsPage(Integer personId, Integer pageIndex, Integer size) {
 		UsuarioEntity user = userService.getCurrentUser();
 		Client client = clientHasUsersRepository.findByClientId(user.getId()).getClient();
-
-		List<CartProduct> data = orderHasProductRepository.findByClientIdAndPersonId(client.getId(), personId);
-		List<CartDto> result = new ArrayList<>();
-		if (CollectionUtils.isNotEmpty(data)) {
-			// Agrupo por cart
-			Map<Cart, List<CartProduct>> mapDataByCart = data.stream().collect(Collectors.groupingBy(d -> d.getCart()));
-			// Itero cara key
-			mapDataByCart.forEach((cart, products) -> {
-				CartDto dto = cartDtoConverter.toDto(cart);
-				dto.setProducts(cartProductDtoConverter.toDtoList(products));
-				result.add(dto);
+		// busco el paginado de los carts
+		if (pageIndex == null)
+			pageIndex = 0;
+		if (size == null)
+			size = 10;
+		PageRequest pageable = PageRequest.of(pageIndex, size);
+		Page<Cart> page = orderRepository.findPageByClientIdAndPersonId(client.getId(), personId, pageable);
+		Page<CartDto> result = cartDtoConverter.toPage(page);
+		if (CollectionUtils.isNotEmpty(page.getContent())) {
+			List<Integer> cartIds = page.getContent().stream().map(Cart::getId).toList();
+			// busco los productos de todos los carts
+			List<CartProduct> products = orderHasProductRepository.findByCartIds(cartIds);
+			// Los agrego a cada cart
+			result.getContent().forEach(c -> {
+				List<CartProduct> currentCartProducts = products.stream()
+						.filter(cp -> cp.getCart().getId().equals(c.getCartId())).toList();
+				if (CollectionUtils.isNotEmpty(currentCartProducts))
+					c.setProducts(cartProductDtoConverter.toDtoList(currentCartProducts));
 			});
-			result.sort((a, b) -> b.getDateCreated().compareTo(a.getDateCreated()));
 		}
 		return result;
 	}
@@ -146,7 +153,7 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public void deleteById(Integer cartId) {
 		// Elimino productos
-		List<CartProduct> products = orderHasProductRepository.findByCartId(cartId);
+		List<CartProduct> products = orderHasProductRepository.findByCartIds(Arrays.asList(cartId));
 		orderHasProductRepository.deleteAll(products);
 		// Elimino pedido
 		orderRepository.deleteById(cartId);
@@ -161,7 +168,5 @@ public class CartServiceImpl implements CartService {
 	public boolean hasCartsByDiscountId(Integer id) {
 		return orderRepository.hasCartsByDiscountId(id);
 	}
-
-
 
 }

@@ -3,6 +3,7 @@ package distribuidora.scrapping.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,22 +19,24 @@ import distribuidora.scrapping.services.CartService;
 @RestController
 @RequestMapping("/cart")
 public class CartController {
-	
+
 	@Autowired
 	CartService cartService;
-	
+
 	@PostMapping()
-	List<CartDto> createFinalizedCarts(@RequestBody List<CartDto> data) throws Exception{
+	List<CartDto> createFinalizedCarts(@RequestBody List<CartDto> data) throws Exception {
 		return cartService.createFinalizedCart(data);
 	}
-	
+
 	@GetMapping()
-	List<CartDto> getCarts(@RequestParam(required = false) Integer personId) throws Exception{
-		return cartService.getCarts(personId);
+	Page<CartDto> getCarts(@RequestParam(required = false) Integer personId,
+			@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size)
+			throws Exception {
+		return cartService.getCartsPage(personId, page, size);
 	}
-	
+
 	@DeleteMapping("/{id}")
-	void deleteCartById(@PathVariable Integer id) throws Exception{
+	void deleteCartById(@PathVariable Integer id) throws Exception {
 		cartService.deleteById(id);
 	}
 }

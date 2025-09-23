@@ -7,24 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 
 import distribuidora.scrapping.entities.customer.CartProduct;
 
-public interface CartProductRepository
-		extends
-			JpaRepository<CartProduct, Integer> {
+public interface CartProductRepository extends JpaRepository<CartProduct, Integer> {
 
 	@Query("""
 			SELECT cp
 			FROM CartProduct cp
-				INNER JOIN cp.cart c
-			WHERE c.client.id = :clientId
-				AND :personId IS NULL OR cp.cart.customer.id = :personId
+			WHERE cp.cart.id IN :cartIds
 			""")
-	List<CartProduct> findByClientIdAndPersonId(Integer clientId, Integer personId);
-
-	@Query("""
-			SELECT cp
-			FROM CartProduct cp
-			WHERE cp.cart.id = :cartId
-			""")
-	List<CartProduct> findByCartId(Integer cartId);
+	List<CartProduct> findByCartIds(List<Integer> cartIds);
 
 }

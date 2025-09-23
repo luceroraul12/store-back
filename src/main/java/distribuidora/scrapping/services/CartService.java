@@ -2,13 +2,15 @@ package distribuidora.scrapping.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import distribuidora.scrapping.dto.CartDto;
 
 public interface CartService {
 
 	List<CartDto> createFinalizedCart(List<CartDto> data) throws Exception;
 
-	List<CartDto> getCarts(Integer personId);
+	Page<CartDto> getCartsPage(Integer personId, Integer page, Integer size);
 
 	void deleteById(Integer id);
 
