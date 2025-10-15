@@ -2,6 +2,8 @@ package distribuidora.scrapping.services.internal;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.CategoryDto;
@@ -30,7 +32,7 @@ public interface InventorySystem {
 	List<ProductoInternoDto> eliminarProductos(
 			List<Integer> productoInternoIds);
 
-	List<ProductoInternoDto> getProductDtos(String search) throws Exception;
+	Page<ProductoInternoDto> getProductDtos(String search, Integer page, Integer size) throws Exception;
 
 	List<ProductoInternoDto> updateManyProducto(List<ProductoInternoDto> dtos)
 			throws Exception;
@@ -50,6 +52,8 @@ public interface InventorySystem {
 	void changeAvailable(Integer productId, Boolean isAvailable);
 
 	List<ProductoInterno> getProducts(String search) throws Exception;
+	
+	Page<ProductoInterno> getProducts(String search, Pageable pageable) throws Exception;
 
 	List<ProductCustomerDto> getProductsForCustomer() throws Exception;
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,8 +54,9 @@ public class InventorySystemController {
 	}
 
 	@GetMapping
-	List<ProductoInternoDto> getProductos(@RequestParam(required = false) String search) throws Exception {
-		return service.getProductDtos(search);
+	Page<ProductoInternoDto> getProductos(@RequestParam(required = false) String search, @RequestParam Integer page,
+			@RequestParam Integer size) throws Exception {
+		return service.getProductDtos(search, page, size);
 	}
 
 	@DeleteMapping(value = "delete")
@@ -69,9 +71,8 @@ public class InventorySystemController {
 	}
 
 	@GetMapping("updateAll")
-	List<ProductoInternoDto> actualizarAllProductos() throws Exception {
-		service.actualizarPreciosAutomatico();
-		return getProductos(null);
+	int actualizarAllProductos() throws Exception {
+		return service.actualizarPreciosAutomatico();
 	}
 
 	@GetMapping("pdf")

@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.CategoryDto;
@@ -177,8 +180,20 @@ public class InventorySystemImpl implements InventorySystem {
 	}
 
 	@Override
-	public List<ProductoInternoDto> getProductDtos(String search) throws Exception {
-		return productoInternoConverter.toDtoList(getProducts(search));
+	public Page<ProductoInterno> getProducts(String search, Pageable pageable) throws Exception {
+		Integer clientId = usuarioService.getCurrentClient().getId();
+		// Convierto search en mayuscula
+		if (StringUtils.isNotEmpty(search))
+			search = search.toUpperCase();
+		else
+			search = null;
+		return productoInternoRepository.getPageAllProductosByUserIdAndSearch(clientId, search, pageable);
+	}
+
+	@Override
+	public Page<ProductoInternoDto> getProductDtos(String search, Integer page, Integer size) throws Exception {
+		PageRequest pageable = PageRequest.of(page, size);
+		return productoInternoConverter.toPage(getProducts(search, pageable));
 	}
 
 	@Override

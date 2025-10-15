@@ -2,6 +2,8 @@ package distribuidora.scrapping.repositories.postgres;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,23 +18,28 @@ public interface ProductoInternoRepository extends JpaRepository<ProductoInterno
 	@Query("SELECT pi FROM ProductoInterno pi " + "WHERE pi.id IN (:productoInternoIds)")
 	List<ProductoInterno> getProductsByIds(@Param("productoInternoIds") List<Integer> productoInternoIds);
 
-	@Query("""
-			    SELECT pi
-			    FROM ProductoInterno pi
-			        INNER JOIN pi.category cat
-			        INNER JOIN pi.client c
-			    WHERE c.id = :clientId
-			        AND (
-			        	(:search is null) OR
-			        	  (
-			             UPPER(pi.nombre) LIKE UPPER(CONCAT('%', :search, '%'))
-			             OR UPPER(pi.descripcion) LIKE UPPER(CONCAT('%', :search, '%'))
-			             OR UPPER(pi.category.name) LIKE UPPER(CONCAT('%', :search, '%'))
-			         	)
-			        )
-			    ORDER BY cat.name, pi.nombre, pi.descripcion
-			""")
+	public final String getAllProductosByUserIdAndSearch = """
+		    SELECT pi
+		    FROM ProductoInterno pi
+		        INNER JOIN pi.category cat
+		        INNER JOIN pi.client c
+		    WHERE c.id = :clientId
+		        AND (
+		        	(:search is null) OR
+		        	  (
+		             UPPER(pi.nombre) LIKE UPPER(CONCAT('%', :search, '%'))
+		             OR UPPER(pi.descripcion) LIKE UPPER(CONCAT('%', :search, '%'))
+		             OR UPPER(pi.category.name) LIKE UPPER(CONCAT('%', :search, '%'))
+		         	)
+		        )
+		    ORDER BY cat.name, pi.nombre, pi.descripcion
+		""";
+	
+	@Query(getAllProductosByUserIdAndSearch)
 	List<ProductoInterno> getAllProductosByUserIdAndSearch(Integer clientId, String search);
+	
+	@Query(getAllProductosByUserIdAndSearch)
+	Page<ProductoInterno> getPageAllProductosByUserIdAndSearch(Integer clientId, String search, Pageable pageable);
 
 	@Query("""
 			SELECT COUNT(*)
