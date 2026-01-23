@@ -17,22 +17,22 @@ import distribuidora.scrapping.services.CategoryService;
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
-	
+
 	@Autowired
 	CategoryService categoryService;
 
 	@GetMapping
-	List<CategoryDto> getCategories(){
+	List<CategoryDto> getCategories() {
 		return categoryService.getCategoryDtos();
 	}
-	
+
 	@PostMapping
-	CategoryDto createUpdateCategory(@RequestBody CategoryDto dto) throws Exception{
+	CategoryDto createUpdateCategory(@RequestBody CategoryDto dto) throws Exception {
 		return categoryService.createUpdateCategory(dto);
 	}
-	
+
 	@DeleteMapping("/{id}")
-	Integer deleteCategoryById(@PathVariable Integer id) throws Exception{
+	Integer deleteCategoryById(@PathVariable Integer id) throws Exception {
 		return categoryService.deleteCategoryById(id);
 	}
 }

@@ -12,8 +12,7 @@ import distribuidora.scrapping.entities.ExternalProduct;
 public class VillaresExcelService extends ProductSearcherExcel {
 	@Override
 	boolean esRowValido(Row row) {
-		return row != null && row.getCell(1) != null
-				&& row.getCell(1).getCellType().equals(CellType.NUMERIC);
+		return row != null && row.getCell(1) != null && row.getCell(1).getCellType().equals(CellType.NUMERIC);
 	}
 
 	@Override
@@ -22,17 +21,14 @@ public class VillaresExcelService extends ProductSearcherExcel {
 	}
 
 	@Override
-	protected ExternalProduct convertirRowEnProductoEspecifico(Row row,
-			DatosDistribuidora data) {
+	protected ExternalProduct convertirRowEnProductoEspecifico(Row row, DatosDistribuidora data) {
 		Integer cantidadCeldas = row.getPhysicalNumberOfCells();
 		Integer celdasGranel = 12;
 		Integer celdasGourmetFraccionado = 11;
 		Integer celdasDistribuido = 10;
 		Integer indiceInicioCeldaPrecio = 0;
 		// inicializo
-		String code = String
-				.valueOf(Math.round(row.getCell(1).getNumericCellValue()) + "R-"
-						+ row.getRowNum());
+		String code = String.valueOf(Math.round(row.getCell(1).getNumericCellValue()) + "R-" + row.getRowNum());
 		String cantidad = "";
 		String cantidadMinima = "";
 		String title = "";
@@ -66,14 +62,12 @@ public class VillaresExcelService extends ProductSearcherExcel {
 			brand = row.getCell(5).toString();
 		}
 
-		Boolean estaDisponible = row.getCell(indiceInicioCeldaPrecio)
-				.getCellType().equals(CellType.NUMERIC);
+		Boolean estaDisponible = row.getCell(indiceInicioCeldaPrecio).getCellType().equals(CellType.NUMERIC);
 		if (estaDisponible) {
 			price = row.getCell(indiceInicioCeldaPrecio).getNumericCellValue();
 		}
 
 		title = String.format("%s %s %s", brand, unit, title);
-		return new ExternalProduct(null, title, price, null,
-				getTipoDistribuidora(), code);
+		return new ExternalProduct(null, title, price, null, getTipoDistribuidora(), code);
 	}
 }

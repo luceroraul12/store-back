@@ -19,11 +19,11 @@ public class ClientModule {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private Client client;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "lv_module_id")
 	private LookupValor module;

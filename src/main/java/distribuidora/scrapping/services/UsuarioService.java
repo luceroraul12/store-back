@@ -25,29 +25,27 @@ public class UsuarioService {
 
 	@Autowired
 	private ClientHasUsersRepository clientHasUsersRepository;
-	
+
 	@Autowired
 	private ClientModuleRepository clientModuleRepository;
-	
+
 	@Autowired
 	private LookupValueDtoConverter lookupValueDtoConverter;
-	
+
 	@Autowired
 	private ClientDtoConverter clientDtoConverter;
 
 	public UsuarioEntity getCurrentUser() {
-		String auth = SecurityContextHolder.getContext().getAuthentication()
-				.getName();
+		String auth = SecurityContextHolder.getContext().getAuthentication().getName();
 		return usuarioRepository.findByUsuario(auth);
 	}
-	
+
 	public ClientDto getCurrentUserDto() {
 		return clientDtoConverter.toDto(getCurrentClient());
 	}
 
 	public Client getCurrentClient() {
-		String username = SecurityContextHolder.getContext().getAuthentication()
-				.getName();
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		return clientHasUsersRepository.getClientIdByUsername(username);
 	}
 
@@ -57,6 +55,4 @@ public class UsuarioService {
 		return result.stream().map(r -> lookupValueDtoConverter.toDto(r.getModule())).toList();
 	}
 
-	
-	
 }

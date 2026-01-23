@@ -6,7 +6,7 @@ import distribuidora.scrapping.dto.ClientDto;
 import distribuidora.scrapping.entities.Client;
 
 @Component
-public class ClientDtoConverter extends Converter<Client, ClientDto>{
+public class ClientDtoConverter extends Converter<Client, ClientDto> {
 
 	@Override
 	public ClientDto toDto(Client e) {

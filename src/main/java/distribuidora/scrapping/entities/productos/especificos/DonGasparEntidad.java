@@ -8,10 +8,10 @@ import lombok.ToString;
 @Getter
 @ToString
 public class DonGasparEntidad extends ProductoEspecifico {
-    String nombreProducto;
-    Double precio;
+	String nombreProducto;
+	Double precio;
 
-    @Builder
+	@Builder
 	public DonGasparEntidad(String id, String distribuidoraCodigo, String nombreProducto, Double precio) {
 		super(id, distribuidoraCodigo);
 		this.nombreProducto = nombreProducto;

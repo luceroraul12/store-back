@@ -30,38 +30,31 @@ import distribuidora.scrapping.services.ProductSearcher;
  */
 public abstract class ProductSearcherExcel extends ProductSearcher {
 	@Override
-	protected List<ExternalProduct> adquirirProductosEntidad(
-			UpdateRequest request, DatosDistribuidora data) {
+	protected List<ExternalProduct> adquirirProductosEntidad(UpdateRequest request, DatosDistribuidora data) {
 		List<ExternalProduct> productosrecolectados;
-		productosrecolectados = obtenerProductosApartirDeExcels(
-				request.getMultipartFiles(), data);
+		productosrecolectados = obtenerProductosApartirDeExcels(request.getMultipartFiles(), data);
 		return productosrecolectados;
 	}
 
 	/**
-	 * Encargado de obtener la lista de productos en dicha Entidad. hace todos
-	 * los pasos para convertir y analizar workbooks a partir de Multipart hasta
-	 * obtener List Entidad
+	 * Encargado de obtener la lista de productos en dicha Entidad. hace todos los
+	 * pasos para convertir y analizar workbooks a partir de Multipart hasta obtener
+	 * List Entidad
 	 * 
-	 * @param excels
-	 *            Documentos a los cuales se los va aconvertir en WorkBook
+	 * @param excels Documentos a los cuales se los va aconvertir en WorkBook
 	 * @return Lista de productos en entidad especifica
 	 * @throws IOException
 	 */
-	public List<ExternalProduct> obtenerProductosApartirDeExcels(
-			MultipartFile[] excels, DatosDistribuidora data) {
-		return Arrays.stream(excels).map(this::obtenerSheets)
-				.flatMap(Collection::stream)
-				.map(s -> obtenerProductosPorSheet(s, data))
-				.flatMap(Collection::stream).filter(Objects::nonNull)
+	public List<ExternalProduct> obtenerProductosApartirDeExcels(MultipartFile[] excels, DatosDistribuidora data) {
+		return Arrays.stream(excels).map(this::obtenerSheets).flatMap(Collection::stream)
+				.map(s -> obtenerProductosPorSheet(s, data)).flatMap(Collection::stream).filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
 
 	/**
 	 * Genera todos los sheets que contenga un documento Excel.
 	 * 
-	 * @param excel
-	 *            un unico documento excel.
+	 * @param excel un unico documento excel.
 	 * @return una o varias sheets.
 	 * @throws IOException
 	 */
@@ -84,12 +77,10 @@ public abstract class ProductSearcherExcel extends ProductSearcher {
 	/**
 	 * Extrae todos los productos del sheet
 	 * 
-	 * @param sheet
-	 *            es uno solo
+	 * @param sheet es uno solo
 	 * @return lsita de productos
 	 */
-	private Collection<ExternalProduct> obtenerProductosPorSheet(Sheet sheet,
-			DatosDistribuidora data) {
+	private Collection<ExternalProduct> obtenerProductosPorSheet(Sheet sheet, DatosDistribuidora data) {
 		Collection<ExternalProduct> productosFinales = new ArrayList<>();
 		sheet.rowIterator().forEachRemaining(row -> {
 			row.cellIterator().forEachRemaining(cell -> {
@@ -103,20 +94,19 @@ public abstract class ProductSearcherExcel extends ProductSearcher {
 
 	/**
 	 * Expande los valores de celdas fusionadas. Cuando un rango de celdas es
-	 * fusionado, todas muestran el mismo valor. Pero el valor de todas las
-	 * celdas solo se encuentra en la primera columna primer renglon de un rango
-	 * de valores fusionados, el resto de celdas del rango tienen valor null.
-	 * Este metodo se encarga de analizar una celda con respecto a los rangos de
-	 * fusion para una sheet y en caso de encajar en uno (y no ser col 0 row 0)
-	 * se le copia el valor correspondiente para que no tenga valor null.
+	 * fusionado, todas muestran el mismo valor. Pero el valor de todas las celdas
+	 * solo se encuentra en la primera columna primer renglon de un rango de valores
+	 * fusionados, el resto de celdas del rango tienen valor null. Este metodo se
+	 * encarga de analizar una celda con respecto a los rangos de fusion para una
+	 * sheet y en caso de encajar en uno (y no ser col 0 row 0) se le copia el valor
+	 * correspondiente para que no tenga valor null.
 	 * 
 	 * @param sheet
 	 * @param celda
 	 */
 	private void expandirValorDeCeldasFusionadas(Sheet sheet, Cell celda) {
 		sheet.getMergedRegions().forEach(rango -> {
-			Cell celdaUnica = sheet.getRow(rango.getFirstRow())
-					.getCell(rango.getFirstColumn());
+			Cell celdaUnica = sheet.getRow(rango.getFirstRow()).getCell(rango.getFirstColumn());
 			if (rango.isInRange(celda)) {
 				try {
 					celda.setCellValue(celdaUnica.getStringCellValue());
@@ -128,8 +118,8 @@ public abstract class ProductSearcherExcel extends ProductSearcher {
 	}
 
 	/**
-	 * En caso de que la celda contenga una formula, la aplica y deja el
-	 * resultado en su lugar.
+	 * En caso de que la celda contenga una formula, la aplica y deja el resultado
+	 * en su lugar.
 	 * 
 	 * @param celda
 	 */
@@ -141,37 +131,32 @@ public abstract class ProductSearcherExcel extends ProductSearcher {
 
 	/**
 	 * Trabaja con un renglon para obtener productos del mismo. Este renglon
-	 * previamente es pasado por un condicional para indicar si valido realizar
-	 * la extraccion.
+	 * previamente es pasado por un condicional para indicar si valido realizar la
+	 * extraccion.
 	 * 
-	 * @param row
-	 *            del sheet
+	 * @param row  del sheet
 	 * @param data
 	 * @return lista de productos
 	 * @see ProductSearcherExcel#esRowValido(Row row)
 	 */
-	private Collection<ExternalProduct> trabajarConRowyObtenerProducto(Row row,
-			DatosDistribuidora data) {
+	private Collection<ExternalProduct> trabajarConRowyObtenerProducto(Row row, DatosDistribuidora data) {
 		Collection<ExternalProduct> productosPorRows = new ArrayList<>();
 		if (esRowValido(row)) {
-			ExternalProduct producto = convertirRowEnProductoEspecifico(row,
-					data);
+			ExternalProduct producto = convertirRowEnProductoEspecifico(row, data);
 			productosPorRows.add(producto);
 		}
 		return productosPorRows;
 	}
 
-	protected abstract ExternalProduct convertirRowEnProductoEspecifico(Row row,
-			DatosDistribuidora data);
+	protected abstract ExternalProduct convertirRowEnProductoEspecifico(Row row, DatosDistribuidora data);
 
 	/**
 	 * Encargado de verificar si es un renglon valido para mapear. Es necesario
-	 * debido a que algunos excels estan acompaniado de datos que no son
-	 * necesarios para la generacion de productos o por que no cumplen con los
-	 * requisitos minimos necesarios para que sea un producto.
+	 * debido a que algunos excels estan acompaniado de datos que no son necesarios
+	 * para la generacion de productos o por que no cumplen con los requisitos
+	 * minimos necesarios para que sea un producto.
 	 * 
-	 * @param row
-	 *            renglon a verificar
+	 * @param row renglon a verificar
 	 * @return booleano
 	 */
 	abstract boolean esRowValido(Row row);

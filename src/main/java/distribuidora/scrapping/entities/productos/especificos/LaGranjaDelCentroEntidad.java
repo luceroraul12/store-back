@@ -10,8 +10,7 @@ public class LaGranjaDelCentroEntidad extends ProductoEspecifico {
 	private final Double precio;
 
 	@Builder
-	public LaGranjaDelCentroEntidad(String id, String distribuidoraCodigo,
-			String nombreProducto, Double precio) {
+	public LaGranjaDelCentroEntidad(String id, String distribuidoraCodigo, String nombreProducto, Double precio) {
 		super(id, distribuidoraCodigo);
 		this.nombreProducto = nombreProducto;
 		this.precio = precio;

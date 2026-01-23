@@ -22,50 +22,48 @@ import distribuidora.scrapping.security.repository.UsuarioTieneRolRepository;
 
 @Component
 public class ScrappingAuthenticationProvider implements AuthenticationProvider {
-    @Autowired
-    private UsuarioTieneRolRepository usuarioTieneRolRepository;
+	@Autowired
+	private UsuarioTieneRolRepository usuarioTieneRolRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
-    @Override
-    public Authentication authenticate(Authentication authentication) {
-        String username = authentication.getName();
-        String pwd = authentication.getCredentials().toString();
+	@Override
+	public Authentication authenticate(Authentication authentication) {
+		String username = authentication.getName();
+		String pwd = authentication.getCredentials().toString();
 
+		UsuarioEntity usuario = usuarioRepository.findByUsuario(username);
+		if (usuario == null)
+			throw new UsernameNotFoundException("El usuario no existe");
 
-        UsuarioEntity usuario = usuarioRepository.findByUsuario(username);
-        if (usuario == null)
-            throw new UsernameNotFoundException("El usuario no existe");
+		if (!passwordEncoder.matches(pwd, usuario.getPasswordHash()))
+			throw new UsernameNotFoundException("Credencial incorrecta");
 
-        if (!passwordEncoder.matches(pwd, usuario.getPasswordHash()))
-            throw new UsernameNotFoundException("Credencial incorrecta");
+		List<RolEntity> roles = new ArrayList<>();
+		if (usuario != null) {
+			roles = usuarioTieneRolRepository.getRolesDelUsuario(username);
+		}
 
-        List<RolEntity> roles = new ArrayList<>();
-        if (usuario != null){
-            roles = usuarioTieneRolRepository.getRolesDelUsuario(username);
-        }
+		Authentication auth = new UsernamePasswordAuthenticationToken(username, null, roles);
+		SecurityContextHolder.getContext().setAuthentication(auth);
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(username, null, roles);
-        SecurityContextHolder.getContext().setAuthentication(auth);
+		return auth;
+	}
 
-        return auth;
-    }
+	private List<GrantedAuthority> getGrantedAuthorities(Set<RolEntity> authorities) {
+		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+		for (RolEntity authority : authorities) {
+			grantedAuthorities.add(new SimpleGrantedAuthority(authority.getCodigo()));
+		}
+		return grantedAuthorities;
+	}
 
-    private List<GrantedAuthority> getGrantedAuthorities(Set<RolEntity> authorities) {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for (RolEntity authority : authorities) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getCodigo()));
-        }
-        return grantedAuthorities;
-    }
-
-
-    @Override
-    public boolean supports(Class<?> authenticationType) {
-        return authenticationType.equals(UsernamePasswordAuthenticationToken.class);
-    }
+	@Override
+	public boolean supports(Class<?> authenticationType) {
+		return authenticationType.equals(UsernamePasswordAuthenticationToken.class);
+	}
 }

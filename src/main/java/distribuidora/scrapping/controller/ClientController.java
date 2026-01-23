@@ -16,27 +16,26 @@ import distribuidora.scrapping.services.UsuarioService;
 @RestController
 @RequestMapping("/client")
 public class ClientController {
-	
+
 	@Autowired
 	UsuarioService userService;
-	
+
 	@Autowired
 	PresentationService presentationService;
-	
+
 	@GetMapping("/current")
-	ClientDto getCurrentUser(){
+	ClientDto getCurrentUser() {
 		return userService.getCurrentUserDto();
 	}
-	
+
 	@GetMapping("/modules")
-	List<LookupValueDto> getModules(){
+	List<LookupValueDto> getModules() {
 		return userService.getModules();
 	}
-	
+
 	@GetMapping("/presentations")
-	List<PresentationDto> getUnits(){
+	List<PresentationDto> getUnits() {
 		return presentationService.getPresentations();
 	}
-
 
 }

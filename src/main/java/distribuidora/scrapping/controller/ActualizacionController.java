@@ -36,18 +36,16 @@ public class ActualizacionController {
 	UpdaterService updaterService;
 
 	/**
-	 * Permite actualizar los productos de las distribuidoras que dependan de
-	 * excel. Actualiza una Distribuidora a la vez
+	 * Permite actualizar los productos de las distribuidoras que dependan de excel.
+	 * Actualiza una Distribuidora a la vez
 	 * 
-	 * @param documento
-	 *            Debe contener todas sus partes.
+	 * @param documento Debe contener todas sus partes.
 	 * @throws Exception
 	 * @see UpdateRequestExcel
 	 */
 	@PostMapping("/update")
 
-	public DatosDistribuidoraDto update(
-			@RequestPart(required = false) MultipartFile[] excels,
+	public DatosDistribuidoraDto update(@RequestPart(required = false) MultipartFile[] excels,
 			@RequestParam String code) throws Exception {
 		return updaterService.update(new UpdateRequest(code, excels));
 	}

@@ -17,23 +17,23 @@ import distribuidora.scrapping.security.service.LoginService;
 @RestController
 public class LoginController {
 
-    @Autowired
-    private LoginService loginService;
+	@Autowired
+	private LoginService loginService;
 
-    @PostMapping("/login")
-    public Map<String, String> loginUser(@RequestBody UsuarioDto usuario){
-        Map<String, String> map = new HashMap<>();
-        map.put("jwt", loginService.generateTokenWithDataUserByUsername(usuario));
-        return map;
-    }
+	@PostMapping("/login")
+	public Map<String, String> loginUser(@RequestBody UsuarioDto usuario) {
+		Map<String, String> map = new HashMap<>();
+		map.put("jwt", loginService.generateTokenWithDataUserByUsername(usuario));
+		return map;
+	}
 
-    @GetMapping("/myData")
-    public Map<String, Object> myData(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Map<String, Object> map = new HashMap<>();
-        map.put("myUsername", auth.getName());
-        map.put("myAuthorities", auth.getAuthorities().toArray());
-        return map;
-    }
+	@GetMapping("/myData")
+	public Map<String, Object> myData() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Map<String, Object> map = new HashMap<>();
+		map.put("myUsername", auth.getName());
+		map.put("myAuthorities", auth.getAuthorities().toArray());
+		return map;
+	}
 
 }

@@ -14,5 +14,5 @@ public class ErrorResponse {
 	@Override
 	public String toString() {
 		return String.format("{\"message\":\"%s\"}", message);
-	}	
+	}
 }

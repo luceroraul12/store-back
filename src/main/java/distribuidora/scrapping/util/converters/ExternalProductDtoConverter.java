@@ -7,15 +7,15 @@ import distribuidora.scrapping.dto.ExternalProductDto;
 import distribuidora.scrapping.entities.ExternalProduct;
 
 @Component
-public class ExternalProductDtoConverter extends Converter<ExternalProduct, ExternalProductDto>{
+public class ExternalProductDtoConverter extends Converter<ExternalProduct, ExternalProductDto> {
 
 	@Autowired
 	private LookupValueDtoConverter lookupValueDtoConverter;
-	
+
 	@Override
 	public ExternalProductDto toDto(ExternalProduct entidad) {
 		ExternalProductDto dto = null;
-		if(entidad != null) {
+		if (entidad != null) {
 			dto = new ExternalProductDto();
 			dto.setId(entidad.getId());
 			dto.setCode(entidad.getCode());
@@ -30,9 +30,9 @@ public class ExternalProductDtoConverter extends Converter<ExternalProduct, Exte
 	@Override
 	public ExternalProduct toEntidad(ExternalProductDto dto) {
 		ExternalProduct externalProduct = null;
-		if(dto != null)
+		if (dto != null)
 			externalProduct = ExternalProduct.builder().id(dto.getId()).build();
-			
+
 		return externalProduct;
 	}
 }

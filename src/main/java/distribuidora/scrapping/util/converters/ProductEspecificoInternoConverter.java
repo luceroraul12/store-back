@@ -12,26 +12,20 @@ import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.services.general.LookupService;
 
-public class ProductEspecificoInternoConverter
-		extends
-			Converter<ProductoEspecifico, ProductoInterno> {
+public class ProductEspecificoInternoConverter extends Converter<ProductoEspecifico, ProductoInterno> {
 
 	@Autowired
 	LookupService lookupService;
 
 	private Map<String, LookupValor> lvDistribuidoras = lookupService
-			.getLookupValoresPorLookupTipoCodigo(Constantes.LV_DISTRIBUIDORAS)
-			.stream().collect(Collectors.toMap(lv -> lv.getCodigo(),
-					Function.identity()));
+			.getLookupValoresPorLookupTipoCodigo(Constantes.LV_DISTRIBUIDORAS).stream()
+			.collect(Collectors.toMap(lv -> lv.getCodigo(), Function.identity()));
 
 	@Override
 	public ProductoInterno toDto(ProductoEspecifico productoEspecifico) {
-		return ProductoInterno.builder()
-				.codigoReferencia(productoEspecifico.getId())
+		return ProductoInterno.builder().codigoReferencia(productoEspecifico.getId())
 				.precio(productoEspecifico.getPrecioExterno())
-				.distribuidoraReferencia(lvDistribuidoras
-						.get(productoEspecifico.getDistribuidora()))
-				.build();
+				.distribuidoraReferencia(lvDistribuidoras.get(productoEspecifico.getDistribuidora())).build();
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import distribuidora.scrapping.dto.UnitDto;
 import distribuidora.scrapping.entities.Unit;
 
 @Component
-public class UnitDtoConverter extends Converter<Unit, UnitDto>{
+public class UnitDtoConverter extends Converter<Unit, UnitDto> {
 
 	@Override
 	public UnitDto toDto(Unit e) {

@@ -2,7 +2,6 @@ package distribuidora.scrapping.services;
 
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import distribuidora.scrapping.dto.DiscountDto;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.Discount;
-import distribuidora.scrapping.entities.customer.Cart;
 import distribuidora.scrapping.repositories.DiscountRepository;
 import distribuidora.scrapping.util.converters.DiscountDtoConverter;
 
@@ -36,13 +34,13 @@ public class DiscountServiceImpl implements DiscountService {
 
 	@Override
 	public DiscountDto createUpdateDiscount(DiscountDto dto) throws Exception {
-		if(StringUtils.isEmpty(dto.getName()))
+		if (StringUtils.isEmpty(dto.getName()))
 			throw new Exception("El descuento debe tener nombre");
-		if(dto.getPercentageValue() == null && dto.getPlainValue() == null)
+		if (dto.getPercentageValue() == null && dto.getPlainValue() == null)
 			throw new Exception("Es obligatorio el valor del descuento");
 		Discount e = discountDtoConverter.toEntidad(dto);
 		Client client = userService.getCurrentClient();
-		if(dto.getId() == null) {
+		if (dto.getId() == null) {
 			e.setClient(client);
 		}
 		e = discountRepository.save(e);

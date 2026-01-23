@@ -22,8 +22,7 @@ public class IndiasExcelService extends ProductSearcherExcel {
 		try {
 			rowGeneral = row.getCell(1).getCellType().equals(CellType.STRING)
 					&& (row.getCell(3).getCellType().equals(CellType.STRING)
-							|| row.getCell(3).getCellType()
-									.equals(CellType.NUMERIC))
+							|| row.getCell(3).getCellType().equals(CellType.NUMERIC))
 					&& row.getCell(4).getCellType().equals(CellType.STRING)
 					&& row.getCell(6).getCellType().equals(CellType.NUMERIC);
 		} catch (Exception exception) {
@@ -32,12 +31,12 @@ public class IndiasExcelService extends ProductSearcherExcel {
 		try {
 			rowEspecifico = row.getCell(1).getCellType().equals(CellType.STRING)
 					&& (row.getCell(2).getCellType().equals(CellType.STRING)
-							|| row.getCell(2).getCellType()
-									.equals(CellType.NUMERIC))
+							|| row.getCell(2).getCellType().equals(CellType.NUMERIC))
 					&& row.getCell(3).getCellType().equals(CellType.STRING)
 					&& row.getCell(4).getCellType().equals(CellType.NUMERIC);
 		} catch (Exception exception) {
-		} ;
+		}
+		;
 		resultado = rowGeneral || rowEspecifico;
 		return resultado;
 	}
@@ -72,15 +71,13 @@ public class IndiasExcelService extends ProductSearcherExcel {
 	}
 
 	@Override
-	protected ExternalProduct convertirRowEnProductoEspecifico(Row row,
-			DatosDistribuidora data) {
+	protected ExternalProduct convertirRowEnProductoEspecifico(Row row, DatosDistribuidora data) {
 		boolean rowGeneral = false;
 		boolean rowEspecifico = false;
 		try {
 			rowGeneral = row.getCell(1).getCellType().equals(CellType.STRING)
 					&& (row.getCell(3).getCellType().equals(CellType.STRING)
-							|| row.getCell(3).getCellType()
-									.equals(CellType.NUMERIC))
+							|| row.getCell(3).getCellType().equals(CellType.NUMERIC))
 					&& row.getCell(4).getCellType().equals(CellType.STRING)
 					&& row.getCell(6).getCellType().equals(CellType.NUMERIC);
 		} catch (Exception exception) {
@@ -89,8 +86,7 @@ public class IndiasExcelService extends ProductSearcherExcel {
 		try {
 			rowEspecifico = row.getCell(1).getCellType().equals(CellType.STRING)
 					&& (row.getCell(2).getCellType().equals(CellType.STRING)
-							|| row.getCell(2).getCellType()
-									.equals(CellType.NUMERIC))
+							|| row.getCell(2).getCellType().equals(CellType.NUMERIC))
 					&& row.getCell(3).getCellType().equals(CellType.STRING)
 					&& row.getCell(4).getCellType().equals(CellType.NUMERIC);
 		} catch (Exception exception) {
@@ -112,7 +108,6 @@ public class IndiasExcelService extends ProductSearcherExcel {
 			rubro = row.getCell(1).toString();
 		}
 		title = String.format("%s %s", rubro, title);
-		return new ExternalProduct(null, title, price, null,
-				getTipoDistribuidora(), code);
+		return new ExternalProduct(null, title, price, null, getTipoDistribuidora(), code);
 	}
 }

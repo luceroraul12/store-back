@@ -8,7 +8,7 @@ import distribuidora.scrapping.entities.Category;
 public interface CategoryService {
 
 	List<CategoryDto> getCategoryDtos();
-	
+
 	List<Category> getCategories();
 
 	CategoryDto createUpdateCategory(CategoryDto dto) throws Exception;

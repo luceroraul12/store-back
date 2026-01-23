@@ -16,19 +16,17 @@ public class LaGranjaDelCentroWebScrappingService extends ProductSearcherWeb {
 
 	@Override
 	public void setCodes() {
-		setDistribuidoraCodigo(
-				Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
+		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO);
 	}
 
 	/**
-	 * Para este caso, contienen un apartado de paginador. En el template
-	 * aparece la siguiente etiqueta 'span' con los siguientes atributos:<br>
+	 * Para este caso, contienen un apartado de paginador. En el template aparece la
+	 * siguiente etiqueta 'span' con los siguientes atributos:<br>
 	 * span class="p-activo">123 <br>
-	 * Esta etiqueta solo esta presente cuando es una pagina valida. Por lo
-	 * tanto voy a condicionar en funcion a eso.
+	 * Esta etiqueta solo esta presente cuando es una pagina valida. Por lo tanto
+	 * voy a condicionar en funcion a eso.
 	 * 
-	 * @param document
-	 *            template de la pagina Web siguiente
+	 * @param document template de la pagina Web siguiente
 	 * @return
 	 */
 	@Override
@@ -44,17 +42,13 @@ public class LaGranjaDelCentroWebScrappingService extends ProductSearcherWeb {
 	}
 
 	@Override
-	protected ExternalProduct obtenerProductosAPartirDeElements(
-			Element elementProducto) {
+	protected ExternalProduct obtenerProductosAPartirDeElements(Element elementProducto) {
 		String code = elementProducto.attr("data-product-id");
-		String title = elementProducto.getElementsByClass("h3-content-1")
-				.text();
-		Double price = Double.valueOf(
-				elementProducto.getElementsByClass("p-precio-content-1").text()
-						.replaceAll("[$.]", "").replaceAll(",", "."));
+		String title = elementProducto.getElementsByClass("h3-content-1").text();
+		Double price = Double.valueOf(elementProducto.getElementsByClass("p-precio-content-1").text()
+				.replaceAll("[$.]", "").replaceAll(",", "."));
 
-		return new ExternalProduct(null, title, price, null,
-				getTipoDistribuidora(), code);
+		return new ExternalProduct(null, title, price, null, getTipoDistribuidora(), code);
 	}
 
 	@Override

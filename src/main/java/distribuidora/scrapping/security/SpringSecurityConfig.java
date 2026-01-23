@@ -22,55 +22,47 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import distribuidora.scrapping.security.filter.JWTTokenValidatorFilter;
 
-
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Autowired
-    private JWTTokenValidatorFilter jwtTokenValidatorFilter;
+	@Autowired
+	private JWTTokenValidatorFilter jwtTokenValidatorFilter;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable() // (2)
-                .authorizeHttpRequests(aut-> aut
-                		.antMatchers("/customer/**").permitAll()
-                        .antMatchers("/login/**").permitAll()
-                        .antMatchers("/inventory-system/**").hasAuthority("ALL")
-                        .antMatchers("/order/**").hasAuthority("ALL")
-                        .antMatchers("/lookup/**").hasAuthority("ALL")
-                        .anyRequest().authenticated()
-                )
-                .cors(withDefaults())
-                .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
-        ;
-        return http.build();
-    }
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.csrf().disable() // (2)
+				.authorizeHttpRequests(aut -> aut.antMatchers("/customer/**").permitAll().antMatchers("/login/**")
+						.permitAll().antMatchers("/inventory-system/**").hasAuthority("ALL").antMatchers("/order/**")
+						.hasAuthority("ALL").antMatchers("/lookup/**").hasAuthority("ALL").anyRequest().authenticated())
+				.cors(withDefaults())
+				.addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
+				.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		;
+		return http.build();
+	}
 
-    @Bean
-    AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+	@Bean
+	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://luceroraul.click/", "http://192.168.0.16:4200"));
-        
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE"));
-        configuration.addAllowedHeader("*");
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(
+				Arrays.asList("http://localhost:4200", "http://luceroraul.click/", "http://192.168.0.16:4200"));
+
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+		configuration.addAllowedHeader("*");
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
 }

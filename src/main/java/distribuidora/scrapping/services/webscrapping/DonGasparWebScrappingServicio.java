@@ -14,9 +14,7 @@ import distribuidora.scrapping.configs.Constantes;
 import distribuidora.scrapping.entities.ExternalProduct;
 
 @Service
-public class DonGasparWebScrappingServicio
-		extends
-			ProductSearcherWeb {
+public class DonGasparWebScrappingServicio extends ProductSearcherWeb {
 
 	@Override
 	protected boolean esDocumentValido(Document document) {
@@ -24,13 +22,11 @@ public class DonGasparWebScrappingServicio
 	}
 
 	@Override
-	protected ExternalProduct obtenerProductosAPartirDeElements(
-			Element elementProducto) {
+	protected ExternalProduct obtenerProductosAPartirDeElements(Element elementProducto) {
 		new ArrayList<>();
 		double price;
 		try {
-			price = Double.parseDouble(elementProducto.select(".precio-box")
-					.text().replace("$", ""));
+			price = Double.parseDouble(elementProducto.select(".precio-box").text().replace("$", ""));
 		} catch (Exception e) {
 			price = 0;
 		}
@@ -39,17 +35,16 @@ public class DonGasparWebScrappingServicio
 		Pattern MY_PATTERN = Pattern.compile("\\(([0-9]*)\\)");
 		Matcher m = MY_PATTERN.matcher(description);
 		while (m.find()) {
-		    code = m.group(1);
+			code = m.group(1);
 		}
-		if(code == null)
+		if (code == null)
 			return null;
-		
+
 		ExternalProduct product = null;
 		// Si el nombre contiene la palabra oferta, no lo guardo ya que estara repetido
-		if(!description.contains("(OFERTA)"))
-			product = new ExternalProduct(null, description, price, null,
-					getTipoDistribuidora(), code);
-		
+		if (!description.contains("(OFERTA)"))
+			product = new ExternalProduct(null, description, price, null, getTipoDistribuidora(), code);
+
 		return product;
 	}
 

@@ -8,7 +8,7 @@ import distribuidora.scrapping.repositories.ClientDataRepository;
 
 @Service
 public class ClientDataServiceImpl implements ClientDataService {
-	
+
 	@Autowired
 	ClientDataRepository repository;
 

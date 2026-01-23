@@ -7,7 +7,6 @@ import distribuidora.scrapping.entities.UpdateRequest;
 
 public interface UpdaterService {
 
-	DatosDistribuidoraDto update(UpdateRequest request)
-			throws IOException, Exception;
+	DatosDistribuidoraDto update(UpdateRequest request) throws IOException, Exception;
 
 }

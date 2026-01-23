@@ -6,7 +6,7 @@ import distribuidora.scrapping.dto.LookupValueDto;
 import distribuidora.scrapping.entities.LookupValor;
 
 @Component
-public class LookupValueDtoConverter extends Converter<LookupValor, LookupValueDto>{
+public class LookupValueDtoConverter extends Converter<LookupValor, LookupValueDto> {
 
 	@Override
 	public LookupValueDto toDto(LookupValor entidad) {

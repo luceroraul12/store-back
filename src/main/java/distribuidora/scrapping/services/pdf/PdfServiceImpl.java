@@ -52,7 +52,7 @@ public class PdfServiceImpl implements PdfService {
 
 	@Autowired
 	UsuarioService userService;
-	
+
 	@Autowired
 	CalculatorUtil calculatorUtil;
 

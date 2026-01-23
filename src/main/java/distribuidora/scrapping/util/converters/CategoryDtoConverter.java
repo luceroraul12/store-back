@@ -8,8 +8,8 @@ import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.services.PresentationDtoConverter;
 
 @Component
-public class CategoryDtoConverter extends Converter<Category, CategoryDto>{
-	
+public class CategoryDtoConverter extends Converter<Category, CategoryDto> {
+
 	@Autowired
 	PresentationDtoConverter unitDtoConverter;
 

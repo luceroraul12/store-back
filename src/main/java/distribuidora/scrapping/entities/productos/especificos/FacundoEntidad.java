@@ -6,16 +6,16 @@ import lombok.Getter;
 
 @Getter
 public class FacundoEntidad extends ProductoEspecifico {
-    private final String categoria;
+	private final String categoria;
 
-    private final String categoriaRenglon;
+	private final String categoriaRenglon;
 
-    private final String subcategoria;
-    private final String cantidad;
-    private final Double precioMayor;
-    private final Double precioMenor;
-    
-    @Builder
+	private final String subcategoria;
+	private final String cantidad;
+	private final Double precioMayor;
+	private final Double precioMenor;
+
+	@Builder
 	public FacundoEntidad(String id, String distribuidoraCodigo, String categoria, String categoriaRenglon,
 			String subcategoria, String cantidad, Double precioMayor, Double precioMenor) {
 		super(id, distribuidoraCodigo);
@@ -31,5 +31,5 @@ public class FacundoEntidad extends ProductoEspecifico {
 	public Double getPrecioExterno() {
 		return precioMayor;
 	}
-    
+
 }

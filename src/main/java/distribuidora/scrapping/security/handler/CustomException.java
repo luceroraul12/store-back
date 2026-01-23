@@ -11,19 +11,16 @@ public class CustomException extends Throwable {
 
 	private static final long serialVersionUID = 1L;
 
-	@ExceptionHandler(AuthenticationException.class) // Manejador específico												// primero
-	public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(
-			AuthenticationException ex) {
+	@ExceptionHandler(AuthenticationException.class) // Manejador específico // primero
+	public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(AuthenticationException ex) {
 		ex.printStackTrace();
 
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body(new ErrorResponse(ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(ex.getMessage()));
 	}
 
 	@ExceptionHandler(Exception.class) // Manejador general después
 	public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
 		ex.printStackTrace();
-		return ResponseEntity.badRequest()
-				.body(new ErrorResponse(ex.getMessage()));
+		return ResponseEntity.badRequest().body(new ErrorResponse(ex.getMessage()));
 	}
 }

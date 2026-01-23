@@ -7,9 +7,7 @@ import distribuidora.scrapping.dto.DatosDistribuidoraDto;
 import distribuidora.scrapping.entities.DatosDistribuidora;
 
 @Component
-public class DatosDistribuidoraConverter
-		extends
-			Converter<DatosDistribuidora, DatosDistribuidoraDto> {
+public class DatosDistribuidoraConverter extends Converter<DatosDistribuidora, DatosDistribuidoraDto> {
 
 	@Autowired
 	private LookupValueDtoConverter lookupValueDtoConverter;
@@ -18,8 +16,7 @@ public class DatosDistribuidoraConverter
 	public DatosDistribuidoraDto toDto(DatosDistribuidora entidad) {
 		DatosDistribuidoraDto dto = new DatosDistribuidoraDto();
 		dto.setId(entidad.getId());
-		dto.setDistribuidora(
-				lookupValueDtoConverter.toDto(entidad.getDistribuidora()));
+		dto.setDistribuidora(lookupValueDtoConverter.toDto(entidad.getDistribuidora()));
 		dto.setExcel(entidad.isExcel());
 		dto.setWeb(entidad.isWeb());
 		dto.setDateLastUpdate(entidad.getFechaActualizacion());

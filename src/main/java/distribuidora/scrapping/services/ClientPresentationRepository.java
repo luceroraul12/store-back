@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import distribuidora.scrapping.entities.ClientPresentation;
 import distribuidora.scrapping.entities.Presentation;
 
-public interface ClientPresentationRepository extends JpaRepository<ClientPresentation, Integer>{
-	
+public interface ClientPresentationRepository extends JpaRepository<ClientPresentation, Integer> {
+
 	@Query("""
 			select cp.presentation
 			from ClientPresentation cp

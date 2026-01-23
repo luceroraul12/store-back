@@ -13,17 +13,17 @@ import distribuidora.scrapping.repositories.postgres.PersonRepository;
 import distribuidora.scrapping.util.converters.PersonDtoConverter;
 
 @Service
-public class PersonServiceImpl implements PersonService{
-	
+public class PersonServiceImpl implements PersonService {
+
 	@Autowired
 	PersonDtoConverter personDtoConverter;
-	
+
 	@Autowired
 	PersonRepository personRepository;
-	
+
 	@Autowired
 	CartService cartService;
-	
+
 	@Autowired
 	UsuarioService userService;
 
@@ -37,7 +37,7 @@ public class PersonServiceImpl implements PersonService{
 
 	@Override
 	public List<PersonDto> getPersons(String search) {
-		if(StringUtils.isEmpty(search))
+		if (StringUtils.isEmpty(search))
 			search = null;
 		List<Person> persons = personRepository.findByClientId(userService.getCurrentClient().getId(), search);
 		return personDtoConverter.toDtoList(persons);
@@ -46,7 +46,7 @@ public class PersonServiceImpl implements PersonService{
 	@Override
 	public Integer deletePerson(Integer id) throws Exception {
 		// Si la persona tiene pedidos no puedo eliminarlo
-		if(cartService.hasCartByCustomerId(id)) {
+		if (cartService.hasCartByCustomerId(id)) {
 			throw new Exception("La persona cuenta con pedidos asociados.");
 		}
 		personRepository.deleteById(id);
@@ -58,6 +58,5 @@ public class PersonServiceImpl implements PersonService{
 		Optional<Person> result = personRepository.findById(id);
 		return result.isEmpty() ? null : result.get();
 	}
-	
 
 }

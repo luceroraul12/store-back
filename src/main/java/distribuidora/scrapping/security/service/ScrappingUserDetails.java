@@ -18,28 +18,23 @@ import distribuidora.scrapping.security.repository.UsuarioTieneRolRepository;
 @Service
 public class ScrappingUserDetails implements UserDetailsService {
 
+	@Autowired
+	private UsuarioTieneRolRepository usuarioTieneRolRepository;
 
-    @Autowired
-    private UsuarioTieneRolRepository usuarioTieneRolRepository;
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		UsuarioEntity usuario = usuarioRepository.findByUsuario(username);
+		if (usuario == null)
+			throw new UsernameNotFoundException("El usuario no existe");
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UsuarioEntity usuario = usuarioRepository.findByUsuario(username);
-        if (usuario == null)
-            throw new UsernameNotFoundException("El usuario no existe");
+		List<RolEntity> roles = new ArrayList<>();
+		if (usuario != null) {
+			roles = usuarioTieneRolRepository.getRolesDelUsuario(username);
+		}
 
-        List<RolEntity> roles = new ArrayList<>();
-        if (usuario != null){
-            roles = usuarioTieneRolRepository.getRolesDelUsuario(username);
-        }
-
-        return User
-                .withUsername(username)
-                .password(usuario.getPasswordHash())
-                .authorities(roles)
-                .build();
-    }
+		return User.withUsername(username).password(usuario.getPasswordHash()).authorities(roles).build();
+	}
 }

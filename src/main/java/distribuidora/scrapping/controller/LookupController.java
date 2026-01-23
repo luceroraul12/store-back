@@ -14,11 +14,11 @@ import distribuidora.scrapping.services.general.LookupService;
 @RestController
 @RequestMapping("/lookup/")
 public class LookupController {
-    @Autowired
-    LookupService lookupService;
+	@Autowired
+	LookupService lookupService;
 
-    @GetMapping
-    public List<LookupValueDto> getLookupValoresByTipo(@RequestParam String code){
-        return lookupService.getLookupValueDtoListByLookupTypeCode(code);
-    }
+	@GetMapping
+	public List<LookupValueDto> getLookupValoresByTipo(@RequestParam String code) {
+		return lookupService.getLookupValueDtoListByLookupTypeCode(code);
+	}
 }

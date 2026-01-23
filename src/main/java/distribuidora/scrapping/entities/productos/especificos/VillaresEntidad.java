@@ -10,20 +10,20 @@ import lombok.ToString;
 @Setter
 @ToString
 public class VillaresEntidad extends ProductoEspecifico {
-    private String descripcion;
-    private String cantidad;
-    private String cantidadMinima;
-    private String detalle;
-    private String marca;
-    private String unidad;
+	private String descripcion;
+	private String cantidad;
+	private String cantidadMinima;
+	private String detalle;
+	private String marca;
+	private String unidad;
 
-    private Double precioLista;
-    private Double precioPrimerBeneficio;
-    private Double precioSegundoBeneficio;
-    private Double precioTercerBeneficio;
+	private Double precioLista;
+	private Double precioPrimerBeneficio;
+	private Double precioSegundoBeneficio;
+	private Double precioTercerBeneficio;
 
-    @Builder
-   	public VillaresEntidad(String externalId, String distribuidoraCodigo, String descripcion, String cantidad,
+	@Builder
+	public VillaresEntidad(String externalId, String distribuidoraCodigo, String descripcion, String cantidad,
 			String cantidadMinima, String detalle, String marca, String unidad, Double precioLista,
 			Double precioPrimerBeneficio, Double precioSegundoBeneficio, Double precioTercerBeneficio) {
 		super(externalId, distribuidoraCodigo);
@@ -43,7 +43,5 @@ public class VillaresEntidad extends ProductoEspecifico {
 	public Double getPrecioExterno() {
 		return precioLista;
 	}
-    
-    
-    
+
 }

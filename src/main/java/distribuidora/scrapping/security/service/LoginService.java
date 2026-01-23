@@ -15,29 +15,28 @@ import distribuidora.scrapping.security.repository.UsuarioRepository;
 @Service
 public class LoginService {
 
-    @Autowired
-    private ScrappingUserDetails scrappingUserDetails;
+	@Autowired
+	private ScrappingUserDetails scrappingUserDetails;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private JwtUtilService jwtUtilService;
+	@Autowired
+	private JwtUtilService jwtUtilService;
 
-    public String generateTokenWithDataUserByUsername(UsuarioDto usuario){
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                usuario.getUsername(),
-                usuario.getPassword()));
+	public String generateTokenWithDataUserByUsername(UsuarioDto usuario) {
+		authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getPassword()));
 
-        UsuarioEntity entity = usuarioRepository.findByUsuario(usuario.getUsername());
-        scrappingUserDetails.loadUserByUsername(usuario.getUsername());
+		UsuarioEntity entity = usuarioRepository.findByUsuario(usuario.getUsername());
+		scrappingUserDetails.loadUserByUsername(usuario.getUsername());
 
-        Map<String, String> mapExtraData = new HashMap<>();
-        mapExtraData.put("usuarioId", entity.getId().toString());
+		Map<String, String> mapExtraData = new HashMap<>();
+		mapExtraData.put("usuarioId", entity.getId().toString());
 
-        return jwtUtilService.generateToken(mapExtraData);
-    }
+		return jwtUtilService.generateToken(mapExtraData);
+	}
 }

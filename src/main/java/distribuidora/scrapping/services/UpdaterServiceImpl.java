@@ -42,16 +42,13 @@ public class UpdaterServiceImpl implements UpdaterService {
 	private DatosDistribuidoraConverter datosDistribuidoraConverter;
 
 	@Override
-	public DatosDistribuidoraDto update(UpdateRequest request)
-			throws Exception {
+	public DatosDistribuidoraDto update(UpdateRequest request) throws Exception {
 		// Genero un arreglo de los servicios actuales
-		List<ProductSearcher> services = Arrays.asList(villaresService,
-				indiasService, laGranjaDelCentroService, facundoService,
-				donGasparService);
+		List<ProductSearcher> services = Arrays.asList(villaresService, indiasService, laGranjaDelCentroService,
+				facundoService, donGasparService);
 
 		// Busco el servicio por codigo que me estan pasando
-		ProductSearcher service = services.stream().filter(
-				s -> s.getDistribuidoraCodigo().equals(request.getCode()))
+		ProductSearcher service = services.stream().filter(s -> s.getDistribuidoraCodigo().equals(request.getCode()))
 				.findFirst().orElse(null);
 
 		if (service == null) {
@@ -61,8 +58,8 @@ public class UpdaterServiceImpl implements UpdaterService {
 		service.update(request);
 
 		// TODO sacar el repository de aca
-		return datosDistribuidoraConverter.toDto(datoDistribuidoraServicio
-				.findByDistribuidoraCodigo(request.getCode()));
+		return datosDistribuidoraConverter
+				.toDto(datoDistribuidoraServicio.findByDistribuidoraCodigo(request.getCode()));
 	}
 
 }

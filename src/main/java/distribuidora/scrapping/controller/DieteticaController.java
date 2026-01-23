@@ -20,19 +20,21 @@ import distribuidora.scrapping.services.ExternalProductService;
 @RequestMapping(value = "/scrapping")
 public class DieteticaController {
 
-    @Autowired
-    ExternalProductService productoService;
+	@Autowired
+	ExternalProductService productoService;
 
-    /**
-     * Metodo para hacer busquedas en funcion a un termino de busqueda
-     * @param busqueda Solo tiene en cuenta la descripcion. Puede ser nulo para traer todos los datos.
-     * @return Devuelve una collecion de Productos, cada uno tiene una descripcion y precio por cierta cantidad especifica.
-     * @see ExternalProduct
-     * @throws IOException
-     */
+	/**
+	 * Metodo para hacer busquedas en funcion a un termino de busqueda
+	 * 
+	 * @param busqueda Solo tiene en cuenta la descripcion. Puede ser nulo para
+	 *                 traer todos los datos.
+	 * @return Devuelve una collecion de Productos, cada uno tiene una descripcion y
+	 *         precio por cierta cantidad especifica.
+	 * @see ExternalProduct
+	 * @throws IOException
+	 */
 	@GetMapping("/productos")
-	public Set<ExternalProductDto> obtenerTodosLosProductos(
-			@RequestParam(name = "busqueda") String busqueda)
+	public Set<ExternalProductDto> obtenerTodosLosProductos(@RequestParam(name = "busqueda") String busqueda)
 			throws IOException {
 		return productoService.getBySearch(busqueda);
 	}

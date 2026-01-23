@@ -17,5 +17,4 @@ public class CartDtoWithProductConverter extends Converter<CartProduct, CartDto>
 		return null;
 	}
 
-
 }
