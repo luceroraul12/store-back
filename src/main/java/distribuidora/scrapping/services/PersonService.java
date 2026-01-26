@@ -1,6 +1,6 @@
 package distribuidora.scrapping.services;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import distribuidora.scrapping.dto.PersonDto;
 import distribuidora.scrapping.entities.Person;
@@ -9,7 +9,7 @@ public interface PersonService {
 
 	Integer createUpdatePerson(PersonDto dto);
 
-	List<PersonDto> getPersons(String search);
+	Page<PersonDto> getPersons(String search, Integer page, Integer size);
 
 	Integer deletePerson(Integer id) throws Exception;
 

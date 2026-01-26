@@ -1,10 +1,12 @@
 package distribuidora.scrapping.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.dto.PersonDto;
@@ -36,11 +38,13 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
-	public List<PersonDto> getPersons(String search) {
+	public Page<PersonDto> getPersons(String search, Integer page, Integer size) {
 		if (StringUtils.isEmpty(search))
 			search = null;
-		List<Person> persons = personRepository.findByClientId(userService.getCurrentClient().getId(), search);
-		return personDtoConverter.toDtoList(persons);
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Person> pageData = personRepository.findByClientId(userService.getCurrentClient().getId(), search,
+				pageable);
+		return personDtoConverter.toPage(pageData);
 	}
 
 	@Override
