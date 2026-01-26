@@ -1,5 +1,6 @@
 package distribuidora.scrapping.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -10,7 +11,7 @@ public interface CartService {
 
 	List<CartDto> createFinalizedCart(List<CartDto> data) throws Exception;
 
-	Page<CartDto> getCartsPage(Integer personId, Integer page, Integer size);
+	Page<CartDto> getCartsPage(Integer personId, LocalDate dateFrom, LocalDate dateTo, Integer page, Integer size);
 
 	void deleteById(Integer id);
 

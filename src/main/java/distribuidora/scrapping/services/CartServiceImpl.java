@@ -1,7 +1,9 @@
 package distribuidora.scrapping.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -26,6 +28,7 @@ import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.security.entity.UsuarioEntity;
 import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.services.internal.InventorySystem;
+import distribuidora.scrapping.util.DateUtil;
 import distribuidora.scrapping.util.converters.CartDtoConverter;
 import distribuidora.scrapping.util.converters.CartProductDtoConverter;
 
@@ -124,16 +127,20 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public Page<CartDto> getCartsPage(Integer personId, Integer pageIndex, Integer size) {
+	public Page<CartDto> getCartsPage(Integer personId, LocalDate dateFrom, LocalDate dateTo, Integer pageIndex,
+			Integer size) {
 		UsuarioEntity user = userService.getCurrentUser();
 		Client client = clientHasUsersRepository.findByClientId(user.getId()).getClient();
+
 		// busco el paginado de los carts
 		if (pageIndex == null)
 			pageIndex = 0;
 		if (size == null)
 			size = 10;
+		Date df = DateUtil.getStartDate(dateFrom);
+		Date dt = DateUtil.getEndDate(dateTo);
 		PageRequest pageable = PageRequest.of(pageIndex, size);
-		Page<Cart> page = orderRepository.findPageByClientIdAndPersonId(client.getId(), personId, pageable);
+		Page<Cart> page = orderRepository.findPageByClientIdAndPersonId(client.getId(), personId, df, dt, pageable);
 		Page<CartDto> result = cartDtoConverter.toPage(page);
 		if (CollectionUtils.isNotEmpty(page.getContent())) {
 			List<Integer> cartIds = page.getContent().stream().map(Cart::getId).toList();

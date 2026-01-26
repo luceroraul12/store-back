@@ -1,5 +1,8 @@
 package distribuidora.scrapping.repositories;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,8 +31,18 @@ public interface OrderRepository extends JpaRepository<Cart, Integer> {
 			FROM Cart c
 			WHERE c.client.id = :clientId
 				AND (:personId IS NULL OR c.customer.id = :personId)
+				AND c.dateCreated BETWEEN :dateFrom AND :dateTo
 			ORDER BY c.dateCreated DESC
 			""")
-	Page<Cart> findPageByClientIdAndPersonId(Integer clientId, Integer personId, Pageable pageable);
+	Page<Cart> findPageByClientIdAndPersonId(Integer clientId, Integer personId,Date dateFrom, Date dateTo, Pageable pageable);
+
+	@Query("""
+			SELECT c
+			FROM Cart c
+			WHERE c.client.id = :clientId
+				AND c.dateCreated BETWEEN :df AND :dt
+			ORDER BY c.dateCreated ASC
+			""")
+	List<Cart> getCartsByClientAndDates(Integer clientId, Date df, Date dt);
 
 }
