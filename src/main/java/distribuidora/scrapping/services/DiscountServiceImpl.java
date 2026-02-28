@@ -38,11 +38,19 @@ public class DiscountServiceImpl implements DiscountService {
 			throw new Exception("El descuento debe tener nombre");
 		if (dto.getPercentageValue() == null && dto.getPlainValue() == null)
 			throw new Exception("Es obligatorio el valor del descuento");
-		Discount e = discountDtoConverter.toEntidad(dto);
-		Client client = userService.getCurrentClient();
-		if (dto.getId() == null) {
-			e.setClient(client);
+		
+		Discount e = null;
+		if(dto.getId() != null) {
+			e = discountRepository.findById(dto.getId()).orElse(discountDtoConverter.toEntidad(dto));
+			e.setDescription(dto.getDescription());
+			e.setName(dto.getName());
+			e.setPercentageValue(dto.getPercentageValue());
+			e.setPlainValue(dto.getPlainValue());
 		}
+		else 
+			e = discountDtoConverter.toEntidad(dto);
+		Client client = userService.getCurrentClient();
+		e.setClient(client);
 		e = discountRepository.save(e);
 		return discountDtoConverter.toDto(e);
 	}
