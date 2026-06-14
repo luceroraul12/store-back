@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.configs.Constants;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoEspecifico;
 import distribuidora.scrapping.entities.ProductoInterno;
@@ -18,7 +18,7 @@ public class ProductEspecificoInternoConverter extends Converter<ProductoEspecif
 	LookupService lookupService;
 
 	private Map<String, LookupValor> lvDistribuidoras = lookupService
-			.getLookupValoresPorLookupTipoCodigo(Constantes.LV_DISTRIBUIDORAS).stream()
+			.getLookupValoresPorLookupTipoCodigo(Constants.LV_DISTRIBUIDORAS).stream()
 			.collect(Collectors.toMap(lv -> lv.getCodigo(), Function.identity()));
 
 	@Override

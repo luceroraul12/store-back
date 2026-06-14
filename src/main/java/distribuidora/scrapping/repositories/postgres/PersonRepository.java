@@ -20,4 +20,13 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 				""")
 	Page<Person> findByClientId(Integer clientId, String search, Pageable pageable);
 
+	@Query("""
+			SELECT p 
+			FROM Person p
+				INNER JOIN p.client c
+			WHERE c.id = :clientId
+				AND p.phone = :phone
+			""")
+	Person findByPhoneAnClientId(String phone, Integer clientId);
+
 }

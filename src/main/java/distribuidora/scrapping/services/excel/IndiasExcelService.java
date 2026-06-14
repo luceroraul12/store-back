@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 
-import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.configs.Constants;
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ExternalProduct;
 
@@ -67,7 +67,7 @@ public class IndiasExcelService extends ProductSearcherExcel {
 
 	@Override
 	public void setCodes() {
-		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_INDIAS);
+		setDistribuidoraCodigo(Constants.LV_DISTRIBUIDORA_INDIAS);
 	}
 
 	@Override

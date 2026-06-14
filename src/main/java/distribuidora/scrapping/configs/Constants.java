@@ -3,7 +3,7 @@ package distribuidora.scrapping.configs;
 import java.util.Arrays;
 import java.util.List;
 
-public class Constantes {
+public class Constants {
 	public static final String LV_DISTRIBUIDORAS = "DISTRIBUIDORAS";
 	public static final String LV_DISTRIBUIDORA_MELAR = "MELAR";
 	public static final String LV_DISTRIBUIDORA_LA_GRANJA_DEL_CENTRO = "LA_GRANJA_DEL_CENTRO";
@@ -25,14 +25,18 @@ public class Constantes {
 	public static final String LV_MEDIDAS_VENTAS_1U_DESCRIPTION = "UNIDAD";
 	public static final String LT_MEDIDAS_VENTAS = "MEDIDAS_VENTAS";
 
-	// Estados de Ordenes
-	public static final String ORDER_STATUS_PENDING = "PENDING";
-	public static final String ORDER_STATUS_CONFIRMED = "CONFIRMED";
-	public static final String ORDER_STATUS_FINALIZED = "FINALIZED";
-	public static final String ORDER_STATUS_INACTIVE = "INACTIVE";
-
 	// Tipos de Distribuidoras
 	public static final String LV_DISTRIBUIDORA_TYPE_EXCEL = "EXCEL";
 	public static final String LV_DISTRIBUIDORA_TYPE_SCRAPPING = "WEB_SCRAPPING";
+	
+	
+	// Estados
+	public static final String STATUS_ACTIVE = "ACTIVE";
+	public static final String STATUS_INACTIVE = "INACTIVE";
+	public static final String STATUS_PENDING = "PENDING";
+	public static final String STATUS_CONFIRMED = "CONFIRMED";
+	public static final String STATUS_FINALIZED = "FINALIZED";
+	
+	public final static String IMAGE_FILE_PATH = "IMAGE_FILE_PATH";
 
 }

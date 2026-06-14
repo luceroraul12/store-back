@@ -60,7 +60,7 @@ public class InventorySystemController {
 	}
 
 	@DeleteMapping(value = "delete")
-	List<ProductoInternoDto> eliminarProductos(@RequestBody List<Integer> dtos) {
+	List<ProductoInternoDto> eliminarProductos(@RequestBody List<Integer> dtos) throws Exception {
 		return service.eliminarProductos(dtos);
 	}
 

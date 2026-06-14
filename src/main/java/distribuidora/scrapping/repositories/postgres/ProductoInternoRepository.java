@@ -11,11 +11,22 @@ import org.springframework.data.repository.query.Param;
 import distribuidora.scrapping.entities.ProductoInterno;
 
 public interface ProductoInternoRepository extends JpaRepository<ProductoInterno, Integer> {
-
-	@Query("SELECT pi FROM ProductoInterno pi " + "WHERE pi.externalProduct IS NOT NULL")
+	
+	@Query("""
+			SELECT pi 
+			FROM ProductoInterno pi 
+			WHERE pi.externalProduct IS NOT NULL
+				AND pi.status = 'ACTIVE'
+			""")
 	List<ProductoInterno> getProductosReferenciados();
-
-	@Query("SELECT pi FROM ProductoInterno pi " + "WHERE pi.id IN (:productoInternoIds)")
+	
+	
+	@Query("""
+			SELECT pi 
+			FROM ProductoInterno pi 	
+			WHERE pi.id IN (:productoInternoIds)
+				AND pi.status = 'ACTIVE'
+				""")
 	List<ProductoInterno> getProductsByIds(@Param("productoInternoIds") List<Integer> productoInternoIds);
 
 	public final String getAllProductosByUserIdAndSearch = """
@@ -32,6 +43,7 @@ public interface ProductoInternoRepository extends JpaRepository<ProductoInterno
 		             OR UPPER(pi.category.name) LIKE UPPER(CONCAT('%', :search, '%'))
 		         	)
 		        )
+			    AND pi.status = 'ACTIVE'
 		    ORDER BY cat.name, pi.nombre, pi.descripcion
 		""";
 	
@@ -45,13 +57,15 @@ public interface ProductoInternoRepository extends JpaRepository<ProductoInterno
 			SELECT COUNT(*)
 			FROM ProductoInterno pi
 			WHERE pi.id IN (:productIds)
+				AND pi.status = 'ACTIVE'
 			""")
 	int countProductsByIds(@Param("productIds") List<Integer> productIds);
 
 	@Query("""
 			SELECT count(p) > 0
-			 		FROM ProductoInterno p
-			 		WHERE p.category.id = :categoryId
+	 		FROM ProductoInterno p
+	 		WHERE p.category.id = :categoryId
+				AND p.status = 'ACTIVE'
 			 		""")
 	boolean hasProductWithCategoryId(Integer categoryId);
 }

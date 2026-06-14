@@ -18,7 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.configs.Constants;
 import distribuidora.scrapping.entities.ExternalProduct;
 import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.ProductoInterno;
@@ -50,8 +50,8 @@ class InventorySystemImplTest {
             Exception {
 		Date now = new Date();
         especificos = new ArrayList<>();
-        LookupValor melar = new LookupValor(Constantes.LV_DISTRIBUIDORA_MELAR);
-        LookupValor villares = new LookupValor(Constantes.LV_DISTRIBUIDORA_VILLARES);
+        LookupValor melar = new LookupValor(Constants.LV_DISTRIBUIDORA_MELAR);
+        LookupValor villares = new LookupValor(Constants.LV_DISTRIBUIDORA_VILLARES);
         especificos.addAll(Arrays.asList(
                 ExternalProduct.builder().distribuidora(melar)
                         .code("1A").price(20.0).build(),
@@ -91,9 +91,9 @@ class InventorySystemImplTest {
         ));
 
 
-        Mockito.when(lookupService.getLookupValoresPorLookupTipoCodigo(Constantes.LV_DISTRIBUIDORAS))
-                .thenReturn(Arrays.asList(new LookupValor(Constantes.LV_DISTRIBUIDORA_MELAR),
-                        new LookupValor(Constantes.LV_DISTRIBUIDORA_VILLARES)));
+        Mockito.when(lookupService.getLookupValoresPorLookupTipoCodigo(Constants.LV_DISTRIBUIDORAS))
+                .thenReturn(Arrays.asList(new LookupValor(Constants.LV_DISTRIBUIDORA_MELAR),
+                        new LookupValor(Constants.LV_DISTRIBUIDORA_VILLARES)));
 
 		Mockito.when(productoInternoRepository.getProductosReferenciados())
 				.thenReturn(internos);
@@ -115,8 +115,8 @@ class InventorySystemImplTest {
                         Collectors.toMap(ExternalProduct::getId,ExternalProduct::getPrecioPorCantidadEspecifica)));
 
         assertEquals(
-                mapInternos.get(Constantes.LV_DISTRIBUIDORA_MELAR).get("8A"),
-                mapEspecificos.get(Constantes.LV_DISTRIBUIDORA_MELAR).get("8A"));
+                mapInternos.get(Constants.LV_DISTRIBUIDORA_MELAR).get("8A"),
+                mapEspecificos.get(Constants.LV_DISTRIBUIDORA_MELAR).get("8A"));
     }
 
     @Test
@@ -132,8 +132,8 @@ class InventorySystemImplTest {
                         Collectors.toMap(ExternalProduct::getId,ExternalProduct::getPrecioPorCantidadEspecifica)));
 
         assertNotEquals(
-                mapInternos.get(Constantes.LV_DISTRIBUIDORA_MELAR).get("8A"),
-                mapEspecificos.get(Constantes.LV_DISTRIBUIDORA_VILLARES).get("8A"));
+                mapInternos.get(Constants.LV_DISTRIBUIDORA_MELAR).get("8A"),
+                mapEspecificos.get(Constants.LV_DISTRIBUIDORA_VILLARES).get("8A"));
     }
 
     @Test
@@ -149,8 +149,8 @@ class InventorySystemImplTest {
                         Collectors.toMap(ExternalProduct::getId,ExternalProduct::getPrecioPorCantidadEspecifica)));
 
         assertNotEquals(
-                mapInternos.get(Constantes.LV_DISTRIBUIDORA_VILLARES).get("11-2a2-336"),
-                mapEspecificos.get(Constantes.LV_DISTRIBUIDORA_VILLARES).get("11-2a2-336"));
+                mapInternos.get(Constants.LV_DISTRIBUIDORA_VILLARES).get("11-2a2-336"),
+                mapEspecificos.get(Constants.LV_DISTRIBUIDORA_VILLARES).get("11-2a2-336"));
     }
 
     @Test

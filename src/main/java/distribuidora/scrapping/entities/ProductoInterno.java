@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +43,7 @@ public class ProductoInterno {
 	@ManyToOne
 	@JoinColumn(name = "distribuidora_id")
 	private LookupValor distribuidoraReferencia;
+	@CreatedDate
 	@Column(name = "fecha_creacion")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaCreacion;
@@ -72,6 +75,8 @@ public class ProductoInterno {
 	private Presentation presentation;
 
 	private Boolean available;
+	
+	private String status;
 
 	@Builder
 	public ProductoInterno(Integer id, String nombre, String descripcion, Double precio, String codigoReferencia,

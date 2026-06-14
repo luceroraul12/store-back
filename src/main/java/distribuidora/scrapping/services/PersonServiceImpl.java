@@ -9,9 +9,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import distribuidora.scrapping.dto.CustomerDto;
 import distribuidora.scrapping.dto.PersonDto;
 import distribuidora.scrapping.entities.Person;
 import distribuidora.scrapping.repositories.postgres.PersonRepository;
+import distribuidora.scrapping.util.converters.CustomerDtoConverter;
 import distribuidora.scrapping.util.converters.PersonDtoConverter;
 
 @Service
@@ -28,6 +30,9 @@ public class PersonServiceImpl implements PersonService {
 
 	@Autowired
 	UsuarioService userService;
+	
+	@Autowired
+	CustomerDtoConverter customerDtoConverter;
 
 	@Override
 	public Integer createUpdatePerson(PersonDto dto) {
@@ -35,6 +40,16 @@ public class PersonServiceImpl implements PersonService {
 		person.setClient(userService.getCurrentClient());
 		person = personRepository.save(person);
 		return person.getId();
+	}
+
+	@Override
+	public CustomerDto checkCustomer(String phone, Integer clientId) throws Exception {
+		// me fijo si existia alguien con ese telefono y tienda
+		Person person = personRepository.findByPhoneAnClientId(phone, clientId);
+		if(person == null)
+			throw new Exception("El comprador no existe.");
+		
+		return customerDtoConverter.toDto(person);
 	}
 
 	@Override

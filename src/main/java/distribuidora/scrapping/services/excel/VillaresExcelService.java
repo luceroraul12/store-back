@@ -4,7 +4,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 
-import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.configs.Constants;
 import distribuidora.scrapping.entities.DatosDistribuidora;
 import distribuidora.scrapping.entities.ExternalProduct;
 
@@ -17,7 +17,7 @@ public class VillaresExcelService extends ProductSearcherExcel {
 
 	@Override
 	public void setCodes() {
-		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_VILLARES);
+		setDistribuidoraCodigo(Constants.LV_DISTRIBUIDORA_VILLARES);
 	}
 
 	@Override

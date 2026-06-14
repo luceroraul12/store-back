@@ -28,7 +28,7 @@ public interface InventorySystem {
 
 	ProductoInternoDto modificarProducto(ProductoInternoDto dto) throws Exception;
 
-	List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds);
+	List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds) throws Exception;
 
 	Page<ProductoInternoDto> getProductDtos(String search, Integer page, Integer size) throws Exception;
 
@@ -48,9 +48,9 @@ public interface InventorySystem {
 
 	void changeAvailable(Integer productId, Boolean isAvailable);
 
-	List<ProductoInterno> getProducts(String search) throws Exception;
+	List<ProductoInterno> getProducts(String search, Integer clientId) throws Exception;
 
 	Page<ProductoInterno> getProducts(String search, Pageable pageable) throws Exception;
 
-	List<ProductCustomerDto> getProductsForCustomer() throws Exception;
+	List<ProductCustomerDto> getProductsForCustomer(Integer clientId) throws Exception;
 }

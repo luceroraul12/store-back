@@ -28,6 +28,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import distribuidora.scrapping.configs.Constants;
 import distribuidora.scrapping.dto.BasePriceDto;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
@@ -35,7 +36,6 @@ import distribuidora.scrapping.entities.ProductoInterno;
 import distribuidora.scrapping.repositories.postgres.CategoryHasUnitRepository;
 import distribuidora.scrapping.services.ConfigService;
 import distribuidora.scrapping.services.UsuarioService;
-import distribuidora.scrapping.services.general.CONFIG;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.util.CalculatorUtil;
 
@@ -89,7 +89,7 @@ public class PdfServiceImpl implements PdfService {
 		// Pruebas de logo del cliente
 		Paragraph p = null;
 		try {
-			String path = configService.getByCode(CONFIG.IMAGE_FILE_PATH).getValue();
+			String path = configService.getByCode(Constants.IMAGE_FILE_PATH).getValue();
 			Image imageLogo = Image.getInstance(String.format("%s/%s", path, client.getFilenameLogo()));
 			imageLogo.setAlignment(Element.ALIGN_CENTER);
 			imageLogo.setSpacingAfter(0);
@@ -133,7 +133,7 @@ public class PdfServiceImpl implements PdfService {
 		// document.add(title);
 
 		// busco los prodcutos
-		List<ProductoInterno> productoInternosStatus = inventoryService.getProducts(StringUtils.EMPTY);
+		List<ProductoInterno> productoInternosStatus = inventoryService.getProducts(StringUtils.EMPTY, clientId);
 
 		for (Category category : categories) {
 			// me fijo si la categoria tiene productos asociados

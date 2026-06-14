@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import distribuidora.scrapping.configs.Constantes;
+import distribuidora.scrapping.configs.Constants;
 import distribuidora.scrapping.entities.ExternalProduct;
 
 @Service
@@ -55,7 +55,7 @@ public class DonGasparWebScrappingServicio extends ProductSearcherWeb {
 
 	@Override
 	public void setCodes() {
-		setDistribuidoraCodigo(Constantes.LV_DISTRIBUIDORA_DON_GASPAR);
+		setDistribuidoraCodigo(Constants.LV_DISTRIBUIDORA_DON_GASPAR);
 	}
 
 	@Override

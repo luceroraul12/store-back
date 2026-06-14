@@ -4,8 +4,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import distribuidora.scrapping.configs.Constants;
 import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.dto.DatosDistribuidoraDto;
 import distribuidora.scrapping.dto.ProductCustomerDto;
@@ -81,7 +82,6 @@ public class InventorySystemImpl implements InventorySystem {
 		// llamado a las bases de datos para obtener los productos especificos e
 		// internos
 		List<ProductoInterno> productoInternos = productoInternoRepository.getProductosReferenciados();
-		Date now = new Date();
 
 		// Recorro cada producto y le agrego el precio external si corresponde
 		DecimalFormat df = new DecimalFormat("#.00");
@@ -117,6 +117,7 @@ public class InventorySystemImpl implements InventorySystem {
 		Category category = categoryService.getById(dto.getCategory().getId());
 
 		ProductoInterno producto = productoInternoConverter.toEntidad(dto);
+		producto.setStatus(Constants.STATUS_ACTIVE);
 		producto.setCategory(category);
 
 		producto.setFechaCreacion(new Date());
@@ -149,6 +150,7 @@ public class InventorySystemImpl implements InventorySystem {
 		newEntidadInterno.setClient(currentClient);
 
 		newEntidadInterno.setFechaCreacion(oldEntidadInterno.getFechaCreacion());
+		newEntidadInterno.setStatus(oldEntidadInterno.getStatus());
 		verifyAndUpdateDateModified(oldEntidadInterno, newEntidadInterno);
 
 		ProductoInterno productoGuardado = productoInternoRepository.save(newEntidadInterno);
@@ -159,17 +161,25 @@ public class InventorySystemImpl implements InventorySystem {
 	}
 
 	@Override
-	public List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds) {
+	public List<ProductoInternoDto> eliminarProductos(List<Integer> productoInternoIds) throws Exception {
 		List<ProductoInterno> productosEncontrados = productoInternoRepository.getProductsByIds(productoInternoIds);
-		List<Integer> productoIdsEncontrados = productosEncontrados.stream().map(ProductoInterno::getId)
-				.collect(Collectors.toList());
-		productoInternoRepository.deleteAllById(productoIdsEncontrados);
+		if (CollectionUtils.isEmpty(productosEncontrados))
+			throw new Exception("Los identificadores de producto no existen.");
+		for (ProductoInterno productoInterno : productosEncontrados) {
+			productoInterno.setStatus(Constants.STATUS_INACTIVE);
+		}
+		productosEncontrados = productoInternoRepository.saveAll(productosEncontrados);
 		return productoInternoConverter.toDtoList(productosEncontrados);
 	}
 
 	@Override
-	public List<ProductoInterno> getProducts(String search) throws Exception {
-		Integer clientId = usuarioService.getCurrentClient().getId();
+	public List<ProductoInterno> getProducts(String search, Integer clientId) throws Exception {
+		if (clientId == null) {
+			Client client = usuarioService.getCurrentClient();
+			if (client == null)
+				throw new Exception("La tienda no existe.");
+			clientId = client.getId();
+		}
 		// Convierto search en mayuscula
 		if (StringUtils.isNotEmpty(search))
 			search = search.toUpperCase();
@@ -284,8 +294,8 @@ public class InventorySystemImpl implements InventorySystem {
 	}
 
 	@Override
-	public List<ProductCustomerDto> getProductsForCustomer() throws Exception {
-		List<ProductoInterno> products = getProducts(StringUtils.EMPTY);
+	public List<ProductCustomerDto> getProductsForCustomer(Integer clientId) throws Exception {
+		List<ProductoInterno> products = getProducts(StringUtils.EMPTY, clientId);
 		List<ProductCustomerDto> dtos = new ArrayList<ProductCustomerDto>();
 		// Tengo que asignar el precio a cada producto en base a las unidades de la
 		// categoria
