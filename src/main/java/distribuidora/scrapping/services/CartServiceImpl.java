@@ -85,7 +85,7 @@ public class CartServiceImpl implements CartService {
 
 		// Creo las ordenes
 		for (CartDto cartDto : data) {
-			Person person = personService.getById(cartDto.getCustomer().getId());
+			Person person = cartDto.getCustomer() != null ? personService.getById(cartDto.getCustomer().getId()) : null;
 			Discount discount = null;
 			if (cartDto.getDiscount() != null)
 				discount = discounts.stream().filter(d -> d.getId().equals(cartDto.getDiscount().getId())).findFirst()

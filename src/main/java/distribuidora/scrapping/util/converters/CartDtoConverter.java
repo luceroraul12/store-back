@@ -24,7 +24,8 @@ public class CartDtoConverter extends Converter<Cart, CartDto> {
 		dto.setStatus(entidad.getStatus());
 		dto.setTotalPrice(entidad.getTotalPrice());
 		dto.setCustomerTotalPrice(entidad.getCustomerTotalPrice());
-		dto.setCustomer(personDtoConverter.toDto(entidad.getCustomer()));
+		if (entidad.getCustomer() != null)
+			dto.setCustomer(personDtoConverter.toDto(entidad.getCustomer()));
 		if (entidad.getDiscount() != null)
 			dto.setDiscount(discountDtoConverter.toDto(entidad.getDiscount()));
 		return dto;
