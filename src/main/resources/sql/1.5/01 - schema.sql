@@ -27,8 +27,8 @@ values ('SUPPLIER_BALANCE_TYPE', 'Supplier balance type');
 
 insert into lookup_valor (lookup_tipo_id, codigo, descripcion)
 values
-	((select id from lookup_tipo where codigo = 'SUPPLIER_BALANCE_TYPE'), 'STORE_CREDIT', 'Credit in favor of the store'),
-	((select id from lookup_tipo where codigo = 'SUPPLIER_BALANCE_TYPE'), 'SUPPLIER_CREDIT', 'Credit in favor of the supplier');
+	((select id from lookup_tipo where codigo = 'SUPPLIER_BALANCE_TYPE'), 'STORE_CREDIT', 'TIENDA'),
+	((select id from lookup_tipo where codigo = 'SUPPLIER_BALANCE_TYPE'), 'SUPPLIER_CREDIT', 'DISTRIBUIDORA');
 
 insert into lookup_valor (lookup_tipo_id, codigo, descripcion)
 values ((select id from lookup_tipo where codigo = 'MODULE_TYPE'), 'MODULE_TYPE_SUPPLIER', 'Suppliers');
