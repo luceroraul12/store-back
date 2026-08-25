@@ -76,6 +76,8 @@ public class SupplierServiceImpl implements SupplierService {
 		Supplier supplier = supplierRepository.findByIdAndClientId(id, userService.getCurrentClient().getId());
 		if (supplier == null)
 			throw new Exception("La distribuidora no existe para la tienda actual");
+		if (!balanceRepository.findBySupplierIdAndClientId(id, userService.getCurrentClient().getId()).isEmpty())
+			throw new Exception("La distribuidora cuenta con saldos asociados y no puede eliminarse");
 		supplierRepository.delete(supplier);
 		return id;
 	}
