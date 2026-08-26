@@ -4,10 +4,14 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import distribuidora.scrapping.dto.SupplierBalanceDto;
+import distribuidora.scrapping.dto.SupplierBalancePageDto;
+import distribuidora.scrapping.dto.SupplierBalanceSummaryDto;
 import distribuidora.scrapping.dto.SupplierDto;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.LookupValor;
@@ -76,17 +80,40 @@ public class SupplierServiceImpl implements SupplierService {
 		Supplier supplier = supplierRepository.findByIdAndClientId(id, userService.getCurrentClient().getId());
 		if (supplier == null)
 			throw new Exception("La distribuidora no existe para la tienda actual");
-		if (!balanceRepository.findBySupplierIdAndClientId(id, userService.getCurrentClient().getId()).isEmpty())
+		if (balanceRepository.existsBySupplierIdAndClientId(id, userService.getCurrentClient().getId()))
 			throw new Exception("La distribuidora cuenta con saldos asociados y no puede eliminarse");
 		supplierRepository.delete(supplier);
 		return id;
 	}
 
 	@Override
-	public List<SupplierBalanceDto> getBalances(Integer supplierId) throws Exception {
+	public SupplierBalancePageDto getBalances(Integer supplierId, Integer page, Integer size) throws Exception {
 		getSupplier(supplierId);
-		return balanceDtoConverter.toDtoList(balanceRepository.findBySupplierIdAndClientId(
-				supplierId, userService.getCurrentClient().getId()));
+		Integer clientId = userService.getCurrentClient().getId();
+		Page<SupplierBalance> balancePage = balanceRepository.findBySupplierIdAndClientId(
+				supplierId, clientId, PageRequest.of(page, size));
+		SupplierBalancePageDto result = new SupplierBalancePageDto();
+		result.setContent(balanceDtoConverter.toDtoList(balancePage.getContent()));
+		result.setNumber(balancePage.getNumber());
+		result.setSize(balancePage.getSize());
+		result.setTotalElements(balancePage.getTotalElements());
+		result.setTotalPages(balancePage.getTotalPages());
+		result.setSummary(buildSummary(supplierId, clientId));
+		return result;
+	}
+
+	private SupplierBalanceSummaryDto buildSummary(Integer supplierId, Integer clientId) {
+		Double totalToSupplier = balanceRepository.sumByType(supplierId, clientId, "SUPPLIER_CREDIT");
+		Double totalToStore = balanceRepository.sumByType(supplierId, clientId, "STORE_CREDIT");
+		SupplierBalanceSummaryDto summary = new SupplierBalanceSummaryDto();
+		summary.setTotalToSupplier(totalToSupplier);
+		summary.setTotalToStore(totalToStore);
+		double difference = Math.abs(totalToSupplier - totalToStore);
+		summary.setDifference(difference);
+		summary.setDebtor(totalToSupplier.equals(totalToStore)
+				? "NONE"
+				: totalToSupplier > totalToStore ? "STORE" : "SUPPLIER");
+		return summary;
 	}
 
 	@Override

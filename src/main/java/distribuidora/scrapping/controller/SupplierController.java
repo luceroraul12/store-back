@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.dto.SupplierBalanceDto;
+import distribuidora.scrapping.dto.SupplierBalancePageDto;
 import distribuidora.scrapping.dto.SupplierDto;
 import distribuidora.scrapping.services.SupplierService;
 
@@ -38,8 +40,10 @@ public class SupplierController {
 	}
 
 	@GetMapping("/{supplierId}/balances")
-	public List<SupplierBalanceDto> getBalances(@PathVariable Integer supplierId) throws Exception {
-		return service.getBalances(supplierId);
+	public SupplierBalancePageDto getBalances(@PathVariable Integer supplierId,
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "20") Integer size) throws Exception {
+		return service.getBalances(supplierId, page, size);
 	}
 
 	@PostMapping("/{supplierId}/balances")
