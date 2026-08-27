@@ -15,6 +15,9 @@ public class CartDtoConverter extends Converter<Cart, CartDto> {
 	@Autowired
 	DiscountDtoConverter discountDtoConverter;
 
+	@Autowired
+	SupplierDtoConverter supplierDtoConverter;
+
 	@Override
 	public CartDto toDto(Cart entidad) {
 		CartDto dto = new CartDto();
@@ -26,6 +29,8 @@ public class CartDtoConverter extends Converter<Cart, CartDto> {
 		dto.setCustomerTotalPrice(entidad.getCustomerTotalPrice());
 		if (entidad.getCustomer() != null)
 			dto.setCustomer(personDtoConverter.toDto(entidad.getCustomer()));
+		if (entidad.getSupplier() != null)
+			dto.setSupplier(supplierDtoConverter.toDto(entidad.getSupplier()));
 		if (entidad.getDiscount() != null)
 			dto.setDiscount(discountDtoConverter.toDto(entidad.getDiscount()));
 		return dto;

@@ -15,6 +15,7 @@ import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import distribuidora.scrapping.entities.customer.Cart;
 
 @Entity
 @Table(name = "supplier_balance")
@@ -32,6 +33,9 @@ public class SupplierBalance {
 	private LookupValor balanceType;
 	@Column(nullable = false)
 	private Double amount;
+	@ManyToOne
+	@JoinColumn(name = "cart_id")
+	private Cart cart;
 	@Column(name = "created_at", nullable = false)
 	private Date createdAt;
 	@Column(name = "updated_at", nullable = false)

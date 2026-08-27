@@ -17,6 +17,8 @@ create table supplier_balance(
 	amount float8 not null,
 	created_at timestamp not null default now(),
 	updated_at timestamp not null default now(),
+	cart_id int,
+	constraint supplier_balance_cart_fk foreign key (cart_id) references cart(id),
 	constraint supplier_balance_supplier_fk foreign key (supplier_id) references supplier(id),
 	constraint supplier_balance_type_fk foreign key (balance_type_id) references lookup_valor(id),
 	constraint supplier_balance_amount_ck check (amount > 0)
@@ -43,3 +45,6 @@ where lv.codigo = 'MODULE_TYPE_SUPPLIER'
 		from client_module cm
 		where cm.client_id = c.id and cm.lv_module_id = lv.id
 	);
+
+alter table cart add supplier_id int;
+alter table cart add constraint cart_supplier_fk foreign key (supplier_id) references supplier(id);

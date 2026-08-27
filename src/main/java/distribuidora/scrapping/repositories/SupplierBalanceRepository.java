@@ -9,6 +9,8 @@ import distribuidora.scrapping.entities.SupplierBalance;
 
 public interface SupplierBalanceRepository extends JpaRepository<SupplierBalance, Integer> {
 
+	void deleteByCartId(Integer cartId);
+
 	@Query("""
 			select b
 			from SupplierBalance b
