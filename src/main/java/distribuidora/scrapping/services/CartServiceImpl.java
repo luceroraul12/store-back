@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import distribuidora.scrapping.dto.CartDto;
+import distribuidora.scrapping.dto.CartPaymentDto;
 import distribuidora.scrapping.dto.CartProductDto;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.Discount;
@@ -24,7 +25,9 @@ import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Supplier;
 import distribuidora.scrapping.entities.SupplierBalance;
 import distribuidora.scrapping.entities.customer.Cart;
+import distribuidora.scrapping.entities.customer.CartPayment;
 import distribuidora.scrapping.entities.customer.CartProduct;
+import distribuidora.scrapping.repositories.CartPaymentRepository;
 import distribuidora.scrapping.repositories.CartProductRepository;
 import distribuidora.scrapping.repositories.ClientHasUsersRepository;
 import distribuidora.scrapping.repositories.OrderRepository;
@@ -36,6 +39,7 @@ import distribuidora.scrapping.services.general.LookupService;
 import distribuidora.scrapping.services.internal.InventorySystem;
 import distribuidora.scrapping.util.DateUtil;
 import distribuidora.scrapping.util.converters.CartDtoConverter;
+import distribuidora.scrapping.util.converters.CartPaymentDtoConverter;
 import distribuidora.scrapping.util.converters.CartProductDtoConverter;
 
 @Service
@@ -51,6 +55,9 @@ public class CartServiceImpl implements CartService {
 	CartProductRepository orderHasProductRepository;
 
 	@Autowired
+	CartPaymentRepository cartPaymentRepository;
+
+	@Autowired
 	CategoryHasUnitRepository categoryHasUnitRepository;
 
 	@Autowired
@@ -64,6 +71,9 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	CartDtoConverter cartDtoConverter;
+
+	@Autowired
+	CartPaymentDtoConverter cartPaymentDtoConverter;
 
 	@Autowired
 	CartProductDtoConverter cartProductDtoConverter;
@@ -133,6 +143,19 @@ public class CartServiceImpl implements CartService {
 				finalProducts.add(cartProduct);
 			}
 			cartDto.setProducts(cartProductDtoConverter.toDtoList(finalProducts));
+			List<CartPayment> finalPayments = new ArrayList<CartPayment>();
+			if (CollectionUtils.isNotEmpty(cartDto.getPayments())) {
+				for (CartPaymentDto cp : cartDto.getPayments()) {
+					LookupValor paymentMethod = lookupService.getLookupValuesByIds(Arrays.asList(cp.getPaymentMethod().getId()))
+							.stream().findFirst().orElse(null);
+					if (paymentMethod == null)
+						throw new Exception("La forma de pago no existe");
+					CartPayment cartPayment = new CartPayment(cart, paymentMethod, cp.getAmount());
+					cartPayment = cartPaymentRepository.save(cartPayment);
+					finalPayments.add(cartPayment);
+				}
+				cartDto.setPayments(cartPaymentDtoConverter.toDtoList(finalPayments));
+			}
 		}
 
 		return data;
@@ -179,12 +202,18 @@ public class CartServiceImpl implements CartService {
 			List<Integer> cartIds = page.getContent().stream().map(Cart::getId).toList();
 			// busco los productos de todos los carts
 			List<CartProduct> products = orderHasProductRepository.findByCartIds(cartIds);
+			// busco las formas de pago de todos los carts
+			List<CartPayment> payments = cartPaymentRepository.findByCartIds(cartIds);
 			// Los agrego a cada cart
 			result.getContent().forEach(c -> {
 				List<CartProduct> currentCartProducts = products.stream()
 						.filter(cp -> cp.getCart().getId().equals(c.getCartId())).toList();
 				if (CollectionUtils.isNotEmpty(currentCartProducts))
 					c.setProducts(cartProductDtoConverter.toDtoList(currentCartProducts));
+				List<CartPayment> currentCartPayments = payments.stream()
+						.filter(cp -> cp.getCart().getId().equals(c.getCartId())).toList();
+				if (CollectionUtils.isNotEmpty(currentCartPayments))
+					c.setPayments(cartPaymentDtoConverter.toDtoList(currentCartPayments));
 			});
 		}
 		return result;
@@ -195,6 +224,7 @@ public class CartServiceImpl implements CartService {
 		// Elimino productos
 		List<CartProduct> products = orderHasProductRepository.findByCartIds(Arrays.asList(cartId));
 		orderHasProductRepository.deleteAll(products);
+		cartPaymentRepository.deleteByCartId(cartId);
 		supplierBalanceRepository.deleteByCartId(cartId);
 		// Elimino pedido
 		orderRepository.deleteById(cartId);

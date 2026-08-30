@@ -17,4 +17,5 @@ public class CartDto {
 	private SupplierDto supplier;
 	private DiscountDto discount;
 	private Double customerTotalPrice;
+	private List<CartPaymentDto> payments;
 }

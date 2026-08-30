@@ -48,3 +48,23 @@ where lv.codigo = 'MODULE_TYPE_SUPPLIER'
 
 alter table cart add supplier_id int;
 alter table cart add constraint cart_supplier_fk foreign key (supplier_id) references supplier(id);
+
+-- Payment methods per cart. The customerTotalPrice is split into one or more payments,
+-- each one using a payment method lookup (eg. CASH/EFECTIVO, TRANSFER/TRANSFERENCIA).
+create table cart_payment(
+	id serial primary key,
+	cart_id int not null,
+	lv_payment_method_id int not null,
+	amount float8 not null,
+	constraint cart_payment_cart_fk foreign key (cart_id) references cart(id),
+	constraint cart_payment_method_fk foreign key (lv_payment_method_id) references lookup_valor(id),
+	constraint cart_payment_amount_ck check (amount > 0)
+);
+
+insert into lookup_tipo(codigo, descripcion)
+values ('PAYMENT_METHOD', 'Forma de pago');
+
+insert into lookup_valor (lookup_tipo_id, codigo, descripcion)
+values
+	((select id from lookup_tipo where codigo = 'PAYMENT_METHOD'), 'CASH', 'EFECTIVO'),
+	((select id from lookup_tipo where codigo = 'PAYMENT_METHOD'), 'TRANSFER', 'TRANSFERENCIA');
