@@ -114,8 +114,6 @@ public class CartServiceImpl implements CartService {
 				if (supplier == null)
 					throw new Exception("La distribuidora no existe para la tienda actual");
 			}
-			if (person == null && supplier == null)
-				throw new Exception("El pedido debe tener una persona o una distribuidora");
 			if (person != null && supplier != null)
 				throw new Exception("El pedido no puede tener una persona y una distribuidora");
 			Discount discount = null;
