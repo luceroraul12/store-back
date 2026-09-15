@@ -39,4 +39,12 @@ public class Constants {
 	
 	public final static String IMAGE_FILE_PATH = "IMAGE_FILE_PATH";
 
+	// Payment Methods
+	public static final String LV_PAYMENT_METHOD_CASH = "CASH";
+	public static final String LV_PAYMENT_METHOD_TRANSFER = "TRANSFER";
+
+	// Cash Register Status
+	public static final String CASH_REGISTER_STATUS_OPEN = "OPEN";
+	public static final String CASH_REGISTER_STATUS_CLOSED = "CLOSED";
+
 }
