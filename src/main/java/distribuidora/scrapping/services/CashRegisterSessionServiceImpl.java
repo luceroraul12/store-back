@@ -1,8 +1,11 @@
 package distribuidora.scrapping.services;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +15,7 @@ import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.customer.CashRegisterSession;
 import distribuidora.scrapping.repositories.CashRegisterSessionRepository;
 import distribuidora.scrapping.repositories.CartPaymentRepository;
+import distribuidora.scrapping.util.DateUtil;
 import distribuidora.scrapping.util.converters.CashRegisterSessionConverter;
 
 @Service
@@ -83,5 +87,24 @@ public class CashRegisterSessionServiceImpl implements CashRegisterSessionServic
 			return null;
 
 		return cashRegisterSessionConverter.toDto(session);
+	}
+
+	@Override
+	public Page<CashRegisterSessionDto> getHistory(LocalDate dateFrom, LocalDate dateTo, Integer pageIndex,
+			Integer size) throws Exception {
+		Client client = userService.getCurrentClient();
+		if (client == null)
+			throw new Exception("No existe la tienda solicitada");
+
+		if (pageIndex == null)
+			pageIndex = 0;
+		if (size == null)
+			size = 10;
+		Date df = DateUtil.getStartDate(dateFrom);
+		Date dt = DateUtil.getEndDate(dateTo);
+		PageRequest pageable = PageRequest.of(pageIndex, size);
+		Page<CashRegisterSession> page = cashRegisterSessionRepository.findByClientIdAndDateRange(client.getId(), df,
+				dt, pageable);
+		return cashRegisterSessionConverter.toPage(page);
 	}
 }

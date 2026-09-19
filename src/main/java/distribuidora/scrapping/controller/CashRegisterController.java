@@ -1,10 +1,15 @@
 package distribuidora.scrapping.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.dto.CashRegisterSessionDto;
@@ -30,5 +35,14 @@ public class CashRegisterController {
 	@GetMapping("/current")
 	CashRegisterSessionDto getCurrentSession() throws Exception {
 		return cashRegisterSessionService.getCurrentSession();
+	}
+
+	@GetMapping()
+	Page<CashRegisterSessionDto> getHistory(
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
+			@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size)
+			throws Exception {
+		return cashRegisterSessionService.getHistory(dateFrom, dateTo, page, size);
 	}
 }
