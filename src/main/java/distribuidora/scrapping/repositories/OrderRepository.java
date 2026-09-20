@@ -45,4 +45,22 @@ public interface OrderRepository extends JpaRepository<Cart, Integer> {
 			""")
 	List<Cart> getCartsByClientAndDates(Integer clientId, Date df, Date dt);
 
+	@Query("""
+			SELECT c
+			FROM Cart c
+			WHERE c.client.id = :clientId
+			ORDER BY c.dateCreated ASC
+			""")
+	List<Cart> findByClientId(Integer clientId);
+
+	@Query("""
+			SELECT c
+			FROM Cart c
+			WHERE c.client.id = :clientId
+				AND (:hasDateFrom = false OR c.dateCreated >= :dateFrom)
+				AND (:hasDateTo = false OR c.dateCreated <= :dateTo)
+			ORDER BY c.dateCreated ASC
+			""")
+	List<Cart> findByClientIdAndDateRange(Integer clientId, boolean hasDateFrom, Date dateFrom, boolean hasDateTo, Date dateTo);
+
 }

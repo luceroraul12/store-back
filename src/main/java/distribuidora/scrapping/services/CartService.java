@@ -13,9 +13,12 @@ public interface CartService {
 
 	Page<CartDto> getCartsPage(Integer personId, LocalDate dateFrom, LocalDate dateTo, Integer page, Integer size);
 
+	List<CartDto> getCartsBySessionId(Integer sessionId);
+
 	void deleteById(Integer id);
 
 	boolean hasCartByCustomerId(Integer id);
 
 	boolean hasCartsByDiscountId(Integer id);
+
 }

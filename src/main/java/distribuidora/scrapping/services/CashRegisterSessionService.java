@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import org.springframework.data.domain.Page;
 
 import distribuidora.scrapping.dto.CashRegisterSessionDto;
+import distribuidora.scrapping.entities.customer.CashRegisterSession;
 
 public interface CashRegisterSessionService {
 
@@ -18,5 +19,7 @@ public interface CashRegisterSessionService {
 
 	Page<CashRegisterSessionDto> getHistory(LocalDate dateFrom, LocalDate dateTo, Integer page, Integer size)
 			throws Exception;
+
+	CashRegisterSession getById(Integer sessionId);
 
 }

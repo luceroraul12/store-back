@@ -19,14 +19,15 @@ import distribuidora.scrapping.dto.CartPaymentDto;
 import distribuidora.scrapping.dto.CartProductDto;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.Discount;
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Person;
 import distribuidora.scrapping.entities.ProductoInterno;
-import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.entities.Supplier;
 import distribuidora.scrapping.entities.SupplierBalance;
 import distribuidora.scrapping.entities.customer.Cart;
 import distribuidora.scrapping.entities.customer.CartPayment;
 import distribuidora.scrapping.entities.customer.CartProduct;
+import distribuidora.scrapping.entities.customer.CashRegisterSession;
 import distribuidora.scrapping.repositories.CartPaymentRepository;
 import distribuidora.scrapping.repositories.CartProductRepository;
 import distribuidora.scrapping.repositories.ClientHasUsersRepository;
@@ -92,6 +93,9 @@ public class CartServiceImpl implements CartService {
 	@Autowired
 	DiscountService discountService;
 
+	@Autowired
+	CashRegisterSessionService cashRegisterSessionService;
+
 	@Override
 	@Transactional
 	public List<CartDto> createFinalizedCart(List<CartDto> data) throws Exception {
@@ -120,9 +124,9 @@ public class CartServiceImpl implements CartService {
 			if (cartDto.getDiscount() != null)
 				discount = discounts.stream().filter(d -> d.getId().equals(cartDto.getDiscount().getId())).findFirst()
 						.orElse(null);
-	
-			Cart cart = new Cart(client, person, supplier, cartDto.getDateCreated(), "SYNCHRONIZED", cartDto.getTotalPrice(),
-					cartDto.getCustomerTotalPrice(), discount);
+
+			Cart cart = new Cart(client, person, supplier, cartDto.getDateCreated(), "SYNCHRONIZED",
+					cartDto.getTotalPrice(), cartDto.getCustomerTotalPrice(), discount);
 			cart = orderRepository.save(cart);
 			if (supplier != null)
 				createStoreCredit(supplier, cart);
@@ -144,8 +148,9 @@ public class CartServiceImpl implements CartService {
 			List<CartPayment> finalPayments = new ArrayList<CartPayment>();
 			if (CollectionUtils.isNotEmpty(cartDto.getPayments())) {
 				for (CartPaymentDto cp : cartDto.getPayments()) {
-					LookupValor paymentMethod = lookupService.getLookupValuesByIds(Arrays.asList(cp.getPaymentMethod().getId()))
-							.stream().findFirst().orElse(null);
+					LookupValor paymentMethod = lookupService
+							.getLookupValuesByIds(Arrays.asList(cp.getPaymentMethod().getId())).stream().findFirst()
+							.orElse(null);
 					if (paymentMethod == null)
 						throw new Exception("La forma de pago no existe");
 					CartPayment cartPayment = new CartPayment(cart, paymentMethod, cp.getAmount());
@@ -197,24 +202,27 @@ public class CartServiceImpl implements CartService {
 		Page<Cart> page = orderRepository.findPageByClientIdAndPersonId(client.getId(), personId, df, dt, pageable);
 		Page<CartDto> result = cartDtoConverter.toPage(page);
 		if (CollectionUtils.isNotEmpty(page.getContent())) {
-			List<Integer> cartIds = page.getContent().stream().map(Cart::getId).toList();
-			// busco los productos de todos los carts
-			List<CartProduct> products = orderHasProductRepository.findByCartIds(cartIds);
-			// busco las formas de pago de todos los carts
-			List<CartPayment> payments = cartPaymentRepository.findByCartIds(cartIds);
-			// Los agrego a cada cart
-			result.getContent().forEach(c -> {
-				List<CartProduct> currentCartProducts = products.stream()
-						.filter(cp -> cp.getCart().getId().equals(c.getCartId())).toList();
-				if (CollectionUtils.isNotEmpty(currentCartProducts))
-					c.setProducts(cartProductDtoConverter.toDtoList(currentCartProducts));
-				List<CartPayment> currentCartPayments = payments.stream()
-						.filter(cp -> cp.getCart().getId().equals(c.getCartId())).toList();
-				if (CollectionUtils.isNotEmpty(currentCartPayments))
-					c.setPayments(cartPaymentDtoConverter.toDtoList(currentCartPayments));
-			});
+			setPaymentMethodsForCarts(result.getContent());
+			setProductsForCarts(result.getContent());
 		}
 		return result;
+	}
+
+	@Override
+	public List<CartDto> getCartsBySessionId(Integer sessionId) {
+		CashRegisterSession session = cashRegisterSessionService.getById(sessionId);
+		if (session == null) {
+			return null;
+		}
+
+		Integer clientId = session.getClient().getId();
+		Date dateFrom = session.getOpeningDate();
+		Date dateTo = session.getClosingDate();
+		List<Cart> carts = orderRepository.findByClientIdAndDateRange(clientId, dateFrom != null, dateFrom,
+				dateTo != null, dateTo);
+		List<CartDto> dtoList = cartDtoConverter.toDtoList(carts);
+		setPaymentMethodsForCarts(dtoList);
+		return dtoList;
 	}
 
 	@Override
@@ -238,4 +246,31 @@ public class CartServiceImpl implements CartService {
 		return orderRepository.hasCartsByDiscountId(id);
 	}
 
+	private void setPaymentMethodsForCarts(List<CartDto> dtoList) {
+		// busco metodos de pago
+		if (CollectionUtils.isNotEmpty(dtoList)) {
+			List<Integer> cartIds = dtoList.stream().map(CartDto::getCartId).toList();
+			List<CartPayment> payments = cartPaymentRepository.findByCartIds(cartIds);
+			dtoList.forEach(c -> {
+				List<CartPayment> currentCartPayments = payments.stream()
+						.filter(cp -> cp.getCart().getId().equals(c.getCartId())).toList();
+				if (CollectionUtils.isNotEmpty(currentCartPayments))
+					c.setPayments(cartPaymentDtoConverter.toDtoList(currentCartPayments));
+			});
+		}
+	}
+
+	private void setProductsForCarts(List<CartDto> dtoList) {
+		// busco productos
+		if (CollectionUtils.isNotEmpty(dtoList)) {
+			List<Integer> cartIds = dtoList.stream().map(CartDto::getCartId).toList();
+			List<CartProduct> products = orderHasProductRepository.findByCartIds(cartIds);
+			dtoList.forEach(c -> {
+				List<CartProduct> currentCartProducts = products.stream()
+						.filter(cp -> cp.getCart().getId().equals(c.getCartId())).toList();
+				if (CollectionUtils.isNotEmpty(currentCartProducts))
+					c.setProducts(cartProductDtoConverter.toDtoList(currentCartProducts));
+			});
+		}
+	}
 }

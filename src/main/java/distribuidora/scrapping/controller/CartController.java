@@ -38,6 +38,12 @@ public class CartController {
 			throws Exception {
 		return cartService.getCartsPage(personId, dateFrom, dateTo, page, size);
 	}
+	
+	@GetMapping("/session/{sessionId}")
+	List<CartDto> getCartsBySessionId(@PathVariable Integer sessionId)
+			throws Exception {
+		return cartService.getCartsBySessionId(sessionId);
+	}
 
 	@DeleteMapping("/{id}")
 	void deleteCartById(@PathVariable Integer id) throws Exception {

@@ -121,4 +121,9 @@ public class CashRegisterSessionServiceImpl implements CashRegisterSessionServic
 				dt, pageable);
 		return cashRegisterSessionConverter.toPage(page);
 	}
+
+	@Override
+	public CashRegisterSession getById(Integer sessionId) {
+		return cashRegisterSessionRepository.findById(sessionId).orElse(null);
+	}
 }
