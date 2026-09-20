@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import distribuidora.scrapping.dto.CartDto;
 import distribuidora.scrapping.dto.CartPaymentDto;
 import distribuidora.scrapping.dto.CartProductDto;
+import distribuidora.scrapping.dto.CashRegisterSessionDto;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.Discount;
 import distribuidora.scrapping.entities.LookupValor;
@@ -101,6 +102,11 @@ public class CartServiceImpl implements CartService {
 	public List<CartDto> createFinalizedCart(List<CartDto> data) throws Exception {
 		// Obtengo el cliente
 		Client client = validateClient();
+		// me fijo si tiene sesion abierta
+		CashRegisterSessionDto session = cashRegisterSessionService.getCurrentSession();
+		if (session == null)
+			throw new Exception("No hay una caja abierta para la tienda actual");
+		
 		List<Integer> productIds = data.stream().map(d -> d.getProducts()).flatMap(List::stream)
 				.map(d -> d.getProductId()).distinct().toList();
 		List<ProductoInterno> products = inventoryService.getProductByIds(productIds);
