@@ -36,6 +36,11 @@ public class CashRegisterController {
 	CashRegisterSessionDto getCurrentSession() throws Exception {
 		return cashRegisterSessionService.getCurrentSession();
 	}
+	
+	@GetMapping("/last-closed")
+	CashRegisterSessionDto getLastCloseSession() throws Exception {
+		return cashRegisterSessionService.getLastCloseSession();
+	}
 
 	@GetMapping()
 	Page<CashRegisterSessionDto> getHistory(

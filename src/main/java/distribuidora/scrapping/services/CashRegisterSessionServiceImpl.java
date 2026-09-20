@@ -13,8 +13,8 @@ import distribuidora.scrapping.configs.Constants;
 import distribuidora.scrapping.dto.CashRegisterSessionDto;
 import distribuidora.scrapping.entities.Client;
 import distribuidora.scrapping.entities.customer.CashRegisterSession;
-import distribuidora.scrapping.repositories.CashRegisterSessionRepository;
 import distribuidora.scrapping.repositories.CartPaymentRepository;
+import distribuidora.scrapping.repositories.CashRegisterSessionRepository;
 import distribuidora.scrapping.util.DateUtil;
 import distribuidora.scrapping.util.converters.CashRegisterSessionConverter;
 
@@ -40,10 +40,9 @@ public class CashRegisterSessionServiceImpl implements CashRegisterSessionServic
 		if (client == null)
 			throw new Exception("No existe la tienda solicitada");
 
-		cashRegisterSessionRepository.findOpenSessionByClientId(client.getId())
-				.ifPresent(s -> {
-					throw new RuntimeException("Ya existe una sesion de caja abierta para esta tienda");
-				});
+		cashRegisterSessionRepository.findOpenSessionByClientId(client.getId()).ifPresent(s -> {
+			throw new RuntimeException("Ya existe una sesion de caja abierta para esta tienda");
+		});
 
 		CashRegisterSession session = new CashRegisterSession();
 		session.setClient(client);
@@ -82,6 +81,21 @@ public class CashRegisterSessionServiceImpl implements CashRegisterSessionServic
 			throw new Exception("No existe la tienda solicitada");
 
 		CashRegisterSession session = cashRegisterSessionRepository.findOpenSessionByClientId(client.getId())
+				.orElse(null);
+		if (session == null)
+			return null;
+
+		return cashRegisterSessionConverter.toDto(session);
+	}
+
+	@Override
+	public CashRegisterSessionDto getLastCloseSession() throws Exception {
+		Client client = userService.getCurrentClient();
+		if (client == null)
+			throw new Exception("No existe la tienda solicitada");
+
+		CashRegisterSession session = cashRegisterSessionRepository
+				.findLastCloseSession(client.getId(), PageRequest.of(0, 1)).getContent().stream().findFirst()
 				.orElse(null);
 		if (session == null)
 			return null;

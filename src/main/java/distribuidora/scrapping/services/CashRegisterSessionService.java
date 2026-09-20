@@ -14,6 +14,9 @@ public interface CashRegisterSessionService {
 
 	CashRegisterSessionDto getCurrentSession() throws Exception;
 
+	CashRegisterSessionDto getLastCloseSession() throws Exception;
+
 	Page<CashRegisterSessionDto> getHistory(LocalDate dateFrom, LocalDate dateTo, Integer page, Integer size)
 			throws Exception;
+
 }
