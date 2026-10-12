@@ -1,6 +1,7 @@
 package distribuidora.scrapping.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,12 @@ public class ExpenseController {
 			@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "20") Integer size)
 			throws Exception {
 		return expenseService.getExpenses(dateFrom, dateTo, page, size);
+	}
+	
+	@GetMapping("/session/{sessionId}")
+	List<ExpenseDto> getCartsBySessionId(@PathVariable Integer sessionId)
+			throws Exception {
+		return expenseService.getExpenseDtosBySessionId(sessionId);
 	}
 
 	@PostMapping

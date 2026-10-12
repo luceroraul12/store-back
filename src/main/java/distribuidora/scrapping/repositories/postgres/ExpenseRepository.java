@@ -21,5 +21,15 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 			""")
 	Page<Expense> findPageByParams(Integer clientId, Date dateFrom, Date dateTo, Pageable pageable);
 
+	@Query("""
+			SELECT e FROM Expense e
+			WHERE e.client.id = :clientId
+				AND (:hasDateFrom = false OR e.creationDate >= :dateFrom)
+				AND (:hasDateTo = false OR e.creationDate <= :dateTo)
+			ORDER BY e.creationDate DESC
+			""")
+	List<Expense> findByClientIdAndDateRange(Integer clientId, boolean hasDateFrom, Date dateFrom, boolean hasDateTo,
+			Date dateTo);
+
 	Expense findByIdAndClientId(Integer id, Integer clientId);
 }
