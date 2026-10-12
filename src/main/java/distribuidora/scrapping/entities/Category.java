@@ -25,4 +25,7 @@ public class Category {
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private Client client;
+	@ManyToOne
+	@JoinColumn(name = "lv_category_type_id")
+	private LookupValor categoryType;
 }

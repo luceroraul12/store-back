@@ -3,12 +3,15 @@ package distribuidora.scrapping.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import distribuidora.scrapping.configs.Constants;
 import distribuidora.scrapping.dto.CategoryDto;
 import distribuidora.scrapping.entities.Category;
 import distribuidora.scrapping.entities.Client;
+import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.repositories.CategoryRepository;
 import distribuidora.scrapping.repositories.postgres.ProductoInternoRepository;
 import distribuidora.scrapping.services.general.LookupService;
@@ -42,7 +45,18 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public List<Category> getCategories() {
-		return categoryRepository.findCategoriesByClientId(userService.getCurrentClient().getId());
+		return categoryRepository.findCategoriesByClientIdAndType(userService.getCurrentClient().getId(),
+				Constants.LV_CATEGORY_TYPE_PRODUCT);
+	}
+
+	@Override
+	public List<Category> getCategoriesByType(String typeCode) {
+		return categoryRepository.findCategoriesByClientIdAndType(userService.getCurrentClient().getId(), typeCode);
+	}
+
+	@Override
+	public List<CategoryDto> getCategoryDtosByType(String typeCode) {
+		return categoryDtoConverter.toDtoList(getCategoriesByType(typeCode));
 	}
 
 	@Override
@@ -51,14 +65,21 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new Exception("Debe pasar la categoria");
 		if (dto.getName() == null)
 			throw new Exception("Debe pasar el nombre de la categoría");
+		if (dto.getCategoryType() == null || StringUtils.isBlank(dto.getCategoryType().getCode()))
+			throw new Exception("Debe pasar el tipo de categoría");
 		Client currentClient = userService.getCurrentClient();
-		Category categoryExisted = categoryRepository.findCategoryByNameAndClientId(dto.getName(),
-				currentClient.getId());
+		Category categoryExisted = categoryRepository.findCategoryByNameAndClientIdAndType(dto.getName(),
+				currentClient.getId(), dto.getCategoryType().getCode());
 		if (categoryExisted != null && !categoryExisted.getId().equals(dto.getId())
 				&& categoryExisted.getName().equalsIgnoreCase(dto.getName()))
 			throw new Exception("Ya existe una categoría con el nombre enviado");
+		LookupValor categoryType = lookupService.getLookupValueByCode(dto.getCategoryType().getCode());
+		if (categoryType == null || categoryType.getLookupTipo() == null
+				|| !Constants.LT_CATEGORY_TYPE.equals(categoryType.getLookupTipo().getCodigo()))
+			throw new Exception("El tipo de categoría no es válido");
 		Category category = categoryDtoConverter.toEntidad(dto);
 		category.setClient(currentClient);
+		category.setCategoryType(categoryType);
 		category = categoryRepository.save(category);
 		return categoryDtoConverter.toDto(category);
 	}

@@ -7,4 +7,5 @@ public class CategoryDto {
 	Integer id;
 	String name;
 	String description;
+	LookupValueDto categoryType;
 }

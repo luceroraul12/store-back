@@ -11,6 +11,10 @@ public interface CategoryService {
 
 	List<Category> getCategories();
 
+	List<Category> getCategoriesByType(String typeCode);
+
+	List<CategoryDto> getCategoryDtosByType(String typeCode);
+
 	CategoryDto createUpdateCategory(CategoryDto dto) throws Exception;
 
 	Integer deleteCategoryById(Integer id) throws Exception;
