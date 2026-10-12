@@ -23,3 +23,17 @@ alter table category add constraint category_lv_type_fk foreign key (lv_category
 -- Unicidad por nombre, cliente y tipo
 alter table category drop constraint category_uq;
 alter table category add constraint category_uq unique (name, client_id, lv_category_type_id);
+
+-- Tabla de gastos del negocio
+create table expense(
+	id serial primary key,
+	creation_date timestamp not null default now(),
+	client_id int not null,
+	amount float8 not null,
+	category_id int not null,
+	payment_method_id int not null,
+	observation varchar(1000),
+	constraint expense_client_fk foreign key (client_id) references client(id),
+	constraint expense_category_fk foreign key (category_id) references category(id),
+	constraint expense_payment_method_fk foreign key (payment_method_id) references lookup_valor(id)
+);
