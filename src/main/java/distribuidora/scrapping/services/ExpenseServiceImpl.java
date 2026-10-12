@@ -1,10 +1,12 @@
 package distribuidora.scrapping.services;
 
+import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import distribuidora.scrapping.configs.Constants;
@@ -15,6 +17,7 @@ import distribuidora.scrapping.entities.LookupValor;
 import distribuidora.scrapping.repositories.CategoryRepository;
 import distribuidora.scrapping.repositories.postgres.ExpenseRepository;
 import distribuidora.scrapping.services.general.LookupService;
+import distribuidora.scrapping.util.DateUtil;
 import distribuidora.scrapping.util.converters.ExpenseConverter;
 
 @Service
@@ -61,8 +64,13 @@ public class ExpenseServiceImpl implements ExpenseService {
 	}
 
 	@Override
-	public List<ExpenseDto> getExpenses() throws Exception {
-		return expenseConverter.toDtoList(expenseRepository.findByClientId(userService.getCurrentClient().getId()));
+	public Page<ExpenseDto> getExpenses(LocalDate dateFrom, LocalDate dateTo, Integer page, Integer size)
+			throws Exception {
+		Date df = DateUtil.getStartDate(dateFrom);
+		Date dt = DateUtil.getEndDate(dateTo);
+		Page<Expense> expensePage = expenseRepository.findPageByParams(userService.getCurrentClient().getId(), df, dt,
+				PageRequest.of(page, size));
+		return expensePage.map(expenseConverter::toDto);
 	}
 
 	@Override
