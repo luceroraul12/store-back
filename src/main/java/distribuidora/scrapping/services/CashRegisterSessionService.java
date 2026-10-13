@@ -1,6 +1,7 @@
 package distribuidora.scrapping.services;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import org.springframework.data.domain.Page;
 
@@ -21,5 +22,7 @@ public interface CashRegisterSessionService {
 			throws Exception;
 
 	CashRegisterSession getById(Integer sessionId);
+
+	CashRegisterSession getClosedSessionByClientIdAndDate(Integer id, Date dateCreated);
 
 }

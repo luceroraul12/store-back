@@ -68,8 +68,12 @@ public class CategoryServiceImpl implements CategoryService {
 		if (dto.getCategoryType() == null || StringUtils.isBlank(dto.getCategoryType().getCode()))
 			throw new Exception("Debe pasar el tipo de categoría");
 		Client currentClient = userService.getCurrentClient();
-		Category categoryExisted = categoryRepository.findCategoryByNameAndClientIdAndType(dto.getName(),
-				currentClient.getId(), dto.getCategoryType().getCode());
+		Category categoryExisted = null;
+		categoryExisted = categoryRepository.findById(dto.getId()).orElse(null);
+		if (categoryExisted == null)
+			categoryExisted = categoryRepository.findCategoryByNameAndClientIdAndType(dto.getName(),
+					currentClient.getId(), dto.getCategoryType().getCode());
+
 		if (categoryExisted != null && !categoryExisted.getId().equals(dto.getId())
 				&& categoryExisted.getName().equalsIgnoreCase(dto.getName()))
 			throw new Exception("Ya existe una categoría con el nombre enviado");
@@ -77,6 +81,9 @@ public class CategoryServiceImpl implements CategoryService {
 		if (categoryType == null || categoryType.getLookupTipo() == null
 				|| !Constants.LT_CATEGORY_TYPE.equals(categoryType.getLookupTipo().getCodigo()))
 			throw new Exception("El tipo de categoría no es válido");
+
+		if (categoryExisted != null && !categoryExisted.getCategoryType().getCodigo().equals(categoryType.getCodigo()))
+			throw new Exception("No está permitido cambiar el tipo de una categoría existente");
 		Category category = categoryDtoConverter.toEntidad(dto);
 		category.setClient(currentClient);
 		category.setCategoryType(categoryType);

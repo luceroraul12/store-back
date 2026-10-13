@@ -55,6 +55,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 				.orElseThrow(() -> new Exception("No existe la categoría"));
 		if (!Constants.LV_CATEGORY_TYPE_EXPENSE.equals(category.getCategoryType().getCodigo()))
 			throw new Exception("La categoría no es de tipo gasto");
+		Expense last = expenseRepository.findById(dto.getId()).orElse(null);
+		validateExpense(last);
+		
 		LookupValor paymentMethod = lookupService.getLookupValueByCode(dto.getPaymentMethod().getCode());
 		if (paymentMethod == null)
 			throw new Exception("Método de pago inválido");
@@ -99,7 +102,23 @@ public class ExpenseServiceImpl implements ExpenseService {
 		Expense expense = expenseRepository.findByIdAndClientId(id, userService.getCurrentClient().getId());
 		if (expense == null)
 			throw new Exception("No existe el gasto");
+		
+		validateExpense(expense);
+		
 		expenseRepository.delete(expense);
 		return id;
+	}
+
+	private void validateExpense(Expense expense) throws Exception {
+		if (expense != null) {
+			// Valido que no exista un cierre de caja en la fecha del pedido
+			CashRegisterSession session = cashRegisterSessionService
+					.getClosedSessionByClientIdAndDate(expense.getClient().getId(), expense.getCreationDate());
+			if (session != null) {
+				throw new Exception(
+						String.format("No se puede eliminar ya que es parte del cierre con ID: %s", session.getId()));
+			}
+		}
+		
 	}
 }

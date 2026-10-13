@@ -106,7 +106,7 @@ public class CartServiceImpl implements CartService {
 		CashRegisterSessionDto session = cashRegisterSessionService.getCurrentSession();
 		if (session == null)
 			throw new Exception("No hay una caja abierta para la tienda actual");
-		
+
 		List<Integer> productIds = data.stream().map(d -> d.getProducts()).flatMap(List::stream)
 				.map(d -> d.getProductId()).distinct().toList();
 		List<ProductoInterno> products = inventoryService.getProductByIds(productIds);
@@ -232,11 +232,18 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public void deleteById(Integer cartId) {
+	public void deleteById(Integer cartId) throws Exception {
+		Cart cart = orderRepository.findById(cartId).orElse(null);
+		if (cart == null)
+			throw new RuntimeException("El pedido no existe");
+
+		validateCart(cart);
+
 		// Elimino productos
 		List<CartProduct> products = orderHasProductRepository.findByCartIds(Arrays.asList(cartId));
 		orderHasProductRepository.deleteAll(products);
-		cartPaymentRepository.deleteByCartId(cartId);
+		List<CartPayment> payments = cartPaymentRepository.findByCartIds(Arrays.asList(cartId));
+		cartPaymentRepository.deleteAll(payments);
 		supplierBalanceRepository.deleteByCartId(cartId);
 		// Elimino pedido
 		orderRepository.deleteById(cartId);
@@ -278,5 +285,18 @@ public class CartServiceImpl implements CartService {
 					c.setProducts(cartProductDtoConverter.toDtoList(currentCartProducts));
 			});
 		}
+	}
+
+	private void validateCart(Cart cart) throws Exception {
+		if (cart != null) {
+			// Valido que no exista un cierre de caja en la fecha del pedido
+			CashRegisterSession session = cashRegisterSessionService
+					.getClosedSessionByClientIdAndDate(cart.getClient().getId(), cart.getDateCreated());
+			if (session != null) {
+				throw new Exception(
+						String.format("No se puede eliminar ya que es parte del cierre con ID: %s", session.getId()));
+			}
+		}
+
 	}
 }

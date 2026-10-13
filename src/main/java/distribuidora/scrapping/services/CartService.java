@@ -15,7 +15,7 @@ public interface CartService {
 
 	List<CartDto> getCartsBySessionId(Integer sessionId);
 
-	void deleteById(Integer id);
+	void deleteById(Integer id) throws Exception;
 
 	boolean hasCartByCustomerId(Integer id);
 
