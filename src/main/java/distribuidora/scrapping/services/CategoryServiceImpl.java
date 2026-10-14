@@ -69,7 +69,9 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new Exception("Debe pasar el tipo de categoría");
 		Client currentClient = userService.getCurrentClient();
 		Category categoryExisted = null;
-		categoryExisted = categoryRepository.findById(dto.getId()).orElse(null);
+		categoryExisted = null;
+		if (dto.getId() != null)
+			categoryExisted = categoryRepository.findById(dto.getId()).orElse(null);
 		if (categoryExisted == null)
 			categoryExisted = categoryRepository.findCategoryByNameAndClientIdAndType(dto.getName(),
 					currentClient.getId(), dto.getCategoryType().getCode());
