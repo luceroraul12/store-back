@@ -55,8 +55,11 @@ public class ExpenseServiceImpl implements ExpenseService {
 				.orElseThrow(() -> new Exception("No existe la categoría"));
 		if (!Constants.LV_CATEGORY_TYPE_EXPENSE.equals(category.getCategoryType().getCodigo()))
 			throw new Exception("La categoría no es de tipo gasto");
-		Expense last = expenseRepository.findById(dto.getId()).orElse(null);
-		validateExpense(last);
+		Expense last = null;
+		if (dto.getId() != null) {
+			last = expenseRepository.findById(dto.getId()).orElse(null);
+			validateExpense(last);
+		}
 		
 		LookupValor paymentMethod = lookupService.getLookupValueByCode(dto.getPaymentMethod().getCode());
 		if (paymentMethod == null)
