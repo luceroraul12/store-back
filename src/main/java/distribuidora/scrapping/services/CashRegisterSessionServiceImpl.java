@@ -126,4 +126,9 @@ public class CashRegisterSessionServiceImpl implements CashRegisterSessionServic
 	public CashRegisterSession getById(Integer sessionId) {
 		return cashRegisterSessionRepository.findById(sessionId).orElse(null);
 	}
+
+	@Override
+	public CashRegisterSession getClosedSessionByClientIdAndDate(Integer clientId, Date date) {
+		return cashRegisterSessionRepository.findFinalizedSessionByClientIdAndDate(clientId, date);
+	}
 }

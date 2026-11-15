@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import distribuidora.scrapping.dto.CategoryDto;
@@ -22,8 +23,9 @@ public class CategoryController {
 	CategoryService categoryService;
 
 	@GetMapping
-	List<CategoryDto> getCategories() {
-		return categoryService.getCategoryDtos();
+	List<CategoryDto> getCategories(
+			@RequestParam(required = false) String typeCode) {
+		return categoryService.getCategoryDtosByType(typeCode);
 	}
 
 	@PostMapping

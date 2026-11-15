@@ -16,8 +16,6 @@ public interface CartPaymentRepository extends JpaRepository<CartPayment, Intege
 			""")
 	List<CartPayment> findByCartIds(List<Integer> cartIds);
 
-	void deleteByCartId(Integer cartId);
-
 	@Query("""
 			SELECT COALESCE(SUM(cp.amount), 0.0)
 			FROM CartPayment cp

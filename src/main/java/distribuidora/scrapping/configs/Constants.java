@@ -47,4 +47,9 @@ public class Constants {
 	public static final String CASH_REGISTER_STATUS_OPEN = "OPEN";
 	public static final String CASH_REGISTER_STATUS_CLOSED = "CLOSED";
 
+	// Category Type
+	public static final String LT_CATEGORY_TYPE = "CATEGORY_TYPE";
+	public static final String LV_CATEGORY_TYPE_PRODUCT = "PRODUCT";
+	public static final String LV_CATEGORY_TYPE_EXPENSE = "EXPENSE";
+
 }

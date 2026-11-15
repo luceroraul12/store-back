@@ -43,8 +43,9 @@ public abstract class ProductSearcherWeb extends ProductSearcher {
 		List<ExternalProduct> productostotales = new ArrayList<>();
 		setUrlBuscador(data.getWebUrl());
 		setEsBuscadorConPaginador(data.isPaginator());
-
-		productostotales = generarDocumentos().stream().parallel().map(this::obtenerProductosPorDocument)
+		// esta separado para poder depurar
+		List<Document> documents = generarDocumentos();
+		productostotales = documents.stream().parallel().map(this::obtenerProductosPorDocument)
 				.flatMap(Collection::stream).collect(Collectors.toList());
 		return productostotales;
 	}
@@ -118,7 +119,8 @@ public abstract class ProductSearcherWeb extends ProductSearcher {
 	 * @return listado de productos especificos.
 	 */
 	protected List<ExternalProduct> obtenerProductosPorDocument(Document documento) {
-		return filtrarElementos(documento).stream().map(this::obtenerProductosAPartirDeElements)
+		Elements filteredDocuments = filtrarElementos(documento);
+		return filteredDocuments.stream().map(this::obtenerProductosAPartirDeElements)
 				.filter(ep -> ep != null).collect(Collectors.toList());
 	}
 

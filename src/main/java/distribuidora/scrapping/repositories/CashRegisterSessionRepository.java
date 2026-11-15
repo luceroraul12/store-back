@@ -39,4 +39,14 @@ public interface CashRegisterSessionRepository extends JpaRepository<CashRegiste
 	Page<CashRegisterSession> findByClientIdAndDateRange(Integer clientId, Date dateFrom, Date dateTo,
 			Pageable pageable);
 
+	@Query("""
+			SELECT crs
+			FROM CashRegisterSession crs
+			WHERE crs.client.id = :clientId
+				AND crs.status = 'CLOSED'
+				AND crs.openingDate <= :date
+				AND crs.closingDate >= :date
+			""")
+	CashRegisterSession findFinalizedSessionByClientIdAndDate(Integer clientId, Date date);
+
 }

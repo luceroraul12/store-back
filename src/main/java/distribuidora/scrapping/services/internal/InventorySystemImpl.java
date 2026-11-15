@@ -255,7 +255,8 @@ public class InventorySystemImpl implements InventorySystem {
 	@Override
 	public List<CategoryDto> getCategoryDtoList() {
 		Integer clientId = userService.getCurrentClient().getId();
-		return categoryDtoConverter.toDtoList(categoryHasUnitRepository.findCategoriesByClientId(clientId));
+		return categoryDtoConverter.toDtoList(categoryHasUnitRepository
+				.findCategoriesByClientIdAndType(clientId, Constants.LV_CATEGORY_TYPE_PRODUCT));
 	}
 
 	@Override

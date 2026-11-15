@@ -13,12 +13,17 @@ public class CategoryDtoConverter extends Converter<Category, CategoryDto> {
 	@Autowired
 	PresentationDtoConverter unitDtoConverter;
 
+	@Autowired
+	LookupValueDtoConverter lookupValueDtoConverter;
+
 	@Override
 	public CategoryDto toDto(Category entidad) {
 		CategoryDto dto = new CategoryDto();
 		dto.setId(entidad.getId());
 		dto.setName(entidad.getName());
 		dto.setDescription(entidad.getDescription());
+		if (entidad.getCategoryType() != null)
+			dto.setCategoryType(lookupValueDtoConverter.toDto(entidad.getCategoryType()));
 		return dto;
 	}
 
@@ -28,6 +33,8 @@ public class CategoryDtoConverter extends Converter<Category, CategoryDto> {
 		e.setId(dto.getId());
 		e.setName(dto.getName());
 		e.setDescription(dto.getDescription());
+		if (dto.getCategoryType() != null)
+			e.setCategoryType(lookupValueDtoConverter.toEntidad(dto.getCategoryType()));
 		return e;
 	}
 

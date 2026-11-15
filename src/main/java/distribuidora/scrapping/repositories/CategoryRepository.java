@@ -13,16 +13,18 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 			SELECT c
 			FROM Category c
 			WHERE c.client.id = :clientId
-			ORDER BY c.name 
+				and (:typeCode IS NULL OR c.categoryType.codigo = :typeCode)
+			ORDER BY c.name
 			""")
-	List<Category> findCategoriesByClientId(Integer clientId);
+	List<Category> findCategoriesByClientIdAndType(Integer clientId, String typeCode);
 
 	@Query("""
 			SELECT c
 			FROM Category c
 			WHERE c.client.id = :clientId
+				and c.categoryType.codigo = :typeCode
 				and UPPER(c.name) = UPPER(:name)
 			""")
-	Category findCategoryByNameAndClientId(String name, Integer clientId);
+	Category findCategoryByNameAndClientIdAndType(String name, Integer clientId, String typeCode);
 
 }

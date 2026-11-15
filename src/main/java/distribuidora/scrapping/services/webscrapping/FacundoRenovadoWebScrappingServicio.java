@@ -22,9 +22,8 @@ public class FacundoRenovadoWebScrappingServicio extends ProductSearcherWeb {
 	protected ExternalProduct obtenerProductosAPartirDeElements(Element elementProducto) {
 		// Extraigo los datos que me parecen importantes del producto
 		String code = elementProducto.attr("data-idproducto");
-		String name = elementProducto.getElementsByTag("h5").textNodes().get(0).text().replaceAll("_", " ")
-				.subSequence(0, elementProducto.getElementsByTag("h5").textNodes().get(0).text().length() - 3)
-				.toString();
+		
+		String name = elementProducto.getElementsByClass("producto-nombre").text();
 
 		String category = elementProducto.parent().parent().parent().parent().getElementsByTag("h2").text();
 		String innerPrice = elementProducto.getElementsByTag("strong").text().replaceAll(" ", "")
@@ -46,7 +45,7 @@ public class FacundoRenovadoWebScrappingServicio extends ProductSearcherWeb {
 
 	@Override
 	protected Elements filtrarElementos(Document documento) {
-		return documento.getElementsByClass("item row pointer");
+		return documento.getElementsByClass("item row pointer ");
 	}
 
 	@Override

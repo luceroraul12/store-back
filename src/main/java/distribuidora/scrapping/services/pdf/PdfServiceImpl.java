@@ -124,7 +124,8 @@ public class PdfServiceImpl implements PdfService {
 
 	public void addContent(Document document, PdfWriter writer, String dateConverted, Integer clientId)
 			throws Exception {
-		List<Category> categories = categoryHasUnitRepository.findAll();
+		List<Category> categories = categoryHasUnitRepository.findCategoriesByClientIdAndType(
+				userService.getCurrentClient().getId(), Constants.LV_CATEGORY_TYPE_PRODUCT);
 
 		// TODO: Voy a comentarlo para ver que dice el cliente, en caso que lo
 		// quiera de nuevo lo vuelvo a colocar

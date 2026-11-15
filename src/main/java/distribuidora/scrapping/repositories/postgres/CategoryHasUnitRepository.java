@@ -11,7 +11,8 @@ public interface CategoryHasUnitRepository extends JpaRepository<Category, Integ
 	@Query("""
 			SELECT c
 			FROM Category c
-			where c.client.id = :clientId
+			WHERE c.client.id = :clientId
+				and c.categoryType.codigo = :typeCode
 			""")
-	List<Category> findCategoriesByClientId(Integer clientId);
+	List<Category> findCategoriesByClientIdAndType(Integer clientId, String typeCode);
 }
